@@ -1,0 +1,88 @@
+from typing import Any
+
+from fastapi import APIRouter, HTTPException, Query
+from sqlalchemy import select
+
+from app.core.cache import cache_get
+from app.core.db import SessionLocal
+from app.models import MatchResult, RankingSnapshot
+from app.services import refresh as R
+
+router = APIRouter()
+
+
+async def _cached_or_refresh(key: str, refresher) -> Any:
+    """Read from cache; if empty (cold start), trigger a refresh once."""
+    data = await cache_get(key)
+    if data is None:
+        await refresher()
+        data = await cache_get(key)
+    return data if data is not None else []
+
+
+@router.get("/matches/results")
+async def results():
+    return await _cached_or_refresh(R.CACHE_RESULTS, R.refresh_results)
+
+
+@router.get("/matches/upcoming")
+async def upcoming():
+    return await _cached_or_refresh(R.CACHE_UPCOMING, R.refresh_upcoming)
+
+
+@router.get("/matches/live")
+async def live():
+    return await _cached_or_refresh(R.CACHE_LIVE, R.refresh_upcoming)
+
+
+@router.get("/rankings")
+async def rankings(region: str = Query("all")):
+    key = R.CACHE_RANKINGS.format(region=region)
+    return await _cached_or_refresh(key, lambda: R.refresh_rankings(region))
+
+
+@router.get("/events")
+async def events():
+    return await _cached_or_refresh(R.CACHE_EVENTS, R.refresh_events)
+
+
+@router.get("/news")
+async def news():
+    return await _cached_or_refresh(R.CACHE_NEWS, R.refresh_news)
+
+
+# ---- history (from Postgres) ----
+@router.get("/history/results")
+async def history_results(limit: int = Query(50, le=500)):
+    async with SessionLocal() as session:
+        rows = await session.execute(
+            select(MatchResult).order_by(MatchResult.captured_at.desc()).limit(limit)
+        )
+        return [
+            {
+                "vlr_id": r.vlr_id, "team_a": r.team_a, "team_b": r.team_b,
+                "score_a": r.score_a, "score_b": r.score_b,
+                "event": r.event, "series": r.series, "url": r.url,
+                "captured_at": r.captured_at,
+            }
+            for r in rows.scalars().all()
+        ]
+
+
+@router.get("/history/rankings/{team_id}")
+async def history_rankings(team_id: str, limit: int = Query(100, le=1000)):
+    async with SessionLocal() as session:
+        rows = await session.execute(
+            select(RankingSnapshot)
+            .where(RankingSnapshot.team_id == team_id)
+            .order_by(RankingSnapshot.captured_at.asc())
+            .limit(limit)
+        )
+        snaps = rows.scalars().all()
+        if not snaps:
+            raise HTTPException(404, "no ranking history for that team_id")
+        return [
+            {"rank": s.rank, "rating": s.rating, "record": s.record,
+             "region": s.region, "captured_at": s.captured_at}
+            for s in snaps
+        ]

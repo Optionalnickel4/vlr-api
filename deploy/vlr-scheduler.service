@@ -1,0 +1,17 @@
+# Optional: only use if running API with VLR_ENABLE_SCHEDULER=false
+[Unit]
+Description=vlr-api scraping scheduler
+After=network-online.target postgresql.service redis-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=vlr
+WorkingDirectory=/opt/vlr-api
+EnvironmentFile=/opt/vlr-api/.env
+ExecStart=/opt/vlr-api/.venv/bin/python -m app.jobs.run
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

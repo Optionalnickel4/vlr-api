@@ -1,0 +1,16 @@
+[Unit]
+Description=vlr-api FastAPI server
+After=network-online.target postgresql.service redis-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=vlr
+WorkingDirectory=/opt/vlr-api
+EnvironmentFile=/opt/vlr-api/.env
+ExecStart=/opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
