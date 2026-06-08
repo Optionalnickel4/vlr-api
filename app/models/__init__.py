@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
+from typing import Any
 
 from sqlalchemy import DateTime, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base
@@ -39,6 +41,25 @@ class RankingSnapshot(Base):
     rank: Mapped[str | None] = mapped_column(String(16))
     rating: Mapped[str | None] = mapped_column(String(16))
     record: Mapped[str | None] = mapped_column(String(64))
+    captured_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_now, index=True
+    )
+
+
+class PlayerSnapshot(Base):
+    """A player's detail page captured per on-demand fetch, so agent-stat trends
+    can be charted over time. The per-agent stat rows are stored as JSON verbatim."""
+
+    __tablename__ = "player_snapshots"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    player_id: Mapped[str] = mapped_column(String(32), index=True)
+    alias: Mapped[str | None] = mapped_column(String(128))
+    real_name: Mapped[str | None] = mapped_column(String(128))
+    country: Mapped[str | None] = mapped_column(String(8))
+    team: Mapped[str | None] = mapped_column(String(128))
+    team_id: Mapped[str | None] = mapped_column(String(32))
+    agent_stats: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
     captured_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_now, index=True
     )

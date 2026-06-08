@@ -11,9 +11,10 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from app.core.cache import cache_set
 from app.core.config import get_settings
 from app.core.db import SessionLocal
-from app.models import MatchResult, RankingSnapshot
+from app.models import MatchResult, PlayerSnapshot, RankingSnapshot
 from app.scrapers import events as ev
 from app.scrapers import matches as mt
+from app.scrapers import players as pl
 from app.scrapers import rankings as rk
 
 CACHE_RESULTS = "vlr:results"
@@ -22,6 +23,7 @@ CACHE_LIVE = "vlr:live"
 CACHE_RANKINGS = "vlr:rankings:{region}"
 CACHE_EVENTS = "vlr:events"
 CACHE_NEWS = "vlr:news"
+CACHE_PLAYER = "vlr:player:{id}"
 
 
 async def refresh_results() -> int:
@@ -90,3 +92,27 @@ async def refresh_news() -> int:
     data = await ev.fetch_news()
     await cache_set(CACHE_NEWS, data, s.ttl_news)
     return len(data)
+
+
+async def refresh_player(player_id: str) -> dict[str, Any]:
+    """On-demand: scrape a player detail page, cache it, and persist a snapshot.
+
+    Detail pages are not scheduled — this runs on a cache miss from the route.
+    Each scrape writes one PlayerSnapshot so agent-stat trends can be charted.
+    """
+    s = get_settings()
+    data = await pl.fetch_player(player_id)
+    await cache_set(CACHE_PLAYER.format(id=player_id), data, s.ttl_players)
+    snap = PlayerSnapshot(
+        player_id=str(player_id),
+        alias=data.get("alias"),
+        real_name=data.get("real_name"),
+        country=data.get("country"),
+        team=data.get("team"),
+        team_id=data.get("team_id"),
+        agent_stats=data.get("agent_stats") or [],
+    )
+    async with SessionLocal() as session:
+        session.add(snap)
+        await session.commit()
+    return data
