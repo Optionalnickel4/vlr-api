@@ -15,11 +15,14 @@ MATCH_STATUS = "div.ml-status, span.ml-status"
 MATCH_ETA = "div.ml-eta"
 
 # --- rankings (team rows) ---
-RANK_ROW = "div.rank-item, tr.rank-item"
-RANK_NUM = "div.rank-item-rank-num"
-RANK_TEAM_NAME = "div.rank-item-team-name, div.ge-text"
+# vlr now renders rankings as <table class="wf-faux-table mod-teams"> with one
+# <tr class="wf-card mod-hover"> per team; the team-name <td> wraps the country
+# div, so the parser strips the country suffix off the team name.
+RANK_ROW = "div.rank-item, tr.rank-item, tr.wf-card.mod-hover"
+RANK_NUM = "div.rank-item-rank-num, td.rank-item-rank"
+RANK_TEAM_NAME = "div.rank-item-team-name, div.ge-text, td.rank-item-team a div"
 RANK_COUNTRY = "div.rank-item-team-country"
-RANK_RATING = "div.rank-item-rating"
+RANK_RATING = "div.rank-item-rating, td.rank-item-rating"
 RANK_RECORD = "div.rank-item-record"
 RANK_EARNINGS = "div.rank-item-earnings"
 
@@ -32,10 +35,12 @@ EVENT_DATES = "div.event-item-desc-item.mod-dates"
 EVENT_REGION = "div.event-item-desc-item.mod-location i"
 
 # --- news ---
+# vlr news rows are <a class="wf-module-item"> with inline-styled (class-less)
+# title/desc divs; only the meta line keeps a class (ge-text-light).
 NEWS_ITEM = "a.wf-module-item, a.news-item"
-NEWS_TITLE = "div.news-item-title"
-NEWS_DESC = "div.news-item-desc"
-NEWS_DATE = "div.news-item-meta"
+NEWS_TITLE = 'div.news-item-title, div[style*="font-weight: 700"]'
+NEWS_DESC = 'div.news-item-desc, div[style*="font-size: 13px"]'
+NEWS_DATE = "div.news-item-meta, div.ge-text-light"
 
 # --- team page ---
 TEAM_NAME = "div.team-header-name h1, h1.wf-title"
