@@ -7,6 +7,22 @@ from app.scrapers import selectors as S
 from app.scrapers._util import clean_spaces, first_text, id_from_href, text_of
 
 
+def _desc_value(card: Node, selector: str) -> str:
+    """Text of a desc-item (prize/dates) with its trailing label stripped.
+
+    Live markup nests a <div class="event-item-desc-item-label"> ("Prize Pool",
+    "Dates") inside the value node, so the raw text reads "$1,000,000Prize Pool".
+    """
+    node = card.css_first(selector)
+    if node is None:
+        return ""
+    full = clean_spaces(text_of(node))
+    label = clean_spaces(text_of(node.css_first(S.EVENT_DESC_LABEL)))
+    if label and full.endswith(label):
+        full = full[: -len(label)].strip()
+    return full
+
+
 def _parse_event(card: Node) -> dict[str, Any]:
     href = card.attributes.get("href", "") or ""
     region_node = card.css_first(S.EVENT_REGION)
@@ -16,8 +32,8 @@ def _parse_event(card: Node) -> dict[str, Any]:
         "url": ("https://www.vlr.gg" + href) if href.startswith("/") else href,
         "title": clean_spaces(first_text(card, S.EVENT_TITLE)) or None,
         "status": clean_spaces(first_text(card, S.EVENT_STATUS)) or None,
-        "prize": clean_spaces(first_text(card, S.EVENT_PRIZE)) or None,
-        "dates": clean_spaces(first_text(card, S.EVENT_DATES)) or None,
+        "prize": _desc_value(card, S.EVENT_PRIZE) or None,
+        "dates": _desc_value(card, S.EVENT_DATES) or None,
         "region": region.replace("flag mod-", "").strip() or None,
     }
 

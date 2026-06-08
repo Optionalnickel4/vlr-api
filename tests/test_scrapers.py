@@ -80,11 +80,21 @@ def test_parse_events():
     events = parse_events(load("events.html"))
     assert len(events) == 2
     e = events[0]
-    assert e["id"] == "2498"
-    assert e["title"] == "Masters London 2026"
+    assert e["id"] == "2765"
+    assert e["title"] == "Valorant Masters London 2026"
     assert e["status"] == "ongoing"
+    # prize/dates must have the trailing "Prize Pool"/"Dates" labels stripped
     assert e["prize"] == "$1,000,000"
+    assert e["dates"] == "Jun 5—21"
     assert e["region"] == "gb"
+
+
+def test_parse_events_strips_desc_labels():
+    # second card carries a "TBD" prize — the label-strip must not eat the value
+    e = parse_events(load("events.html"))[1]
+    assert e["id"] == "2780"
+    assert e["prize"] == "TBD"
+    assert e["dates"] == "May 18—Jul 12"
 
 
 # ---------- news ----------

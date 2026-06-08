@@ -27,11 +27,14 @@ RANK_RECORD = "div.rank-item-record"
 RANK_EARNINGS = "div.rank-item-earnings"
 
 # --- events list ---
+# each desc-item (prize/dates) nests a label div ("Prize Pool", "Dates") that
+# the parser strips off so the value text doesn't get the label concatenated.
 EVENT_CARD = "a.event-item"
 EVENT_TITLE = "div.event-item-title"
 EVENT_STATUS = "span.event-item-desc-item-status"
 EVENT_PRIZE = "div.event-item-desc-item.mod-prize"
 EVENT_DATES = "div.event-item-desc-item.mod-dates"
+EVENT_DESC_LABEL = "div.event-item-desc-item-label"
 EVENT_REGION = "div.event-item-desc-item.mod-location i"
 
 # --- news ---
