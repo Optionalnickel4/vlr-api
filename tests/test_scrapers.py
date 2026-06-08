@@ -5,6 +5,7 @@ import pytest
 from app.scrapers.matches import parse_match_list, split_live_upcoming
 from app.scrapers.rankings import parse_rankings
 from app.scrapers.events import parse_events, parse_news
+from app.scrapers.players import parse_player
 from app.scrapers._util import id_from_href, clean_spaces
 
 FIX = Path(__file__).parent / "fixtures"
@@ -109,3 +110,48 @@ def test_parse_news():
 def test_parse_news_skips_titleless():
     html = '<a class="wf-module-item" href="/x"><div class="news-item-desc">no title</div></a>'
     assert parse_news(html) == []
+
+
+# ---------- player detail (TenZ, id 9) ----------
+# These assert STRUCTURE + INVARIANTS only — never volatile values (team, stats,
+# match list all change over time), so the suite stays green as TenZ's data moves.
+def test_parse_player_identity():
+    p = parse_player(load("player_tenz.html"))
+    assert p["id"] and p["id"].isdigit()
+    assert isinstance(p["alias"], str) and p["alias"].strip()
+    assert isinstance(p["real_name"], str) and p["real_name"].strip()
+    # country is a short code parsed off the flag class
+    assert isinstance(p["country"], str) and p["country"].strip()
+
+
+def test_parse_player_team_is_present_but_not_pinned():
+    p = parse_player(load("player_tenz.html"))
+    # a non-empty team string + numeric id — but we do NOT assert *which* team
+    assert isinstance(p["team"], str) and p["team"].strip()
+    assert p["team_id"] and p["team_id"].isdigit()
+
+
+def test_parse_player_agent_stats_structure():
+    p = parse_player(load("player_tenz.html"))
+    stats = p["agent_stats"]
+    assert isinstance(stats, list) and len(stats) > 0
+    for row in stats:
+        assert set(row.keys()) == {"agent", "stats"}
+        assert isinstance(row["agent"], str) and row["agent"].strip()
+        assert isinstance(row["stats"], dict) and len(row["stats"]) > 0
+        # every column value is a string (we don't pin the numbers)
+        assert all(isinstance(v, str) for v in row["stats"].values())
+    # the per-agent columns are consistent across rows
+    assert len({frozenset(r["stats"].keys()) for r in stats}) == 1
+
+
+def test_parse_player_match_history_structure():
+    p = parse_player(load("player_tenz.html"))
+    matches = p["matches"]
+    assert isinstance(matches, list) and len(matches) > 0
+    for m in matches:
+        assert m["id"] and m["id"].isdigit()
+        assert m["url"].startswith("https://www.vlr.gg/")
+        assert isinstance(m["opponent"], str) and m["opponent"].strip()
+        assert m["result"] in {"win", "loss", None}
+        assert isinstance(m["event"], str) and m["event"].strip()

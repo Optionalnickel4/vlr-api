@@ -52,10 +52,28 @@ TEAM_ROSTER = "div.team-roster-item"
 TEAM_ROSTER_ALIAS = "div.team-roster-item-name-alias"
 TEAM_ROSTER_REAL = "div.team-roster-item-name-real"
 
-# --- player page ---
-PLAYER_NAME = "h1.wf-title"
+# --- player detail page (/player/{id}/{slug}) ---
+# header
+PLAYER_ALIAS = "h1.wf-title"
 PLAYER_REAL = "h2.player-real-name"
-PLAYER_TEAM = "div.wf-card a.wf-module-item"
+PLAYER_COUNTRY_FLAG = "div.player-header i.flag"
+# self-id lives in the timespan filter buttons: /player/9/tenz/?timespan=30d
+PLAYER_SELF_LINK = "a.player-stats-filter-btn"
+# current team = the first team module-item on the page; name sits in a 500-weight div
+PLAYER_TEAM = 'a.wf-module-item[href^="/team/"]'
+PLAYER_TEAM_NAME = 'div[style*="font-weight: 500"]'
+# per-agent stats table (header titles drive the stat keys, agent name = img alt)
+PLAYER_STATS_TABLE = "div.wf-card.mod-table table.wf-table"
+PLAYER_STATS_HEADER = "thead th"
+PLAYER_STATS_ROW = "tbody tr"
+PLAYER_STATS_CELL = "td"
+PLAYER_AGENT_IMG = "img"
+# recent match history cards
+PLAYER_MATCH_CARD = "a.m-item"
+PLAYER_MATCH_EVENT = "div.m-item-event div.text-of"
+PLAYER_MATCH_TEAM_NAME = "span.m-item-team-name"
+PLAYER_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
+PLAYER_MATCH_RESULT = "div.m-item-result"
 
 # id is parsed from href like /310/sentinels or /player/4164/...
 HREF_ID_INDEX = 1  # path segment index for numeric id
