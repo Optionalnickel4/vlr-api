@@ -1,0 +1,82 @@
+{
+  "team_id": "2",
+  "team": "Sentinels",
+  "window_days": 90,
+  "rating_trend": [
+    {
+      "captured_at": "2026-06-08T12:30:11.257016+00:00",
+      "rating": 1753.0,
+      "rank": 7
+    },
+    {
+      "captured_at": "2026-06-08T19:29:09.309126+00:00",
+      "rating": 1753.0,
+      "rank": 7
+    },
+    {
+      "captured_at": "2026-06-09T02:48:38.631336+00:00",
+      "rating": 1753.0,
+      "rank": 7
+    },
+    {
+      "captured_at": "2026-06-09T08:38:16.942470+00:00",
+      "rating": 1753.0,
+      "rank": 7
+    },
+    {
+      "captured_at": "2026-06-09T12:47:26.725682+00:00",
+      "rating": 1753.0,
+      "rank": 7
+    }
+  ],
+  "rating_change": 0.0,
+  "results_in_window": [
+    {
+      "vlr_id": "681336",
+      "opponent": "LOUD",
+      "result": "loss",
+      "score": "1:2",
+      "event": "EWC 2026: AMER Qualifier",
+      "captured_at": "2026-06-09T02:05:25.390397+00:00"
+    },
+    {
+      "vlr_id": "681334",
+      "opponent": "KRÜ Esports",
+      "result": "win",
+      "score": "2:1",
+      "event": "EWC 2026: AMER Qualifier",
+      "captured_at": "2026-06-09T02:05:25.390410+00:00"
+    },
+    {
+      "vlr_id": "681328",
+      "opponent": "LEVIATÁN",
+      "result": "loss",
+      "score": "1:2",
+      "event": "EWC 2026: AMER Qualifier",
+      "captured_at": "2026-06-09T02:05:25.390413+00:00"
+    },
+    {
+      "vlr_id": "674841",
+      "opponent": "Evil Geniuses",
+      "result": "win",
+      "score": "2:1",
+      "event": "EWC 2026: AMER Qualifier",
+      "captured_at": "2026-06-09T02:05:25.390414+00:00"
+    },
+    {
+      "vlr_id": "674843",
+      "opponent": "ENVY",
+      "result": "win",
+      "score": "2:0",
+      "event": "EWC 2026: AMER Qualifier",
+      "captured_at": "2026-06-09T02:05:25.390416+00:00"
+    }
+  ],
+  "summary": {
+    "points": 5,
+    "wins": 3,
+    "losses": 2,
+    "current_rating": 1753.0,
+    "peak_rating": 1753.0
+  }
+}

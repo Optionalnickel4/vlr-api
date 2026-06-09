@@ -1,0 +1,138 @@
+[
+  {
+    "id": "684615",
+    "url": "https://www.vlr.gg/684615/nrg-vs-leviat-n-valorant-masters-london-2026-r2-1-0",
+    "time": "12:15 PM",
+    "eta": "19h 34m",
+    "status": "completed",
+    "teams": [
+      "NRG",
+      "LEVIATÁN"
+    ],
+    "scores": [
+      "1",
+      "2"
+    ],
+    "event": "Valorant Masters London 2026",
+    "series": "Swiss Stage–Round 2 (1-0)"
+  },
+  {
+    "id": "684614",
+    "url": "https://www.vlr.gg/684614/team-vitality-vs-fut-esports-valorant-masters-london-2026-r2-1-0",
+    "time": "9:00 AM",
+    "eta": "22h 49m",
+    "status": "completed",
+    "teams": [
+      "Team Vitality",
+      "FUT Esports"
+    ],
+    "scores": [
+      "2",
+      "1"
+    ],
+    "event": "Valorant Masters London 2026",
+    "series": "Swiss Stage–Round 2 (1-0)"
+  },
+  {
+    "id": "684612",
+    "url": "https://www.vlr.gg/684612/leviat-n-vs-global-esports-valorant-masters-london-2026-r1",
+    "time": "11:00 AM",
+    "eta": "1d 20h",
+    "status": "completed",
+    "teams": [
+      "LEVIATÁN",
+      "Global Esports"
+    ],
+    "scores": [
+      "2",
+      "1"
+    ],
+    "event": "Valorant Masters London 2026",
+    "series": "Swiss Stage–Round 1"
+  },
+  {
+    "id": "684611",
+    "url": "https://www.vlr.gg/684611/full-sense-vs-fut-esports-valorant-masters-london-2026-r1",
+    "time": "9:00 AM",
+    "eta": "1d 22h",
+    "status": "completed",
+    "teams": [
+      "FULL SENSE",
+      "FUT Esports"
+    ],
+    "scores": [
+      "0",
+      "2"
+    ],
+    "event": "Valorant Masters London 2026",
+    "series": "Swiss Stage–Round 1"
+  },
+  {
+    "id": "684610",
+    "url": "https://www.vlr.gg/684610/team-vitality-vs-dragon-ranger-gaming-valorant-masters-london-2026-r1",
+    "time": "11:30 AM",
+    "eta": "2d 20h",
+    "status": "completed",
+    "teams": [
+      "Team Vitality",
+      "Dragon Ranger Gaming"
+    ],
+    "scores": [
+      "2",
+      "0"
+    ],
+    "event": "Valorant Masters London 2026",
+    "series": "Swiss Stage–Round 1"
+  },
+  {
+    "id": "684613",
+    "url": "https://www.vlr.gg/684613/xi-lai-gaming-vs-nrg-valorant-masters-london-2026-r1",
+    "time": "9:00 AM",
+    "eta": "2d 22h",
+    "status": "completed",
+    "teams": [
+      "Xi Lai Gaming",
+      "NRG"
+    ],
+    "scores": [
+      "0",
+      "2"
+    ],
+    "event": "Valorant Masters London 2026",
+    "series": "Swiss Stage–Round 1"
+  },
+  {
+    "id": "669118",
+    "url": "https://www.vlr.gg/669118/akave-esports-gc-vs-contra-gc-game-changers-2026-latam-north-stage-2-w4",
+    "time": "8:00 PM",
+    "eta": "3d 11h",
+    "status": "completed",
+    "teams": [
+      "Akave Esports GC",
+      "Contra GC"
+    ],
+    "scores": [
+      "2",
+      "0"
+    ],
+    "event": "Game Changers 2026: LATAM North Stage 2",
+    "series": "Group Stage–Week 4"
+  },
+  {
+    "id": "669100",
+    "url": "https://www.vlr.gg/669100/kr-blaze-vs-looking-for-laburo-game-changers-2026-latam-south-stage-2-w4",
+    "time": "5:00 PM",
+    "eta": "3d 14h",
+    "status": "completed",
+    "teams": [
+      "KRÜ BLAZE",
+      "Looking For Laburo"
+    ],
+    "scores": [
+      "1",
+      "2"
+    ],
+    "event": "Game Changers 2026: LATAM South Stage 2",
+    "series": "Group Stage–Week 4"
+  }
+]

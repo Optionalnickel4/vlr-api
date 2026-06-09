@@ -1,0 +1,74 @@
+[
+  {
+    "rank": "1",
+    "team": "Team Heretics",
+    "team_id": "1001",
+    "country": "Europe",
+    "rating": "2000",
+    "record": null,
+    "earnings": null
+  },
+  {
+    "rank": "2",
+    "team": "Team Vitality",
+    "team_id": "2059",
+    "country": "Europe",
+    "rating": "1950",
+    "record": null,
+    "earnings": null
+  },
+  {
+    "rank": "3",
+    "team": "Enterprise Esports",
+    "team_id": "876",
+    "country": "Czech Republic",
+    "rating": "1937",
+    "record": null,
+    "earnings": null
+  },
+  {
+    "rank": "4",
+    "team": "REBORN",
+    "team_id": "21841",
+    "country": "Türkiye",
+    "rating": "1915",
+    "record": null,
+    "earnings": null
+  },
+  {
+    "rank": "5",
+    "team": "BBL Esports",
+    "team_id": "397",
+    "country": "Türkiye",
+    "rating": "1904",
+    "record": null,
+    "earnings": null
+  },
+  {
+    "rank": "6",
+    "team": "FNATIC",
+    "team_id": "2593",
+    "country": "Europe",
+    "rating": "1882",
+    "record": null,
+    "earnings": null
+  },
+  {
+    "rank": "7",
+    "team": "Gentle Mates",
+    "team_id": "12694",
+    "country": "Europe",
+    "rating": "1851",
+    "record": null,
+    "earnings": null
+  },
+  {
+    "rank": "8",
+    "team": "Team Liquid Academy",
+    "team_id": "17297",
+    "country": "Europe",
+    "rating": "1843",
+    "record": null,
+    "earnings": null
+  }
+]

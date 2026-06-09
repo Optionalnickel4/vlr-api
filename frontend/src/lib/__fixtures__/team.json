@@ -1,0 +1,153 @@
+{
+  "id": "2",
+  "name": "Sentinels",
+  "tag": "SEN",
+  "country": "United States",
+  "country_code": "us",
+  "logo": "https://owcdn.net/img/62875027c8e06.png",
+  "roster": [
+    {
+      "alias": "johnqt",
+      "real_name": "Mohamed Amine Ouarid",
+      "role": null,
+      "country": "ma",
+      "player_id": "1265",
+      "url": "https://www.vlr.gg/player/1265/johnqt",
+      "is_captain": true,
+      "is_staff": false
+    },
+    {
+      "alias": "Reduxx",
+      "real_name": "Yassin Aboulalazm",
+      "role": null,
+      "country": "us",
+      "player_id": "8419",
+      "url": "https://www.vlr.gg/player/8419/reduxx",
+      "is_captain": false,
+      "is_staff": false
+    },
+    {
+      "alias": "Jerrwin",
+      "real_name": "Gurjiwan Gill",
+      "role": null,
+      "country": "in",
+      "player_id": "34057",
+      "url": "https://www.vlr.gg/player/34057/jerrwin",
+      "is_captain": false,
+      "is_staff": false
+    },
+    {
+      "alias": "cortezia",
+      "real_name": "Gabriel Cortez",
+      "role": null,
+      "country": "br",
+      "player_id": "5395",
+      "url": "https://www.vlr.gg/player/5395/cortezia",
+      "is_captain": false,
+      "is_staff": false
+    },
+    {
+      "alias": "JonahP",
+      "real_name": "Jonah Pulice",
+      "role": null,
+      "country": "ca",
+      "player_id": "4581",
+      "url": "https://www.vlr.gg/player/4581/jonahp",
+      "is_captain": false,
+      "is_staff": false
+    },
+    {
+      "alias": "Victor",
+      "real_name": "Victor Wong",
+      "role": "stand-in",
+      "country": "us",
+      "player_id": "261",
+      "url": "https://www.vlr.gg/player/261/victor",
+      "is_captain": false,
+      "is_staff": false
+    },
+    {
+      "alias": "Zyto",
+      "real_name": "Bryan Ybanez",
+      "role": "manager",
+      "country": "us",
+      "player_id": "47462",
+      "url": "https://www.vlr.gg/player/47462/zyto",
+      "is_captain": false,
+      "is_staff": true
+    },
+    {
+      "alias": "Ewok",
+      "real_name": "Marthinus Jacobus Van Der Walt",
+      "role": "head coach",
+      "country": "za",
+      "player_id": "8347",
+      "url": "https://www.vlr.gg/player/8347/ewok",
+      "is_captain": false,
+      "is_staff": true
+    },
+    {
+      "alias": "GUNTER",
+      "real_name": "Luke Clives",
+      "role": "assistant coach",
+      "country": "gb",
+      "player_id": "28113",
+      "url": "https://www.vlr.gg/player/28113/gunter",
+      "is_captain": false,
+      "is_staff": true
+    }
+  ],
+  "results": [
+    {
+      "id": "681336",
+      "url": "https://www.vlr.gg/681336/loud-vs-sentinels-esports-world-cup-2026-americas-qualifier-stage-2-lr2",
+      "opponent": "LOUD",
+      "opponent_id": null,
+      "result": "loss",
+      "score": "1:2",
+      "event": "EWC 2026: AMER Qualifier",
+      "date": "2026/05/307:00 pm"
+    },
+    {
+      "id": "681334",
+      "url": "https://www.vlr.gg/681334/sentinels-vs-kr-esports-esports-world-cup-2026-americas-qualifier-stage-2-lr1",
+      "opponent": "KRÜ Esports",
+      "opponent_id": null,
+      "result": "win",
+      "score": "2:1",
+      "event": "EWC 2026: AMER Qualifier",
+      "date": "2026/05/287:00 pm"
+    },
+    {
+      "id": "681328",
+      "url": "https://www.vlr.gg/681328/leviat-n-vs-sentinels-esports-world-cup-2026-americas-qualifier-stage-2-ubqf",
+      "opponent": "LEVIATÁN",
+      "opponent_id": null,
+      "result": "loss",
+      "score": "1:2",
+      "event": "EWC 2026: AMER Qualifier",
+      "date": "2026/05/277:00 pm"
+    },
+    {
+      "id": "674841",
+      "url": "https://www.vlr.gg/674841/evil-geniuses-vs-sentinels-esports-world-cup-2026-americas-qualifier-stage-1-gf",
+      "opponent": "Evil Geniuses",
+      "opponent_id": null,
+      "result": "win",
+      "score": "2:1",
+      "event": "EWC 2026: AMER Qualifier",
+      "date": "2026/05/207:00 pm"
+    },
+    {
+      "id": "674843",
+      "url": "https://www.vlr.gg/674843/envy-vs-sentinels-esports-world-cup-2026-americas-qualifier-stage-1-lbf",
+      "opponent": "ENVY",
+      "opponent_id": null,
+      "result": "win",
+      "score": "2:0",
+      "event": "EWC 2026: AMER Qualifier",
+      "date": "2026/05/197:00 pm"
+    }
+  ],
+  "upcoming": []
+}

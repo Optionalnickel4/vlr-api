@@ -1,0 +1,368 @@
+{
+  "id": "9",
+  "alias": "TenZ",
+  "real_name": "Tyson Ngo",
+  "country": "ca",
+  "team": "Cubert Academy",
+  "team_id": "16899",
+  "team_url": "https://www.vlr.gg/team/16899/cubert-academy",
+  "agent_stats": [
+    {
+      "agent": "jett",
+      "stats": {
+        "Use": "(206) 46%",
+        "RND": "4306",
+        "Rating": "1.17",
+        "ACS": "263.8",
+        "K:D": "1.32",
+        "ADR": "156.4",
+        "KAST": "72%",
+        "KPR": "0.92",
+        "APR": "0.20",
+        "FKPR": "0.21",
+        "FDPR": "0.15",
+        "K": "3972",
+        "D": "3009",
+        "A": "866",
+        "FK": "893",
+        "FD": "539"
+      }
+    },
+    {
+      "agent": "omen",
+      "stats": {
+        "Use": "(68) 15%",
+        "RND": "1440",
+        "Rating": "1.12",
+        "ACS": "214.4",
+        "K:D": "1.14",
+        "ADR": "139.1",
+        "KAST": "76%",
+        "KPR": "0.76",
+        "APR": "0.44",
+        "FKPR": "0.10",
+        "FDPR": "0.09",
+        "K": "1101",
+        "D": "966",
+        "A": "632",
+        "FK": "146",
+        "FD": "126"
+      }
+    },
+    {
+      "agent": "reyna",
+      "stats": {
+        "Use": "(64) 14%",
+        "RND": "1286",
+        "Rating": "1.28",
+        "ACS": "284.1",
+        "K:D": "1.47",
+        "ADR": "171.9",
+        "KAST": "77%",
+        "KPR": "0.99",
+        "APR": "0.29",
+        "FKPR": "0.19",
+        "FDPR": "0.12",
+        "K": "1271",
+        "D": "864",
+        "A": "371",
+        "FK": "244",
+        "FD": "154"
+      }
+    },
+    {
+      "agent": "raze",
+      "stats": {
+        "Use": "(32) 7%",
+        "RND": "694",
+        "Rating": "1.03",
+        "ACS": "273.4",
+        "K:D": "1.15",
+        "ADR": "168.9",
+        "KAST": "69%",
+        "KPR": "0.89",
+        "APR": "0.26",
+        "FKPR": "0.18",
+        "FDPR": "0.16",
+        "K": "617",
+        "D": "537",
+        "A": "181",
+        "FK": "123",
+        "FD": "85"
+      }
+    },
+    {
+      "agent": "kayo",
+      "stats": {
+        "Use": "(27) 6%",
+        "RND": "575",
+        "Rating": "1.08",
+        "ACS": "218.3",
+        "K:D": "0.98",
+        "ADR": "139.6",
+        "KAST": "75%",
+        "KPR": "0.73",
+        "APR": "0.63",
+        "FKPR": "0.09",
+        "FDPR": "0.09",
+        "K": "421",
+        "D": "429",
+        "A": "361",
+        "FK": "49",
+        "FD": "51"
+      }
+    },
+    {
+      "agent": "yoru",
+      "stats": {
+        "Use": "(14) 3%",
+        "RND": "289",
+        "Rating": "0.94",
+        "ACS": "211.6",
+        "K:D": "0.94",
+        "ADR": "139.1",
+        "KAST": "68%",
+        "KPR": "0.73",
+        "APR": "0.27",
+        "FKPR": "0.17",
+        "FDPR": "0.15",
+        "K": "210",
+        "D": "224",
+        "A": "77",
+        "FK": "48",
+        "FD": "42"
+      }
+    },
+    {
+      "agent": "chamber",
+      "stats": {
+        "Use": "(8) 2%",
+        "RND": "208",
+        "Rating": "1.10",
+        "ACS": "229.6",
+        "K:D": "1.20",
+        "ADR": "147.7",
+        "KAST": "70%",
+        "KPR": "0.84",
+        "APR": "0.11",
+        "FKPR": "0.14",
+        "FDPR": "0.11",
+        "K": "174",
+        "D": "145",
+        "A": "22",
+        "FK": "30",
+        "FD": "23"
+      }
+    },
+    {
+      "agent": "gekko",
+      "stats": {
+        "Use": "(7) 2%",
+        "RND": "156",
+        "Rating": "0.97",
+        "ACS": "179.0",
+        "K:D": "0.92",
+        "ADR": "115.9",
+        "KAST": "71%",
+        "KPR": "0.63",
+        "APR": "0.35",
+        "FKPR": "0.12",
+        "FDPR": "0.08",
+        "K": "99",
+        "D": "108",
+        "A": "55",
+        "FK": "19",
+        "FD": "13"
+      }
+    },
+    {
+      "agent": "breach",
+      "stats": {
+        "Use": "(6) 1%",
+        "RND": "144",
+        "Rating": "1.21",
+        "ACS": "213.2",
+        "K:D": "1.19",
+        "ADR": "142.7",
+        "KAST": "74%",
+        "KPR": "0.78",
+        "APR": "0.42",
+        "FKPR": "0.03",
+        "FDPR": "0.02",
+        "K": "113",
+        "D": "95",
+        "A": "61",
+        "FK": "4",
+        "FD": "3"
+      }
+    },
+    {
+      "agent": "sage",
+      "stats": {
+        "Use": "(4) 1%",
+        "RND": "90",
+        "Rating": "0.95",
+        "ACS": "261.3",
+        "K:D": "1.25",
+        "ADR": "128.7",
+        "KAST": "63%",
+        "KPR": "0.93",
+        "APR": "0.22",
+        "FKPR": "0.17",
+        "FDPR": "0.09",
+        "K": "84",
+        "D": "67",
+        "A": "20",
+        "FK": "15",
+        "FD": "4"
+      }
+    },
+    {
+      "agent": "neon",
+      "stats": {
+        "Use": "(3) 1%",
+        "RND": "68",
+        "Rating": "0.87",
+        "ACS": "208.0",
+        "K:D": "0.84",
+        "ADR": "131.6",
+        "KAST": "71%",
+        "KPR": "0.68",
+        "APR": "0.28",
+        "FKPR": "0.15",
+        "FDPR": "0.15",
+        "K": "46",
+        "D": "55",
+        "A": "19",
+        "FK": "10",
+        "FD": "10"
+      }
+    },
+    {
+      "agent": "viper",
+      "stats": {
+        "Use": "(2) 0%",
+        "RND": "42",
+        "Rating": "",
+        "ACS": "226.5",
+        "K:D": "0.91",
+        "ADR": "",
+        "KAST": "",
+        "KPR": "0.76",
+        "APR": "0.14",
+        "FKPR": "0.05",
+        "FDPR": "",
+        "K": "32",
+        "D": "35",
+        "A": "6",
+        "FK": "2",
+        "FD": "0"
+      }
+    },
+    {
+      "agent": "phoenix",
+      "stats": {
+        "Use": "(1) 0%",
+        "RND": "24",
+        "Rating": "",
+        "ACS": "255.0",
+        "K:D": "1.71",
+        "ADR": "149.8",
+        "KAST": "",
+        "KPR": "1.00",
+        "APR": "0.08",
+        "FKPR": "0.13",
+        "FDPR": "0.13",
+        "K": "24",
+        "D": "14",
+        "A": "2",
+        "FK": "3",
+        "FD": "3"
+      }
+    },
+    {
+      "agent": "iso",
+      "stats": {
+        "Use": "(1) 0%",
+        "RND": "24",
+        "Rating": "1.21",
+        "ACS": "281.0",
+        "K:D": "1.16",
+        "ADR": "178.5",
+        "KAST": "67%",
+        "KPR": "0.92",
+        "APR": "0.21",
+        "FKPR": "0.13",
+        "FDPR": "0.21",
+        "K": "22",
+        "D": "19",
+        "A": "5",
+        "FK": "3",
+        "FD": "5"
+      }
+    },
+    {
+      "agent": "harbor",
+      "stats": {
+        "Use": "(1) 0%",
+        "RND": "18",
+        "Rating": "1.07",
+        "ACS": "227.0",
+        "K:D": "1.07",
+        "ADR": "171.9",
+        "KAST": "72%",
+        "KPR": "0.83",
+        "APR": "0.33",
+        "FKPR": "0.00",
+        "FDPR": "0.00",
+        "K": "15",
+        "D": "14",
+        "A": "6",
+        "FK": "0",
+        "FD": "0"
+      }
+    }
+  ],
+  "matches": [
+    {
+      "id": "586655",
+      "url": "https://www.vlr.gg/586655/team-tenz-vs-team-ludwig-red-bull-home-ground-2025-main-event",
+      "opponent": "Team Ludwig",
+      "result": "win",
+      "score": "1:0",
+      "event": "RBHG 2025"
+    },
+    {
+      "id": "530514",
+      "url": "https://www.vlr.gg/530514/team-world-vs-glory-once-again-vct-2025-pacific-stage-2-main-event",
+      "opponent": "Glory Once Again",
+      "result": "win",
+      "score": "1:0",
+      "event": "VCT 25: PAC Stage 2"
+    },
+    {
+      "id": "515813",
+      "url": "https://www.vlr.gg/515813/t1-academy-vs-team-all-star-t1-home-ground-2025-main-event",
+      "opponent": "T1 Academy",
+      "result": "loss",
+      "score": "0:1",
+      "event": "T1 Home Ground 25"
+    },
+    {
+      "id": "515812",
+      "url": "https://www.vlr.gg/515812/team-korea-vs-team-global-t1-home-ground-2025-main-event",
+      "opponent": "Team Korea",
+      "result": "loss",
+      "score": "0:1",
+      "event": "T1 Home Ground 25"
+    },
+    {
+      "id": "507067",
+      "url": "https://www.vlr.gg/507067/team-tarik-vs-team-toast-valorant-masters-toronto-2025-showmatch",
+      "opponent": "Team tarik",
+      "result": "win",
+      "score": "1:0",
+      "event": "Masters Toronto 2025"
+    }
+  ]
+}
