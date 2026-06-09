@@ -36,14 +36,14 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 `frontend/CLAUDE.md`. Built in vertical slices; **stop & review at each boundary.**
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 2 / 7
+- **Slices done:** 3 / 7
 - **Frontend tests passing:** 22 (Vitest, transforms vs committed real fixtures)
 
 ## Slices
 
 - [x] **Slice 1 — scaffold + data layer + fixtures**
-- [x] **Slice 2 — broadcast primitives + design tokens** (this slice)
-- [ ] **Slice 3 — results + upcoming + live**
+- [x] **Slice 2 — broadcast primitives + design tokens**
+- [x] **Slice 3 — results + upcoming + live** (this slice)
 - [ ] **Slice 4 — rankings + news**
 - [ ] **Slice 5 — player detail + team trends** (team detail guarded for the 500)
 - [ ] **Slice 6 — match-detail page as stub** (components real, data stubbed; Phase 7)
@@ -72,3 +72,12 @@ harmonized with the palette already shipped on the API status page
 - [x] Primitives in `src/components/`: `Panel` + `SectionHeading`, `Badge` (tones), `LiveBadge` (red pulse), `ScoreDisplay` (winner=green, loser=dim, null=dash, undecided=ink), `TableShell` (uppercase dim heads, right-aligned mono stat cells); `src/lib/cn.ts` helper
 - [x] `app/page.tsx` — primitives preview (illustrative demo values, NOT real data; replaced by the real match center in slice 3)
 - [x] Verified: `tsc` clean · `next build` clean (fonts + tokens resolve) · 22 Vitest tests still green · server smoke (HTTP 200, broadcast content + Saira present)
+
+## Slice 3 — results + upcoming + live (match center)
+
+- [x] Route handlers `src/app/api/matches/{results,upcoming,live}/route.ts` — thin, `force-dynamic`, return the data-layer `{data,stale,error}` envelope; server-side fetch only
+- [x] `MatchCard` — broadcast scorebug row (TEAM · score:score · TEAM, winner green on finals, LIVE/countdown/final marker, event+series, links out to vlr.gg source)
+- [x] `MatchSection` — titled module (Panel + heading + count) with graceful empty/stale states
+- [x] `LiveMatches` — client island seeded by SSR, polls `/api/matches/live` every 30s (upstream live TTL), keeps last good data on a failed poll
+- [x] `app/page.tsx` — match center: Live (polling) + Upcoming + Results, all fetched server-side; replaces the primitives preview
+- [x] Verified against the now-healthy vlr-api: `tsc` clean · `next build` clean · 22 Vitest green · smoke — routes return envelopes (results n=50, upcoming n=50, live n=0 empty/valid), SSR page renders real data incl. accented "LEVIATÁN" (clean post-UTF8-fix)
