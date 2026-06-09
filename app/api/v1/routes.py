@@ -7,6 +7,7 @@ from app.core.cache import cache_get
 from app.core.db import SessionLocal
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
 from app.services import refresh as R
+from app.services import trends as T
 
 router = APIRouter()
 
@@ -67,6 +68,12 @@ async def team(team_id: str):
     if data is None:
         data = await R.refresh_team(team_id)
     return data
+
+
+# ---- trends (analytics over banked history; reads ranking_snapshots + match_results) ----
+@router.get("/trends/team/{team_id}")
+async def trends_team(team_id: str, days: int = Query(90, ge=1, le=365)):
+    return await T.team_trend(team_id, days)
 
 
 # ---- history (from Postgres) ----
