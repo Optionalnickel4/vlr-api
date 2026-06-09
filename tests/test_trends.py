@@ -139,13 +139,60 @@ def test_build_results_matches_by_name_and_counts_win_loss():
         {"vlr_id": "3", "team_a": "G2", "team_b": "C9",  # not our team -> excluded
          "score_a": "2", "score_b": "0", "event": "VCT", "captured_at": at(3)},
     ]
-    out = build_results(rows, "Sentinels")
+    out = build_results(rows, "2", "Sentinels")  # rows carry no ids -> name fallback
     assert [m["vlr_id"] for m in out] == ["1", "2"]
     assert out[0] == {
         "vlr_id": "1", "opponent": "NRG", "result": "win",
         "score": "2:0", "event": "VCT", "captured_at": at(1),
     }
     assert out[1]["opponent"] == "LOUD" and out[1]["result"] == "loss"
+
+
+# ---- id-preferred join (phase 5) --------------------------------------------
+def test_build_results_prefers_id_over_name():
+    # the name on the row is wrong ("SEN", a renamed/tag form), but team_a_id matches
+    # the looked-up team_id — the id join selects it and beats the fuzzy name match.
+    rows = [
+        {"vlr_id": "681334", "team_a": "SEN", "team_b": "LOUD",
+         "team_a_id": "2", "team_b_id": "13",
+         "score_a": "2", "score_b": "0", "event": "EWC", "captured_at": at(1)},
+    ]
+    out = build_results(rows, "2", "Sentinels")
+    assert len(out) == 1
+    assert out[0]["opponent"] == "LOUD" and out[0]["result"] == "win"
+    assert out[0]["score"] == "2:0"
+
+
+def test_build_results_id_match_on_side_b():
+    rows = [
+        {"vlr_id": "681336", "team_a": "LOUD", "team_b": "Sentinels Esports",
+         "team_a_id": "13", "team_b_id": "2",
+         "score_a": "2", "score_b": "1", "event": "EWC", "captured_at": at(2)},
+    ]
+    out = build_results(rows, "2", "Sentinels")
+    assert out[0]["opponent"] == "LOUD" and out[0]["result"] == "loss"
+
+
+def test_build_results_falls_back_to_name_when_ids_null():
+    # an older /matches/results row with no ids must still match by name (fallback).
+    rows = [
+        {"vlr_id": "9", "team_a": "Sentinels", "team_b": "NRG",
+         "team_a_id": None, "team_b_id": None,
+         "score_a": "0", "score_b": "2", "event": "VCT", "captured_at": at(1)},
+    ]
+    out = build_results(rows, "2", "Sentinels")
+    assert len(out) == 1
+    assert out[0]["opponent"] == "NRG" and out[0]["result"] == "loss"
+
+
+def test_build_results_id_row_for_other_team_excluded_despite_name():
+    # ids present but neither is ours -> excluded, even though a name happens to match.
+    rows = [
+        {"vlr_id": "1", "team_a": "Sentinels", "team_b": "C9",
+         "team_a_id": "99", "team_b_id": "100",
+         "score_a": "2", "score_b": "0", "event": "x", "captured_at": at(1)},
+    ]
+    assert build_results(rows, "2", "Sentinels") == []
 
 
 def test_full_response_summary_counts():

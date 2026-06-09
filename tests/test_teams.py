@@ -68,6 +68,9 @@ def test_parse_team_results_structure():
         assert m["id"] and m["id"].isdigit()
         assert m["url"].startswith("https://www.vlr.gg/")
         assert isinstance(m["opponent"], str) and m["opponent"].strip()
+        # opponent_id comes from the opponent href when the card exposes one; the
+        # card is itself an <a> so a nested team link is often absent -> null is ok.
+        assert m["opponent_id"] is None or m["opponent_id"].isdigit()
         # a completed result is always win or loss (the split guarantees it)
         assert m["result"] in {"win", "loss"}
         assert isinstance(m["event"], str) and m["event"].strip()
