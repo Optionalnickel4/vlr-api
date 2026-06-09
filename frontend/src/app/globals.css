@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ───────────────────────────────────────────────────────────────────────────
+   Broadcast design tokens — LOCKED aesthetic, harmonized with the palette
+   already shipped on the vlr-api status page (app/api/status_html.py) so the
+   dashboard and the API's own status view read as one product.
+
+   Dark near-black ground · Saira Condensed uppercase wide-tracked display ·
+   green = win/up, red = LIVE/loss/down, dim gray = idle, teal = restrained
+   accent (color is meaning, never decoration). NEVER neon/cyberpunk.
+   ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* ground + surfaces */
+  --color-bg: #0a0d12;
+  --color-panel: #11161f;
+  --color-panel-2: #0d1219;
+  --color-line: #1d2735;
+
+  /* ink ramp */
+  --color-ink: #e8eef6;
+  --color-mut: #7c8aa0;
+  --color-dim: #566273;
+
+  /* meaning */
+  --color-up: #22d37a; /* win / winner / fresh */
+  --color-down: #ff4d5e; /* LIVE / loss / stale */
+  --color-warn: #ffb02e;
+  --color-accent: #2de1c2; /* links / brand spark */
+
+  /* type — next/font supplies the variables, with broadcast-appropriate fallbacks */
+  --font-display: var(--font-saira-condensed), "Oswald", "Arial Narrow", system-ui,
+    sans-serif;
+  --font-body: var(--font-saira), system-ui, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* shared tracking step for uppercase broadcast labels */
+  --tracking-broadcast: 0.14em;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* atmosphere: a faint cool glow off the top-right + a vertical sink, not a flat
+   fill — depth without distracting from the data. */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #13202b 0, transparent 60%),
+    linear-gradient(#0a0d12, #080a0e);
+  background-attachment: fixed;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+/* the pulsing LIVE indicator — CSS-only so primitives stay server components */
+@keyframes vlr-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 94, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(255, 77, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 94, 0);
+  }
 }

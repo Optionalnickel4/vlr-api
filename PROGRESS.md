@@ -36,13 +36,13 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 `frontend/CLAUDE.md`. Built in vertical slices; **stop & review at each boundary.**
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 1 / 7
+- **Slices done:** 2 / 7
 - **Frontend tests passing:** 22 (Vitest, transforms vs committed real fixtures)
 
 ## Slices
 
-- [x] **Slice 1 — scaffold + data layer + fixtures** (this slice)
-- [ ] **Slice 2 — broadcast primitives + design tokens**
+- [x] **Slice 1 — scaffold + data layer + fixtures**
+- [x] **Slice 2 — broadcast primitives + design tokens** (this slice)
 - [ ] **Slice 3 — results + upcoming + live**
 - [ ] **Slice 4 — rankings + news**
 - [ ] **Slice 5 — player detail + team trends** (team detail guarded for the 500)
@@ -58,5 +58,17 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 - [x] `src/types/vlr.ts` — domain types + `ApiResponse<T>`
 - [x] `src/lib/vlr.ts` — `fetchUpstream` boundary, `parseNumeric` (null-not-NaN), transforms, graceful-empty loaders
 - [x] `src/lib/vlr.test.ts` — 22 Vitest tests asserting invariants (envelope, indexing, verbatim agent_stats keys, news split + fallback, numeric coercion, graceful-empty); no network
-- [x] **Banked:** `frontend/OPEN-ITEM-team-detail-500.md` — `/team/{id}` 500 on unknown ids is an upstream-404 → `raise_for_status` API bug; frontend already guards it
-- **Verified deployment notes:** `?region=all` IS accepted (200, 130 teams); `/team/2` works (200) — it's *unknown* ids (`1`/`120`/`1001`) that 500
+- [x] **Banked:** `frontend/OPEN-ITEM-team-detail-500.md` — `/team/{id}` 500 is TWO bugs: (A) nonexistent id → vlr 404 → unhandled `raise_for_status`; (B) real team w/ non-ASCII roster → vlr 200, scrape OK, but `team_snapshots` INSERT 500s because the Postgres cluster is **SQL_ASCII**-encoded (confirmed). Frontend guards both.
+- **Verified deployment notes:** `?region=all` IS accepted (200, 130 teams); `/team/2` works (200)
+
+## Slice 2 — broadcast primitives + design tokens
+
+Read the `frontend-design` skill first. Aesthetic is LOCKED broadcast style; tokens
+harmonized with the palette already shipped on the API status page
+(`app/api/status_html.py`) so dashboard + status read as one product.
+
+- [x] `globals.css` — Tailwind v4 `@theme` tokens: ground/surfaces (`bg`/`panel`/`panel-2`/`line`), ink ramp (`ink`/`mut`/`dim`), meaning (`up`=green, `down`=red LIVE/loss, `warn`, `accent`=teal); atmospheric gradient ground; CSS-only `vlr-pulse` keyframes
+- [x] `layout.tsx` — fonts via `next/font/google`: Saira Condensed (display), Saira (body), JetBrains Mono (numerics); metadata
+- [x] Primitives in `src/components/`: `Panel` + `SectionHeading`, `Badge` (tones), `LiveBadge` (red pulse), `ScoreDisplay` (winner=green, loser=dim, null=dash, undecided=ink), `TableShell` (uppercase dim heads, right-aligned mono stat cells); `src/lib/cn.ts` helper
+- [x] `app/page.tsx` — primitives preview (illustrative demo values, NOT real data; replaced by the real match center in slice 3)
+- [x] Verified: `tsc` clean · `next build` clean (fonts + tokens resolve) · 22 Vitest tests still green · server smoke (HTTP 200, broadcast content + Saira present)
