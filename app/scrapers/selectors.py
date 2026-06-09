@@ -72,6 +72,9 @@ TEAM_MATCH_GAME_ROW_CLASS = "m-item-games-item"
 # series/stage text that trails it in the same container (label-bleed guard).
 TEAM_MATCH_EVENT = "div.m-item-event div.text-of"
 TEAM_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
+# opponent team link, when the card exposes one (the card itself is an <a> to the
+# match, so a nested team <a> is often absent — opponent_id is null in that case).
+TEAM_MATCH_OPPONENT_LINK = 'div.m-item-team.mod-right a[href*="/team/"]'
 TEAM_MATCH_RESULT = "div.m-item-result"
 TEAM_MATCH_DATE = "div.m-item-date"
 

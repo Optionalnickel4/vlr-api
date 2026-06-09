@@ -72,10 +72,13 @@ def _parse_match(card: Node) -> dict[str, Any]:
     rcls = (result_node.attributes.get("class", "") if result_node else "") or ""
     result = "win" if "mod-win" in rcls else "loss" if "mod-loss" in rcls else None
     opp = card.css_first(S.TEAM_MATCH_OPPONENT)
+    opp_link = card.css_first(S.TEAM_MATCH_OPPONENT_LINK)
+    opp_href = (opp_link.attributes.get("href", "") if opp_link else "") or ""
     return {
         "id": id_from_href(href),
         "url": _abs(href),
         "opponent": clean_spaces(text_of(opp)) or None,
+        "opponent_id": id_from_href(opp_href),
         "result": result,
         "score": (clean_spaces(text_of(result_node)) or None) if result_node else None,
         "event": clean_spaces(text_of(card.css_first(S.TEAM_MATCH_EVENT))) or None,
