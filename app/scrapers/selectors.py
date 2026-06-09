@@ -45,12 +45,35 @@ NEWS_TITLE = 'div.news-item-title, div[style*="font-weight: 700"]'
 NEWS_DESC = 'div.news-item-desc, div[style*="font-size: 13px"]'
 NEWS_DATE = "div.news-item-meta, div.ge-text-light"
 
-# --- team page ---
+# --- team detail page (/team/{id}/{slug}) ---
+# header
 TEAM_NAME = "div.team-header-name h1, h1.wf-title"
-TEAM_TAG = "div.team-header-name h2, h2.wf-title.team-header-tag"
-TEAM_ROSTER = "div.team-roster-item"
+TEAM_TAG = "div.team-header-name h2.team-header-tag, h2.wf-title.team-header-tag"
+TEAM_LOGO = "div.team-header-logo img"
+TEAM_COUNTRY = "div.team-header-country"  # text node; the flag <i> is empty so no bleed
+TEAM_COUNTRY_FLAG = "div.team-header-country i.flag"
+# self-id lives in the active nav tab: /team/2/sentinels/
+TEAM_SELF_LINK = "a.wf-nav-item.mod-active"
+# roster: items are grouped under "players" / "staff" wf-module-labels inside one
+# wf-card; document-order traversal of that card assigns each item to its section.
+TEAM_ROSTER_ITEM = "div.team-roster-item"
+TEAM_ROSTER_SECTION = "div.wf-module-label"  # "players" | "staff" -> drives is_staff
+TEAM_ROSTER_LINK = 'a[href^="/player/"]'
 TEAM_ROSTER_ALIAS = "div.team-roster-item-name-alias"
 TEAM_ROSTER_REAL = "div.team-roster-item-name-real"
+TEAM_ROSTER_ROLE = "div.team-roster-item-name-role"  # absent for active players
+TEAM_ROSTER_FLAG = "div.team-roster-item-name-alias i.flag"
+TEAM_ROSTER_CAPTAIN = "i.fa-star"  # team-captain marker inside the alias node
+# match cards: recent results + upcoming share a.m-item; per-map expandable sub-rows
+# carry the extra `m-item-games-item` class and are filtered out by the parser.
+TEAM_MATCH_CARD = "a.m-item"
+TEAM_MATCH_GAME_ROW_CLASS = "m-item-games-item"
+# event name sits in an inner div.text-of; the descendant combinator skips the
+# series/stage text that trails it in the same container (label-bleed guard).
+TEAM_MATCH_EVENT = "div.m-item-event div.text-of"
+TEAM_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
+TEAM_MATCH_RESULT = "div.m-item-result"
+TEAM_MATCH_DATE = "div.m-item-date"
 
 # --- player detail page (/player/{id}/{slug}) ---
 # header

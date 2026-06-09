@@ -23,3 +23,13 @@ def id_from_href(href: str) -> Optional[str]:
 
 def clean_spaces(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
+
+
+def country_from_flag(flag: Optional[Node]) -> Optional[str]:
+    """vlr flags carry the ISO code as a `mod-xx` class, e.g. `flag mod-ca`."""
+    if flag is None:
+        return None
+    for cls in (flag.attributes.get("class", "") or "").split():
+        if cls.startswith("mod-"):
+            return cls[len("mod-") :] or None
+    return None

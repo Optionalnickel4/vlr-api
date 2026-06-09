@@ -11,9 +11,12 @@ from app.scrapers.events import parse_events, parse_news
 from app.scrapers.matches import parse_match_list, split_live_upcoming
 from app.scrapers.players import parse_player
 from app.scrapers.rankings import parse_rankings
+from app.scrapers.teams import parse_team
 
 # real player used to probe the detail-page selectors (TenZ has deep history)
 PROBE_PLAYER_ID = "9"
+# real team used to probe the team-page selectors (Sentinels = id 2)
+PROBE_TEAM_ID = "2"
 
 
 async def main() -> None:
@@ -62,6 +65,16 @@ async def main() -> None:
     if pl["matches"]:
         print(f"  match sample: {pl['matches'][0]}")
 
+    print(f"== /team/{PROBE_TEAM_ID} ==")
+    html = await client.get_html(f"/team/{PROBE_TEAM_ID}")
+    tm = parse_team(html)
+    print(f"  name: {tm['name']} [{tm['tag']}]  id: {tm['id']}  country: {tm['country']} ({tm['country_code']})")
+    print(f"  roster: {len(tm['roster'])}  results: {len(tm['results'])}  upcoming: {len(tm['upcoming'])}")
+    if tm["roster"]:
+        print(f"  roster sample: {tm['roster'][0]}")
+    if tm["results"]:
+        print(f"  result sample: {tm['results'][0]}")
+
     await client.aclose()
 
     bad = []
@@ -72,6 +85,10 @@ async def main() -> None:
     # player page: alias + at least one agent row and one match are the invariants
     if not (pl["alias"] and pl["agent_stats"] and pl["matches"]):
         bad.append("player")
+    # team page: name + a non-empty roster + at least one result are the invariants
+    # (upcoming may legitimately be empty out of season, so it is not checked here)
+    if not (tm["name"] and tm["roster"] and tm["results"]):
+        bad.append("team")
     print()
     if bad:
         print(f"NEEDS FIXING in selectors.py: {', '.join(bad)}")
