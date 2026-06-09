@@ -20,6 +20,10 @@ async def get_session() -> AsyncIterator[AsyncSession]:
 
 async def init_db() -> None:
     from app import models  # noqa: F401 ensure models imported
+    from app.core.migrations import run_migrations
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # additive, idempotent: brings pre-existing tables up to the current shape
+        # (new nullable id columns) without touching banked rows.
+        await run_migrations(conn)

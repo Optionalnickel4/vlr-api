@@ -21,6 +21,10 @@ class MatchResult(Base):
     vlr_id: Mapped[str] = mapped_column(String(32), unique=True, index=True)
     team_a: Mapped[str | None] = mapped_column(String(128))
     team_b: Mapped[str | None] = mapped_column(String(128))
+    # vlr team ids per side, when known (team-page backfill always sets the page
+    # team's; opponent + the /matches/results feed may be null on older rows).
+    team_a_id: Mapped[str | None] = mapped_column(String(32), index=True)
+    team_b_id: Mapped[str | None] = mapped_column(String(32), index=True)
     score_a: Mapped[str | None] = mapped_column(String(16))
     score_b: Mapped[str | None] = mapped_column(String(16))
     event: Mapped[str | None] = mapped_column(String(256))
