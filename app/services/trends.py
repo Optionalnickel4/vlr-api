@@ -15,7 +15,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import and_, func, or_, select
 
 from app.core.db import SessionLocal
 from app.models import MatchResult, RankingSnapshot
@@ -109,32 +109,68 @@ def derive_result(
     return None
 
 
-def build_results(rows: list[dict[str, Any]], team_name: str | None) -> list[dict[str, Any]]:
-    """Pick results where team_name was a participant, shaped for the response.
+def _team_side(
+    row: dict[str, Any], team_id: str | None, team_name: str | None
+) -> str | None:
+    """Which side ('a'/'b') the team is on in this row, or None if it isn't.
 
-    Name-matching is fuzzy by nature (renames, casing) — that's a known limit we
-    surface, not solve. Scores are coerced defensively; an unparseable score yields
-    result=null rather than crashing.
+    IDs win: if the row carries ANY team id, it's authoritative — match strictly on
+    team_id and never fall through to the fuzzy name path (so a rename can't cause a
+    false match). Only rows with BOTH ids null fall back to the existing name match.
     """
+    tid = str(team_id) if team_id is not None else None
+    a_id, b_id = row.get("team_a_id"), row.get("team_b_id")
+    if a_id is not None or b_id is not None:
+        if tid is not None and a_id == tid:
+            return "a"
+        if tid is not None and b_id == tid:
+            return "b"
+        return None
     name = (team_name or "").strip().casefold()
     if not name:
-        return []
+        return None
+    if name == (row.get("team_a") or "").strip().casefold():
+        return "a"
+    if name == (row.get("team_b") or "").strip().casefold():
+        return "b"
+    return None
+
+
+def _result_from_scores(my: Any, opp: Any) -> str | None:
+    """win/loss from the team's own score vs the opponent's. None if either score
+    doesn't parse or they're equal — defensive, never raises (phase-4 contract)."""
+    m, o = coerce_int(my), coerce_int(opp)
+    if m is None or o is None or m == o:
+        return None
+    return "win" if m > o else "loss"
+
+
+def build_results(
+    rows: list[dict[str, Any]], team_id: str | None, team_name: str | None
+) -> list[dict[str, Any]]:
+    """Pick results where the team was a participant, shaped for the response.
+
+    Matching prefers team ids (authoritative) and falls back to fuzzy name match
+    only for older rows that have no ids — see _team_side. Scores are coerced
+    defensively; an unparseable score yields result=null rather than crashing.
+    """
     out: list[dict[str, Any]] = []
     for r in rows:
-        a, b = r.get("team_a"), r.get("team_b")
-        if name == (a or "").strip().casefold():
-            opponent = b
-        elif name == (b or "").strip().casefold():
-            opponent = a
-        else:
+        side = _team_side(r, team_id, team_name)
+        if side is None:
             continue
+        a, b = r.get("team_a"), r.get("team_b")
         sa, sb = r.get("score_a"), r.get("score_b")
+        if side == "a":
+            opponent, my, opp = b, sa, sb
+        else:
+            opponent, my, opp = a, sb, sa
         score = f"{sa}:{sb}" if sa is not None and sb is not None else None
         out.append(
             {
                 "vlr_id": r.get("vlr_id"),
                 "opponent": opponent,
-                "result": derive_result(team_name, a, b, sa, sb),
+                "result": _result_from_scores(my, opp),
                 "score": score,
                 "event": r.get("event"),
                 "captured_at": r.get("captured_at"),
@@ -157,7 +193,7 @@ def build_response(
     """
     trend = build_rating_trend(snapshot_rows)
     team_name = latest_team_name(snapshot_rows)
-    results = build_results(result_rows, team_name)
+    results = build_results(result_rows, team_id, team_name)
     ratings = [p["rating"] for p in trend]
 
     resp: dict[str, Any] = {
@@ -175,10 +211,10 @@ def build_response(
             "peak_rating": max(ratings) if ratings else None,
         },
     }
-    if team_name is None:
+    if team_name is None and not results:
         resp["note"] = (
-            "no team name resolved from ranking snapshots for this team_id; "
-            "results could not be name-matched (results_in_window is empty)"
+            "no team name resolved from ranking snapshots for this team_id and no "
+            "id-matched results found (results_in_window is empty)"
         )
     return resp
 
@@ -211,33 +247,43 @@ async def team_trend(team_id: str, days: int = 90) -> dict[str, Any]:
         ]
 
         team_name = latest_team_name(snapshot_rows)
-        result_rows: list[dict[str, Any]] = []
+        tid = str(team_id)
+        # prefer id match on either side; fall back to fuzzy name ONLY for rows that
+        # carry no ids at all (older /matches/results rows) — mirrors _team_side.
+        conds = [MatchResult.team_a_id == tid, MatchResult.team_b_id == tid]
         if team_name:
             name = team_name.casefold()
-            res = (
-                await session.execute(
-                    select(MatchResult)
-                    .where(MatchResult.captured_at >= cutoff)
-                    .where(
-                        or_(
-                            func.lower(MatchResult.team_a) == name,
-                            func.lower(MatchResult.team_b) == name,
-                        )
-                    )
-                    .order_by(MatchResult.captured_at.asc())
+            conds.append(
+                and_(
+                    MatchResult.team_a_id.is_(None),
+                    MatchResult.team_b_id.is_(None),
+                    or_(
+                        func.lower(MatchResult.team_a) == name,
+                        func.lower(MatchResult.team_b) == name,
+                    ),
                 )
-            ).scalars().all()
-            result_rows = [
-                {
-                    "vlr_id": r.vlr_id,
-                    "team_a": r.team_a,
-                    "team_b": r.team_b,
-                    "score_a": r.score_a,
-                    "score_b": r.score_b,
-                    "event": r.event,
-                    "captured_at": r.captured_at,
-                }
-                for r in res
-            ]
+            )
+        res = (
+            await session.execute(
+                select(MatchResult)
+                .where(MatchResult.captured_at >= cutoff)
+                .where(or_(*conds))
+                .order_by(MatchResult.captured_at.asc())
+            )
+        ).scalars().all()
+        result_rows = [
+            {
+                "vlr_id": r.vlr_id,
+                "team_a": r.team_a,
+                "team_b": r.team_b,
+                "team_a_id": r.team_a_id,
+                "team_b_id": r.team_b_id,
+                "score_a": r.score_a,
+                "score_b": r.score_b,
+                "event": r.event,
+                "captured_at": r.captured_at,
+            }
+            for r in res
+        ]
 
     return build_response(team_id, days, snapshot_rows, result_rows)

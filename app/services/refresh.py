@@ -121,16 +121,71 @@ async def refresh_player(player_id: str) -> dict[str, Any]:
     return data
 
 
+def _split_score(raw: Any) -> tuple[str | None, str | None]:
+    """Split a raw 'a:b' score into its two raw halves (no numeric coercion here —
+    that stays a read-time concern in trends). Malformed -> (None, None), no crash."""
+    if raw is None or ":" not in str(raw):
+        return None, None
+    a, _, b = str(raw).partition(":")
+    return (a.strip() or None), (b.strip() or None)
+
+
+def team_results_to_match_rows(
+    team_id: str | None, team_name: str | None, results: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Pure: shape a team page's parsed completed results into match_results rows.
+
+    The page's own team is side A and ALWAYS carries its id (that's what makes the
+    id-preferred trend join work); the opponent is side B with the id from its href
+    when the card exposed one, else null. Scores are kept as raw text, split on the
+    'a:b' separator. Rows without a vlr match id are dropped (can't dedup them)."""
+    rows: list[dict[str, Any]] = []
+    for m in results:
+        if not m.get("id"):
+            continue
+        score_a, score_b = _split_score(m.get("score"))
+        rows.append(
+            {
+                "vlr_id": m["id"],
+                "team_a": team_name,
+                "team_b": m.get("opponent"),
+                "team_a_id": str(team_id) if team_id is not None else None,
+                "team_b_id": m.get("opponent_id"),
+                "score_a": score_a,
+                "score_b": score_b,
+                "event": m.get("event"),
+                "series": None,
+                "url": m.get("url"),
+            }
+        )
+    return rows
+
+
 async def refresh_team(team_id: str) -> dict[str, Any]:
-    """On-demand: scrape a team detail page, cache it, and persist a snapshot.
+    """On-demand: scrape a team detail page, cache it, persist a snapshot, and
+    backfill the team's completed results into match_results.
 
     Detail pages are not scheduled — this runs on a cache miss from the route.
     Dedup is per-TTL per team: a snapshot is written only if none has landed for
     this team inside the teams TTL window, so repeat fetches never duplicate rows.
+    The match backfill dedups on vlr_id (on_conflict_do_nothing), so re-fetching a
+    team never duplicates its matches — and it fills the gap where a tier-1 team's
+    real games almost never surface in the rolling global /matches/results feed.
     """
     s = get_settings()
     data = await te.fetch_team(team_id)
     await cache_set(CACHE_TEAM.format(id=team_id), data, s.ttl_teams)
+
+    match_rows = team_results_to_match_rows(
+        data.get("id"), data.get("name"), data.get("results") or []
+    )
+    if match_rows:
+        async with SessionLocal() as session:
+            stmt = pg_insert(MatchResult).values(match_rows)
+            stmt = stmt.on_conflict_do_nothing(index_elements=["vlr_id"])
+            await session.execute(stmt)
+            await session.commit()
+
     cutoff = datetime.now(timezone.utc) - timedelta(seconds=s.ttl_teams)
     async with SessionLocal() as session:
         recent = await session.execute(
