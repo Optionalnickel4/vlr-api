@@ -3,13 +3,37 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import select
 
+from app import status_meta as meta
+from app.core import cache as cache_core
+from app.core import db as db_core
 from app.core.cache import cache_get
 from app.core.db import SessionLocal
+from app.jobs import scheduler as sched_mod
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
 from app.services import refresh as R
 from app.services import trends as T
 
 router = APIRouter()
+
+# History tables surfaced on the status page, paired with their timestamp column.
+# All four models happen to use `captured_at` — wired explicitly, not assumed.
+_HISTORY_MODELS = [
+    (MatchResult, "match_results", MatchResult.captured_at),
+    (RankingSnapshot, "ranking_snapshots", RankingSnapshot.captured_at),
+    (PlayerSnapshot, "player_snapshots", PlayerSnapshot.captured_at),
+    (TeamSnapshot, "team_snapshots", TeamSnapshot.captured_at),
+]
+
+# Fixed, league-wide cache keys only (real namespaced strings; name + TTL never a
+# value). On-demand per-team/per-player keys are intentionally NOT enumerated.
+_CACHE_KEYS = [
+    R.CACHE_RESULTS,
+    R.CACHE_UPCOMING,
+    R.CACHE_LIVE,
+    R.CACHE_RANKINGS.format(region="all"),
+    R.CACHE_EVENTS,
+    R.CACHE_NEWS,
+]
 
 
 async def _cached_or_refresh(key: str, refresher) -> Any:
@@ -150,3 +174,59 @@ async def history_team(team_id: str, limit: int = Query(100, le=1000)):
              "captured_at": s.captured_at}
             for s in snaps
         ]
+
+
+# ---- status (Phase 6: read-only health + progress; never scrapes) -----------
+async def build_status() -> dict[str, Any]:
+    """Assemble the status payload from read-only core helpers + committed metadata.
+
+    Strictly read-only: it never calls a refresh_/scraper/service-orchestration
+    function. Every external touch is defensive — one bad table or a down backend
+    degrades a field to null/false, it never 500s the endpoint.
+    """
+    # postgres: baseline SELECT 1, then per-table counts. A failing table both
+    # nulls its own row and flips the postgres check.
+    pg_ok = await db_core.check_db()
+    history: list[dict[str, Any]] = []
+    for model, label, ts_col in _HISTORY_MODELS:
+        try:
+            rows, newest = await db_core.count_and_newest(model, ts_col)
+        except Exception:
+            rows, newest, pg_ok = None, None, False
+        history.append({"table": label, "rows": rows, "newest": newest})
+
+    redis_ok = await cache_core.ping()
+    cache_keys = [
+        {"key": key, "ttl": await cache_core.cache_ttl(key)} for key in _CACHE_KEYS
+    ]
+
+    sched = sched_mod.get_scheduler()
+    scheduler: list[dict[str, Any]] = []
+    for job in meta.JOBS:
+        next_run = None
+        if sched is not None:
+            j = sched.get_job(job)
+            if j is not None and j.next_run_time is not None:
+                next_run = j.next_run_time.isoformat()
+        scheduler.append(
+            {
+                "job": job,
+                "last_run": await cache_core.get_last_run(job),
+                "next_run": next_run,
+            }
+        )
+
+    return {
+        "service": "vlr-api",
+        "commit": meta.COMMIT,
+        "deploy": meta.DEPLOY,
+        "checks": {"postgres": pg_ok, "redis": redis_ok},
+        "history": history,
+        "cache_keys": cache_keys,
+        "scheduler": scheduler,
+    }
+
+
+@router.get("/status")
+async def status():
+    return await build_status()
