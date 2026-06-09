@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.core.cache import cache_get
 from app.core.db import SessionLocal
-from app.models import MatchResult, PlayerSnapshot, RankingSnapshot
+from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
 from app.services import refresh as R
 
 router = APIRouter()
@@ -57,6 +57,15 @@ async def player(player_id: str):
     data = await cache_get(R.CACHE_PLAYER.format(id=player_id))
     if data is None:
         data = await R.refresh_player(player_id)
+    return data
+
+
+# ---- team detail (on-demand: scrape-on-miss, cache, persist a snapshot) ----
+@router.get("/team/{team_id}")
+async def team(team_id: str):
+    data = await cache_get(R.CACHE_TEAM.format(id=team_id))
+    if data is None:
+        data = await R.refresh_team(team_id)
     return data
 
 
@@ -113,5 +122,24 @@ async def history_player(player_id: str, limit: int = Query(100, le=1000)):
             {"alias": s.alias, "real_name": s.real_name, "team": s.team,
              "team_id": s.team_id, "country": s.country,
              "agent_stats": s.agent_stats, "captured_at": s.captured_at}
+            for s in snaps
+        ]
+
+
+@router.get("/history/team/{team_id}")
+async def history_team(team_id: str, limit: int = Query(100, le=1000)):
+    async with SessionLocal() as session:
+        rows = await session.execute(
+            select(TeamSnapshot)
+            .where(TeamSnapshot.team_id == team_id)
+            .order_by(TeamSnapshot.captured_at.asc())
+            .limit(limit)
+        )
+        snaps = rows.scalars().all()
+        if not snaps:
+            raise HTTPException(404, "no snapshots for that team_id")
+        return [
+            {"name": s.name, "region": s.region, "roster": s.roster,
+             "captured_at": s.captured_at}
             for s in snaps
         ]

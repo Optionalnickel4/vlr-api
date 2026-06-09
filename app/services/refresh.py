@@ -3,6 +3,7 @@
 The API never calls these directly for live requests; the scheduler does.
 API reads from cache (and DB for history).
 """
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from sqlalchemy import select
@@ -11,11 +12,12 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from app.core.cache import cache_set
 from app.core.config import get_settings
 from app.core.db import SessionLocal
-from app.models import MatchResult, PlayerSnapshot, RankingSnapshot
+from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
 from app.scrapers import events as ev
 from app.scrapers import matches as mt
 from app.scrapers import players as pl
 from app.scrapers import rankings as rk
+from app.scrapers import teams as te
 
 CACHE_RESULTS = "vlr:results"
 CACHE_UPCOMING = "vlr:upcoming"
@@ -24,6 +26,7 @@ CACHE_RANKINGS = "vlr:rankings:{region}"
 CACHE_EVENTS = "vlr:events"
 CACHE_NEWS = "vlr:news"
 CACHE_PLAYER = "vlr:player:{id}"
+CACHE_TEAM = "vlr:team:{id}"
 
 
 async def refresh_results() -> int:
@@ -115,4 +118,35 @@ async def refresh_player(player_id: str) -> dict[str, Any]:
     async with SessionLocal() as session:
         session.add(snap)
         await session.commit()
+    return data
+
+
+async def refresh_team(team_id: str) -> dict[str, Any]:
+    """On-demand: scrape a team detail page, cache it, and persist a snapshot.
+
+    Detail pages are not scheduled — this runs on a cache miss from the route.
+    Dedup is per-TTL per team: a snapshot is written only if none has landed for
+    this team inside the teams TTL window, so repeat fetches never duplicate rows.
+    """
+    s = get_settings()
+    data = await te.fetch_team(team_id)
+    await cache_set(CACHE_TEAM.format(id=team_id), data, s.ttl_teams)
+    cutoff = datetime.now(timezone.utc) - timedelta(seconds=s.ttl_teams)
+    async with SessionLocal() as session:
+        recent = await session.execute(
+            select(TeamSnapshot.id)
+            .where(TeamSnapshot.team_id == str(team_id))
+            .where(TeamSnapshot.captured_at >= cutoff)
+            .limit(1)
+        )
+        if recent.first() is None:
+            session.add(
+                TeamSnapshot(
+                    team_id=str(team_id),
+                    name=data.get("name"),
+                    region=data.get("country"),
+                    roster=data.get("roster") or [],
+                )
+            )
+            await session.commit()
     return data

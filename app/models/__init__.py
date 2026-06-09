@@ -63,3 +63,21 @@ class PlayerSnapshot(Base):
     captured_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_now, index=True
     )
+
+
+class TeamSnapshot(Base):
+    """A team's detail page captured per on-demand fetch. Intentionally lean: roster
+    churn is infrequent (vlr already logs transactions), so the value is being
+    queryable/joinable against match results and ranking history — not novel data.
+    Dedup is per-TTL per team so it never fills with near-identical rows."""
+
+    __tablename__ = "team_snapshots"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    team_id: Mapped[str] = mapped_column(String(32), index=True)
+    name: Mapped[str | None] = mapped_column(String(128))
+    region: Mapped[str | None] = mapped_column(String(64))
+    roster: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    captured_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_now, index=True
+    )
