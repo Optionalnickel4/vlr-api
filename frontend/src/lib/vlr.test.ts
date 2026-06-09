@@ -147,6 +147,19 @@ describe("normalizeNews", () => {
     expect(out2[0].date).toBe("Just a date string");
     expect(out2[0].author).toBeNull();
   });
+
+  it("label-bleed guard: the headline never carries the date/author/meta text", () => {
+    // The scraper can let date/author/category nodes bleed into the headline.
+    // Every title must stay clean: no "•"/"by " separators and no copy of the
+    // parsed date or author that belongs in the dim meta footer instead.
+    for (const a of out) {
+      const title = a.title ?? "";
+      expect(title).not.toContain("•");
+      expect(title.toLowerCase()).not.toMatch(/\bby \w/);
+      if (a.date) expect(title).not.toContain(a.date);
+      if (a.author) expect(title).not.toContain(a.author);
+    }
+  });
 });
 
 describe("normalizePlayer (single object -> one-element list)", () => {

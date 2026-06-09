@@ -1,16 +1,20 @@
-import { getLive, getResults, getUpcoming } from "@/lib/vlr";
+import { getLive, getNews, getRankings, getResults, getUpcoming } from "@/lib/vlr";
 import { MatchCard } from "@/components/MatchCard";
 import { MatchSection } from "@/components/MatchSection";
 import { LiveMatches } from "@/components/LiveMatches";
+import { RankingsPanel } from "@/components/RankingsPanel";
+import { NewsPanel } from "@/components/NewsPanel";
 
 // Always fresh: the match center reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
 
 export default async function MatchCenter() {
-  const [results, upcoming, live] = await Promise.all([
+  const [results, upcoming, live, rankings, news] = await Promise.all([
     getResults(),
     getUpcoming(),
     getLive(),
+    getRankings(),
+    getNews(),
   ]);
 
   return (
@@ -74,6 +78,12 @@ export default async function MatchCenter() {
               />
             ))}
           </MatchSection>
+        </div>
+
+        {/* rankings + news */}
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+          <RankingsPanel rankings={rankings} />
+          <NewsPanel news={news} />
         </div>
       </div>
     </main>

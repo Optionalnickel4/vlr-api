@@ -36,15 +36,15 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 `frontend/CLAUDE.md`. Built in vertical slices; **stop & review at each boundary.**
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 3 / 7
-- **Frontend tests passing:** 22 (Vitest, transforms vs committed real fixtures)
+- **Slices done:** 4 / 7
+- **Frontend tests passing:** 23 (Vitest, transforms vs committed real fixtures)
 
 ## Slices
 
 - [x] **Slice 1 — scaffold + data layer + fixtures**
 - [x] **Slice 2 — broadcast primitives + design tokens**
-- [x] **Slice 3 — results + upcoming + live** (this slice)
-- [ ] **Slice 4 — rankings + news**
+- [x] **Slice 3 — results + upcoming + live**
+- [x] **Slice 4 — rankings + news** (this slice)
 - [ ] **Slice 5 — player detail + team trends** (team detail guarded for the 500)
 - [ ] **Slice 6 — match-detail page as stub** (components real, data stubbed; Phase 7)
 - [ ] **Slice 7 — visual polish pass**
@@ -81,3 +81,21 @@ harmonized with the palette already shipped on the API status page
 - [x] `LiveMatches` — client island seeded by SSR, polls `/api/matches/live` every 30s (upstream live TTL), keeps last good data on a failed poll
 - [x] `app/page.tsx` — match center: Live (polling) + Upcoming + Results, all fetched server-side; replaces the primitives preview
 - [x] Verified against the now-healthy vlr-api: `tsc` clean · `next build` clean · 22 Vitest green · smoke — routes return envelopes (results n=50, upcoming n=50, live n=0 empty/valid), SSR page renders real data incl. accented "LEVIATÁN" (clean post-UTF8-fix)
+
+## Slice 4 — rankings + news
+
+- [x] Route handlers `src/app/api/{rankings,news}/route.ts` — thin, `force-dynamic`, return the data-layer `{data,stale,error}` envelope; server-side fetch only. `rankings` passes `?region=` through (defaults `all`)
+- [x] `RankingsPanel` — lean broadcast table of EXACTLY the four fields vlr-api serves: rank / team / region / rating (`TableShell`, rank+rating right-aligned mono). rank+rating coerced via `parseNumeric` in the data layer; nothing sorts on the raw string (Phase 4 string-sort trap)
+- [x] `NewsPanel` — headline feed as stacked lower-thirds; headline from `title` only, the split date+author sit in a separate dim footer (label-bleed guard), each row links out to vlr.gg
+- [x] Both rendered in `app/page.tsx` below the match center, server-side fetched, graceful empty/stale (empty is valid, not an error)
+- [x] Test added — news **label-bleed guard**: every headline is free of `•`/`by `/the parsed date/the parsed author (23 total, prior 22 still green)
+- [x] **Scoped deliberately lean** (see decision below): no W/L/streak/win-rate columns, no `parsePercent` helper, no API-side scraper changes
+
+### Deferred vlr-api gaps (API-side, not frontend — sequence BEFORE any column that would render them)
+
+The rankings endpoint serves only rank/team/country/rating. Two distinct upstream gaps mean a richer rankings table can't be built honestly yet; both are API-side fixes for their own tasks, out of the frontend slice boundary:
+
+1. **W/L returns `null` — selector drift.** The scraper has a slot (`RANK_RECORD = "div.rank-item-record"` → `record`) but it no longer matches current vlr.gg markup, so `record` is always `null`. Same selector-drift bug class as the Phase 7 match-detail scoreboard work. Fix + verify on container, then W/L can surface.
+2. **streak and win-rate% are not scraped at all.** No field, no selector, no schema slot anywhere in `app/scrapers/rankings.py`. Net-new scraping + schema work before either can exist.
+
+Note: the "`33%` won't parse without %-stripping" finding is real but belongs to **Phase 7 match-detail** (KAST/HS% scoreboard cells), not rankings — rankings has no percentage column. The `parsePercent` helper lands there, where it's actually consumed, not here.
