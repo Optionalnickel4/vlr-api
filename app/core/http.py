@@ -34,7 +34,10 @@ class VlrClient:
                 await asyncio.sleep(wait)
             self._last_request = time.monotonic()
 
-    async def get_html(self, path: str) -> str:
+    async def get_raw(self, path: str) -> httpx.Response:
+        """Fetch a path or absolute URL and return the full Response, throttled
+        and retried with the same polite UA as get_html. Read `resp.content` for
+        the verbatim bytes — used for one-shot fixture captures (no parsing)."""
         s = self._settings
         last_exc: Exception | None = None
         for attempt in range(s.max_retries):
@@ -46,12 +49,15 @@ class VlrClient:
                         f"retryable {resp.status_code}", request=resp.request, response=resp
                     )
                 resp.raise_for_status()
-                return resp.text
+                return resp
             except (httpx.HTTPStatusError, httpx.TransportError) as exc:
                 last_exc = exc
                 await asyncio.sleep(2 ** attempt)
         assert last_exc is not None
         raise last_exc
+
+    async def get_html(self, path: str) -> str:
+        return (await self.get_raw(path)).text
 
     async def aclose(self) -> None:
         await self._client.aclose()
