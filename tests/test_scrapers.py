@@ -76,6 +76,56 @@ def test_parse_rankings():
     assert rows[1]["country"] == "Singapore"
 
 
+# ---------- rankings: W/L record (Item 1 — regional layout) ----------
+# vlr split rankings into a WORLD view (no record) and REGIONAL pages (record
+# present in div.rank-item-record as "wins–losses"). These assert the record is
+# extracted from the regional layout and splits into clean, coercible wins/losses.
+def _coerces_clean(s):
+    # mirrors the frontend parseNumeric contract: a finite number or null, never NaN
+    if s is None:
+        return True
+    try:
+        int(s)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
+def test_parse_rankings_record_wl_regional():
+    rows = parse_rankings(load("rankings_regional.html"))
+    assert len(rows) == 2
+    g2 = rows[0]
+    # record is non-null and is the CURRENT (first) node "74–35", not all-time "140–64"
+    assert g2["record"] == "74–35"
+    assert g2["wins"] == "74" and g2["losses"] == "35"
+    # the per-match mod-win/mod-loss dots ("1","0","1") did NOT bleed into the record
+    assert "1" not in (g2["wins"], g2["losses"]) or g2["wins"] == "74"
+    # every team's W/L is non-null and coerces cleanly (parseNumeric: value not NaN)
+    for r in rows:
+        assert r["record"] is not None
+        assert r["wins"] is not None and r["losses"] is not None
+        assert _coerces_clean(r["wins"]) and _coerces_clean(r["losses"])
+        assert int(r["wins"]) >= 0 and int(r["losses"]) >= 0
+
+
+def test_parse_rankings_world_view_has_no_record():
+    # the world/all view dropped the W/L column entirely — record/wins/losses are
+    # legitimately null there (a valid state, not a parse failure), and still coerce.
+    # NB: must be wrapped in <table> — selectolax/lexbor drops a bare <tr>, exactly
+    # as the live world page nests its rows in a real rankings table.
+    html = (
+        '<table><tbody><tr class="wf-card mod-hover"><td class="rank-item-rank">'
+        '<a href="/team/2/sentinels">1</a></td>'
+        '<td class="rank-item-team"><a href="/team/2/sentinels"><div>Sentinels'
+        '<div class="rank-item-team-country">United States</div></div></a></td>'
+        '<td class="rank-item-rating mod-world"><a>1024</a></td></tr></tbody></table>'
+    )
+    r = parse_rankings(html)[0]
+    assert r["rating"] == "1024"
+    assert r["record"] is None and r["wins"] is None and r["losses"] is None
+    assert _coerces_clean(r["wins"]) and _coerces_clean(r["losses"])
+
+
 # ---------- events ----------
 def test_parse_events():
     events = parse_events(load("events.html"))

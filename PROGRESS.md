@@ -4,8 +4,40 @@ Counts here mirror `app/status_meta.py` (the committed source of truth). Keep th
 in sync: bump both in the same commit.
 
 - **Phases shipped:** 6 / 6
-- **Tests passing:** 58
+- **Tests passing:** 72
 - **Commit:** 1d22037
+
+## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
+
+Container-verified through the app's httpx client (never curl). Resolves the three
+deferred vlr-api gaps logged in the frontend slices below.
+
+1. **W/L selector drift (rankings) — RESOLVED.** Root cause found via live markup:
+   vlr split rankings into a **world** view (`/rankings`, `?region=all`) that dropped
+   the W/L column entirely, and **regional** pages (`/rankings/<full-region-slug>`,
+   e.g. `north-america`) that still carry it in `div.rank-item-record`. The selector
+   hadn't been renamed — the data simply isn't on the world view the frontend defaults
+   to. Fix: parser now splits the record ("74–35", en-dash) into clean `wins`/`losses`
+   numeric fields (robust to dash/label variants), targeting the record summary node —
+   never the per-match `mod-win`/`mod-loss` dots (the concatenation trap). World view →
+   record/wins/losses null (valid). Verified: `/rankings/north-america` → G2 Esports
+   `74–35` → wins 74, losses 35. Tests: `+2` (regional record split + world-view null).
+2. **Phase 7 match-detail scoreboard selectors — BUILT.** New `app/scrapers/match_detail.py`
+   + selectors for `table.wf-table-inset.mod-overview` (8 per match: per-map × per-team
+   + all-maps aggregate). Every value cell reads `span.mod-both`, NEVER raw `td.text()`
+   (which concatenates the three side-split spans: K=13 renders raw as "1385" — coerces
+   fine, silently wrong). `mod-t`/`mod-ct` (attack/defense) preserved. `parse_numeric` +
+   new `parse_percent` (KAST/HS%) in `_util.py`, null-not-NaN. Tested against BOTH banked
+   fixtures: partial (R/ACS/ADR empty → null) and filled (all populated). Tests: `+9`.
+3. **Team-endpoint 404 handler (Bug A) — RESOLVED.** `app/core/http.py` raises a domain
+   `VlrNotFound` on an upstream 404 (final, not retried); the `/team/{id}` route maps it
+   to a clean HTTP 404 instead of the old unhandled-`raise_for_status` 500. Verified live:
+   `/team/1` → `VlrNotFound` → 404; `/team/2` → 200 (Sentinels, full roster + results).
+   Tests: `+3`. (Bug B / id 1001 was already resolved — SQL_ASCII re-encode.)
+
+> Note: the running uvicorn predates this pass; a `systemctl restart vlr-api` is needed
+> to surface these on the live HTTP endpoints. The code + container-level verification
+> (through the app's httpx client, per the repair rules) are complete.
 
 ## Phases
 

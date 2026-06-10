@@ -1,0 +1,46 @@
+<html><body>
+<!-- Faithful trim of a real vlr REGIONAL rankings page (/rankings/north-america).
+     Unlike the world view (/rankings), regional rows carry the W/L record. Key
+     real-markup traits reproduced here:
+       - two div.rank-item-record per row: current (rating window) THEN all-time
+       - the record separator is an EN-DASH (–, U+2013), e.g. "74–35"
+       - the team text nests a #tag span + the country div (country-suffix bleed)
+       - per-match mod-win/mod-loss dots elsewhere in the row: these must NOT be
+         read as the record (the concatenation trap) -->
+<div class="rank-item wf-card fc-flex">
+  <div class="rank-item-rank"><div class="rank-item-rank-num">1</div></div>
+  <a class="rank-item-team fc-flex" href="/team/11058/g2-esports">
+    <img src="//owcdn.net/img/x.png" alt="G2 Esports">
+    <div class="ge-text">
+      G2 Esports<span class="rank-item-team-tag">#BN1</span>
+      <div class="rank-item-team-country">United States</div>
+    </div>
+  </a>
+  <div class="rank-item-rating">2000</div>
+  <div class="rank-item-rating mod-short">2000</div>
+  <div class="rank-item-matches mod-collapsed">
+    <div class="rank-item-matches-dt mod-win">1</div>
+    <div class="rank-item-matches-dt mod-loss">0</div>
+    <div class="rank-item-matches-dt mod-win">1</div>
+  </div>
+  <div class="rank-item-streak mod-right"><span style="color:#61b876">2W</span></div>
+  <div class="rank-item-record">74–35<!--/0--></div>
+  <div class="rank-item-record">140–64</div>
+  <div class="rank-item-earnings mod-right">$872,250</div>
+</div>
+<div class="rank-item wf-card fc-flex">
+  <div class="rank-item-rank"><div class="rank-item-rank-num">2</div></div>
+  <a class="rank-item-team fc-flex" href="/team/1034/nrg">
+    <img src="//owcdn.net/img/y.png" alt="NRG">
+    <div class="ge-text">
+      NRG<span class="rank-item-team-tag">#Z5K</span>
+      <div class="rank-item-team-country">United States</div>
+    </div>
+  </a>
+  <div class="rank-item-rating">1951</div>
+  <div class="rank-item-streak mod-right"><span>1L</span></div>
+  <div class="rank-item-record">57–29</div>
+  <div class="rank-item-record">110–70</div>
+  <div class="rank-item-earnings mod-right">$500,000</div>
+</div>
+</body></html>

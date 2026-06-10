@@ -15,14 +15,24 @@ MATCH_STATUS = "div.ml-status, span.ml-status"
 MATCH_ETA = "div.ml-eta"
 
 # --- rankings (team rows) ---
-# vlr now renders rankings as <table class="wf-faux-table mod-teams"> with one
-# <tr class="wf-card mod-hover"> per team; the team-name <td> wraps the country
-# div, so the parser strips the country suffix off the team name.
+# vlr serves TWO ranking layouts and the parser handles both:
+#  - WORLD view (/rankings, ?region=all): a stripped <tr class="wf-card mod-hover">
+#    table with only rank / team(+country) / rating (mod-world). NO W/L record —
+#    record/wins/losses are legitimately null here (the column was removed).
+#  - REGIONAL view (/rankings/<full-region-slug>, e.g. /rankings/north-america):
+#    the rich <div class="rank-item wf-card"> rows that DO carry the W/L record,
+#    streak, and earnings. The team text nests a #tag + the country div, so the
+#    parser strips the country suffix off the team name.
 RANK_ROW = "div.rank-item, tr.rank-item, tr.wf-card.mod-hover"
 RANK_NUM = "div.rank-item-rank-num, td.rank-item-rank"
 RANK_TEAM_NAME = "div.rank-item-team-name, div.ge-text, td.rank-item-team a div"
 RANK_COUNTRY = "div.rank-item-team-country"
 RANK_RATING = "div.rank-item-rating, td.rank-item-rating"
+# The W/L record is "wins–losses" (en-dash) text in div.rank-item-record. There are
+# TWO per regional row — the FIRST is the current/rating-window record, the second
+# is all-time; css_first() takes the current one. This is the SUMMARY node, distinct
+# from the per-match mod-win/mod-loss dots (rank-item-matches-dt) — never read those,
+# they'd concatenate into a silently-wrong number.
 RANK_RECORD = "div.rank-item-record"
 RANK_EARNINGS = "div.rank-item-earnings"
 
@@ -100,6 +110,37 @@ PLAYER_MATCH_EVENT = "div.m-item-event div.text-of"
 PLAYER_MATCH_TEAM_NAME = "span.m-item-team-name"
 PLAYER_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
 PLAYER_MATCH_RESULT = "div.m-item-result"
+
+# --- match detail page (/{match_id}/...) — scoreboard (Phase 7) ---
+# The per-map scoreboards are <table class="wf-table-inset mod-overview"> — there
+# are 8 (per-map × per-team + the all-maps aggregate). This is NOT the player-page
+# PLAYER_STATS_TABLE. Header row drives the stat columns:
+#   ['', '', 'R','ACS','K','D','A','+/–','KAST','ADR','HS%','FK','FD','+/–']
+MATCH_SB_TABLE = "table.wf-table-inset.mod-overview"
+MATCH_SB_HEADER = "thead th"
+MATCH_SB_ROW = "tbody tr"
+MATCH_SB_CELL = "td"
+# identity: name nests a 700-weight div.text-of (alias) + a div.ge-text-light (team
+# tag); a flag <i> carries the country; the <a> carries the player id.
+MATCH_SB_PLAYER = "td.mod-player"
+MATCH_SB_PLAYER_LINK = 'a[href^="/player/"]'
+MATCH_SB_PLAYER_ALIAS = "div.text-of"
+MATCH_SB_PLAYER_TEAM = "div.ge-text-light"
+MATCH_SB_PLAYER_FLAG = "i.flag"
+MATCH_SB_AGENT = "td.mod-agents img"  # agent name = img alt
+# CRITICAL: every value cell is td.mod-stat and holds THREE side-split spans —
+# mod-both (combined), mod-t (attack), mod-ct (defense). Read mod-both; NEVER
+# td.text(), which concatenates all three into a silently-wrong number (e.g. K=13
+# renders raw as "1385"). mod-t/mod-ct are real attack/defense data, not artifacts.
+MATCH_SB_STAT_CELL = "td.mod-stat"
+MATCH_SB_VAL_BOTH = "span.mod-both"
+MATCH_SB_VAL_T = "span.mod-t"
+MATCH_SB_VAL_CT = "span.mod-ct"
+# the two '+/–' headers collide; disambiguate the diff cells by these class markers
+MATCH_SB_CLS_KD_DIFF = "mod-kd-diff"
+MATCH_SB_CLS_FK_DIFF = "mod-fk-diff"
+# the % columns whose values go through parse_percent
+MATCH_SB_PCT_KEYS = ("KAST", "HS%")
 
 # id is parsed from href like /310/sentinels or /player/4164/...
 HREF_ID_INDEX = 1  # path segment index for numeric id

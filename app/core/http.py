@@ -6,6 +6,17 @@ import httpx
 from app.core.config import get_settings
 
 
+class VlrNotFound(Exception):
+    """vlr.gg returned 404 for a path — the resource genuinely doesn't exist.
+
+    Distinct from a transient 5xx/429 (which we retry): a 404 is final. Callers
+    (routers) map this to an HTTP 404 instead of letting it surface as a 500."""
+
+    def __init__(self, path: str) -> None:
+        self.path = path
+        super().__init__(f"vlr.gg 404 for {path}")
+
+
 class VlrClient:
     """Polite async HTTP client for vlr.gg.
 
@@ -44,15 +55,24 @@ class VlrClient:
             await self._throttle()
             try:
                 resp = await self._client.get(path)
-                if resp.status_code == 429 or resp.status_code >= 500:
-                    raise httpx.HTTPStatusError(
-                        f"retryable {resp.status_code}", request=resp.request, response=resp
-                    )
-                resp.raise_for_status()
-                return resp
-            except (httpx.HTTPStatusError, httpx.TransportError) as exc:
+            except httpx.TransportError as exc:
                 last_exc = exc
                 await asyncio.sleep(2 ** attempt)
+                continue
+            # A 404 is final, not transient: surface a clean domain error so the
+            # router maps it to HTTP 404 instead of a 500. No wasted retries.
+            if resp.status_code == 404:
+                raise VlrNotFound(path)
+            # Rate-limit + server errors ARE transient: back off and retry.
+            if resp.status_code == 429 or resp.status_code >= 500:
+                last_exc = httpx.HTTPStatusError(
+                    f"retryable {resp.status_code}", request=resp.request, response=resp
+                )
+                await asyncio.sleep(2 ** attempt)
+                continue
+            # Any other non-2xx (e.g. 403) is also final.
+            resp.raise_for_status()
+            return resp
         assert last_exc is not None
         raise last_exc
 

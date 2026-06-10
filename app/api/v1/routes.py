@@ -7,6 +7,7 @@ from app import status_meta as meta
 from app.core import cache as cache_core
 from app.core import db as db_core
 from app.core.cache import cache_get
+from app.core.http import VlrNotFound
 from app.core.db import SessionLocal
 from app.jobs import scheduler as sched_mod
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
@@ -90,7 +91,13 @@ async def player(player_id: str):
 async def team(team_id: str):
     data = await cache_get(R.CACHE_TEAM.format(id=team_id))
     if data is None:
-        data = await R.refresh_team(team_id)
+        try:
+            data = await R.refresh_team(team_id)
+        except VlrNotFound:
+            # Bug A: an id vlr.gg has no page for used to 500 (unhandled
+            # raise_for_status). Return a clean 404 so the frontend's graceful
+            # "couldn't load this team" path gets a proper signal.
+            raise HTTPException(status_code=404, detail=f"team {team_id} not found")
     return data
 
 
