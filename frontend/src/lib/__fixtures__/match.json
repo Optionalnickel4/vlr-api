@@ -1,0 +1,3861 @@
+{
+  "id": "684612",
+  "event": "Valorant Masters London 2026",
+  "series": "Swiss Stage: Round 1",
+  "status": "final",
+  "format": "BO3",
+  "teams": [
+    {
+      "name": "LEVIATÁN",
+      "id": "2359",
+      "score": 2,
+      "won": true
+    },
+    {
+      "name": "Global Esports",
+      "id": "918",
+      "score": 1,
+      "won": false
+    }
+  ],
+  "veto": "GE ban Ascent; LEV ban Breeze; GE pick Pearl; LEV pick Fracture; GE ban Haven; LEV ban Lotus; Split remains",
+  "maps": [
+    {
+      "game_id": "270743",
+      "name": "Pearl",
+      "picked": true,
+      "decider": false,
+      "scores": [
+        4.0,
+        13.0
+      ],
+      "teams": [
+        {
+          "name": "LEVIATÁN",
+          "score": 4.0,
+          "players": [
+            {
+              "player": "Neon",
+              "team": "LEV",
+              "player_id": "29243",
+              "country": "ar",
+              "agent": "chamber",
+              "stats": {
+                "R": {
+                  "value": 1.35,
+                  "both": "1.35",
+                  "t": "1.19",
+                  "ct": "1.42"
+                },
+                "ACS": {
+                  "value": 263.0,
+                  "both": "263",
+                  "t": "276",
+                  "ct": "259"
+                },
+                "K": {
+                  "value": 15.0,
+                  "both": "15",
+                  "t": "4",
+                  "ct": "11"
+                },
+                "D": {
+                  "value": 11.0,
+                  "both": "11",
+                  "t": "4",
+                  "ct": "7"
+                },
+                "A": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 4.0,
+                  "both": "+4",
+                  "t": "0",
+                  "ct": "+4"
+                },
+                "KAST": {
+                  "value": 59.0,
+                  "both": "59%",
+                  "t": "40%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 202.0,
+                  "both": "202",
+                  "t": "201",
+                  "ct": "202"
+                },
+                "HS%": {
+                  "value": 45.0,
+                  "both": "45%",
+                  "t": "42%",
+                  "ct": "47%"
+                },
+                "FK": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "2",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "1",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "+1",
+                  "ct": "-1"
+                }
+              }
+            },
+            {
+              "player": "kiNgg",
+              "team": "LEV",
+              "player_id": "8549",
+              "country": "cl",
+              "agent": "astra",
+              "stats": {
+                "R": {
+                  "value": 1.04,
+                  "both": "1.04",
+                  "t": "0.55",
+                  "ct": "1.25"
+                },
+                "ACS": {
+                  "value": 196.0,
+                  "both": "196",
+                  "t": "77",
+                  "ct": "246"
+                },
+                "K": {
+                  "value": 12.0,
+                  "both": "12",
+                  "t": "2",
+                  "ct": "10"
+                },
+                "D": {
+                  "value": 11.0,
+                  "both": "11",
+                  "t": "4",
+                  "ct": "7"
+                },
+                "A": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "-2",
+                  "ct": "+3"
+                },
+                "KAST": {
+                  "value": 65.0,
+                  "both": "65%",
+                  "t": "40%",
+                  "ct": "75%"
+                },
+                "ADR": {
+                  "value": 114.0,
+                  "both": "114",
+                  "t": "45",
+                  "ct": "142"
+                },
+                "HS%": {
+                  "value": 23.0,
+                  "both": "23%",
+                  "t": "25%",
+                  "ct": "23%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "0",
+                  "ct": "+1"
+                }
+              }
+            },
+            {
+              "player": "blowz",
+              "team": "LEV",
+              "player_id": "21251",
+              "country": "br",
+              "agent": "sova",
+              "stats": {
+                "R": {
+                  "value": 0.78,
+                  "both": "0.78",
+                  "t": "1.07",
+                  "ct": "0.66"
+                },
+                "ACS": {
+                  "value": 107.0,
+                  "both": "107",
+                  "t": "190",
+                  "ct": "73"
+                },
+                "K": {
+                  "value": 6.0,
+                  "both": "6",
+                  "t": "3",
+                  "ct": "3"
+                },
+                "D": {
+                  "value": 11.0,
+                  "both": "11",
+                  "t": "3",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 5.0,
+                  "both": "5",
+                  "t": "2",
+                  "ct": "3"
+                },
+                "KD_+/-": {
+                  "value": -5.0,
+                  "both": "-5",
+                  "t": "0",
+                  "ct": "-5"
+                },
+                "KAST": {
+                  "value": 47.0,
+                  "both": "47%",
+                  "t": "60%",
+                  "ct": "42%"
+                },
+                "ADR": {
+                  "value": 75.0,
+                  "both": "75",
+                  "t": "156",
+                  "ct": "42"
+                },
+                "HS%": {
+                  "value": 31.0,
+                  "both": "31%",
+                  "t": "38%",
+                  "ct": "25%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "0",
+                  "ct": "+1"
+                }
+              }
+            },
+            {
+              "player": "spike",
+              "team": "LEV",
+              "player_id": "21661",
+              "country": "br",
+              "agent": "neon",
+              "stats": {
+                "R": {
+                  "value": 0.55,
+                  "both": "0.55",
+                  "t": "0.19",
+                  "ct": "0.71"
+                },
+                "ACS": {
+                  "value": 176.0,
+                  "both": "176",
+                  "t": "108",
+                  "ct": "204"
+                },
+                "K": {
+                  "value": 9.0,
+                  "both": "9",
+                  "t": "1",
+                  "ct": "8"
+                },
+                "D": {
+                  "value": 16.0,
+                  "both": "16",
+                  "t": "5",
+                  "ct": "11"
+                },
+                "A": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "1",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": -7.0,
+                  "both": "-7",
+                  "t": "-4",
+                  "ct": "-3"
+                },
+                "KAST": {
+                  "value": 65.0,
+                  "both": "65%",
+                  "t": "60%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 120.0,
+                  "both": "120",
+                  "t": "92",
+                  "ct": "131"
+                },
+                "HS%": {
+                  "value": 41.0,
+                  "both": "41%",
+                  "t": "22%",
+                  "ct": "48%"
+                },
+                "FK": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "1",
+                  "ct": "3"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "0",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": 2.0,
+                  "both": "+2",
+                  "t": "+1",
+                  "ct": "+1"
+                }
+              }
+            },
+            {
+              "player": "Sato",
+              "team": "LEV",
+              "player_id": "21659",
+              "country": "br",
+              "agent": "phoenix",
+              "stats": {
+                "R": {
+                  "value": 0.53,
+                  "both": "0.53",
+                  "t": "0.98",
+                  "ct": "0.34"
+                },
+                "ACS": {
+                  "value": 157.0,
+                  "both": "157",
+                  "t": "207",
+                  "ct": "137"
+                },
+                "K": {
+                  "value": 8.0,
+                  "both": "8",
+                  "t": "4",
+                  "ct": "4"
+                },
+                "D": {
+                  "value": 16.0,
+                  "both": "16",
+                  "t": "4",
+                  "ct": "12"
+                },
+                "A": {
+                  "value": 6.0,
+                  "both": "6",
+                  "t": "0",
+                  "ct": "6"
+                },
+                "KD_+/-": {
+                  "value": -8.0,
+                  "both": "-8",
+                  "t": "0",
+                  "ct": "-8"
+                },
+                "KAST": {
+                  "value": 65.0,
+                  "both": "65%",
+                  "t": "60%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 99.0,
+                  "both": "99",
+                  "t": "104",
+                  "ct": "97"
+                },
+                "HS%": {
+                  "value": 33.0,
+                  "both": "33%",
+                  "t": "25%",
+                  "ct": "38%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "1",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "-1",
+                  "ct": "0"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Global Esports",
+          "score": 13.0,
+          "players": [
+            {
+              "player": "Kr1stal",
+              "team": "GE",
+              "player_id": "5796",
+              "country": "ru",
+              "agent": "killjoy",
+              "stats": {
+                "R": {
+                  "value": 1.79,
+                  "both": "1.79",
+                  "t": "1.61",
+                  "ct": "2.23"
+                },
+                "ACS": {
+                  "value": 350.0,
+                  "both": "350",
+                  "t": "312",
+                  "ct": "442"
+                },
+                "K": {
+                  "value": 21.0,
+                  "both": "21",
+                  "t": "13",
+                  "ct": "8"
+                },
+                "D": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "8",
+                  "ct": "2"
+                },
+                "A": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "4",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": 11.0,
+                  "both": "+11",
+                  "t": "+5",
+                  "ct": "+6"
+                },
+                "KAST": {
+                  "value": 88.0,
+                  "both": "88%",
+                  "t": "83%",
+                  "ct": "100%"
+                },
+                "ADR": {
+                  "value": 224.0,
+                  "both": "224",
+                  "t": "219",
+                  "ct": "236"
+                },
+                "HS%": {
+                  "value": 33.0,
+                  "both": "33%",
+                  "t": "37%",
+                  "ct": "27%"
+                },
+                "FK": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "2",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "3",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "-1",
+                  "ct": "+1"
+                }
+              }
+            },
+            {
+              "player": "Autumn",
+              "team": "GE",
+              "player_id": "872",
+              "country": "au",
+              "agent": "phoenix",
+              "stats": {
+                "R": {
+                  "value": 1.26,
+                  "both": "1.26",
+                  "t": "1.33",
+                  "ct": "1.08"
+                },
+                "ACS": {
+                  "value": 232.0,
+                  "both": "232",
+                  "t": "217",
+                  "ct": "268"
+                },
+                "K": {
+                  "value": 15.0,
+                  "both": "15",
+                  "t": "10",
+                  "ct": "5"
+                },
+                "D": {
+                  "value": 9.0,
+                  "both": "9",
+                  "t": "6",
+                  "ct": "3"
+                },
+                "A": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "1",
+                  "ct": "2"
+                },
+                "KD_+/-": {
+                  "value": 6.0,
+                  "both": "+6",
+                  "t": "+4",
+                  "ct": "+2"
+                },
+                "KAST": {
+                  "value": 82.0,
+                  "both": "82%",
+                  "t": "75%",
+                  "ct": "100%"
+                },
+                "ADR": {
+                  "value": 136.0,
+                  "both": "136",
+                  "t": "130",
+                  "ct": "150"
+                },
+                "HS%": {
+                  "value": 44.0,
+                  "both": "44%",
+                  "t": "44%",
+                  "ct": "44%"
+                },
+                "FK": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "1",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "0",
+                  "ct": "+1"
+                }
+              }
+            },
+            {
+              "player": "UdoTan",
+              "team": "GE",
+              "player_id": "4428",
+              "country": "kr",
+              "agent": "neon",
+              "stats": {
+                "R": {
+                  "value": 1.2,
+                  "both": "1.20",
+                  "t": "1.19",
+                  "ct": "1.22"
+                },
+                "ACS": {
+                  "value": 225.0,
+                  "both": "225",
+                  "t": "254",
+                  "ct": "158"
+                },
+                "K": {
+                  "value": 13.0,
+                  "both": "13",
+                  "t": "11",
+                  "ct": "2"
+                },
+                "D": {
+                  "value": 9.0,
+                  "both": "9",
+                  "t": "7",
+                  "ct": "2"
+                },
+                "A": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "1",
+                  "ct": "2"
+                },
+                "KD_+/-": {
+                  "value": 4.0,
+                  "both": "+4",
+                  "t": "+4",
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 76.0,
+                  "both": "76%",
+                  "t": "75%",
+                  "ct": "80%"
+                },
+                "ADR": {
+                  "value": 146.0,
+                  "both": "146",
+                  "t": "157",
+                  "ct": "120"
+                },
+                "HS%": {
+                  "value": 27.0,
+                  "both": "27%",
+                  "t": "24%",
+                  "ct": "36%"
+                },
+                "FK": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "2",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "1",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "+1",
+                  "ct": "-1"
+                }
+              }
+            },
+            {
+              "player": "xavi8k",
+              "team": "GE",
+              "player_id": "7754",
+              "country": "ph",
+              "agent": "astra",
+              "stats": {
+                "R": {
+                  "value": 0.79,
+                  "both": "0.79",
+                  "t": "0.72",
+                  "ct": "0.96"
+                },
+                "ACS": {
+                  "value": 134.0,
+                  "both": "134",
+                  "t": "114",
+                  "ct": "183"
+                },
+                "K": {
+                  "value": 7.0,
+                  "both": "7",
+                  "t": "4",
+                  "ct": "3"
+                },
+                "D": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "7",
+                  "ct": "3"
+                },
+                "A": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "8",
+                  "ct": "2"
+                },
+                "KD_+/-": {
+                  "value": -3.0,
+                  "both": "-3",
+                  "t": "-3",
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 88.0,
+                  "both": "88%",
+                  "t": "92%",
+                  "ct": "80%"
+                },
+                "ADR": {
+                  "value": 90.0,
+                  "both": "90",
+                  "t": "72",
+                  "ct": "135"
+                },
+                "HS%": {
+                  "value": 12.0,
+                  "both": "12%",
+                  "t": "11%",
+                  "ct": "13%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "-1",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "PatMen",
+              "team": "GE",
+              "player_id": "13744",
+              "country": "ph",
+              "agent": "fade",
+              "stats": {
+                "R": {
+                  "value": 0.61,
+                  "both": "0.61",
+                  "t": "0.74",
+                  "ct": "0.29"
+                },
+                "ACS": {
+                  "value": 131.0,
+                  "both": "131",
+                  "t": "152",
+                  "ct": "82"
+                },
+                "K": {
+                  "value": 9.0,
+                  "both": "9",
+                  "t": "7",
+                  "ct": "2"
+                },
+                "D": {
+                  "value": 12.0,
+                  "both": "12",
+                  "t": "8",
+                  "ct": "4"
+                },
+                "A": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "2",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": -3.0,
+                  "both": "-3",
+                  "t": "-1",
+                  "ct": "-2"
+                },
+                "KAST": {
+                  "value": 82.0,
+                  "both": "82%",
+                  "t": "92%",
+                  "ct": "60%"
+                },
+                "ADR": {
+                  "value": 77.0,
+                  "both": "77",
+                  "t": "97",
+                  "ct": "29"
+                },
+                "HS%": {
+                  "value": 23.0,
+                  "both": "23%",
+                  "t": "20%",
+                  "ct": "50%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "1",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": -3.0,
+                  "both": "-3",
+                  "t": "-1",
+                  "ct": "-2"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "0-1"
+        },
+        {
+          "round": 2,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "0-2"
+        },
+        {
+          "round": 3,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "0-3"
+        },
+        {
+          "round": 4,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "0-4"
+        },
+        {
+          "round": 5,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "0-5"
+        },
+        {
+          "round": 6,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "0-6"
+        },
+        {
+          "round": 7,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "0-7"
+        },
+        {
+          "round": 8,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "1-7"
+        },
+        {
+          "round": 9,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "2-7"
+        },
+        {
+          "round": 10,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "2-8"
+        },
+        {
+          "round": 11,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "2-9"
+        },
+        {
+          "round": 12,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "3-9"
+        },
+        {
+          "round": 13,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "3-10"
+        },
+        {
+          "round": 14,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "3-11"
+        },
+        {
+          "round": 15,
+          "winner": 1,
+          "side": "t",
+          "outcome": "boom",
+          "score": "4-11"
+        },
+        {
+          "round": 16,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "4-12"
+        },
+        {
+          "round": 17,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "4-13"
+        },
+        {
+          "round": 18,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 19,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 20,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 21,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 22,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 23,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 24,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        }
+      ]
+    },
+    {
+      "game_id": "270744",
+      "name": "Fracture",
+      "picked": true,
+      "decider": false,
+      "scores": [
+        13.0,
+        11.0
+      ],
+      "teams": [
+        {
+          "name": "LEVIATÁN",
+          "score": 13.0,
+          "players": [
+            {
+              "player": "Sato",
+              "team": "LEV",
+              "player_id": "21659",
+              "country": "br",
+              "agent": "waylay",
+              "stats": {
+                "R": {
+                  "value": 1.64,
+                  "both": "1.64",
+                  "t": "1.84",
+                  "ct": "1.45"
+                },
+                "ACS": {
+                  "value": 304.0,
+                  "both": "304",
+                  "t": "321",
+                  "ct": "287"
+                },
+                "K": {
+                  "value": 27.0,
+                  "both": "27",
+                  "t": "15",
+                  "ct": "12"
+                },
+                "D": {
+                  "value": 14.0,
+                  "both": "14",
+                  "t": "6",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 6.0,
+                  "both": "6",
+                  "t": "2",
+                  "ct": "4"
+                },
+                "KD_+/-": {
+                  "value": 13.0,
+                  "both": "+13",
+                  "t": "+9",
+                  "ct": "+4"
+                },
+                "KAST": {
+                  "value": 79.0,
+                  "both": "79%",
+                  "t": "75%",
+                  "ct": "83%"
+                },
+                "ADR": {
+                  "value": 186.0,
+                  "both": "186",
+                  "t": "213",
+                  "ct": "159"
+                },
+                "HS%": {
+                  "value": 27.0,
+                  "both": "27%",
+                  "t": "33%",
+                  "ct": "19%"
+                },
+                "FK": {
+                  "value": 8.0,
+                  "both": "8",
+                  "t": "4",
+                  "ct": "4"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "2",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": 5.0,
+                  "both": "+5",
+                  "t": "+2",
+                  "ct": "+3"
+                }
+              }
+            },
+            {
+              "player": "Neon",
+              "team": "LEV",
+              "player_id": "29243",
+              "country": "ar",
+              "agent": "brimstone",
+              "stats": {
+                "R": {
+                  "value": 1.19,
+                  "both": "1.19",
+                  "t": "1.26",
+                  "ct": "1.12"
+                },
+                "ACS": {
+                  "value": 236.0,
+                  "both": "236",
+                  "t": "263",
+                  "ct": "210"
+                },
+                "K": {
+                  "value": 17.0,
+                  "both": "17",
+                  "t": "9",
+                  "ct": "8"
+                },
+                "D": {
+                  "value": 13.0,
+                  "both": "13",
+                  "t": "8",
+                  "ct": "5"
+                },
+                "A": {
+                  "value": 17.0,
+                  "both": "17",
+                  "t": "13",
+                  "ct": "4"
+                },
+                "KD_+/-": {
+                  "value": 4.0,
+                  "both": "+4",
+                  "t": "+1",
+                  "ct": "+3"
+                },
+                "KAST": {
+                  "value": 75.0,
+                  "both": "75%",
+                  "t": "83%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 160.0,
+                  "both": "160",
+                  "t": "163",
+                  "ct": "158"
+                },
+                "HS%": {
+                  "value": 21.0,
+                  "both": "21%",
+                  "t": "24%",
+                  "ct": "18%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "0",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "0",
+                  "ct": "-1"
+                }
+              }
+            },
+            {
+              "player": "kiNgg",
+              "team": "LEV",
+              "player_id": "8549",
+              "country": "cl",
+              "agent": "breach",
+              "stats": {
+                "R": {
+                  "value": 1.07,
+                  "both": "1.07",
+                  "t": "1.41",
+                  "ct": "0.73"
+                },
+                "ACS": {
+                  "value": 143.0,
+                  "both": "143",
+                  "t": "196",
+                  "ct": "92"
+                },
+                "K": {
+                  "value": 14.0,
+                  "both": "14",
+                  "t": "9",
+                  "ct": "5"
+                },
+                "D": {
+                  "value": 13.0,
+                  "both": "13",
+                  "t": "6",
+                  "ct": "7"
+                },
+                "A": {
+                  "value": 9.0,
+                  "both": "9",
+                  "t": "5",
+                  "ct": "4"
+                },
+                "KD_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "+3",
+                  "ct": "-2"
+                },
+                "KAST": {
+                  "value": 67.0,
+                  "both": "67%",
+                  "t": "67%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 91.0,
+                  "both": "91",
+                  "t": "121",
+                  "ct": "61"
+                },
+                "HS%": {
+                  "value": 26.0,
+                  "both": "26%",
+                  "t": "32%",
+                  "ct": "17%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "1",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": -2.0,
+                  "both": "-2",
+                  "t": "-1",
+                  "ct": "-1"
+                }
+              }
+            },
+            {
+              "player": "blowz",
+              "team": "LEV",
+              "player_id": "21251",
+              "country": "br",
+              "agent": "tejo",
+              "stats": {
+                "R": {
+                  "value": 0.96,
+                  "both": "0.96",
+                  "t": "0.43",
+                  "ct": "1.50"
+                },
+                "ACS": {
+                  "value": 139.0,
+                  "both": "139",
+                  "t": "53",
+                  "ct": "226"
+                },
+                "K": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "1",
+                  "ct": "9"
+                },
+                "D": {
+                  "value": 14.0,
+                  "both": "14",
+                  "t": "8",
+                  "ct": "6"
+                },
+                "A": {
+                  "value": 8.0,
+                  "both": "8",
+                  "t": "4",
+                  "ct": "4"
+                },
+                "KD_+/-": {
+                  "value": -4.0,
+                  "both": "-4",
+                  "t": "-7",
+                  "ct": "+3"
+                },
+                "KAST": {
+                  "value": 71.0,
+                  "both": "71%",
+                  "t": "58%",
+                  "ct": "83%"
+                },
+                "ADR": {
+                  "value": 110.0,
+                  "both": "110",
+                  "t": "44",
+                  "ct": "176"
+                },
+                "HS%": {
+                  "value": 24.0,
+                  "both": "24%",
+                  "t": "18%",
+                  "ct": "26%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "spike",
+              "team": "LEV",
+              "player_id": "21661",
+              "country": "br",
+              "agent": "neon",
+              "stats": {
+                "R": {
+                  "value": 0.88,
+                  "both": "0.88",
+                  "t": "0.76",
+                  "ct": "1.00"
+                },
+                "ACS": {
+                  "value": 179.0,
+                  "both": "179",
+                  "t": "181",
+                  "ct": "178"
+                },
+                "K": {
+                  "value": 16.0,
+                  "both": "16",
+                  "t": "8",
+                  "ct": "8"
+                },
+                "D": {
+                  "value": 18.0,
+                  "both": "18",
+                  "t": "10",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "3",
+                  "ct": "7"
+                },
+                "KD_+/-": {
+                  "value": -2.0,
+                  "both": "-2",
+                  "t": "-2",
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 71.0,
+                  "both": "71%",
+                  "t": "75%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 113.0,
+                  "both": "113",
+                  "t": "115",
+                  "ct": "112"
+                },
+                "HS%": {
+                  "value": 33.0,
+                  "both": "33%",
+                  "t": "31%",
+                  "ct": "35%"
+                },
+                "FK": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "2",
+                  "ct": "2"
+                },
+                "FD": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "3",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "-1",
+                  "ct": "+1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Global Esports",
+          "score": 11.0,
+          "players": [
+            {
+              "player": "UdoTan",
+              "team": "GE",
+              "player_id": "4428",
+              "country": "kr",
+              "agent": "chamber",
+              "stats": {
+                "R": {
+                  "value": 1.32,
+                  "both": "1.32",
+                  "t": "1.70",
+                  "ct": "0.94"
+                },
+                "ACS": {
+                  "value": 301.0,
+                  "both": "301",
+                  "t": "374",
+                  "ct": "229"
+                },
+                "K": {
+                  "value": 24.0,
+                  "both": "24",
+                  "t": "15",
+                  "ct": "9"
+                },
+                "D": {
+                  "value": 16.0,
+                  "both": "16",
+                  "t": "7",
+                  "ct": "9"
+                },
+                "A": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "2",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 8.0,
+                  "both": "+8",
+                  "t": "+8",
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 67.0,
+                  "both": "67%",
+                  "t": "67%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 184.0,
+                  "both": "184",
+                  "t": "225",
+                  "ct": "142"
+                },
+                "HS%": {
+                  "value": 39.0,
+                  "both": "39%",
+                  "t": "25%",
+                  "ct": "62%"
+                },
+                "FK": {
+                  "value": 5.0,
+                  "both": "5",
+                  "t": "3",
+                  "ct": "2"
+                },
+                "FD": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "3",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "0",
+                  "ct": "+1"
+                }
+              }
+            },
+            {
+              "player": "xavi8k",
+              "team": "GE",
+              "player_id": "7754",
+              "country": "ph",
+              "agent": "astra",
+              "stats": {
+                "R": {
+                  "value": 0.88,
+                  "both": "0.88",
+                  "t": "0.86",
+                  "ct": "0.90"
+                },
+                "ACS": {
+                  "value": 154.0,
+                  "both": "154",
+                  "t": "137",
+                  "ct": "173"
+                },
+                "K": {
+                  "value": 14.0,
+                  "both": "14",
+                  "t": "7",
+                  "ct": "7"
+                },
+                "D": {
+                  "value": 16.0,
+                  "both": "16",
+                  "t": "8",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 6.0,
+                  "both": "6",
+                  "t": "3",
+                  "ct": "3"
+                },
+                "KD_+/-": {
+                  "value": -2.0,
+                  "both": "-2",
+                  "t": "-1",
+                  "ct": "-1"
+                },
+                "KAST": {
+                  "value": 58.0,
+                  "both": "58%",
+                  "t": "58%",
+                  "ct": "58%"
+                },
+                "ADR": {
+                  "value": 103.0,
+                  "both": "103",
+                  "t": "81",
+                  "ct": "125"
+                },
+                "HS%": {
+                  "value": 29.0,
+                  "both": "29%",
+                  "t": "56%",
+                  "ct": "19%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "0",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "+1",
+                  "ct": "-2"
+                }
+              }
+            },
+            {
+              "player": "Autumn",
+              "team": "GE",
+              "player_id": "872",
+              "country": "au",
+              "agent": "phoenix",
+              "stats": {
+                "R": {
+                  "value": 0.82,
+                  "both": "0.82",
+                  "t": "0.60",
+                  "ct": "1.03"
+                },
+                "ACS": {
+                  "value": 156.0,
+                  "both": "156",
+                  "t": "109",
+                  "ct": "204"
+                },
+                "K": {
+                  "value": 14.0,
+                  "both": "14",
+                  "t": "4",
+                  "ct": "10"
+                },
+                "D": {
+                  "value": 16.0,
+                  "both": "16",
+                  "t": "7",
+                  "ct": "9"
+                },
+                "A": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "2",
+                  "ct": "2"
+                },
+                "KD_+/-": {
+                  "value": -2.0,
+                  "both": "-2",
+                  "t": "-3",
+                  "ct": "+1"
+                },
+                "KAST": {
+                  "value": 63.0,
+                  "both": "63%",
+                  "t": "58%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 110.0,
+                  "both": "110",
+                  "t": "82",
+                  "ct": "139"
+                },
+                "HS%": {
+                  "value": 35.0,
+                  "both": "35%",
+                  "t": "33%",
+                  "ct": "37%"
+                },
+                "FK": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "0",
+                  "ct": "2"
+                },
+                "FD": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "0",
+                  "ct": "+1"
+                }
+              }
+            },
+            {
+              "player": "PatMen",
+              "team": "GE",
+              "player_id": "13744",
+              "country": "ph",
+              "agent": "waylay",
+              "stats": {
+                "R": {
+                  "value": 0.67,
+                  "both": "0.67",
+                  "t": "0.48",
+                  "ct": "0.86"
+                },
+                "ACS": {
+                  "value": 157.0,
+                  "both": "157",
+                  "t": "132",
+                  "ct": "184"
+                },
+                "K": {
+                  "value": 12.0,
+                  "both": "12",
+                  "t": "5",
+                  "ct": "7"
+                },
+                "D": {
+                  "value": 19.0,
+                  "both": "19",
+                  "t": "11",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "0",
+                  "ct": "2"
+                },
+                "KD_+/-": {
+                  "value": -7.0,
+                  "both": "-7",
+                  "t": "-6",
+                  "ct": "-1"
+                },
+                "KAST": {
+                  "value": 42.0,
+                  "both": "42%",
+                  "t": "33%",
+                  "ct": "50%"
+                },
+                "ADR": {
+                  "value": 107.0,
+                  "both": "107",
+                  "t": "91",
+                  "ct": "123"
+                },
+                "HS%": {
+                  "value": 23.0,
+                  "both": "23%",
+                  "t": "27%",
+                  "ct": "19%"
+                },
+                "FK": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "1",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "2",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "-1",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "Kr1stal",
+              "team": "GE",
+              "player_id": "5796",
+              "country": "ru",
+              "agent": "fade",
+              "stats": {
+                "R": {
+                  "value": 0.51,
+                  "both": "0.51",
+                  "t": "0.29",
+                  "ct": "0.74"
+                },
+                "ACS": {
+                  "value": 95.0,
+                  "both": "95",
+                  "t": "68",
+                  "ct": "122"
+                },
+                "K": {
+                  "value": 8.0,
+                  "both": "8",
+                  "t": "3",
+                  "ct": "5"
+                },
+                "D": {
+                  "value": 17.0,
+                  "both": "17",
+                  "t": "9",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "1",
+                  "ct": "3"
+                },
+                "KD_+/-": {
+                  "value": -9.0,
+                  "both": "-9",
+                  "t": "-6",
+                  "ct": "-3"
+                },
+                "KAST": {
+                  "value": 67.0,
+                  "both": "67%",
+                  "t": "75%",
+                  "ct": "58%"
+                },
+                "ADR": {
+                  "value": 63.0,
+                  "both": "63",
+                  "t": "39",
+                  "ct": "87"
+                },
+                "HS%": {
+                  "value": 17.0,
+                  "both": "17%",
+                  "t": "25%",
+                  "ct": "14%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "2",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": -2.0,
+                  "both": "-2",
+                  "t": "-2",
+                  "ct": "0"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "1-0"
+        },
+        {
+          "round": 2,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "2-0"
+        },
+        {
+          "round": 3,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "2-1"
+        },
+        {
+          "round": 4,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "3-1"
+        },
+        {
+          "round": 5,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "4-1"
+        },
+        {
+          "round": 6,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "time",
+          "score": "5-1"
+        },
+        {
+          "round": 7,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "5-2"
+        },
+        {
+          "round": 8,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "5-3"
+        },
+        {
+          "round": 9,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "5-4"
+        },
+        {
+          "round": 10,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "5-5"
+        },
+        {
+          "round": 11,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "6-5"
+        },
+        {
+          "round": 12,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "6-6"
+        },
+        {
+          "round": 13,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "7-6"
+        },
+        {
+          "round": 14,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "8-6"
+        },
+        {
+          "round": 15,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "8-7"
+        },
+        {
+          "round": 16,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "8-8"
+        },
+        {
+          "round": 17,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "9-8"
+        },
+        {
+          "round": 18,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "10-8"
+        },
+        {
+          "round": 19,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "10-9"
+        },
+        {
+          "round": 20,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "11-9"
+        },
+        {
+          "round": 21,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "11-10"
+        },
+        {
+          "round": 22,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "11-11"
+        },
+        {
+          "round": 23,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "12-11"
+        },
+        {
+          "round": 24,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "13-11"
+        }
+      ]
+    },
+    {
+      "game_id": "270745",
+      "name": "Split",
+      "picked": false,
+      "decider": true,
+      "scores": [
+        13.0,
+        9.0
+      ],
+      "teams": [
+        {
+          "name": "LEVIATÁN",
+          "score": 13.0,
+          "players": [
+            {
+              "player": "Sato",
+              "team": "LEV",
+              "player_id": "21659",
+              "country": "br",
+              "agent": "phoenix",
+              "stats": {
+                "R": {
+                  "value": 1.43,
+                  "both": "1.43",
+                  "t": "1.60",
+                  "ct": "1.29"
+                },
+                "ACS": {
+                  "value": 271.0,
+                  "both": "271",
+                  "t": "283",
+                  "ct": "263"
+                },
+                "K": {
+                  "value": 19.0,
+                  "both": "19",
+                  "t": "9",
+                  "ct": "10"
+                },
+                "D": {
+                  "value": 13.0,
+                  "both": "13",
+                  "t": "4",
+                  "ct": "9"
+                },
+                "A": {
+                  "value": 6.0,
+                  "both": "6",
+                  "t": "3",
+                  "ct": "3"
+                },
+                "KD_+/-": {
+                  "value": 6.0,
+                  "both": "+6",
+                  "t": "+5",
+                  "ct": "+1"
+                },
+                "KAST": {
+                  "value": 86.0,
+                  "both": "86%",
+                  "t": "100%",
+                  "ct": "75%"
+                },
+                "ADR": {
+                  "value": 183.0,
+                  "both": "183",
+                  "t": "179",
+                  "ct": "188"
+                },
+                "HS%": {
+                  "value": 44.0,
+                  "both": "44%",
+                  "t": "42%",
+                  "ct": "47%"
+                },
+                "FK": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "2",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "1",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "+1",
+                  "ct": "-2"
+                }
+              }
+            },
+            {
+              "player": "kiNgg",
+              "team": "LEV",
+              "player_id": "8549",
+              "country": "cl",
+              "agent": "viper",
+              "stats": {
+                "R": {
+                  "value": 1.28,
+                  "both": "1.28",
+                  "t": "1.57",
+                  "ct": "1.04"
+                },
+                "ACS": {
+                  "value": 199.0,
+                  "both": "199",
+                  "t": "211",
+                  "ct": "189"
+                },
+                "K": {
+                  "value": 15.0,
+                  "both": "15",
+                  "t": "8",
+                  "ct": "7"
+                },
+                "D": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "2",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 5.0,
+                  "both": "5",
+                  "t": "1",
+                  "ct": "4"
+                },
+                "KD_+/-": {
+                  "value": 5.0,
+                  "both": "+5",
+                  "t": "+6",
+                  "ct": "-1"
+                },
+                "KAST": {
+                  "value": 73.0,
+                  "both": "73%",
+                  "t": "90%",
+                  "ct": "58%"
+                },
+                "ADR": {
+                  "value": 127.0,
+                  "both": "127",
+                  "t": "143",
+                  "ct": "113"
+                },
+                "HS%": {
+                  "value": 29.0,
+                  "both": "29%",
+                  "t": "33%",
+                  "ct": "25%"
+                },
+                "FK": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "1",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "0",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "+1",
+                  "ct": "-1"
+                }
+              }
+            },
+            {
+              "player": "Neon",
+              "team": "LEV",
+              "player_id": "29243",
+              "country": "ar",
+              "agent": "omen",
+              "stats": {
+                "R": {
+                  "value": 1.15,
+                  "both": "1.15",
+                  "t": "1.20",
+                  "ct": "1.11"
+                },
+                "ACS": {
+                  "value": 182.0,
+                  "both": "182",
+                  "t": "119",
+                  "ct": "235"
+                },
+                "K": {
+                  "value": 15.0,
+                  "both": "15",
+                  "t": "5",
+                  "ct": "10"
+                },
+                "D": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "2",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 6.0,
+                  "both": "6",
+                  "t": "1",
+                  "ct": "5"
+                },
+                "KD_+/-": {
+                  "value": 5.0,
+                  "both": "+5",
+                  "t": "+3",
+                  "ct": "+2"
+                },
+                "KAST": {
+                  "value": 77.0,
+                  "both": "77%",
+                  "t": "100%",
+                  "ct": "58%"
+                },
+                "ADR": {
+                  "value": 108.0,
+                  "both": "108",
+                  "t": "74",
+                  "ct": "137"
+                },
+                "HS%": {
+                  "value": 27.0,
+                  "both": "27%",
+                  "t": "23%",
+                  "ct": "29%"
+                },
+                "FK": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "1",
+                  "ct": "2"
+                },
+                "FD": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 2.0,
+                  "both": "+2",
+                  "t": "0",
+                  "ct": "+2"
+                }
+              }
+            },
+            {
+              "player": "spike",
+              "team": "LEV",
+              "player_id": "21661",
+              "country": "br",
+              "agent": "neon",
+              "stats": {
+                "R": {
+                  "value": 1.11,
+                  "both": "1.11",
+                  "t": "1.24",
+                  "ct": "1.01"
+                },
+                "ACS": {
+                  "value": 257.0,
+                  "both": "257",
+                  "t": "319",
+                  "ct": "207"
+                },
+                "K": {
+                  "value": 19.0,
+                  "both": "19",
+                  "t": "11",
+                  "ct": "8"
+                },
+                "D": {
+                  "value": 17.0,
+                  "both": "17",
+                  "t": "8",
+                  "ct": "9"
+                },
+                "A": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "1",
+                  "ct": "3"
+                },
+                "KD_+/-": {
+                  "value": 2.0,
+                  "both": "+2",
+                  "t": "+3",
+                  "ct": "-1"
+                },
+                "KAST": {
+                  "value": 73.0,
+                  "both": "73%",
+                  "t": "90%",
+                  "ct": "58%"
+                },
+                "ADR": {
+                  "value": 156.0,
+                  "both": "156",
+                  "t": "191",
+                  "ct": "127"
+                },
+                "HS%": {
+                  "value": 38.0,
+                  "both": "38%",
+                  "t": "28%",
+                  "ct": "60%"
+                },
+                "FK": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "3",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "1",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "+2",
+                  "ct": "-1"
+                }
+              }
+            },
+            {
+              "player": "blowz",
+              "team": "LEV",
+              "player_id": "21251",
+              "country": "br",
+              "agent": "fade",
+              "stats": {
+                "R": {
+                  "value": 0.97,
+                  "both": "0.97",
+                  "t": "1.18",
+                  "ct": "0.79"
+                },
+                "ACS": {
+                  "value": 122.0,
+                  "both": "122",
+                  "t": "111",
+                  "ct": "132"
+                },
+                "K": {
+                  "value": 11.0,
+                  "both": "11",
+                  "t": "5",
+                  "ct": "6"
+                },
+                "D": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "2",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "3",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "+3",
+                  "ct": "-2"
+                },
+                "KAST": {
+                  "value": 77.0,
+                  "both": "77%",
+                  "t": "90%",
+                  "ct": "67%"
+                },
+                "ADR": {
+                  "value": 88.0,
+                  "both": "88",
+                  "t": "62",
+                  "ct": "110"
+                },
+                "HS%": {
+                  "value": 73.0,
+                  "both": "73%",
+                  "t": "67%",
+                  "ct": "78%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Global Esports",
+          "score": 9.0,
+          "players": [
+            {
+              "player": "UdoTan",
+              "team": "GE",
+              "player_id": "4428",
+              "country": "kr",
+              "agent": "raze",
+              "stats": {
+                "R": {
+                  "value": 0.91,
+                  "both": "0.91",
+                  "t": "1.16",
+                  "ct": "0.61"
+                },
+                "ACS": {
+                  "value": 230.0,
+                  "both": "230",
+                  "t": "287",
+                  "ct": "163"
+                },
+                "K": {
+                  "value": 19.0,
+                  "both": "19",
+                  "t": "14",
+                  "ct": "5"
+                },
+                "D": {
+                  "value": 17.0,
+                  "both": "17",
+                  "t": "9",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 2.0,
+                  "both": "+2",
+                  "t": "+5",
+                  "ct": "-3"
+                },
+                "KAST": {
+                  "value": 68.0,
+                  "both": "68%",
+                  "t": "67%",
+                  "ct": "70%"
+                },
+                "ADR": {
+                  "value": 154.0,
+                  "both": "154",
+                  "t": "200",
+                  "ct": "98"
+                },
+                "HS%": {
+                  "value": 36.0,
+                  "both": "36%",
+                  "t": "43%",
+                  "ct": "24%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "0",
+                  "ct": "-1"
+                }
+              }
+            },
+            {
+              "player": "Kr1stal",
+              "team": "GE",
+              "player_id": "5796",
+              "country": "ru",
+              "agent": "fade",
+              "stats": {
+                "R": {
+                  "value": 0.82,
+                  "both": "0.82",
+                  "t": "0.96",
+                  "ct": "0.65"
+                },
+                "ACS": {
+                  "value": 127.0,
+                  "both": "127",
+                  "t": "173",
+                  "ct": "72"
+                },
+                "K": {
+                  "value": 9.0,
+                  "both": "9",
+                  "t": "7",
+                  "ct": "2"
+                },
+                "D": {
+                  "value": 13.0,
+                  "both": "13",
+                  "t": "7",
+                  "ct": "6"
+                },
+                "A": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "2",
+                  "ct": "2"
+                },
+                "KD_+/-": {
+                  "value": -4.0,
+                  "both": "-4",
+                  "t": "0",
+                  "ct": "-4"
+                },
+                "KAST": {
+                  "value": 68.0,
+                  "both": "68%",
+                  "t": "67%",
+                  "ct": "70%"
+                },
+                "ADR": {
+                  "value": 79.0,
+                  "both": "79",
+                  "t": "102",
+                  "ct": "51"
+                },
+                "HS%": {
+                  "value": 27.0,
+                  "both": "27%",
+                  "t": "18%",
+                  "ct": "50%"
+                },
+                "FK": {
+                  "value": 5.0,
+                  "both": "5",
+                  "t": "3",
+                  "ct": "2"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 5.0,
+                  "both": "+5",
+                  "t": "+3",
+                  "ct": "+2"
+                }
+              }
+            },
+            {
+              "player": "xavi8k",
+              "team": "GE",
+              "player_id": "7754",
+              "country": "ph",
+              "agent": "sage",
+              "stats": {
+                "R": {
+                  "value": 0.71,
+                  "both": "0.71",
+                  "t": "0.92",
+                  "ct": "0.47"
+                },
+                "ACS": {
+                  "value": 124.0,
+                  "both": "124",
+                  "t": "161",
+                  "ct": "81"
+                },
+                "K": {
+                  "value": 10.0,
+                  "both": "10",
+                  "t": "7",
+                  "ct": "3"
+                },
+                "D": {
+                  "value": 15.0,
+                  "both": "15",
+                  "t": "8",
+                  "ct": "7"
+                },
+                "A": {
+                  "value": 8.0,
+                  "both": "8",
+                  "t": "5",
+                  "ct": "3"
+                },
+                "KD_+/-": {
+                  "value": -5.0,
+                  "both": "-5",
+                  "t": "-1",
+                  "ct": "-4"
+                },
+                "KAST": {
+                  "value": 64.0,
+                  "both": "64%",
+                  "t": "67%",
+                  "ct": "60%"
+                },
+                "ADR": {
+                  "value": 80.0,
+                  "both": "80",
+                  "t": "102",
+                  "ct": "54"
+                },
+                "HS%": {
+                  "value": 26.0,
+                  "both": "26%",
+                  "t": "28%",
+                  "ct": "22%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 4.0,
+                  "both": "4",
+                  "t": "2",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": -3.0,
+                  "both": "-3",
+                  "t": "-1",
+                  "ct": "-2"
+                }
+              }
+            },
+            {
+              "player": "Autumn",
+              "team": "GE",
+              "player_id": "872",
+              "country": "au",
+              "agent": "viper",
+              "stats": {
+                "R": {
+                  "value": 0.68,
+                  "both": "0.68",
+                  "t": "0.98",
+                  "ct": "0.32"
+                },
+                "ACS": {
+                  "value": 156.0,
+                  "both": "156",
+                  "t": "208",
+                  "ct": "94"
+                },
+                "K": {
+                  "value": 11.0,
+                  "both": "11",
+                  "t": "8",
+                  "ct": "3"
+                },
+                "D": {
+                  "value": 16.0,
+                  "both": "16",
+                  "t": "8",
+                  "ct": "8"
+                },
+                "A": {
+                  "value": 6.0,
+                  "both": "6",
+                  "t": "3",
+                  "ct": "3"
+                },
+                "KD_+/-": {
+                  "value": -5.0,
+                  "both": "-5",
+                  "t": "0",
+                  "ct": "-5"
+                },
+                "KAST": {
+                  "value": 59.0,
+                  "both": "59%",
+                  "t": "75%",
+                  "ct": "40%"
+                },
+                "ADR": {
+                  "value": 113.0,
+                  "both": "113",
+                  "t": "145",
+                  "ct": "75"
+                },
+                "HS%": {
+                  "value": 31.0,
+                  "both": "31%",
+                  "t": "27%",
+                  "ct": "40%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "0",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "+1",
+                  "ct": "-2"
+                }
+              }
+            },
+            {
+              "player": "PatMen",
+              "team": "GE",
+              "player_id": "13744",
+              "country": "ph",
+              "agent": "omen",
+              "stats": {
+                "R": {
+                  "value": 0.64,
+                  "both": "0.64",
+                  "t": "0.74",
+                  "ct": "0.53"
+                },
+                "ACS": {
+                  "value": 170.0,
+                  "both": "170",
+                  "t": "157",
+                  "ct": "186"
+                },
+                "K": {
+                  "value": 11.0,
+                  "both": "11",
+                  "t": "6",
+                  "ct": "5"
+                },
+                "D": {
+                  "value": 18.0,
+                  "both": "18",
+                  "t": "9",
+                  "ct": "9"
+                },
+                "A": {
+                  "value": 7.0,
+                  "both": "7",
+                  "t": "6",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": -7.0,
+                  "both": "-7",
+                  "t": "-3",
+                  "ct": "-4"
+                },
+                "KAST": {
+                  "value": 68.0,
+                  "both": "68%",
+                  "t": "75%",
+                  "ct": "60%"
+                },
+                "ADR": {
+                  "value": 139.0,
+                  "both": "139",
+                  "t": "119",
+                  "ct": "164"
+                },
+                "HS%": {
+                  "value": 30.0,
+                  "both": "30%",
+                  "t": "39%",
+                  "ct": "23%"
+                },
+                "FK": {
+                  "value": 3.0,
+                  "both": "3",
+                  "t": "2",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 5.0,
+                  "both": "5",
+                  "t": "3",
+                  "ct": "2"
+                },
+                "FK_+/-": {
+                  "value": -2.0,
+                  "both": "-2",
+                  "t": "-1",
+                  "ct": "-1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "1-0"
+        },
+        {
+          "round": 2,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "2-0"
+        },
+        {
+          "round": 3,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "2-1"
+        },
+        {
+          "round": 4,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "2-2"
+        },
+        {
+          "round": 5,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "2-3"
+        },
+        {
+          "round": 6,
+          "winner": 2,
+          "side": "t",
+          "outcome": "boom",
+          "score": "2-4"
+        },
+        {
+          "round": 7,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "3-4"
+        },
+        {
+          "round": 8,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "3-5"
+        },
+        {
+          "round": 9,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "3-6"
+        },
+        {
+          "round": 10,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "3-7"
+        },
+        {
+          "round": 11,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "4-7"
+        },
+        {
+          "round": 12,
+          "winner": 2,
+          "side": "t",
+          "outcome": "elim",
+          "score": "4-8"
+        },
+        {
+          "round": 13,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "5-8"
+        },
+        {
+          "round": 14,
+          "winner": 1,
+          "side": "t",
+          "outcome": "boom",
+          "score": "6-8"
+        },
+        {
+          "round": 15,
+          "winner": 1,
+          "side": "t",
+          "outcome": "boom",
+          "score": "7-8"
+        },
+        {
+          "round": 16,
+          "winner": 1,
+          "side": "t",
+          "outcome": "boom",
+          "score": "8-8"
+        },
+        {
+          "round": 17,
+          "winner": 1,
+          "side": "t",
+          "outcome": "boom",
+          "score": "9-8"
+        },
+        {
+          "round": 18,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "10-8"
+        },
+        {
+          "round": 19,
+          "winner": 2,
+          "side": "ct",
+          "outcome": "elim",
+          "score": "10-9"
+        },
+        {
+          "round": 20,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "11-9"
+        },
+        {
+          "round": 21,
+          "winner": 1,
+          "side": "t",
+          "outcome": "boom",
+          "score": "12-9"
+        },
+        {
+          "round": 22,
+          "winner": 1,
+          "side": "t",
+          "outcome": "elim",
+          "score": "13-9"
+        },
+        {
+          "round": 23,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 24,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        }
+      ]
+    }
+  ],
+  "all_maps": {
+    "teams": [
+      {
+        "name": null,
+        "players": [
+          {
+            "player": "Sato",
+            "team": "LEV",
+            "player_id": "21659",
+            "country": "br",
+            "agent": "phoenix",
+            "stats": {
+              "R": {
+                "value": 1.27,
+                "both": "1.27",
+                "t": "1.59",
+                "ct": "1.03"
+              },
+              "ACS": {
+                "value": 244.0,
+                "both": "244",
+                "t": "286",
+                "ct": "229"
+              },
+              "K": {
+                "value": 54.0,
+                "both": "54",
+                "t": "28",
+                "ct": "26"
+              },
+              "D": {
+                "value": 43.0,
+                "both": "43",
+                "t": "14",
+                "ct": "29"
+              },
+              "A": {
+                "value": 18.0,
+                "both": "18",
+                "t": "5",
+                "ct": "13"
+              },
+              "KD_+/-": {
+                "value": 11.0,
+                "both": "+11",
+                "t": "+14",
+                "ct": "-3"
+              },
+              "KAST": {
+                "value": 78.0,
+                "both": "78%",
+                "t": "81%",
+                "ct": "75%"
+              },
+              "ADR": {
+                "value": 161.0,
+                "both": "161",
+                "t": "180",
+                "ct": "148"
+              },
+              "HS%": {
+                "value": 36.0,
+                "both": "36%",
+                "t": "35%",
+                "ct": "36%"
+              },
+              "FK": {
+                "value": 11.0,
+                "both": "11",
+                "t": "6",
+                "ct": "5"
+              },
+              "FD": {
+                "value": 8.0,
+                "both": "8",
+                "t": "4",
+                "ct": "4"
+              },
+              "FK_+/-": {
+                "value": 3.0,
+                "both": "+3",
+                "t": "+2",
+                "ct": "+1"
+              }
+            }
+          },
+          {
+            "player": "Neon",
+            "team": "LEV",
+            "player_id": "29243",
+            "country": "ar",
+            "agent": "chamber",
+            "stats": {
+              "R": {
+                "value": 1.22,
+                "both": "1.22",
+                "t": "1.23",
+                "ct": "1.22"
+              },
+              "ACS": {
+                "value": 227.0,
+                "both": "227",
+                "t": "212",
+                "ct": "235"
+              },
+              "K": {
+                "value": 47.0,
+                "both": "47",
+                "t": "18",
+                "ct": "29"
+              },
+              "D": {
+                "value": 34.0,
+                "both": "34",
+                "t": "14",
+                "ct": "20"
+              },
+              "A": {
+                "value": 24.0,
+                "both": "24",
+                "t": "14",
+                "ct": "10"
+              },
+              "KD_+/-": {
+                "value": 13.0,
+                "both": "+13",
+                "t": "+4",
+                "ct": "+9"
+              },
+              "KAST": {
+                "value": 71.0,
+                "both": "71%",
+                "t": "81%",
+                "ct": "64%"
+              },
+              "ADR": {
+                "value": 153.0,
+                "both": "153",
+                "t": "137",
+                "ct": "166"
+              },
+              "HS%": {
+                "value": 27.0,
+                "both": "27%",
+                "t": "27%",
+                "ct": "27%"
+              },
+              "FK": {
+                "value": 7.0,
+                "both": "7",
+                "t": "3",
+                "ct": "4"
+              },
+              "FD": {
+                "value": 6.0,
+                "both": "6",
+                "t": "2",
+                "ct": "4"
+              },
+              "FK_+/-": {
+                "value": 1.0,
+                "both": "+1",
+                "t": "+1",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "kiNgg",
+            "team": "LEV",
+            "player_id": "8549",
+            "country": "cl",
+            "agent": "astra",
+            "stats": {
+              "R": {
+                "value": 1.13,
+                "both": "1.13",
+                "t": "1.31",
+                "ct": "1.00"
+              },
+              "ACS": {
+                "value": 179.0,
+                "both": "179",
+                "t": "179",
+                "ct": "176"
+              },
+              "K": {
+                "value": 41.0,
+                "both": "41",
+                "t": "19",
+                "ct": "22"
+              },
+              "D": {
+                "value": 34.0,
+                "both": "34",
+                "t": "12",
+                "ct": "22"
+              },
+              "A": {
+                "value": 15.0,
+                "both": "15",
+                "t": "6",
+                "ct": "9"
+              },
+              "KD_+/-": {
+                "value": 7.0,
+                "both": "+7",
+                "t": "+7",
+                "ct": "0"
+              },
+              "KAST": {
+                "value": 68.0,
+                "both": "68%",
+                "t": "70%",
+                "ct": "67%"
+              },
+              "ADR": {
+                "value": 110.0,
+                "both": "110",
+                "t": "115",
+                "ct": "106"
+              },
+              "HS%": {
+                "value": 26.0,
+                "both": "26%",
+                "t": "32%",
+                "ct": "22%"
+              },
+              "FK": {
+                "value": 3.0,
+                "both": "3",
+                "t": "1",
+                "ct": "2"
+              },
+              "FD": {
+                "value": 4.0,
+                "both": "4",
+                "t": "1",
+                "ct": "3"
+              },
+              "FK_+/-": {
+                "value": -1.0,
+                "both": "-1",
+                "t": "0",
+                "ct": "-1"
+              }
+            }
+          },
+          {
+            "player": "blowz",
+            "team": "LEV",
+            "player_id": "21251",
+            "country": "br",
+            "agent": "sova",
+            "stats": {
+              "R": {
+                "value": 0.92,
+                "both": "0.92",
+                "t": "0.83",
+                "ct": "0.99"
+              },
+              "ACS": {
+                "value": 123.0,
+                "both": "123",
+                "t": "100",
+                "ct": "144"
+              },
+              "K": {
+                "value": 27.0,
+                "both": "27",
+                "t": "9",
+                "ct": "18"
+              },
+              "D": {
+                "value": 35.0,
+                "both": "35",
+                "t": "13",
+                "ct": "22"
+              },
+              "A": {
+                "value": 17.0,
+                "both": "17",
+                "t": "9",
+                "ct": "8"
+              },
+              "KD_+/-": {
+                "value": -8.0,
+                "both": "-8",
+                "t": "-4",
+                "ct": "-4"
+              },
+              "KAST": {
+                "value": 67.0,
+                "both": "67%",
+                "t": "70%",
+                "ct": "64%"
+              },
+              "ADR": {
+                "value": 93.0,
+                "both": "93",
+                "t": "71",
+                "ct": "109"
+              },
+              "HS%": {
+                "value": 36.0,
+                "both": "36%",
+                "t": "36%",
+                "ct": "35%"
+              },
+              "FK": {
+                "value": 2.0,
+                "both": "2",
+                "t": "0",
+                "ct": "2"
+              },
+              "FD": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "FK_+/-": {
+                "value": 1.0,
+                "both": "+1",
+                "t": "0",
+                "ct": "+1"
+              }
+            }
+          },
+          {
+            "player": "spike",
+            "team": "LEV",
+            "player_id": "21661",
+            "country": "br",
+            "agent": "neon",
+            "stats": {
+              "R": {
+                "value": 0.87,
+                "both": "0.87",
+                "t": "0.83",
+                "ct": "0.90"
+              },
+              "ACS": {
+                "value": 204.0,
+                "both": "204",
+                "t": "218",
+                "ct": "196"
+              },
+              "K": {
+                "value": 44.0,
+                "both": "44",
+                "t": "20",
+                "ct": "24"
+              },
+              "D": {
+                "value": 51.0,
+                "both": "51",
+                "t": "23",
+                "ct": "28"
+              },
+              "A": {
+                "value": 16.0,
+                "both": "16",
+                "t": "5",
+                "ct": "11"
+              },
+              "KD_+/-": {
+                "value": -7.0,
+                "both": "-7",
+                "t": "-3",
+                "ct": "-4"
+              },
+              "KAST": {
+                "value": 70.0,
+                "both": "70%",
+                "t": "78%",
+                "ct": "64%"
+              },
+              "ADR": {
+                "value": 130.0,
+                "both": "130",
+                "t": "139",
+                "ct": "123"
+              },
+              "HS%": {
+                "value": 37.0,
+                "both": "37%",
+                "t": "29%",
+                "ct": "48%"
+              },
+              "FK": {
+                "value": 12.0,
+                "both": "12",
+                "t": "6",
+                "ct": "6"
+              },
+              "FD": {
+                "value": 9.0,
+                "both": "9",
+                "t": "4",
+                "ct": "5"
+              },
+              "FK_+/-": {
+                "value": 3.0,
+                "both": "+3",
+                "t": "+2",
+                "ct": "+1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": null,
+        "players": [
+          {
+            "player": "UdoTan",
+            "team": "GE",
+            "player_id": "4428",
+            "country": "kr",
+            "agent": "neon",
+            "stats": {
+              "R": {
+                "value": 1.14,
+                "both": "1.14",
+                "t": "1.35",
+                "ct": "0.87"
+              },
+              "ACS": {
+                "value": 252.0,
+                "both": "252",
+                "t": "305",
+                "ct": "191"
+              },
+              "K": {
+                "value": 56.0,
+                "both": "56",
+                "t": "40",
+                "ct": "16"
+              },
+              "D": {
+                "value": 42.0,
+                "both": "42",
+                "t": "23",
+                "ct": "19"
+              },
+              "A": {
+                "value": 7.0,
+                "both": "7",
+                "t": "3",
+                "ct": "4"
+              },
+              "KD_+/-": {
+                "value": 14.0,
+                "both": "+14",
+                "t": "+17",
+                "ct": "-3"
+              },
+              "KAST": {
+                "value": 70.0,
+                "both": "70%",
+                "t": "69%",
+                "ct": "70%"
+              },
+              "ADR": {
+                "value": 163.0,
+                "both": "163",
+                "t": "194",
+                "ct": "122"
+              },
+              "HS%": {
+                "value": 34.0,
+                "both": "34%",
+                "t": "31%",
+                "ct": "39%"
+              },
+              "FK": {
+                "value": 7.0,
+                "both": "7",
+                "t": "5",
+                "ct": "2"
+              },
+              "FD": {
+                "value": 7.0,
+                "both": "7",
+                "t": "4",
+                "ct": "3"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "+1",
+                "ct": "-1"
+              }
+            }
+          },
+          {
+            "player": "Kr1stal",
+            "team": "GE",
+            "player_id": "5796",
+            "country": "ru",
+            "agent": "killjoy",
+            "stats": {
+              "R": {
+                "value": 0.97,
+                "both": "0.97",
+                "t": "0.95",
+                "ct": "0.98"
+              },
+              "ACS": {
+                "value": 191.0,
+                "both": "191",
+                "t": "184",
+                "ct": "163"
+              },
+              "K": {
+                "value": 38.0,
+                "both": "38",
+                "t": "23",
+                "ct": "15"
+              },
+              "D": {
+                "value": 40.0,
+                "both": "40",
+                "t": "24",
+                "ct": "16"
+              },
+              "A": {
+                "value": 12.0,
+                "both": "12",
+                "t": "7",
+                "ct": "5"
+              },
+              "KD_+/-": {
+                "value": -2.0,
+                "both": "-2",
+                "t": "-1",
+                "ct": "-1"
+              },
+              "KAST": {
+                "value": 73.0,
+                "both": "73%",
+                "t": "75%",
+                "ct": "70%"
+              },
+              "ADR": {
+                "value": 112.0,
+                "both": "112",
+                "t": "120",
+                "ct": "101"
+              },
+              "HS%": {
+                "value": 28.0,
+                "both": "28%",
+                "t": "29%",
+                "ct": "25%"
+              },
+              "FK": {
+                "value": 9.0,
+                "both": "9",
+                "t": "5",
+                "ct": "4"
+              },
+              "FD": {
+                "value": 6.0,
+                "both": "6",
+                "t": "5",
+                "ct": "1"
+              },
+              "FK_+/-": {
+                "value": 3.0,
+                "both": "+3",
+                "t": "0",
+                "ct": "+3"
+              }
+            }
+          },
+          {
+            "player": "Autumn",
+            "team": "GE",
+            "player_id": "872",
+            "country": "au",
+            "agent": "phoenix",
+            "stats": {
+              "R": {
+                "value": 0.89,
+                "both": "0.89",
+                "t": "0.97",
+                "ct": "0.78"
+              },
+              "ACS": {
+                "value": 181.0,
+                "both": "181",
+                "t": "178",
+                "ct": "175"
+              },
+              "K": {
+                "value": 40.0,
+                "both": "40",
+                "t": "22",
+                "ct": "18"
+              },
+              "D": {
+                "value": 41.0,
+                "both": "41",
+                "t": "21",
+                "ct": "20"
+              },
+              "A": {
+                "value": 13.0,
+                "both": "13",
+                "t": "6",
+                "ct": "7"
+              },
+              "KD_+/-": {
+                "value": -1.0,
+                "both": "-1",
+                "t": "+1",
+                "ct": "-2"
+              },
+              "KAST": {
+                "value": 67.0,
+                "both": "67%",
+                "t": "69%",
+                "ct": "63%"
+              },
+              "ADR": {
+                "value": 118.0,
+                "both": "118",
+                "t": "119",
+                "ct": "117"
+              },
+              "HS%": {
+                "value": 37.0,
+                "both": "37%",
+                "t": "35%",
+                "ct": "39%"
+              },
+              "FK": {
+                "value": 5.0,
+                "both": "5",
+                "t": "2",
+                "ct": "3"
+              },
+              "FD": {
+                "value": 4.0,
+                "both": "4",
+                "t": "1",
+                "ct": "3"
+              },
+              "FK_+/-": {
+                "value": 1.0,
+                "both": "+1",
+                "t": "+1",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "xavi8k",
+            "team": "GE",
+            "player_id": "7754",
+            "country": "ph",
+            "agent": "astra",
+            "stats": {
+              "R": {
+                "value": 0.8,
+                "both": "0.80",
+                "t": "0.83",
+                "ct": "0.75"
+              },
+              "ACS": {
+                "value": 137.0,
+                "both": "137",
+                "t": "137",
+                "ct": "140"
+              },
+              "K": {
+                "value": 31.0,
+                "both": "31",
+                "t": "18",
+                "ct": "13"
+              },
+              "D": {
+                "value": 41.0,
+                "both": "41",
+                "t": "23",
+                "ct": "18"
+              },
+              "A": {
+                "value": 24.0,
+                "both": "24",
+                "t": "16",
+                "ct": "8"
+              },
+              "KD_+/-": {
+                "value": -10.0,
+                "both": "-10",
+                "t": "-5",
+                "ct": "-5"
+              },
+              "KAST": {
+                "value": 68.0,
+                "both": "68%",
+                "t": "72%",
+                "ct": "63%"
+              },
+              "ADR": {
+                "value": 92.0,
+                "both": "92",
+                "t": "85",
+                "ct": "101"
+              },
+              "HS%": {
+                "value": 22.0,
+                "both": "22%",
+                "t": "27%",
+                "ct": "18%"
+              },
+              "FK": {
+                "value": 2.0,
+                "both": "2",
+                "t": "2",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 7.0,
+                "both": "7",
+                "t": "3",
+                "ct": "4"
+              },
+              "FK_+/-": {
+                "value": -5.0,
+                "both": "-5",
+                "t": "-1",
+                "ct": "-4"
+              }
+            }
+          },
+          {
+            "player": "PatMen",
+            "team": "GE",
+            "player_id": "13744",
+            "country": "ph",
+            "agent": "fade",
+            "stats": {
+              "R": {
+                "value": 0.64,
+                "both": "0.64",
+                "t": "0.65",
+                "ct": "0.63"
+              },
+              "ACS": {
+                "value": 153.0,
+                "both": "153",
+                "t": "147",
+                "ct": "166"
+              },
+              "K": {
+                "value": 32.0,
+                "both": "32",
+                "t": "18",
+                "ct": "14"
+              },
+              "D": {
+                "value": 49.0,
+                "both": "49",
+                "t": "28",
+                "ct": "21"
+              },
+              "A": {
+                "value": 11.0,
+                "both": "11",
+                "t": "8",
+                "ct": "3"
+              },
+              "KD_+/-": {
+                "value": -17.0,
+                "both": "-17",
+                "t": "-10",
+                "ct": "-7"
+              },
+              "KAST": {
+                "value": 62.0,
+                "both": "62%",
+                "t": "67%",
+                "ct": "56%"
+              },
+              "ADR": {
+                "value": 110.0,
+                "both": "110",
+                "t": "102",
+                "ct": "120"
+              },
+              "HS%": {
+                "value": 26.0,
+                "both": "26%",
+                "t": "28%",
+                "ct": "23%"
+              },
+              "FK": {
+                "value": 5.0,
+                "both": "5",
+                "t": "3",
+                "ct": "2"
+              },
+              "FD": {
+                "value": 11.0,
+                "both": "11",
+                "t": "6",
+                "ct": "5"
+              },
+              "FK_+/-": {
+                "value": -6.0,
+                "both": "-6",
+                "t": "-3",
+                "ct": "-3"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "url": "https://www.vlr.gg/684612"
+}

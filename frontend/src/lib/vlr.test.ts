@@ -10,6 +10,7 @@ import {
   fetchUpstream,
   getResults,
   normalizeLive,
+  normalizeMatch,
   normalizeNews,
   normalizePlayer,
   normalizeRankings,
@@ -28,6 +29,7 @@ import news from "@/lib/__fixtures__/news.json";
 import player from "@/lib/__fixtures__/player.json";
 import team from "@/lib/__fixtures__/team.json";
 import trends from "@/lib/__fixtures__/trends.json";
+import match from "@/lib/__fixtures__/match.json";
 
 describe("parseNumeric (null, never NaN)", () => {
   it("parses real numeric strings", () => {
@@ -265,6 +267,100 @@ describe("normalizeTrend", () => {
   });
 });
 
+describe("normalizeMatch (Phase 7 match detail)", () => {
+  const out = normalizeMatch(match);
+  const m = out[0];
+
+  it("wraps the single match object as a one-element list with header fields", () => {
+    expect(out.length).toBe(1);
+    expect(m.event).toBeTruthy();
+    expect(m.teams.length).toBe(2);
+    for (const t of m.teams) {
+      expect(typeof t.name).toBe("string");
+      expect(t.id && /^\d+$/.test(t.id)).toBeTruthy();
+      expect(t.score === null || typeof t.score === "number").toBe(true);
+    }
+    expect(m.format).toBe("BO3");
+    expect(m.veto && m.veto.toLowerCase()).toContain("pick");
+  });
+
+  it("exposes maps with the picked/decider markers and [team1,team2] scores", () => {
+    expect(m.maps.length).toBeGreaterThan(0);
+    expect(m.maps.filter((mp) => mp.decider).length).toBe(1);
+    expect(m.maps.filter((mp) => mp.picked).length).toBe(m.maps.length - 1);
+    for (const mp of m.maps) {
+      expect(mp.teams.length).toBe(2);
+      expect(mp.scores.length).toBe(2);
+      for (const s of mp.scores) {
+        expect(s === null || Number.isFinite(s)).toBe(true);
+        expect(Number.isNaN(s as number)).toBe(false);
+      }
+    }
+  });
+
+  it("carries the full stat column set, every value number-or-null (never NaN)", () => {
+    const p = m.maps[0].teams[0].players[0];
+    // map-tab data keys the table reads
+    for (const key of ["R", "ACS", "K", "D", "A", "KAST", "ADR", "HS%"]) {
+      expect(key in p.stats).toBe(true);
+    }
+    const allPlayers = [
+      ...m.maps.flatMap((mp) => mp.teams.flatMap((t) => t.players)),
+      ...(m.allMaps?.teams.flatMap((t) => t.players) ?? []),
+    ];
+    expect(allPlayers.length).toBeGreaterThan(0);
+    for (const pl of allPlayers) {
+      expect(typeof pl.player).toBe("string");
+      for (const cell of Object.values(pl.stats)) {
+        // parseNumeric contract: a finite number or null, never NaN
+        expect(cell.value === null || Number.isFinite(cell.value)).toBe(true);
+        expect(Number.isNaN(cell.value as number)).toBe(false);
+      }
+    }
+  });
+
+  it("KAST/HS% arrive as bare numbers (value), with the % kept only for display", () => {
+    const p = m.maps[0].teams[0].players[0];
+    const kast = p.stats["KAST"];
+    expect(kast.value === null || typeof kast.value === "number").toBe(true);
+    if (kast.value !== null) expect(kast.value).toBeLessThanOrEqual(100);
+  });
+
+  it("rounds are real win/loss data: winner 1|2|null, side t|ct|null", () => {
+    const withRounds = m.maps.find((mp) => mp.rounds.length > 0);
+    expect(withRounds).toBeTruthy();
+    for (const r of withRounds!.rounds) {
+      expect([1, 2, null]).toContain(r.winner);
+      expect(["t", "ct", null]).toContain(r.side);
+    }
+  });
+
+  it("empty stat cell coerces to null (not NaN, not 0)", () => {
+    const partial = normalizeMatch({
+      ...(match as object),
+      maps: [
+        {
+          game_id: "x",
+          name: "Test",
+          picked: true,
+          decider: false,
+          scores: ["", null],
+          teams: [
+            { name: "A", score: null, players: [
+              { player: "p", agent: "a", stats: { R: { value: null, both: null, t: null, ct: null }, K: { value: 1, both: "1" } } },
+            ] },
+            { name: "B", score: 0, players: [] },
+          ],
+          rounds: [],
+        },
+      ],
+    })[0];
+    const cell = partial.maps[0].teams[0].players[0].stats["R"];
+    expect(cell.value).toBeNull();
+    expect(partial.maps[0].scores[0]).toBeNull(); // "" -> null, not NaN
+  });
+});
+
 describe("graceful-empty on failure (never throws to the page)", () => {
   afterEach(() => vi.restoreAllMocks());
 
@@ -312,5 +408,7 @@ describe("empty / garbage input yields valid empty output (no throw)", () => {
     expect(normalizePlayer(null)).toEqual([]);
     expect(normalizeTeam([])).toEqual([]);
     expect(normalizeTrend("garbage")).toEqual([]);
+    expect(normalizeMatch(null)).toEqual([]);
+    expect(normalizeMatch([])).toEqual([]);
   });
 });

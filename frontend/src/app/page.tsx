@@ -51,7 +51,7 @@ export default async function MatchCenter() {
                 event={m.event}
                 series={m.series}
                 label={m.timeUntil}
-                url={m.url}
+                id={m.id}
               />
             ))}
           </MatchSection>
@@ -74,7 +74,7 @@ export default async function MatchCenter() {
                 event={m.event}
                 series={m.series}
                 label={m.time}
-                url={m.url}
+                id={m.id}
               />
             ))}
           </MatchSection>

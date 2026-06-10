@@ -142,5 +142,32 @@ MATCH_SB_CLS_FK_DIFF = "mod-fk-diff"
 # the % columns whose values go through parse_percent
 MATCH_SB_PCT_KEYS = ("KAST", "HS%")
 
+# --- match detail: header / maps / rounds (the rich page shape) ---
+# header: event link wraps a bold event-name div + a series/stage div
+MATCH_H_EVENT_LINK = "a.match-header-event"
+MATCH_H_EVENT_NAME = 'a.match-header-event div[style*="font-weight: 700"]'
+MATCH_H_SERIES = "div.match-header-event-series"
+# the two team links carry the team id (href) + mod-1/mod-2 ordering
+MATCH_H_TEAM_LINK = "a.match-header-link"
+MATCH_H_TEAM_NAME = "div.match-header-link-name div.wf-title-med"
+# series score: the spoiler holds "2:1"; vs-note holds status ("final"/"live") + "Bo3"
+MATCH_H_SCORE_SPOILER = "div.match-header-vs-score .js-spoiler"
+MATCH_H_VS_NOTE = "div.match-header-vs-note"
+MATCH_H_VETO = "div.match-header-note"
+# per-map game containers (one per map + an aggregate with data-game-id="all")
+MATCH_GAME = "div.vm-stats-game"
+MATCH_GAME_ALL_ID = "all"  # the aggregate game's data-game-id
+MATCH_NAV_ITEM = "div.vm-stats-gamesnav-item"  # data-game-id -> "1Pearl" etc.
+MATCH_GAME_MAP = "div.map"  # text like "PearlPICK37:17"; carries the PICK marker
+MATCH_GAME_HEADER_SCORE = "div.vm-stats-game-header div.score"
+MATCH_GAME_HEADER_TEAM = "div.vm-stats-game-header div.team-name"
+MATCH_GAME_PICK_TOKEN = "PICK"  # presence in the .map text => a team-picked map
+# round timeline: one row of square-cols per map; each col = a round
+MATCH_RND_ROW = "div.vlr-rounds-row"
+MATCH_RND_COL = "div.vlr-rounds-row-col"
+MATCH_RND_NUM = "div.rnd-num"  # absent on the team-label col -> skip that col
+MATCH_RND_SQ = "div.rnd-sq"  # two per col: [team1, team2]; the winner carries mod-win
+MATCH_RND_IMG = "img"  # win-condition icon: /round/elim|boom|defuse|time.webp
+
 # id is parsed from href like /310/sentinels or /player/4164/...
 HREF_ID_INDEX = 1  # path segment index for numeric id

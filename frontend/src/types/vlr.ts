@@ -176,3 +176,73 @@ export interface TeamTrend {
   summary: TrendSummary | null;
   note?: string;
 }
+
+// ---- match detail (from /match/{id}, Phase 7) ------------------------------
+// The API already coerces scoreboard values: each stat cell is { value, both,
+// t, ct } where `value` is a number|null (KAST/HS% come through parse_percent as
+// the bare number, e.g. 59, with `both` keeping the "59%" display string). The
+// data layer re-coerces `value` defensively (parseNumeric, null-not-NaN).
+
+/** One scoreboard stat cell. `value` is the combined (mod-both) number; `t`/`ct`
+ *  keep the attack/defense side-split display strings. */
+export interface MatchStatCell {
+  value: number | null;
+  both: string | null;
+  t: string | null;
+  ct: string | null;
+}
+
+export interface MatchPlayer {
+  player: string | null;
+  team: string | null;
+  playerId: string | null;
+  country: string | null;
+  agent: string | null;
+  stats: Record<string, MatchStatCell>;
+}
+
+export interface MatchMapTeam {
+  name: string | null;
+  score: number | null;
+  players: MatchPlayer[];
+}
+
+/** One round in the timeline. `winner` is 1|2 (team index) or null (not played);
+ *  `side` is the winner's attack/defense; `outcome` is elim|boom|defuse|time. */
+export interface MatchRound {
+  round: number | null;
+  winner: 1 | 2 | null;
+  side: "t" | "ct" | null;
+  outcome: string | null;
+  score: string | null; // cumulative "team1-team2"
+}
+
+export interface MatchMap {
+  gameId: string | null;
+  name: string | null;
+  picked: boolean;
+  decider: boolean;
+  scores: (number | null)[]; // [team1, team2]
+  teams: MatchMapTeam[];
+  rounds: MatchRound[];
+}
+
+export interface MatchTeam {
+  name: string | null;
+  id: string | null;
+  score: number | null; // series score (maps won)
+  won: boolean;
+}
+
+export interface MatchDetail {
+  id: string | null;
+  event: string | null;
+  series: string | null;
+  status: string | null; // "final" | "live" | null
+  format: string | null; // "BO3"
+  url: string | null;
+  veto: string | null;
+  teams: MatchTeam[];
+  maps: MatchMap[];
+  allMaps: { teams: MatchMapTeam[] } | null;
+}

@@ -68,8 +68,8 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 `frontend/CLAUDE.md`. Built in vertical slices; **stop & review at each boundary.**
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 5 / 7 (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
-- **Frontend tests passing:** 26 (Vitest, transforms vs committed real fixtures)
+- **Slices done:** 6 / 7 (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
+- **Frontend tests passing:** 32 (Vitest, transforms vs committed real fixtures)
 
 ## Slices
 
@@ -77,8 +77,8 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 - [x] **Slice 2 — broadcast primitives + design tokens**
 - [x] **Slice 3 — results + upcoming + live**
 - [x] **Slice 4 — rankings + news**
-- [x] **Slice 5 — team detail + trend** (this slice; player-detail page carved out to a follow-up)
-- [ ] **Slice 6 — match-detail page as stub** (components real, data stubbed; Phase 7)
+- [x] **Slice 5 — team detail + trend** (player-detail page carved out to a follow-up)
+- [x] **Slice 6 — match-detail page** (this slice; built against the REAL Phase 7 endpoint — not a stub)
 - [ ] **Slice 7 — visual polish pass**
 
 ## Slice 1 — scaffold + data layer + fixtures
@@ -195,3 +195,45 @@ remaining team-endpoint 500 is Bug A (the 404 handler above).
 **Bundle this Bug-A fix into the same vlr-api selector/endpoint repair pass** as the two
 slice-4 gaps: the W/L `rank-item-record` selector drift and the Phase 7 match-detail scoreboard
 selectors — all one HTML-drift / endpoint-hardening sweep, verified on the container.
+
+## Slice 6 — match-detail page (built against the real Phase 7 endpoint)
+
+The internal `/match/[id]` page, rebuilt fresh against vlr-api's real shape (NOT a stub,
+NOT ported from vlrggapi field names). Verified live against match `684612` (LEVIATÁN 2:1
+Global Esports, Masters London).
+
+**Premise correction (same class as Bug B / the W/L drift):** the slice prompt said "the
+match-detail API was built this session." It wasn't — only the *scoreboard scraper*
+(`app/scrapers/match_detail.py`, mod-overview selectors) existed, returning flat
+`scoreboards` with no header/maps/veto, and there was **no route, service, or cache key**.
+So this slice first **built the backend `/match/{id}` endpoint**, then the frontend.
+
+**Backend (API, this slice):**
+- `app/scrapers/match_detail.py` rebuilt to the rich shape: header (event, series, status,
+  format, teams + ids + series score + `won`), veto strip, per-map list (name, picked/decider,
+  `[team1,team2]` map score), per-map per-team player rows, the aggregate "All Maps", and the
+  **round timeline** (per round: winner 1|2, side t/ct, outcome elim/boom/defuse/time,
+  cumulative score). Scoreboard cells still read `span.mod-both` (never the concatenation),
+  KAST/HS% via `parse_percent`, empty live cells → null.
+- `refresh_match` + `CACHE_MATCH` (on-demand, no history snapshot) + `GET /match/{id}` route
+  (VlrNotFound → clean 404). Tests: `tests/test_match_detail.py` rewritten to the rich shape
+  (header/maps/rounds + the concatenation/percent/empty-cell invariants), 9 → 12.
+- Backend suite: 72 → **75**. `systemctl restart vlr-api` applied so the live endpoint serves it.
+
+**Frontend (this slice):**
+- Types `MatchDetail/MatchMap/MatchRound/MatchStatCell/...`; `normalizeMatch` + `getMatch`
+  loader (single object → one-element list; stat `value` re-coerced via `parseNumeric`,
+  null-not-NaN; KAST/HS% arrive as bare numbers with `both` keeping "59%" for display).
+- `src/app/match/[id]/page.tsx` — force-dynamic server component; thin `api/match/[id]` handler;
+  graceful "couldn't load this match" on 404/error (HTTP 200, no crash).
+- Components: `MatchHeader` (scorebug + veto + "Open on VLR.gg"), `MapTabs` (client island,
+  one tab per map + All Maps, picked/decider marked; allowedDevOrigins already has 192.168.1.35),
+  `PlayerStatsTable` (R/ACS/K/D/A/+−/KAST/ADR/HS%/FK/FD; empty → dash), `RoundTimeline`
+  (green/red square strip per team, omits gracefully if a map has no rounds).
+- **Round data IS exposed** (the endpoint serves it), so the timeline is real — nothing faked.
+- Match cards in the center now link to the internal `/match/{id}` (was: out to vlr.gg); the
+  source link moved onto the detail page. Fixture `match.json` (real 684612 response) committed.
+- Verified: `tsc` clean · `next build` clean (`/match/[id]` + `/api/match/[id]` dynamic) · Vitest
+  26 → **32** · live smoke `/match/684612` renders header + map tabs + both scoreboards + round
+  strip; `/match/000000` → graceful error; home cards land internally (100 `/match/` links, 0
+  vlr.gg match links).

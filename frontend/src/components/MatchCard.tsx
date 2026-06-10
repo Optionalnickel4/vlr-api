@@ -15,9 +15,9 @@ export interface MatchCardProps {
   series?: string | null;
   /** time (result) or eta/timeUntil (upcoming); unused for live. */
   label?: string | null;
-  /** vlr.gg match URL — opens the source page (internal match detail is the
-   *  Phase 7 stub, slice 6). */
-  url?: string | null;
+  /** vlr match id — the whole card links to the internal /match/{id} detail
+   *  page (Phase 7). The "Open on VLR.gg" source link lives on that page. */
+  id?: string | null;
 }
 
 const TEAM = "font-display text-base font-semibold uppercase tracking-[0.04em] leading-tight";
@@ -38,8 +38,8 @@ function teamClass(
 /**
  * MatchCard — one broadcast scorebug row: TEAM A · score:score · TEAM B, with
  * the event/series above and a state marker (LIVE / countdown / final time) on
- * the right. The winning side lights green on finals. The whole row links out
- * to the vlr.gg source page.
+ * the right. The winning side lights green on finals. The whole row links to the
+ * internal /match/{id} detail page.
  */
 export function MatchCard({
   state,
@@ -50,7 +50,7 @@ export function MatchCard({
   event,
   series,
   label,
-  url,
+  id,
 }: MatchCardProps) {
   const inner = (
     <div className="flex flex-col gap-2 px-4 py-3">
@@ -94,8 +94,8 @@ export function MatchCard({
   const shell =
     "block border-b border-line/60 last:border-b-0 transition-colors hover:bg-ink/[0.03]";
 
-  return url ? (
-    <a href={url} target="_blank" rel="noopener noreferrer" className={shell}>
+  return id ? (
+    <a href={`/match/${id}`} className={shell}>
       {inner}
     </a>
   ) : (

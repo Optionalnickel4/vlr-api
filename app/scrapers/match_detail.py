@@ -1,14 +1,16 @@
-"""Match-detail scoreboard scraper (Phase 7).
+"""Match-detail scraper (Phase 7) — the full match page shape.
 
-Parses the per-map scoreboards on a vlr match page. The hard-won rule (from the two
-banked live fixtures): every value cell is side-split into three spans — mod-both
-(combined), mod-t (attack), mod-ct (defense). We read mod-both as the value and keep
-mod-t/mod-ct alongside. Reading raw td.text() instead would CONCATENATE the three
-(K=13 -> "1385"), which still coerces to a number and is therefore silently wrong.
+Produces the rich shape the broadcast match page needs: header (event, teams +
+series score, veto line), the per-map list (name, pick/decider, map score), the
+per-map per-team scoreboards, and the round-by-round timeline.
 
-Live-state empties are valid: on an in-progress match R/ACS/ADR aren't computed yet,
-so those cells are empty -> the value coerces to None (never NaN, never a crash).
+The hard-won scoreboard rule (from the banked live fixtures): every value cell is
+side-split into three spans — mod-both (combined), mod-t (attack), mod-ct (defense).
+We read mod-both as the value and keep mod-t/mod-ct alongside. Reading raw td.text()
+instead would CONCATENATE the three (K=13 -> "1385"), a number that coerces fine and
+is silently wrong. Live-state empties (R/ACS/ADR not yet computed) -> None, never NaN.
 """
+import re
 from typing import Any
 
 from selectolax.parser import HTMLParser, Node
@@ -24,7 +26,11 @@ from app.scrapers._util import (
     text_of,
 )
 
+VLR = "https://www.vlr.gg"
+_LEADING_INDEX = re.compile(r"^\s*\d+\s*")  # "1Pearl" -> "Pearl"
 
+
+# ---- scoreboard cells (per-player stat rows) -------------------------------
 def _stat_key(header: str, cls: str) -> str | None:
     """Column key from the header, disambiguating the two identical '+/–' headers
     via the cell's diff class (kd-diff vs fk-diff)."""
@@ -69,7 +75,7 @@ def _parse_identity(tr: Node) -> dict[str, Any]:
     }
 
 
-def _parse_row(tr: Node, headers: list[str]) -> dict[str, Any]:
+def _parse_player_row(tr: Node, headers: list[str]) -> dict[str, Any]:
     agent_img = tr.css_first(S.MATCH_SB_AGENT)
     agent = (agent_img.attributes.get("alt") if agent_img else None) or None
     stats: dict[str, Any] = {}
@@ -86,26 +92,157 @@ def _parse_row(tr: Node, headers: list[str]) -> dict[str, Any]:
     return {**_parse_identity(tr), "agent": agent, "stats": stats}
 
 
-def _parse_scoreboard(table: Node) -> dict[str, Any]:
+def _parse_table(table: Node) -> list[dict[str, Any]]:
     headers = [clean_spaces(text_of(th)) for th in table.css(S.MATCH_SB_HEADER)]
-    players = [
-        _parse_row(tr, headers)
+    return [
+        _parse_player_row(tr, headers)
         for tr in table.css(S.MATCH_SB_ROW)
         if tr.css(S.MATCH_SB_CELL)
     ]
-    return {"players": players}
 
 
-def parse_match_detail(html: str) -> dict[str, Any]:
+# ---- rounds ----------------------------------------------------------------
+def _outcome_from_img(sq: Node) -> str | None:
+    img = sq.css_first(S.MATCH_RND_IMG)
+    src = (img.attributes.get("src", "") if img else "") or ""
+    # /img/vlr/game/round/elim.webp -> "elim"
+    if not src:
+        return None
+    return src.rsplit("/", 1)[-1].split(".")[0] or None
+
+
+def _parse_rounds(game: Node) -> list[dict[str, Any]]:
+    row = game.css_first(S.MATCH_RND_ROW)
+    if row is None:
+        return []
+    rounds: list[dict[str, Any]] = []
+    for col in row.css(S.MATCH_RND_COL):
+        num = col.css_first(S.MATCH_RND_NUM)
+        if num is None:  # the leading team-label col carries no round number
+            continue
+        winner = side = outcome = None
+        for i, sq in enumerate(col.css(S.MATCH_RND_SQ)):  # [team1, team2]
+            cls = sq.attributes.get("class", "") or ""
+            if "mod-win" in cls:
+                winner = i + 1  # 1 = team1 (top), 2 = team2 (bottom)
+                side = "t" if "mod-t" in cls else "ct" if "mod-ct" in cls else None
+                outcome = _outcome_from_img(sq)
+        n = parse_numeric(text_of(num))
+        rounds.append(
+            {
+                "round": int(n) if n is not None else None,
+                "winner": winner,
+                "side": side,
+                "outcome": outcome,
+                "score": col.attributes.get("title"),  # cumulative "team1-team2"
+            }
+        )
+    return rounds
+
+
+# ---- header ----------------------------------------------------------------
+def _parse_header(tree: HTMLParser) -> dict[str, Any]:
+    links = tree.css(S.MATCH_H_TEAM_LINK)
+    teams: list[dict[str, Any]] = []
+    for ln in links[:2]:
+        href = ln.attributes.get("href", "") or ""
+        name = clean_spaces(text_of(ln.css_first(S.MATCH_H_TEAM_NAME))) or None
+        teams.append({"name": name, "id": id_from_href(href)})
+
+    spoiler = tree.css_first(S.MATCH_H_SCORE_SPOILER)
+    a, b = None, None
+    if spoiler is not None:
+        m = re.findall(r"\d+", spoiler.text())
+        if len(m) >= 2:
+            a, b = int(m[0]), int(m[1])
+
+    notes = [clean_spaces(text_of(n)).lower() for n in tree.css(S.MATCH_H_VS_NOTE)]
+    status = "final" if any("final" in n for n in notes) else (
+        "live" if any("live" in n for n in notes) else None
+    )
+    fmt = next((n.upper() for n in notes if re.fullmatch(r"bo\d", n)), None)
+
+    if len(teams) == 2:
+        teams[0]["score"], teams[1]["score"] = a, b
+        decided = status == "final" and a is not None and b is not None and a != b
+        teams[0]["won"] = decided and a > b
+        teams[1]["won"] = decided and b > a
+
+    return {
+        "event": clean_spaces(text_of(tree.css_first(S.MATCH_H_EVENT_NAME))) or None,
+        "series": clean_spaces(text_of(tree.css_first(S.MATCH_H_SERIES))) or None,
+        "status": status,
+        "format": fmt,
+        "teams": teams,
+        "veto": clean_spaces(text_of(tree.css_first(S.MATCH_H_VETO))) or None,
+    }
+
+
+# ---- maps ------------------------------------------------------------------
+def _nav_map_names(tree: HTMLParser) -> dict[str, str]:
+    """game-id -> clean map name, from the games nav ("1Pearl" -> "Pearl")."""
+    out: dict[str, str] = {}
+    for nav in tree.css(S.MATCH_NAV_ITEM):
+        gid = nav.attributes.get("data-game-id")
+        if not gid:
+            continue
+        out[gid] = _LEADING_INDEX.sub("", clean_spaces(text_of(nav))) or gid
+    return out
+
+
+def _parse_game(game: Node, names: dict[str, str]) -> dict[str, Any]:
+    gid = game.attributes.get("data-game-id")
+    tables = game.css(S.MATCH_SB_TABLE)  # [team1, team2]
+    team_names = [clean_spaces(text_of(n)) or None for n in game.css(S.MATCH_GAME_HEADER_TEAM)]
+    scores = [parse_numeric(text_of(s)) for s in game.css(S.MATCH_GAME_HEADER_SCORE)]
+    map_text = clean_spaces(text_of(game.css_first(S.MATCH_GAME_MAP)))
+    picked = S.MATCH_GAME_PICK_TOKEN in map_text
+    name = names.get(gid or "", "") or _LEADING_INDEX.sub("", map_text.replace(S.MATCH_GAME_PICK_TOKEN, "")) or None
+
+    teams = []
+    for i, table in enumerate(tables):
+        teams.append(
+            {
+                "name": team_names[i] if i < len(team_names) else None,
+                "score": scores[i] if i < len(scores) else None,
+                "players": _parse_table(table),
+            }
+        )
+    return {
+        "game_id": gid,
+        "name": name,
+        "picked": picked,
+        "decider": not picked,  # the one map neither side picked
+        "scores": [t["score"] for t in teams] or None,
+        "teams": teams,
+        "rounds": _parse_rounds(game),
+    }
+
+
+# ---- top-level -------------------------------------------------------------
+def parse_match(html: str) -> dict[str, Any]:
     """Pure: HTML -> match detail dict. Network-free (like the other scrapers).
 
-    `scoreboards` is the list of per-map/per-team scoreboards in document order
-    (8 on a finished bo3: per-map × per-team + the all-maps aggregate)."""
+    `maps` is the per-map games in play order (Pearl/Fracture/Split). `all_maps`
+    is the aggregate scoreboard (vlr's "All Maps" tab). Each map carries both teams'
+    player rows + the round timeline; the aggregate has no map score or rounds."""
     tree = HTMLParser(html)
-    tables = tree.css(S.MATCH_SB_TABLE)
-    return {"scoreboards": [_parse_scoreboard(t) for t in tables]}
+    names = _nav_map_names(tree)
+    maps: list[dict[str, Any]] = []
+    all_maps: dict[str, Any] | None = None
+    for game in tree.css(S.MATCH_GAME):
+        parsed = _parse_game(game, names)
+        if parsed["game_id"] == S.MATCH_GAME_ALL_ID:
+            # aggregate: keep only the player tables, drop the (absent) map meta
+            all_maps = {"teams": [{"name": t["name"], "players": t["players"]} for t in parsed["teams"]]}
+        else:
+            maps.append(parsed)
+    return {"id": None, **_parse_header(tree), "maps": maps, "all_maps": all_maps}
 
 
-async def fetch_match_detail(match_id: str) -> dict[str, Any]:
+async def fetch_match(match_id: str) -> dict[str, Any]:
     html = await get_client().get_html(f"/{match_id}")
-    return parse_match_detail(html)
+    data = parse_match(html)
+    data["id"] = str(match_id)  # trust the requested id
+    data["url"] = f"{VLR}/{match_id}"
+    return data

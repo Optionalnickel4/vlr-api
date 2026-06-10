@@ -14,6 +14,7 @@ from app.core.config import get_settings
 from app.core.db import SessionLocal
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
 from app.scrapers import events as ev
+from app.scrapers import match_detail as md
 from app.scrapers import matches as mt
 from app.scrapers import players as pl
 from app.scrapers import rankings as rk
@@ -27,6 +28,7 @@ CACHE_EVENTS = "vlr:events"
 CACHE_NEWS = "vlr:news"
 CACHE_PLAYER = "vlr:player:{id}"
 CACHE_TEAM = "vlr:team:{id}"
+CACHE_MATCH = "vlr:match:{id}"
 
 
 async def refresh_results() -> int:
@@ -118,6 +120,16 @@ async def refresh_player(player_id: str) -> dict[str, Any]:
     async with SessionLocal() as session:
         session.add(snap)
         await session.commit()
+    return data
+
+
+async def refresh_match(match_id: str) -> dict[str, Any]:
+    """On-demand: scrape a match-detail page and cache it. Read-on-miss from the
+    route, like player/team. No history table — match detail is a point-in-time
+    view, not a snapshot series (completed matches are immutable; live ones churn)."""
+    s = get_settings()
+    data = await md.fetch_match(match_id)
+    await cache_set(CACHE_MATCH.format(id=match_id), data, s.ttl_matches)
     return data
 
 

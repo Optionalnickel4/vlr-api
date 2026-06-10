@@ -101,6 +101,18 @@ async def team(team_id: str):
     return data
 
 
+# ---- match detail (on-demand: scrape-on-miss, cache; no history snapshot) ----
+@router.get("/match/{match_id}")
+async def match(match_id: str):
+    data = await cache_get(R.CACHE_MATCH.format(id=match_id))
+    if data is None:
+        try:
+            data = await R.refresh_match(match_id)
+        except VlrNotFound:
+            raise HTTPException(status_code=404, detail=f"match {match_id} not found")
+    return data
+
+
 # ---- trends (analytics over banked history; reads ranking_snapshots + match_results) ----
 @router.get("/trends/team/{team_id}")
 async def trends_team(team_id: str, days: int = Query(90, ge=1, le=365)):

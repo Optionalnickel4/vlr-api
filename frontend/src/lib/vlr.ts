@@ -13,6 +13,13 @@ import type {
   AgentStat,
   ApiResponse,
   LiveMatch,
+  MatchDetail,
+  MatchMap,
+  MatchMapTeam,
+  MatchPlayer,
+  MatchRound,
+  MatchStatCell,
+  MatchTeam,
   NewsArticle,
   PlayerDetail,
   PlayerMatch,
@@ -318,6 +325,118 @@ export function normalizeTrend(raw: unknown): TeamTrend[] {
   ];
 }
 
+// ---- match detail (Phase 7) -------------------------------------------------
+
+function normalizeStatCell(raw: unknown): MatchStatCell {
+  const c =
+    raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  return {
+    // value arrives numeric from the API; parseNumeric re-coerces defensively so
+    // an empty live-partial cell is null, never NaN. KAST/HS% are bare numbers.
+    value: parseNumeric(c.value),
+    both: str(c.both),
+    t: str(c.t),
+    ct: str(c.ct),
+  };
+}
+
+function normalizeMatchPlayer(raw: Record<string, unknown>): MatchPlayer {
+  const statsRaw =
+    raw.stats && typeof raw.stats === "object"
+      ? (raw.stats as Record<string, unknown>)
+      : {};
+  const stats: Record<string, MatchStatCell> = {};
+  for (const [k, v] of Object.entries(statsRaw)) stats[k] = normalizeStatCell(v);
+  return {
+    player: str(raw.player),
+    team: str(raw.team),
+    playerId: str(raw.player_id),
+    country: str(raw.country),
+    agent: str(raw.agent),
+    stats,
+  };
+}
+
+function normalizeMapTeam(raw: unknown): MatchMapTeam {
+  const t = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  return {
+    name: str(t.name),
+    score: parseNumeric(t.score),
+    players: (Array.isArray(t.players) ? t.players : []).map((p) =>
+      normalizeMatchPlayer(p as Record<string, unknown>),
+    ),
+  };
+}
+
+function normalizeRound(raw: Record<string, unknown>): MatchRound {
+  const w = parseNumeric(raw.winner);
+  const side = raw.side === "t" || raw.side === "ct" ? raw.side : null;
+  return {
+    round: parseNumeric(raw.round),
+    winner: w === 1 ? 1 : w === 2 ? 2 : null,
+    side,
+    outcome: str(raw.outcome),
+    score: str(raw.score),
+  };
+}
+
+function normalizeMap(raw: Record<string, unknown>): MatchMap {
+  return {
+    gameId: str(raw.game_id),
+    name: str(raw.name),
+    picked: raw.picked === true,
+    decider: raw.decider === true,
+    scores: (Array.isArray(raw.scores) ? raw.scores : []).map(parseNumeric),
+    teams: (Array.isArray(raw.teams) ? raw.teams : []).map(normalizeMapTeam),
+    rounds: (Array.isArray(raw.rounds) ? raw.rounds : []).map((r) =>
+      normalizeRound(r as Record<string, unknown>),
+    ),
+  };
+}
+
+function normalizeMatchTeam(raw: unknown): MatchTeam {
+  const t = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  return {
+    name: str(t.name),
+    id: str(t.id),
+    score: parseNumeric(t.score),
+    won: t.won === true,
+  };
+}
+
+/** Match detail is a single object; wrap it as a one-element list to keep the
+ *  ApiResponse<T> envelope uniform (like player/team). */
+export function normalizeMatch(raw: unknown): MatchDetail[] {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return [];
+  const m = raw as Record<string, unknown>;
+  const allMapsRaw =
+    m.all_maps && typeof m.all_maps === "object"
+      ? (m.all_maps as Record<string, unknown>)
+      : null;
+  return [
+    {
+      id: str(m.id),
+      event: str(m.event),
+      series: str(m.series),
+      status: str(m.status),
+      format: str(m.format),
+      url: str(m.url),
+      veto: str(m.veto),
+      teams: (Array.isArray(m.teams) ? m.teams : []).map(normalizeMatchTeam),
+      maps: (Array.isArray(m.maps) ? m.maps : []).map((x) =>
+        normalizeMap(x as Record<string, unknown>),
+      ),
+      allMaps: allMapsRaw
+        ? {
+            teams: (Array.isArray(allMapsRaw.teams) ? allMapsRaw.teams : []).map(
+              normalizeMapTeam,
+            ),
+          }
+        : null,
+    },
+  ];
+}
+
 // ---- loaders (graceful-empty) ----------------------------------------------
 
 async function load<T>(
@@ -360,3 +479,8 @@ export const getTeamTrend = (id: string, days = 90) =>
     `/trends/team/${encodeURIComponent(id)}?days=${days}`,
     normalizeTrend,
   );
+
+// /match/{id} 404s upstream for ids vlr.gg has no page for (clean 404 from the
+// Phase 7 endpoint) — load()'s catch turns that into { data: [], stale, error }.
+export const getMatch = (id: string) =>
+  load<MatchDetail>(`/match/${encodeURIComponent(id)}`, normalizeMatch);

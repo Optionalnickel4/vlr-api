@@ -51,7 +51,7 @@ export function LiveMatches({ initial }: { initial: ApiResponse<LiveMatch> }) {
           score2={m.score2}
           event={m.event}
           series={m.series}
-          url={m.url}
+          id={m.id}
         />
       ))}
     </MatchSection>
