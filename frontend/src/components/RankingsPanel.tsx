@@ -40,7 +40,16 @@ export function RankingsPanel({ rankings }: { rankings: ApiResponse<RankedTeam> 
               {t.rank ?? "—"}
             </td>
             <td className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink">
-              {t.team ?? "—"}
+              {t.id ? (
+                // links to the internal team page (rating trend + results join).
+                // Some ids 500 upstream — the team page renders that as a
+                // graceful "couldn't load this team", so the link is safe.
+                <a href={`/team/${t.id}`} className="text-ink hover:text-accent">
+                  {t.team ?? "—"}
+                </a>
+              ) : (
+                (t.team ?? "—")
+              )}
             </td>
             <td className="font-body text-[13px] text-mut">{t.country ?? "—"}</td>
             <td className="text-right font-mono text-sm text-ink tabular-nums">

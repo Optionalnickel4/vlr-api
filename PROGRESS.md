@@ -36,16 +36,16 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 `frontend/CLAUDE.md`. Built in vertical slices; **stop & review at each boundary.**
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 4 / 7
-- **Frontend tests passing:** 23 (Vitest, transforms vs committed real fixtures)
+- **Slices done:** 5 / 7 (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
+- **Frontend tests passing:** 26 (Vitest, transforms vs committed real fixtures)
 
 ## Slices
 
 - [x] **Slice 1 — scaffold + data layer + fixtures**
 - [x] **Slice 2 — broadcast primitives + design tokens**
 - [x] **Slice 3 — results + upcoming + live**
-- [x] **Slice 4 — rankings + news** (this slice)
-- [ ] **Slice 5 — player detail + team trends** (team detail guarded for the 500)
+- [x] **Slice 4 — rankings + news**
+- [x] **Slice 5 — team detail + trend** (this slice; player-detail page carved out to a follow-up)
 - [ ] **Slice 6 — match-detail page as stub** (components real, data stubbed; Phase 7)
 - [ ] **Slice 7 — visual polish pass**
 
@@ -99,3 +99,67 @@ The rankings endpoint serves only rank/team/country/rating. Two distinct upstrea
 2. **streak and win-rate% are not scraped at all.** No field, no selector, no schema slot anywhere in `app/scrapers/rankings.py`. Net-new scraping + schema work before either can exist.
 
 Note: the "`33%` won't parse without %-stripping" finding is real but belongs to **Phase 7 match-detail** (KAST/HS% scoreboard cells), not rankings — rankings has no percentage column. The `parsePercent` helper lands there, where it's actually consumed, not here.
+
+## Slice 5 — team detail + trend
+
+The differentiation surface: a `/team/[id]` page combining team detail (name /
+region / roster) with the rating-trend line **joined to** its results over the same
+window — the combined view the public vlrggapi never served (vlr.gg only shows
+*current* rating). Built + verified against id `2` (Sentinels): trend returns 10
+rating points + 5 results (W:3 L:2), rating line drawn, accented opponent "LEVIATÁN"
+renders clean (post-UTF8-fix).
+
+- [x] `src/app/team/[id]/page.tsx` — `force-dynamic` server component; awaits the
+  async route param, fetches `getTeam(id)` + `getTeamTrend(id)` server-side (browser
+  never touches vlr-api). Team identity header (name / tag / region badge).
+- [x] Thin route handlers `src/app/api/team/[id]/route.ts` + `api/trends/team/[id]/route.ts`
+  — `force-dynamic`, return the `{data, stale, error}` envelope; trend passes `?days=` through.
+- [x] `Sparkline` — dependency-free inline-SVG rating line (polyline + area + endpoint
+  dot); tone = direction (green up / red down / dim flat). Values arrive numeric +
+  time-ordered from the data layer; min/max math runs on numbers (no string-sort trap).
+- [x] `TeamTrendPanel` — sparkline + summary (change / current / peak / window W/L) +
+  upstream `note`. Three graceful states: errored ("trend unavailable"), young history
+  (<2 points → honest "history still young", no fake flat line), real series.
+- [x] `TeamResultsPanel` — the results join as a recent-results list, each row tagged
+  W/L with the broadcast color signal; links to the vlr.gg match; graceful-empty.
+- [x] `TeamRosterPanel` — roster as a `TableShell` (players first, staff under a divider,
+  captain badge); aliases link to vlr.gg player pages.
+- [x] **Graceful error path (mandatory):** the data layer's `load()` catch turns an
+  upstream 500 into `{data:[], stale:true, error}`; the page detects no team detail and
+  renders a page-level "Couldn't load this team" state — **HTTP 200, not a crash, not a
+  Next error boundary.** Live-verified by hitting a 500-ing id (`/team/1`).
+- [x] `RankingsPanel` team names now link to `/team/{id}` (the "click a ranked team → its
+  page" nav the error path protects); kept the locked ink color, accent only on hover.
+- [x] Coercion at the read boundary: rating/rank via `parseNumeric` (null-not-NaN). The
+  trend line is **time-ordered on the real `captured_at` timestamp** in `normalizeTrend`
+  (sort added) — never lexical, never on the rating value.
+- [x] Tests +3 (23 → 26): results-join verdicts valid · **time-ordering invariant** (a
+  scrambled series with a lexical-trap rating set must order chronologically) · empty/garbage
+  trend → valid empty, no throw. Existing 23 still green.
+- [x] Verified: `tsc` clean · `next build` clean (all 3 new routes dynamic) · 26 Vitest
+  green · live smoke — `/team/2` renders detail+trend+results; `/team/1` renders the
+  graceful error state (HTTP 200).
+- **Carved out of this pass:** the **player-detail page** (`/player/[id]`). The data layer
+  (`getPlayer`/`normalizePlayer`, `player.json` fixture) already exists from slice 1; only
+  the page/components remain. Done next; this slice stayed focused on the team trend — the
+  actual differentiation surface.
+
+### Deferred vlr-api gap #3 — team-endpoint 500 on certain ids (Bug A, the 404 handler)
+
+The `/team/{id}` (and on some ids the trend) endpoint still 500s for **ids vlr.gg has no
+page for** — e.g. `/team/1` → upstream **404** → unhandled `resp.raise_for_status()` →
+generic 500 (Bug A in `frontend/OPEN-ITEM-team-detail-500.md`). These ids are reachable
+from normal nav (a ranked team click), so the frontend guards every one (graceful "couldn't
+load this team"). **Fix (API repo):** catch `httpx.HTTPStatusError` (404) in
+`fetch_team`/`get_html` and raise `HTTPException(404)` instead of 500.
+
+**Correction to the slice prompt's premise:** the prompt expected **id `1001`/Heretics to
+500** with an open question (vlr 404 vs scraper parse failure). Verified on the container this
+pass: `/team/1001` **and** `/trends/team/1001` now both return **200** (Heretics, 11-man roster
+incl. the accented analyst name). That was **Bug B (SQL_ASCII persist)** — already **resolved**
+(DB re-encoded UTF8, see OPEN-ITEM). So the open question is answered for 1001, and the *only*
+remaining team-endpoint 500 is Bug A (the 404 handler above).
+
+**Bundle this Bug-A fix into the same vlr-api selector/endpoint repair pass** as the two
+slice-4 gaps: the W/L `rank-item-record` selector drift and the Phase 7 match-detail scoreboard
+selectors — all one HTML-drift / endpoint-hardening sweep, verified on the container.

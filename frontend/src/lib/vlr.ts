@@ -278,16 +278,30 @@ export function normalizeTrend(raw: unknown): TeamTrend[] {
     event: str(r.event),
     capturedAt: str(r.captured_at),
   }));
+  // The trend line MUST be time-ordered on the real timestamp, never lexically
+  // and never on the rating value (the Phase-4 string-sort trap). Sort here in
+  // the data layer so the sparkline can trust the order. Undated points sink to
+  // the end rather than crashing the comparator.
+  const ratingTrend = trend
+    .map((p) => ({
+      capturedAt: str(p.captured_at),
+      rating: parseNumeric(p.rating),
+      rank: parseNumeric(p.rank),
+    }))
+    .sort((a, b) => {
+      const ta = a.capturedAt ? Date.parse(a.capturedAt) : NaN;
+      const tb = b.capturedAt ? Date.parse(b.capturedAt) : NaN;
+      if (Number.isNaN(ta) && Number.isNaN(tb)) return 0;
+      if (Number.isNaN(ta)) return 1;
+      if (Number.isNaN(tb)) return -1;
+      return ta - tb;
+    });
   return [
     {
       teamId: str(t.team_id),
       team: str(t.team),
       windowDays: parseNumeric(t.window_days),
-      ratingTrend: trend.map((p) => ({
-        capturedAt: str(p.captured_at),
-        rating: parseNumeric(p.rating),
-        rank: parseNumeric(p.rank),
-      })),
+      ratingTrend,
       ratingChange: parseNumeric(t.rating_change),
       resultsInWindow,
       summary: summaryRaw

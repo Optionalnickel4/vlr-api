@@ -215,6 +215,54 @@ describe("normalizeTrend", () => {
     expect(t.summary).not.toBeNull();
     expect(typeof t.summary?.points).toBe("number");
   });
+
+  it("resultsInWindow carry valid win/loss verdicts (the results join)", () => {
+    const t = out[0];
+    expect(t.resultsInWindow.length).toBeGreaterThan(0);
+    for (const r of t.resultsInWindow) {
+      expect(["win", "loss", null]).toContain(r.result);
+    }
+  });
+
+  it("orders the trend line on the real timestamp, not lexically or by rating", () => {
+    // The string-sort trap, time edition: feed points OUT of chronological order
+    // whose rating values would mis-sort if compared as strings ("998" > "1024"
+    // lexically). The data layer must order on captured_at (real Date), leaving
+    // ratings numeric and untouched as a sort key.
+    const scrambled = {
+      team_id: "2",
+      team: "Test",
+      window_days: 90,
+      rating_trend: [
+        { captured_at: "2026-06-09T12:00:00+00:00", rating: "1024", rank: "3" },
+        { captured_at: "2026-06-07T12:00:00+00:00", rating: "998", rank: "5" },
+        { captured_at: "2026-06-08T12:00:00+00:00", rating: "1003", rank: "4" },
+      ],
+      rating_change: 26.0,
+      results_in_window: [],
+      summary: null,
+    };
+    const ratings = normalizeTrend(scrambled)[0].ratingTrend.map((p) => p.rating);
+    // chronological order is 998 (7th) → 1003 (8th) → 1024 (9th)
+    expect(ratings).toEqual([998, 1003, 1024]);
+    // and the committed real fixture is already chronological after sorting
+    const times = out[0].ratingTrend
+      .map((p) => (p.capturedAt ? Date.parse(p.capturedAt) : NaN))
+      .filter((n) => !Number.isNaN(n));
+    expect(times).toEqual([...times].sort((a, b) => a - b));
+  });
+
+  it("yields a valid empty trend for garbage/empty input (no throw)", () => {
+    const empty = normalizeTrend({
+      team_id: "9",
+      rating_trend: [],
+      results_in_window: [],
+    });
+    expect(empty.length).toBe(1);
+    expect(empty[0].ratingTrend).toEqual([]);
+    expect(empty[0].resultsInWindow).toEqual([]);
+    expect(empty[0].summary).toBeNull();
+  });
 });
 
 describe("graceful-empty on failure (never throws to the page)", () => {
