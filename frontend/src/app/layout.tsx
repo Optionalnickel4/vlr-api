@@ -38,7 +38,16 @@ export default function RootLayout({
       lang="en"
       className={`${sairaCondensed.variable} ${saira.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      {/* suppressHydrationWarning is scoped to <body> ONLY and is one-level-deep:
+          it silences mismatches on body's OWN attributes (browser extensions —
+          Grammarly, password managers, dark-reader — inject attrs/classes here
+          before React hydrates), NOT its descendants. Page content mismatches
+          still surface (and are guarded by match-hydration.test.ts). This is the
+          one node external code mutates; it is not a wrapper and masks no render
+          value of ours — the match island is provably deterministic. */}
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
+        {children}
+      </body>
     </html>
   );
 }

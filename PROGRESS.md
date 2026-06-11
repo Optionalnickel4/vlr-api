@@ -69,7 +69,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
 - **Slices done:** 6 / 7 (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
-- **Frontend tests passing:** 32 (Vitest, transforms vs committed real fixtures)
+- **Frontend tests passing:** 34 (Vitest — transforms vs committed real fixtures + a SSR→hydrate guard)
 
 ## Slices
 
