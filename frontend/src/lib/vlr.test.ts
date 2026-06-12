@@ -19,7 +19,10 @@ import {
   normalizeTrend,
   normalizeUpcoming,
   parseNumeric,
+  shouldRenderTrendLine,
 } from "@/lib/vlr";
+
+import type { RatingPoint } from "@/types/vlr";
 
 import results from "@/lib/__fixtures__/results.json";
 import upcoming from "@/lib/__fixtures__/upcoming.json";
@@ -410,5 +413,33 @@ describe("empty / garbage input yields valid empty output (no throw)", () => {
     expect(normalizeTrend("garbage")).toEqual([]);
     expect(normalizeMatch(null)).toEqual([]);
     expect(normalizeMatch([])).toEqual([]);
+  });
+});
+
+describe("shouldRenderTrendLine (degenerate-trend honest state)", () => {
+  const pt = (rating: number | null): RatingPoint => ({
+    capturedAt: "2026-06-01T00:00:00Z",
+    rating,
+    rank: 1,
+  });
+
+  it("real sloped series -> line", () => {
+    // Leviatán-shaped: genuine movement across the window.
+    expect(shouldRenderTrendLine([pt(1802), pt(1830), pt(1848)])).toBe(true);
+  });
+
+  it("flat series (>=2 points, zero spread) -> no line", () => {
+    // Heretics-shaped: a rank-1 ceiling pinned at 2000 is REAL data, but a
+    // dead-flat line reads as a bug — honest note instead.
+    expect(shouldRenderTrendLine([pt(2000), pt(2000), pt(2000)])).toBe(false);
+    // sub-epsilon wobble is still "flat" (< 0.5 spread).
+    expect(shouldRenderTrendLine([pt(2000), pt(2000.3)])).toBe(false);
+  });
+
+  it("fewer than 2 real ratings -> no line (history still young)", () => {
+    expect(shouldRenderTrendLine([])).toBe(false);
+    expect(shouldRenderTrendLine([pt(1850)])).toBe(false);
+    // nulls don't count toward the 2 real ratings needed.
+    expect(shouldRenderTrendLine([pt(1850), pt(null), pt(null)])).toBe(false);
   });
 });

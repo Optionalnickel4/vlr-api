@@ -16,6 +16,11 @@ import { Badge } from "@/components/Badge";
  */
 function ResultRow({ r, idx }: { r: TrendResult; idx: number }) {
   const tone = r.result === "win" ? "up" : r.result === "loss" ? "down" : "neutral";
+  // The score carries the same chroma weight as a scorebug: winner-green on a
+  // win, loss-red on a loss (the green/red rhythm match-detail uses), instead of
+  // the flat dim it had before. Same token vocabulary, just lit per verdict.
+  const scoreTone =
+    r.result === "win" ? "text-up" : r.result === "loss" ? "text-down" : "text-dim";
   const url = r.vlrId ? `https://www.vlr.gg/${r.vlrId}` : null;
 
   const inner = (
@@ -31,7 +36,9 @@ function ResultRow({ r, idx }: { r: TrendResult; idx: number }) {
           <div className="truncate font-body text-[12px] text-mut">{r.event}</div>
         )}
       </div>
-      <span className="shrink-0 font-mono text-lg text-ink tabular-nums">
+      <span
+        className={`shrink-0 font-display text-xl font-bold tabular-nums ${scoreTone}`}
+      >
         {r.score ?? "–"}
       </span>
     </div>

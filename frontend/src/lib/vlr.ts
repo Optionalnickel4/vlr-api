@@ -24,6 +24,7 @@ import type {
   PlayerDetail,
   PlayerMatch,
   RankedTeam,
+  RatingPoint,
   ResultMatch,
   RosterMember,
   TeamDetail,
@@ -323,6 +324,25 @@ export function normalizeTrend(raw: unknown): TeamTrend[] {
       ...(str(t.note) ? { note: str(t.note) as string } : {}),
     },
   ];
+}
+
+/** Below this spread (max − min rating across the window) the trend is
+ *  effectively flat: a straight line carries no signal and reads as a render
+ *  bug, so the panel shows the honest thin-history note instead. NOT a data fix
+ *  — a ceiling team genuinely holds rating; this is purely a presentation gate. */
+export const FLAT_EPSILON = 0.5;
+
+/** Whether a trend series has enough real, *moving* data to draw a sparkline.
+ *  Two thin states collapse to "no line": fewer than 2 real ratings (history
+ *  still young) OR ≥2 ratings with spread < FLAT_EPSILON (the degenerate flat
+ *  case — e.g. a rank-1 team pinned at 2000). The honest-state decision lives
+ *  here in the tested data layer, not inline in the component. */
+export function shouldRenderTrendLine(points: RatingPoint[]): boolean {
+  const ratings = points
+    .map((p) => p.rating)
+    .filter((r): r is number => r !== null);
+  if (ratings.length < 2) return false;
+  return Math.max(...ratings) - Math.min(...ratings) >= FLAT_EPSILON;
 }
 
 // ---- match detail (Phase 7) -------------------------------------------------

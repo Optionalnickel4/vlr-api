@@ -1,4 +1,5 @@
 import type { ApiResponse, TeamTrend } from "@/types/vlr";
+import { shouldRenderTrendLine } from "@/lib/vlr";
 import { Panel, SectionHeading } from "@/components/Panel";
 import { Badge } from "@/components/Badge";
 import { Sparkline } from "@/components/Sparkline";
@@ -11,9 +12,13 @@ import { Sparkline } from "@/components/Sparkline";
  *
  * Three states, all graceful:
  *  - errored (stale + empty): the trend endpoint 500'd → "trend unavailable".
- *  - young history (<2 points): the cadence is working but there isn't a line
- *    to draw yet — surface that honestly, don't fake a flat line as signal.
+ *  - thin history: either <2 points (cadence working, no line yet) OR enough
+ *    points but zero variation across the window (a rank-1 ceiling sits flat at
+ *    e.g. 2000 — real data, but a flat line reads like a bug). Both surface the
+ *    honest "limited history" note instead of drawing a meaningless flat line.
  *  - real series: sparkline + rating delta + current/peak + W/L record.
+ *
+ * The line-vs-note decision is `shouldRenderTrendLine` in lib/vlr (tested).
  */
 function Stat({
   label,
@@ -50,7 +55,12 @@ export function TeamTrendPanel({ trend }: { trend: ApiResponse<TeamTrend> }) {
   const tone = change == null || change === 0 ? "flat" : change > 0 ? "up" : "down";
   const summary = t?.summary ?? null;
   const points = t?.ratingTrend ?? [];
-  const hasLine = points.filter((p) => p.rating !== null).length >= 2;
+  // The honest-state decision is a tested data-layer helper: a line needs ≥2
+  // real ratings AND real movement (spread ≥ FLAT_EPSILON). `enoughPoints` is
+  // kept only to phrase the two thin states (young vs. degenerate-flat).
+  const enoughPoints =
+    points.filter((p) => p.rating !== null).length >= 2;
+  const hasLine = shouldRenderTrendLine(points);
 
   const fmt = (n: number | null) =>
     n == null ? "—" : Number.isInteger(n) ? String(n) : n.toFixed(1);
@@ -68,7 +78,7 @@ export function TeamTrendPanel({ trend }: { trend: ApiResponse<TeamTrend> }) {
         )}
       </SectionHeading>
 
-      <Panel className="flex flex-col gap-4 p-4">
+      <Panel className="flex flex-col gap-4 border-t-2 border-t-accent/60 p-4">
         {errored ? (
           <p className="py-6 text-center font-body text-sm text-dim">
             Trend unavailable — couldn&apos;t load this team&apos;s history.
@@ -82,7 +92,9 @@ export function TeamTrendPanel({ trend }: { trend: ApiResponse<TeamTrend> }) {
               />
             ) : (
               <p className="py-6 text-center font-body text-sm text-dim">
-                History is still young — not enough snapshots for a line yet.
+                {enoughPoints
+                  ? "Rating held flat across this window — too little movement to chart."
+                  : "History is still young — not enough snapshots for a line yet."}
               </p>
             )}
 

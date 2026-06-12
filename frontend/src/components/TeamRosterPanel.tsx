@@ -43,7 +43,13 @@ function RosterRow({ m }: { m: RosterMember }) {
   );
 }
 
-export function TeamRosterPanel({ roster }: { roster: RosterMember[] }) {
+export function TeamRosterPanel({
+  roster,
+  teamName,
+}: {
+  roster: RosterMember[];
+  teamName?: string | null;
+}) {
   const players = roster.filter((m) => !m.isStaff);
   const staff = roster.filter((m) => m.isStaff);
 
@@ -55,8 +61,11 @@ export function TeamRosterPanel({ roster }: { roster: RosterMember[] }) {
       emptyLabel="No roster listed."
     >
       <TableShell
+        // First column heads with the team name (same identity anchor
+        // PlayerStatsTable uses on match detail) so the table reads as *this
+        // team's* roster, not a generic wall of names.
         columns={[
-          { label: "Player" },
+          { label: teamName || "Player" },
           { label: "Name" },
           { label: "Role" },
           { label: "Country", className: "w-20" },
