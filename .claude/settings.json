@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "defaultMode": "auto",
+    "ask": [
+      "Bash(apt*)",
+      "Bash(apt-get*)",
+      "Bash(pip install*)",
+      "Bash(.venv/bin/pip install*)",
+      "Bash(*sudo*)",
+      "Bash(systemctl*)",
+      "Bash(su *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(curl*)",
+      "Bash(wget*)",
+      "Bash(* | bash)",
+      "Bash(* | sh)"
+    ]
+  }
+}
