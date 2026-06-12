@@ -68,3 +68,23 @@ a {
     box-shadow: 0 0 0 0 rgba(255, 77, 94, 0);
   }
 }
+
+/* the broadcast stat ticker — a seamless horizontal marquee. The track holds the
+   tape TWICE side by side; translating it by exactly -50% lands copy #2 where
+   copy #1 began, so the loop has no visible seam. Pure CSS (no JS clock / no
+   Math.random) keeps the ticker a server component and hydration-safe. */
+@keyframes vlr-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* respect reduced-motion: hold the tape still rather than scrolling it. */
+@media (prefers-reduced-motion: reduce) {
+  .vlr-ticker-track {
+    animation: none !important;
+  }
+}

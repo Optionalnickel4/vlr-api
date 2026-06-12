@@ -11,7 +11,7 @@ done*, and any *dependency / open decision*. When an item ships, move its record
 | Item | Status | Blocked on |
 |------|--------|------------|
 | Player pages (`/player/[id]`) | Planned | — (data layer exists; page + components only) |
-| Stat ticker (lower-third) | Planned | curated-vs-random decision |
+| Stat ticker (lower-third) | ✅ Shipped (see `PROGRESS.md`) | — (curated; no new scraping) |
 | Featured streamers (top) | Planned | **data-source decision (must resolve first)** |
 | Team-page W/L display | Parked refinement | regional-fetch-vs-no-records decision |
 | Rankings streak + win-rate% | Parked (API-side gap) | net-new scraping + schema |
@@ -30,12 +30,6 @@ slice 1 — this is **page + components only**.
   colons — read **verbatim**, do not normalize.
 - **Limit:** can show detail + snapshot but **no trend line** until the player-trend
   endpoint exists (see parked API gap below).
-
-### Stat ticker — bottom-of-screen lower-third
-Horizontal scrolling marquee of notable stats aggregated from **existing** endpoints
-(top ACS from live/recent matches, rating-trend deltas, upset results, leaderboard
-movers). Presentation layer over data we already serve — **no new scraping**.
-- **Open decision:** curated "notable performances" vs. random selection — **lean curated**.
 
 ### Featured streamers — top-of-screen
 Twitch streams for the live event.

@@ -30,6 +30,8 @@ import type {
   TeamDetail,
   TeamMatch,
   TeamTrend,
+  TickerItem,
+  TickerSources,
   TrendResult,
   UpcomingMatch,
 } from "@/types/vlr";
@@ -504,3 +506,203 @@ export const getTeamTrend = (id: string, days = 90) =>
 // Phase 7 endpoint) — load()'s catch turns that into { data: [], stale, error }.
 export const getMatch = (id: string) =>
   load<MatchDetail>(`/match/${encodeURIComponent(id)}`, normalizeMatch);
+
+// ---- stat ticker (broadcast lower-third) -----------------------------------
+// A PRESENTATION layer over data we already serve — NO new scraping. buildTicker
+// is a pure curator (tested against committed fixtures); getTicker does the
+// bounded orchestration of the existing loaders. "Notable", not random: every
+// emitted item clears an explicit threshold below.
+
+/** Notability gates. Tuned for a broadcast feel — meaningful performances, not
+ *  filler. Exported so tests can reason about the curation contract. */
+export const ACS_NOTABLE = 250; // a standout map ACS (combined, all-maps)
+export const TREND_RATING_NOTABLE = 15; // |rating_change| points over the window
+export const RANK_MOVE_NOTABLE = 2; // positions climbed/dropped in the window
+export const UPSET_RANK_GAP = 3; // winner ranked >= this many spots BELOW loser
+/** How many entries the ticker tape carries (kept tight so it stays readable). */
+export const TICKER_MAX = 12;
+/** Bounds on the fan-out fetches getTicker makes off the match-center data. */
+export const TICKER_MATCH_SAMPLE = 4; // recent results we pull detail for (ACS)
+export const TICKER_TREND_SAMPLE = 6; // top-ranked teams we pull trends for
+
+function fmtInt(n: number | null): string {
+  return n === null ? "—" : String(Math.round(n));
+}
+
+function fmtSigned(n: number | null): string {
+  if (n === null) return "—";
+  const r = Math.round(n);
+  return r > 0 ? `+${r}` : String(r); // -0 can't occur after round on an int
+}
+
+/** The top single-map ACS performance in one match. Prefers the all-maps
+ *  aggregate (the headline number) and falls back to the first map. Returns the
+ *  performer + value, or null when no numeric ACS is present. */
+function topAcs(
+  m: MatchDetail,
+): { player: string; team: string | null; acs: number } | null {
+  const teams = m.allMaps?.teams.length ? m.allMaps.teams : m.maps[0]?.teams ?? [];
+  let best: { player: string; team: string | null; acs: number } | null = null;
+  for (const t of teams) {
+    for (const p of t.players) {
+      const acs = p.stats["ACS"]?.value ?? null;
+      if (acs === null || !p.player) continue; // null-not-NaN already guaranteed
+      if (!best || acs > best.acs) best = { player: p.player, team: p.team, acs };
+    }
+  }
+  return best;
+}
+
+function matchup(m: MatchDetail): string {
+  const a = m.teams[0]?.name ?? "TBD";
+  const b = m.teams[1]?.name ?? "TBD";
+  return `${a} vs ${b}`;
+}
+
+/** Curate the notable-stats tape from already-normalized inputs. Pure: no
+ *  network, no clock, no randomness — deterministic for a given snapshot, so the
+ *  server render and any later poll agree (hydration-safe). Order is fixed
+ *  (upsets → top ACS → movers/trends) and the tape is capped at TICKER_MAX. */
+export function buildTicker(src: TickerSources): TickerItem[] {
+  const upsets: TickerItem[] = [];
+  const acs: TickerItem[] = [];
+  const movers: TickerItem[] = [];
+
+  // rank lookup by team name (single rankings snapshot → no movement here; the
+  // movement signal comes from each team's trend window below).
+  const rankByName = new Map<string, number>();
+  for (const t of src.rankings) {
+    if (t.team && t.rank !== null) rankByName.set(t.team, t.rank);
+  }
+
+  // ── upsets: a decided result where the WINNER is ranked well below the loser.
+  for (const r of src.results) {
+    if (r.score1 === null || r.score2 === null || r.score1 === r.score2) continue;
+    const win1 = r.score1 > r.score2;
+    const winner = win1 ? r.team1 : r.team2;
+    const loser = win1 ? r.team2 : r.team1;
+    const ws = win1 ? r.score1 : r.score2;
+    const ls = win1 ? r.score2 : r.score1;
+    if (!winner || !loser) continue;
+    const wr = rankByName.get(winner);
+    const lr = rankByName.get(loser);
+    if (wr === undefined || lr === undefined) continue;
+    if (wr - lr < UPSET_RANK_GAP) continue; // not an upset (favorite won / close)
+    upsets.push({
+      id: `upset:${r.id ?? `${winner}-${loser}`}`,
+      kind: "upset",
+      label: "UPSET",
+      tone: "warn",
+      primary: winner,
+      detail: `def. ${loser} · #${wr} over #${lr}${r.event ? ` · ${r.event}` : ""}`,
+      value: `${fmtInt(ws)}–${fmtInt(ls)}`,
+    });
+  }
+
+  // ── top ACS: the headline performance from each sampled match detail.
+  for (const m of src.matches) {
+    const top = topAcs(m);
+    if (!top || top.acs < ACS_NOTABLE) continue;
+    acs.push({
+      id: `acs:${m.id ?? matchup(m)}:${top.player}`,
+      kind: "acs",
+      label: "TOP ACS",
+      tone: "accent",
+      primary: top.player,
+      detail: `${top.team ? `${top.team} · ` : ""}${matchup(m)}${m.event ? ` · ${m.event}` : ""}`,
+      value: fmtInt(top.acs),
+    });
+  }
+
+  // ── movers / trends: one item per team — the leaderboard climb/drop if the
+  // rank moved enough, else a notable rating swing. (Prevents double-counting a
+  // team that both moved and swung.)
+  for (const tr of src.trends) {
+    if (!tr.team) continue;
+    const ranks = tr.ratingTrend
+      .map((p) => p.rank)
+      .filter((r): r is number => r !== null);
+    const firstRank = ranks[0] ?? null;
+    const lastRank = ranks[ranks.length - 1] ?? null;
+    const rankMove =
+      firstRank !== null && lastRank !== null ? firstRank - lastRank : null;
+
+    if (rankMove !== null && Math.abs(rankMove) >= RANK_MOVE_NOTABLE) {
+      const climbed = rankMove > 0; // lower rank number = better
+      movers.push({
+        id: `trend:${tr.teamId ?? tr.team}`,
+        kind: "mover",
+        label: "MOVER",
+        tone: climbed ? "up" : "down",
+        primary: tr.team,
+        detail: `#${fmtInt(firstRank)} → #${fmtInt(lastRank)} · ${fmtInt(tr.windowDays)}D`,
+        value: `${climbed ? "▲" : "▼"}${Math.abs(rankMove)}`,
+      });
+      continue;
+    }
+
+    const change = tr.ratingChange;
+    if (change !== null && Math.abs(change) >= TREND_RATING_NOTABLE) {
+      const up = change > 0;
+      const now = tr.summary?.currentRating ?? null;
+      movers.push({
+        id: `trend:${tr.teamId ?? tr.team}`,
+        kind: "trend",
+        label: "TREND",
+        tone: up ? "up" : "down",
+        primary: tr.team,
+        detail: `now ${fmtInt(now)} · ${fmtInt(tr.windowDays)}D`,
+        value: fmtSigned(change),
+      });
+    }
+  }
+
+  // fixed priority, de-duped on id (source-derived → stable across renders).
+  const seen = new Set<string>();
+  const out: TickerItem[] = [];
+  for (const item of [...upsets, ...acs, ...movers]) {
+    if (seen.has(item.id)) continue;
+    seen.add(item.id);
+    out.push(item);
+    if (out.length >= TICKER_MAX) break;
+  }
+  return out;
+}
+
+/** Aggregate the notable-stats tape. Server-side, force-dynamic via the route.
+ *  Fans out (bounded) over the SAME loaders the match center already uses, so it
+ *  adds no new upstream surface. Graceful-empty: any failure → empty tape, never
+ *  a thrown page; an empty tape simply hides the ticker. */
+export async function getTicker(): Promise<ApiResponse<TickerItem>> {
+  try {
+    const [results, rankings] = await Promise.all([getResults(), getRankings()]);
+
+    // top-ACS source: detail for the most recent completed results (bounded).
+    const matchIds = results.data
+      .map((r) => r.id)
+      .filter((id): id is string => Boolean(id))
+      .slice(0, TICKER_MATCH_SAMPLE);
+    const matchRes = await Promise.all(matchIds.map((id) => getMatch(id)));
+    const matches = matchRes.flatMap((r) => r.data);
+
+    // mover/trend source: trends for the top-ranked teams (bounded).
+    const teamIds = rankings.data
+      .map((t) => t.id)
+      .filter((id): id is string => Boolean(id))
+      .slice(0, TICKER_TREND_SAMPLE);
+    const trendRes = await Promise.all(teamIds.map((id) => getTeamTrend(id)));
+    const trends = trendRes.flatMap((r) => r.data);
+
+    const data = buildTicker({
+      results: results.data,
+      rankings: rankings.data,
+      matches,
+      trends,
+    });
+    // stale if either headline source was stale (detail/trend gaps just thin the
+    // tape — they don't mark the whole thing stale).
+    return { data, stale: results.stale || rankings.stale };
+  } catch (err) {
+    return { data: [], stale: true, error: String(err) };
+  }
+}

@@ -246,3 +246,33 @@ export interface MatchDetail {
   maps: MatchMap[];
   allMaps: { teams: MatchMapTeam[] } | null;
 }
+
+// ---- stat ticker (broadcast lower-third) -----------------------------------
+// A PRESENTATION aggregate over endpoints we already serve — no new scraping.
+// buildTicker() curates "notable" stats (top ACS, upsets, leaderboard movers,
+// rating-trend deltas) into a flat, render-ready list. Every metric is a
+// pre-formatted string (dash, never NaN); `tone` carries meaning, not decoration.
+
+export type TickerKind = "acs" | "upset" | "mover" | "trend";
+
+/** One scrolling ticker entry. The component is dumb: it styles by `tone` and
+ *  prints the strings verbatim. Numbers are already coerced + formatted in the
+ *  data layer (null → "—"), so nothing here can render NaN. */
+export interface TickerItem {
+  id: string; // stable, source-derived key (no Math.random / Date.now)
+  kind: TickerKind;
+  label: string; // uppercase category cap, e.g. "TOP ACS" / "UPSET" / "MOVER"
+  tone: "up" | "down" | "warn" | "accent" | "neutral"; // matches BadgeTone
+  primary: string; // lead subject (player / team)
+  detail: string; // context (matchup / event / rank move)
+  value: string; // formatted metric ("252", "+24", "▲3"), "—" when null
+}
+
+/** Already-normalized inputs the curator aggregates. The route fetches these
+ *  (bounded) via the existing loaders; buildTicker itself is pure + testable. */
+export interface TickerSources {
+  results: ResultMatch[];
+  rankings: RankedTeam[];
+  matches: MatchDetail[];
+  trends: TeamTrend[];
+}

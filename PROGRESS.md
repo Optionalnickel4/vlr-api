@@ -71,8 +71,8 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 > parked**, see the forward-looking backlog: `frontend/FEATURES.md`.
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 6 / 7 (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
-- **Frontend tests passing:** 34 (Vitest — transforms vs committed real fixtures + a SSR→hydrate guard)
+- **Slices done:** 6 / 7 + stat-ticker feature (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
+- **Frontend tests passing:** 55 (Vitest — transforms vs committed real fixtures + a SSR→hydrate guard + ticker curation)
 
 ## Slices
 
@@ -82,6 +82,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 - [x] **Slice 4 — rankings + news**
 - [x] **Slice 5 — team detail + trend** (player-detail page carved out to a follow-up)
 - [x] **Slice 6 — match-detail page** (this slice; built against the REAL Phase 7 endpoint — not a stub)
+- [x] **Stat ticker** (broadcast lower-third; presentation aggregate over existing endpoints)
 - [ ] **Slice 7 — visual polish pass**
 
 ## Slice 1 — scaffold + data layer + fixtures
@@ -240,3 +241,32 @@ So this slice first **built the backend `/match/{id}` endpoint**, then the front
   26 → **32** · live smoke `/match/684612` renders header + map tabs + both scoreboards + round
   strip; `/match/000000` → graceful error; home cards land internally (100 `/match/` links, 0
   vlr.gg match links).
+
+## Stat ticker — broadcast lower-third (presentation aggregate, no new scraping)
+
+The bottom-of-screen scrolling marquee of **curated** notable stats. Pure presentation
+over endpoints we already serve — zero new upstream surface (decision from `FEATURES.md`:
+**curated, not random**).
+
+- **Curation (`buildTicker`, pure + tested):** aggregates already-normalized inputs into a
+  flat, render-ready `TickerItem[]`. Four notable-stat kinds, each behind an explicit gate
+  (exported consts, so "notable" is a contract, not a vibe):
+  - **TOP ACS** — headline single-map ACS per sampled match detail, gated `>= 250`.
+  - **UPSET** — a decided result whose winner is ranked `>= 3` spots **below** the loser
+    (results × rankings name-join).
+  - **MOVER** — leaderboard rank climb/drop `>= 2` positions across a team's trend window.
+  - **TREND** — a notable rating swing (`|Δ| >= 15`) when the rank held flat.
+  - One item per team (mover preferred over trend → no double-count); fixed order
+    (upsets → ACS → movers/trends); de-duped on source-derived id; capped at 12.
+- **Hydration-safe by construction:** `buildTicker` is deterministic (no clock, no
+  randomness); the scroll is **pure CSS** (`vlr-marquee` keyframes, track rendered twice,
+  `-50%` translate for a seamless loop; `prefers-reduced-motion` holds it still). `StatTicker`
+  is a server component. Values pre-formatted in the data layer — **dash, never NaN**.
+- **`getTicker` orchestration:** force-dynamic `api/ticker` route + a data-layer loader that
+  fans out (bounded: ≤4 match details, ≤6 top-team trends) over the **same** loaders the
+  match center already uses. Graceful-empty on any failure; an empty tape **hides** the
+  ticker (honest neutral state, never an error strip). Mounted at the bottom of the match
+  center (server-rendered via the same `getTicker()` call).
+- Verified: `tsc` clean · `eslint` clean · `next build` clean (`/api/ticker` dynamic) ·
+  Vitest 32 → **55** (18 new ticker tests: per-gate curation, ordering, one-per-team,
+  dash-not-NaN, empty-state, graceful-empty).

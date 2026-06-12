@@ -1,20 +1,29 @@
-import { getLive, getNews, getRankings, getResults, getUpcoming } from "@/lib/vlr";
+import {
+  getLive,
+  getNews,
+  getRankings,
+  getResults,
+  getTicker,
+  getUpcoming,
+} from "@/lib/vlr";
 import { MatchCard } from "@/components/MatchCard";
 import { MatchSection } from "@/components/MatchSection";
 import { LiveMatches } from "@/components/LiveMatches";
 import { RankingsPanel } from "@/components/RankingsPanel";
 import { NewsPanel } from "@/components/NewsPanel";
+import { StatTicker } from "@/components/StatTicker";
 
 // Always fresh: the match center reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
 
 export default async function MatchCenter() {
-  const [results, upcoming, live, rankings, news] = await Promise.all([
+  const [results, upcoming, live, rankings, news, ticker] = await Promise.all([
     getResults(),
     getUpcoming(),
     getLive(),
     getRankings(),
     getNews(),
+    getTicker(),
   ]);
 
   return (
@@ -85,6 +94,10 @@ export default async function MatchCenter() {
           <RankingsPanel rankings={rankings} />
           <NewsPanel news={news} />
         </div>
+
+        {/* broadcast lower-third: the curated notable-stats ticker. Hides itself
+            when there's nothing notable to show (empty tape → null). */}
+        <StatTicker items={ticker.data} />
       </div>
     </main>
   );
