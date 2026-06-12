@@ -67,6 +67,9 @@ Next.js broadcast dashboard living in `frontend/` (same repo, same container).
 Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live in
 `frontend/CLAUDE.md`. Built in vertical slices; **stop & review at each boundary.**
 
+> This file is the build journal (completed work). For what's **planned / in-progress /
+> parked**, see the forward-looking backlog: `frontend/FEATURES.md`.
+
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
 - **Slices done:** 6 / 7 (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
 - **Frontend tests passing:** 34 (Vitest — transforms vs committed real fixtures + a SSR→hydrate guard)
