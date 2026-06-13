@@ -46,7 +46,9 @@ curation, upset detection) that a raw data mirror like VLR.gg structurally can't
 
 | Item | Status | Blocked on |
 |------|--------|------------|
-| Player pages (`/player/[id]`) | Planned | — (data layer exists; page + components only) |
+| News page (`/news`) | Planned (small) | — (endpoint already serves it; frontend-only) |
+| Player detail page (`/player/[id]`) | Planned | — lean now (data layer exists); fuller needs player-trends API |
+| Player index / directory | Planned (larger) | **net-new API — no list-players / stats endpoint yet** |
 | Stat ticker (lower-third) | ✅ Shipped (see `PROGRESS.md`) | — (curated; no new scraping) |
 | Featured streamers (top) | ✅ Shipped (see `PROGRESS.md`) | — (decision resolved: VLR streams scrape + Helix live status) |
 | Team-page W/L display | Parked refinement | regional-fetch-vs-no-records decision |
@@ -58,14 +60,31 @@ curation, upset detection) that a raw data mirror like VLR.gg structurally can't
 
 ## Planned — to build
 
-### Player pages — `/player/[id]`
-Player detail + `PlayerSnapshot` + per-agent stat table. **Lightest remaining slice:**
-the data layer (`getPlayer`/`normalizePlayer`, `player.json` fixture) already exists from
-slice 1 — this is **page + components only**.
+### News page — `/news`
+Promote the existing `NewsPanel` (currently a panel on the match center, slice 4) to a
+dedicated `/news` route with a **nav link**, showing a fuller feed than the home-page panel.
+**Frontend-only — the news endpoint already serves this.** Small slice.
+- **Scope:** new route + nav entry; reuse the slice-4 `getNews` loader + `NewsPanel` (or a
+  longer-list variant). No new data layer, no API change.
+
+### Player detail page — `/player/[id]`
+The carved-out slice. The data layer (`getPlayer`/`normalizePlayer`, `player.json` fixture)
+already exists from slice 1 — this is **page + components only**.
+- **Lean version (shippable now):** identity/detail + per-agent stat table + recent matches.
 - **Notes:** TenZ = id `9`, `?timespan=all`. `agent_stats` keys are display-cased with
   colons — read **verbatim**, do not normalize.
-- **Limit:** can show detail + snapshot but **no trend line** until the player-trend
-  endpoint exists (see parked API gap below).
+- **Fuller version depends on a net-new API phase (player trends):** a rating trend line
+  would match the team-page differentiation surface (slice 5). Per the ESPN north-star,
+  **player-driven content is core**, so this is on the critical path — but the trend line
+  needs the parked **player-trend endpoint** (see API-side gaps below) built first.
+
+### Player index / directory (optional, larger)
+A browsable player landing/list page to navigate into individual `/player/[id]` pages.
+- **NET-NEW API WORK — not a frontend-only slice** like the two above. There is **no
+  "list players" or region-wide stats endpoint** in vlr-api yet (the stats leaderboard was
+  explicitly **omitted** in an earlier slice as having no vlr-api source).
+- **Action:** **decide scope + build the API first.** Until a list/stats source exists,
+  there's nothing for a directory to read — sequence the API phase before any UI.
 
 > **Featured streamers — top-of-screen — ✅ SHIPPED** (writeup in `../PROGRESS.md`).
 > The open data-source decision was resolved by doing **both**: route (a) the
