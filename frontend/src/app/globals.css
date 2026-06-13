@@ -43,6 +43,14 @@
   --ticker-h: 2.75rem;
 }
 
+/* The stat ticker is a self-fetching client island that renders nothing until it
+   has a tape (and nothing again when empty). Reserve the fixed footer's bottom
+   space ONLY while its element is actually present — pure CSS, so the layout
+   never has to know the island's empty state. */
+body:has(.vlr-ticker) {
+  padding-bottom: var(--ticker-h);
+}
+
 /* atmosphere: a faint cool glow off the top-right + a vertical sink, not a flat
    fill — depth without distracting from the data. */
 body {

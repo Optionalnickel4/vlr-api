@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Saira, Saira_Condensed, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { StatTicker } from "@/components/StatTicker";
 
 // Display: Saira Condensed — the uppercase, wide-tracked broadcast voice.
 const sairaCondensed = Saira_Condensed({
@@ -47,6 +48,12 @@ export default function RootLayout({
           value of ours — the match island is provably deterministic. */}
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}
+        {/* The persistent broadcast lower-third. A self-fetching client island:
+            the layout passes NO data and does NO fetching, so every page renders
+            at full speed. The island owns its own static/live lifecycle and
+            hides itself when empty — `body:has(.vlr-ticker)` (globals.css)
+            reserves bottom space only while a tape is actually showing. */}
+        <StatTicker />
       </body>
     </html>
   );

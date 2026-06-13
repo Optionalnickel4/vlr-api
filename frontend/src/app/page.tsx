@@ -3,8 +3,6 @@ import {
   getNews,
   getRankings,
   getResults,
-  getLiveTickerSeed,
-  getTicker,
   getUpcoming,
   HOME_SNAPSHOT_LIMIT,
 } from "@/lib/vlr";
@@ -13,8 +11,6 @@ import { MatchSection } from "@/components/MatchSection";
 import { LiveMatches } from "@/components/LiveMatches";
 import { RankingsPanel } from "@/components/RankingsPanel";
 import { NewsPanel } from "@/components/NewsPanel";
-import { StatTicker } from "@/components/StatTicker";
-import { LiveStatTicker } from "@/components/LiveStatTicker";
 import { FeaturedStreamers } from "@/components/FeaturedStreamers";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getFeaturedStreamers } from "@/lib/twitch";
@@ -30,14 +26,13 @@ export const dynamic = "force-dynamic";
  * scrolls; on desktop the two snapshots sit side by side.
  */
 export default async function MatchCenter() {
-  const [results, upcoming, live, rankings, news, ticker, streamers] =
+  const [results, upcoming, live, rankings, news, streamers] =
     await Promise.all([
       getResults(),
       getUpcoming(),
       getLive(),
       getRankings(),
       getNews(),
-      getTicker(),
       getFeaturedStreamers(),
     ]);
 
@@ -46,22 +41,8 @@ export default async function MatchCenter() {
   const upcomingSnapshot = upcoming.data.slice(0, HOME_SNAPSHOT_LIMIT);
   const resultsSnapshot = results.data.slice(0, HOME_SNAPSHOT_LIMIT);
 
-  // Live-ticker mode: if a match is live, seed the polling island server-side
-  // (order computed once here, carried into first client render). Otherwise the
-  // ticker stays the static, server-rendered curated tape (no polling).
-  const liveSeed = await getLiveTickerSeed(live.data);
-
-  // The ticker is a fixed footer; reserve matching bottom padding so its tape
-  // never covers the last row of content — but only when it actually renders
-  // (empty tape → the ticker returns null, so no space needs reserving).
-  const hasTicker = liveSeed !== null || ticker.data.length > 0;
-
   return (
-    <main
-      className={`mx-auto w-full max-w-5xl px-4 pt-8 sm:px-6 sm:pt-10 ${
-        hasTicker ? "pb-[calc(var(--ticker-h)+2.5rem)]" : "pb-10"
-      }`}
-    >
+    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
       <SiteHeader label="match center" />
 
       <div className="flex flex-col gap-8 sm:gap-10">
@@ -129,15 +110,6 @@ export default async function MatchCenter() {
           <RankingsPanel rankings={rankings} />
           <NewsPanel news={news} />
         </div>
-
-        {/* broadcast lower-third. When a match is LIVE, the polling island takes
-            over (live in-game stats, LIVE accent); otherwise the static curated
-            tape (server-rendered). Both hide themselves when empty. */}
-        {liveSeed ? (
-          <LiveStatTicker initial={liveSeed} staticItems={ticker.data} />
-        ) : (
-          <StatTicker items={ticker.data} />
-        )}
       </div>
     </main>
   );

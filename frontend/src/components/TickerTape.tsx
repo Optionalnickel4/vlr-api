@@ -3,8 +3,8 @@ import { Badge } from "@/components/Badge";
 import type { TickerItem } from "@/types/vlr";
 
 /**
- * TickerTape — the presentational broadcast lower-third marquee, shared by the
- * static curated tape (StatTicker) and the live in-game tape (LiveStatTicker).
+ * TickerTape — the presentational broadcast lower-third marquee, driven by the
+ * self-fetching StatTicker island in both its static and live modes.
  * Pure: it styles by `tone` and prints the strings verbatim (numbers are already
  * coerced + formatted upstream → dash, never NaN). The scroll is CSS-only
  * (`vlr-marquee` keyframes) — NO Date.now / Math.random in render, so it can't

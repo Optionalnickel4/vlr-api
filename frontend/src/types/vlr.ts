@@ -306,13 +306,3 @@ export interface TickerSources {
   matches: MatchDetail[];
   trends: TeamTrend[];
 }
-
-/** Server-computed seed for the live-ticker island: the live match to poll, the
- *  seed that fixes the tape order, and the already-ordered initial items. The
- *  island renders `items` verbatim on first paint (SSR-identical) and reuses
- *  `seed` to re-order each poll's fresh items so the order never jumps. */
-export interface LiveTickerSeed {
-  matchId: string;
-  seed: number;
-  items: TickerItem[];
-}

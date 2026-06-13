@@ -1,22 +1,24 @@
 // @vitest-environment happy-dom
 //
-// Hydration + mode-switch guard for the live ticker. The order is computed once
-// on the server (seededOrder) and must carry into the FIRST client render
-// unchanged — the island seeds useState with the server `items` and only
-// re-derives inside the post-mount effect. If the order were rolled in render,
-// SSR and hydrate would diverge and React would warn here (the match-page trap
-// class). We also assert the live↔static visual switch.
+// Behavior + hydration guard for the SELF-FETCHING StatTicker island. The layout
+// passes it NO data — it fetches on mount and owns its own static/live lifecycle.
+// Because the first render uses empty initial state, SSR and the first client
+// render are BOTH the empty tape (identical → zero hydration error on any route);
+// content populates after mount. We drive the real island + real derivations
+// through a mocked fetch (no network) and assert: SSR↔hydrate parity, fetch-on-
+// mount of the static tape, live discovery + mode switch, revert-on-final, and
+// static-tape interval refresh. The pure order/derivation logic is covered by
+// liveTicker.test.ts; here we only test where it's invoked.
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createElement as h, act } from "react";
 import { renderToString } from "react-dom/server";
 import { hydrateRoot } from "react-dom/client";
 
-import { LiveStatTicker } from "@/components/LiveStatTicker";
 import { StatTicker } from "@/components/StatTicker";
 import { normalizeMatch } from "@/lib/vlr";
-import { buildLiveTicker, seededOrder } from "@/lib/liveTicker";
-import type { LiveTickerSeed, TickerItem } from "@/types/vlr";
+import { buildLiveTicker } from "@/lib/liveTicker";
+import type { ApiResponse, MatchDetail, TickerItem } from "@/types/vlr";
 
 import filledFixture from "@/lib/__fixtures__/match_live_filled.json";
 
@@ -24,24 +26,56 @@ import filledFixture from "@/lib/__fixtures__/match_live_filled.json";
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT =
   true;
 
-const filled = normalizeMatch(filledFixture)[0];
-const SEED = 12345;
-const seededItems = seededOrder(buildLiveTicker(filled), SEED);
-const initial: LiveTickerSeed = { matchId: "684619", seed: SEED, items: seededItems };
+// A normalized, in-progress match detail (status forced non-final so discovery
+// keeps it) — the same fixture the derivations are proven against.
+const liveMatch: MatchDetail = { ...normalizeMatch(filledFixture)[0], status: "live" };
+// At least one live-derived stat must exist or discovery yields null.
+const LIVE_STAT = buildLiveTicker(liveMatch)[0]?.primary ?? "";
 
 const STATIC: TickerItem[] = [
   { id: "s1", kind: "acs", label: "TOP ACS", tone: "accent", primary: "Demon1", value: "301", detail: "G2 · all-events" },
 ];
 
-afterEach(() => {
-  vi.restoreAllMocks();
-  vi.useRealTimers();
-});
+function json(body: unknown): Response {
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { "content-type": "application/json" },
+  });
+}
 
-async function hydrationErrors(element: ReturnType<typeof h>): Promise<string[]> {
-  const html = renderToString(element);
+/** Route the island's fetches. `live` toggles whether a match is on; `status`
+ *  drives the match-detail payload (so a test can flip a live match to final). */
+function mockFetch(opts: {
+  ticker?: TickerItem[];
+  live?: boolean;
+  status?: () => string;
+}) {
+  const ticker = opts.ticker ?? [];
+  return vi.spyOn(globalThis, "fetch").mockImplementation((async (
+    input: string | URL | Request,
+  ) => {
+    const url = String(input);
+    if (url.includes("/api/ticker")) {
+      return json({ data: ticker, stale: false } satisfies ApiResponse<TickerItem>);
+    }
+    if (url.includes("/api/matches/live")) {
+      return json({ data: opts.live ? [{ id: "684619" }] : [], stale: false });
+    }
+    if (url.includes("/api/match/")) {
+      const status = opts.status?.() ?? "live";
+      return json({ data: [{ ...liveMatch, status }], stale: false });
+    }
+    return json({ data: [], stale: false });
+  }) as typeof fetch);
+}
+
+/** Render to string, hydrate, and run mount effects. Returns the live container
+ *  + a root handle + any hydration-related console errors seen during hydrate. */
+async function mountIsland() {
+  const element = h(StatTicker);
+  const ssrHtml = renderToString(element); // empty initial state → ""
   const container = document.createElement("div");
-  container.innerHTML = html;
+  container.innerHTML = ssrHtml;
 
   const seen: string[] = [];
   const spy = vi.spyOn(console, "error").mockImplementation((...args) => {
@@ -50,78 +84,115 @@ async function hydrationErrors(element: ReturnType<typeof h>): Promise<string[]>
   const root = hydrateRoot(container, element, {
     onRecoverableError: (e) => seen.push(String(e)),
   });
-  await act(async () => {});
-  root.unmount();
+  // flush mount effects: discovery chains two fetches (live → match), so drain
+  // the microtask queue across a couple of macrotask ticks (real timers here).
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 0));
+  });
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 0));
+  });
   spy.mockRestore();
 
-  return seen.filter((mm) =>
-    /hydrat|did not match|didn't match|server rendered|server-rendered|attributes/i.test(mm),
+  const hydrationErrors = seen.filter((m) =>
+    /hydrat|did not match|didn't match|server rendered|server-rendered|attributes/i.test(m),
   );
+  return { container, root, ssrHtml, hydrationErrors };
 }
 
-describe("live ticker hydration (seeded order carries SSR → first client render)", () => {
-  it("SSR == hydrate, zero hydration errors (no render-time reshuffle)", async () => {
-    const errors = await hydrationErrors(
-      h(LiveStatTicker, { initial, staticItems: STATIC }),
-    );
-    expect(errors).toEqual([]);
-  });
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.useRealTimers();
+});
 
-  it("first paint renders the server-seeded order verbatim", () => {
-    const html = renderToString(
-      h(LiveStatTicker, { initial, staticItems: STATIC }),
-    );
-    // first occurrence of each item's (unique) label appears in the seeded order
-    const positions = seededItems.map((i) => html.indexOf(`>${i.label}<`));
-    expect(positions.every((p) => p >= 0)).toBe(true);
-    const sorted = [...positions].sort((a, b) => a - b);
-    expect(positions).toEqual(sorted);
+describe("StatTicker island — SSR ↔ hydrate parity", () => {
+  it("renders nothing on the server and hydrates with zero hydration errors", async () => {
+    mockFetch({ ticker: [], live: false });
+    const { ssrHtml, hydrationErrors, root } = await mountIsland();
+    // empty initial state → no tape on the server (SSR-identical to first client
+    // render), so there is nothing to mismatch on any route
+    expect(ssrHtml).toBe("");
+    expect(hydrationErrors).toEqual([]);
+    root.unmount();
   });
 });
 
-describe("live ↔ static mode switch", () => {
-  it("live mode renders the LIVE 'now playing' tape", () => {
-    const html = renderToString(
-      h(LiveStatTicker, { initial, staticItems: STATIC }),
-    );
-    expect(html).toContain("Live match stats"); // live aria-label
-    expect(html).toContain("primmie"); // a live-derived stat
-    expect(html).not.toContain("Stat Ticker");
+describe("StatTicker island — static mode (fetch on mount)", () => {
+  it("fetches /api/ticker on mount and renders the curated tape", async () => {
+    mockFetch({ ticker: STATIC, live: false });
+    const { container, root } = await mountIsland();
+    expect(container.innerHTML).toContain("Notable stats"); // static aria-label
+    expect(container.innerHTML).toContain("Demon1");
+    expect(container.innerHTML).not.toContain("Live match stats");
+    root.unmount();
   });
 
-  it("static mode (no live match) renders the curated tape", () => {
-    const html = renderToString(h(StatTicker, { items: STATIC }));
-    expect(html).toContain("Notable stats");
-    expect(html).toContain("Demon1");
+  it("refreshes the static tape on its interval (no full reload needed)", async () => {
+    vi.useFakeTimers();
+    let ticker: TickerItem[] = [];
+    vi.spyOn(globalThis, "fetch").mockImplementation((async (
+      input: string | URL | Request,
+    ) => {
+      const url = String(input);
+      if (url.includes("/api/ticker")) return json({ data: ticker, stale: false });
+      if (url.includes("/api/matches/live")) return json({ data: [], stale: false });
+      return json({ data: [], stale: false });
+    }) as typeof fetch);
+
+    const element = h(StatTicker);
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(element);
+    const root = hydrateRoot(container, element);
+    await act(async () => {}); // mount: tape still empty upstream
+    expect(container.innerHTML).not.toContain("Demon1");
+
+    // upstream gains a stat; the next refresh tick pulls it in (no reload)
+    ticker = STATIC;
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(5 * 60_000);
+    });
+    expect(container.innerHTML).toContain("Demon1");
+    root.unmount();
+  });
+});
+
+describe("StatTicker island — live mode discovery + switch", () => {
+  it("discovers a live match on mount and renders the LIVE tape", async () => {
+    expect(LIVE_STAT).not.toBe(""); // fixture sanity: derivations produce a stat
+    mockFetch({ ticker: STATIC, live: true });
+    const { container, root } = await mountIsland();
+    expect(container.innerHTML).toContain("Live match stats"); // live aria-label
+    expect(container.innerHTML).toContain(LIVE_STAT);
+    expect(container.innerHTML).not.toContain("Notable stats");
+    root.unmount();
   });
 
   it("reverts to the static tape when a poll reports the match FINAL", async () => {
     vi.useFakeTimers();
-    const finalMatch = { ...filledFixture, status: "final" };
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ data: [finalMatch], stale: false }), {
-        status: 200,
-      }),
-    );
+    let status = "live";
+    mockFetch({ ticker: STATIC, live: true, status: () => status });
 
-    const element = h(LiveStatTicker, { initial, staticItems: STATIC });
+    const element = h(StatTicker);
     const container = document.createElement("div");
     container.innerHTML = renderToString(element);
     const root = hydrateRoot(container, element);
-    await act(async () => {});
-
-    // live before the poll
+    // mount discovery (live → match fetch chain) → live; drain microtasks
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
     expect(container.innerHTML).toContain("Live match stats");
 
-    // fire the 30s poll → final → revert to the static curated tape
+    // the match finals; the next 30s poll reverts to the curated static tape
+    status = "final";
     await act(async () => {
       await vi.advanceTimersByTimeAsync(30_000);
     });
-
     expect(container.innerHTML).toContain("Notable stats");
     expect(container.innerHTML).toContain("Demon1");
     expect(container.innerHTML).not.toContain("Live match stats");
-
     root.unmount();
   });
 });
