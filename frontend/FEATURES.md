@@ -50,6 +50,7 @@ curation, upset detection) that a raw data mirror like VLR.gg structurally can't
 | Player detail page (`/player/[id]`) | Planned | — lean now (data layer exists); fuller needs player-trends API |
 | Player index / directory | Planned (larger) | **net-new API — no list-players / stats endpoint yet** |
 | Stat ticker (lower-third) | ✅ Shipped (see `PROGRESS.md`) | — (curated; no new scraping) |
+| Stat ticker — live-match mode | Planned (enhancement) | — frontend-only for verified stats; clutch/ace need new scrape |
 | Featured streamers (top) | ✅ Shipped (see `PROGRESS.md`) | — (decision resolved: VLR streams scrape + Helix live status) |
 | Team-page W/L display | Parked refinement | regional-fetch-vs-no-records decision |
 | Rankings streak + win-rate% | Parked (API-side gap) | net-new scraping + schema |
@@ -85,6 +86,42 @@ A browsable player landing/list page to navigate into individual `/player/[id]` 
   explicitly **omitted** in an earlier slice as having no vlr-api source).
 - **Action:** **decide scope + build the API first.** Until a list/stats source exists,
   there's nothing for a directory to read — sequence the API phase before any UI.
+
+### Stat ticker — live-match mode (enhancement to the shipped ticker)
+Today the ticker is a **static, server-rendered** curated all-events tape (ACS / upsets /
+movers / trends). **Enhancement:** when a match is **LIVE**, the ticker switches to a
+live-updating mode focused on the live game; when nothing is live it stays static. **Poll
+ONLY while a game is live** — cross-event "notable" stats change slowly, only in-game stats
+change fast.
+- **Polling blueprint = `LiveMatches`:** SSR-seed → poll the live match-detail endpoint
+  (`/api/match/[id]` already exists, `force-dynamic`) while live → keep last-good on a failed
+  poll; revert to the static tape when the live set empties.
+- **HYDRATION-CRITICAL (same trap class as the match-page fix):** the seeded shuffle/order
+  must carry into the **first client render unchanged**; live updates happen **post-mount
+  only**. No `Math.random` / `Date.now` divergence between SSR and hydrate.
+- **Visual:** "live now playing" — LIVE accent/pulse, focuses on the live match; reverts to
+  the curated all-events tape otherwise. Broadcast-authentic.
+- **Candidate live stats — verified against the Phase 7 match-detail shape** (all from the
+  EXISTING scrape unless noted):
+  - ✅ **Top performer now** — highest live **ACS** (`stats.ACS.value`, both teams).
+    *Caveat:* R/ACS/ADR read **null early-live** (computed late — see the partial live
+    fixture); fall back to K/D/A, which populate immediately.
+  - ✅ **Current map score + round number** — per-map `scores [t1,t2]` + the latest played
+    round's `round` / cumulative `score` from the round timeline.
+  - ✅ **Win streak (consecutive rounds)** — derive from per-round `winner` (1|2) in the
+    timeline. Pure computation, no new data.
+  - ✅ **Momentum — "won X of last Y"** — windowed over the same round `winner` sequence.
+  - ✅ **First-blood leader** — scoreboard **FK** column (map / all-maps total; FB leader =
+    max FK).
+  - ✅ **Veto / decider recap** on a freshly-started map — header `veto` strip + per-map
+    `picked`/`decider`; "freshly started" detectable when a map's rounds are still mostly
+    unplayed (`winner` null).
+  - ❌ **Clutch / ace flags — NOT derivable from the current scrape.** `round.outcome` is the
+    win CONDITION (`elim`/`boom`/`defuse`/`time`), not a 1vX clutch or 5K ace; per-round
+    player kills aren't scraped (scoreboard `K` is a per-map total). **Needs net-new scraping**
+    (round-by-round player events) — sequence an API phase before this one stat.
+- **Scope:** frontend-only for the ✅ items (the live match-detail endpoint already serves the
+  shape); only the ❌ clutch/ace item is gated on net-new API scraping.
 
 > **Featured streamers — top-of-screen — ✅ SHIPPED** (writeup in `../PROGRESS.md`).
 > The open data-source decision was resolved by doing **both**: route (a) the
