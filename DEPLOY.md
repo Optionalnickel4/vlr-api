@@ -69,8 +69,75 @@ curl -s localhost:8000/api/v1/rankings | head -c 400
 ## 8. reverse proxy (optional, matches your Caddy pattern)
 Point Caddy at 192.168.1.35:8000, e.g. vlr.jushosting.dev.
 
+## 9. frontend (Next.js) service — managed, not a dev process
+The broadcast dashboard in `frontend/` runs as its own systemd unit on port 3000
+(`next start`, the **production build** — never `next dev`). Server-side fetch only to
+`http://127.0.0.1:8000/api/v1`; the browser never calls vlr-api directly. Confirm container
+Node ≥ 18.18/20 for Next 16.
+
+```bash
+# Node (if not already present) — e.g. nodesource 20.x
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt -y install nodejs
+
+# build as the service user (vlr must OWN the build output + node_modules)
+chown -R vlr:vlr /opt/vlr-api/frontend
+cd /opt/vlr-api/frontend
+sudo -u vlr cp .env.example .env   # then edit: VLR_API_BASE + the Twitch creds (below)
+sudo -u vlr chmod 640 .env         # Twitch secret: owner-rw, group-r, world-none
+chown vlr:vlr .env
+sudo -u vlr bash -lc 'cd /opt/vlr-api/frontend && npm ci && npm run build'
+```
+
+`frontend/.env` (gitignored — never committed). The featured-streamers bar needs a Twitch app
+(client-credentials grant; the secret stays server-side, never shipped to the browser):
+```
+VLR_API_BASE=http://127.0.0.1:8000/api/v1
+TWITCH_CLIENT_ID=<from dev.twitch.tv app>
+TWITCH_CLIENT_SECRET=<from dev.twitch.tv app>
+TWITCH_FEATURED=s0mcs,tarik,shanks_ttv,yinsu   # comma-sep custom handles (optional)
+```
+
+### systemd unit — lives OUTSIDE the repo, so it's reproduced here verbatim
+The unit file at `/etc/systemd/system/vlr-frontend.service` cannot be tracked in the repo in
+place. Recreate it exactly on a container rebuild:
+```ini
+[Unit]
+Description=vlr-api frontend (Next.js)
+After=network-online.target vlr-api.service
+Wants=network-online.target
+[Service]
+Type=simple
+User=vlr
+WorkingDirectory=/opt/vlr-api/frontend
+ExecStart=/usr/bin/npm run start
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target
+```
+```bash
+# (paste the unit above, then:)
+systemctl daemon-reload
+systemctl enable --now vlr-frontend
+systemctl status vlr-frontend --no-pager
+# reach it directly (Caddy out of scope): http://192.168.1.35:3000
+```
+
+### operating both services — `start-services.sh` (repo root)
+One entrypoint for the API + frontend pair (tracked in the repo):
+```bash
+./start-services.sh start     # start both
+./start-services.sh stop      # stop both (web first, then api)
+./start-services.sh restart   # rebuild frontend, then restart both
+./start-services.sh build     # rebuild frontend + restart web only
+./start-services.sh status    # show both
+```
+
 ## Updating later
 ```bash
+# API
 cd /opt/vlr-api && git pull && .venv/bin/pip install -e .
 systemctl restart vlr-api
+# frontend (rebuild the production bundle, then restart the web unit)
+./start-services.sh build      # == npm run build (as vlr) + systemctl restart vlr-frontend
 ```

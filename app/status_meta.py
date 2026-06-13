@@ -6,7 +6,7 @@ mirrors these counts; keep the two in sync.
 """
 
 # Short sha of the release this build corresponds to. Bump per release.
-COMMIT = "d17d067"
+COMMIT = "9ee985b"
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
 TESTS_PASSING = 79

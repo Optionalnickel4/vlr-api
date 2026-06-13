@@ -5,7 +5,7 @@ in sync: bump both in the same commit.
 
 - **Phases shipped:** 7 / 7
 - **Tests passing:** 79
-- **Commit:** d17d067
+- **Commit:** 9ee985b
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
 
@@ -72,8 +72,8 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 > parked**, see the forward-looking backlog: `frontend/FEATURES.md`.
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 6 / 7 + stat-ticker feature (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
-- **Frontend tests passing:** 55 (Vitest — transforms vs committed real fixtures + a SSR→hydrate guard + ticker curation)
+- **Slices done:** 6 / 7 + stat-ticker + featured-streamers features (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
+- **Frontend tests passing:** 72 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer)
 
 ## Slices
 
@@ -84,6 +84,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 - [x] **Slice 5 — team detail + trend** (player-detail page carved out to a follow-up)
 - [x] **Slice 6 — match-detail page** (this slice; built against the REAL Phase 7 endpoint — not a stub)
 - [x] **Stat ticker** (broadcast lower-third; presentation aggregate over existing endpoints)
+- [x] **Featured streamers** (top-of-screen watch-live bar; first external API — Twitch Helix)
 - [ ] **Slice 7 — visual polish pass**
 
 ## Slice 1 — scaffold + data layer + fixtures
@@ -271,3 +272,62 @@ over endpoints we already serve — zero new upstream surface (decision from `FE
 - Verified: `tsc` clean · `eslint` clean · `next build` clean (`/api/ticker` dynamic) ·
   Vitest 32 → **55** (18 new ticker tests: per-gate curation, ordering, one-per-team,
   dash-not-NaN, empty-state, graceful-empty).
+
+## Featured streamers — watch-live bar (first external API integration)
+
+The top-of-match-center broadcast band of **Twitch channels live now** for the event.
+This is the project's **first external API integration** — and it resolved the long-open
+`FEATURES.md` data-source decision by doing **both** routes, each where it fits best:
+
+**Backend (the channel SOURCE — route (a), already shipped in Phase 7's streams scrape):**
+- `app/scrapers/match_detail.py` parses the match page's `.match-streams-container`: the
+  embeddable `.mod-embed` entries carry `data-site-id` = the bare Twitch login (e.g.
+  `valorant_br`), read directly (fallback: last path segment of the external `twitch.tv/…`
+  href). **Twitch-only** (YouTube/SOOP/etc. lack `data-site-id` → skipped), case-insensitive
+  **dedupe**, empty list valid. Surfaced as the `streams` field on `GET /match/{id}`. No new
+  fetch / scheduler / endpoint — rides the existing match-page fetch. Backend tests 75 → **79**.
+
+**Frontend (the LIVE STATUS — route (b), Twitch Helix):**
+- `src/lib/twitch.ts` — the Twitch data layer, **server-side ONLY** (the client secret never
+  reaches the browser). App access token via **client-credentials grant**, cached in memory
+  with its expiry, refreshed on expiry **or** once on a Helix 401. `getStreams(logins)` batches
+  all logins into one Helix `/streams` call (≤100), returns only the LIVE subset, `viewer_count`
+  via `parseNumeric` (null-not-NaN).
+- **Channel set = live-match channels ∪ `TWITCH_FEATURED`** (custom handles), deduped
+  case-insensitively, then **Valorant-only** filtered (no Just Chatting / other games in the
+  event bar). **Hydration-safe shuffle:** a seedable Fisher–Yates applied **once server-side at
+  request time** (`mulberry32`), never in render — one order computed on the server and sent
+  identically to SSR + client (the match center is `force-dynamic`, so each load reshuffles
+  without a hydration mismatch — the exact failure class we'd just fixed).
+- `getFeaturedStreamers` orchestration + thin `force-dynamic` `/api/streamers` route returning
+  the `{data, stale, error}` envelope. **Graceful-empty on ANY failure** (no creds, token error,
+  Helix down, nothing live) → empty bar, never an error strip. `FeaturedStreamers.tsx` server
+  component, LOCKED chroma (`LiveBadge` red, teal hover, red viewer count); each entry =
+  channel, viewer count, truncated title, link to `twitch.tv/<login>`. Empty → renders `null`
+  (hides), like the ticker. Mounted at the top of the match center.
+- `MatchDetail` gains `streams[]`; `normalizeMatch` wires it through.
+- Verified: `tsc` clean · `eslint` clean (my files) · `next build` clean (`/api/streamers`
+  dynamic) · Vitest 55 → **72** (token-flow shape, union + case-insensitive dedupe, Valorant
+  filter, viewer-count null-not-NaN, 401-refresh, graceful-empty paths, shuffle
+  deterministic-per-seed/permutation, end-to-end union→filter, + an SSR→hydrate guard). Live
+  smoke vs real Twitch: token + Helix 200; with `TWITCH_FEATURED` pointed at live Valorant
+  channels the bar renders + reshuffles per load; with the real featured set (none live this
+  moment) the bar hides — both valid.
+
+## Infra — frontend is now a managed systemd service
+
+The frontend stopped being a hand-started dev process and became a **proper managed service**
+(the reliability/uptime step the `FEATURES.md` north star calls for):
+
+- **`vlr-frontend.service`** (systemd, `User=vlr`, `WorkingDirectory=/opt/vlr-api/frontend`,
+  `ExecStart=/usr/bin/npm run start` → `next start`, `Restart=always`, ordered `After=vlr-api`).
+  Runs the **production build**, not `next dev`. ⚠️ The unit lives at
+  `/etc/systemd/system/vlr-frontend.service` — **outside the repo**, so it can't be tracked in
+  place; its full contents are pasted into `DEPLOY.md` for reproducibility on a container rebuild.
+- **`start-services.sh`** (repo root, now tracked) — one operator entrypoint for both units:
+  `start` / `stop` (web-first) / `restart` (rebuild frontend then restart both) / `build`
+  (rebuild + restart web only) / `status`.
+- **Ownership fixed** `root` → `vlr` on `frontend/` (the service user must own the build output
+  + `node_modules`), and **`frontend/.env` tightened to `640`** (Twitch secret: owner-rw,
+  group-r, world-none).
+- See `DEPLOY.md` → "9. frontend (Next.js) service" for the full setup + the unit file contents.

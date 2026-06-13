@@ -48,7 +48,7 @@ curation, upset detection) that a raw data mirror like VLR.gg structurally can't
 |------|--------|------------|
 | Player pages (`/player/[id]`) | Planned | — (data layer exists; page + components only) |
 | Stat ticker (lower-third) | ✅ Shipped (see `PROGRESS.md`) | — (curated; no new scraping) |
-| Featured streamers (top) | Planned | **data-source decision (must resolve first)** |
+| Featured streamers (top) | ✅ Shipped (see `PROGRESS.md`) | — (decision resolved: VLR streams scrape + Helix live status) |
 | Team-page W/L display | Parked refinement | regional-fetch-vs-no-records decision |
 | Rankings streak + win-rate% | Parked (API-side gap) | net-new scraping + schema |
 | Player trend endpoint | Parked (API-side gap) | API build (extend team-trend pattern) |
@@ -67,15 +67,13 @@ slice 1 — this is **page + components only**.
 - **Limit:** can show detail + snapshot but **no trend line** until the player-trend
   endpoint exists (see parked API gap below).
 
-### Featured streamers — top-of-screen
-Twitch streams for the live event.
-- **OPEN DECISION (resolve before building):**
-  - **(a)** Scrape the streams VLR already lists on the event/match pages we scrape —
-    cheap, no new integration.
-  - **(b)** Twitch Helix API for who's-live + viewers + thumbnails — needs a Twitch app
-    (client ID/secret, OAuth app-token flow).
-- **Note:** a Twitch integration may already exist in the **Synapse dashboard** — lift
-  credentials / pattern from there if going route (b).
+> **Featured streamers — top-of-screen — ✅ SHIPPED** (writeup in `../PROGRESS.md`).
+> The open data-source decision was resolved by doing **both**: route (a) the
+> backend now scrapes the Twitch channels VLR lists on the match page (the
+> `streams` field), **and** route (b) the frontend calls Twitch **Helix** for who's
+> actually live + viewers + title. The two channel sources (live-match channels ∪
+> the `TWITCH_FEATURED` env handles) are unioned, then filtered Valorant-only. The
+> project's first external API integration; the Twitch secret stays server-side.
 
 ---
 
