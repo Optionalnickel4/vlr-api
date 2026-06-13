@@ -18,6 +18,9 @@ const NAV: { href: string; label: string; key: string }[] = [
   { href: "/results", label: "Results", key: "results" },
   // coming soon — slot in with one line each:
   // { href: "/news", label: "News", key: "news" },
+  // Player DETAIL pages (/player/{id}) now exist, reached via roster + match-
+  // detail name links; this top-nav slot is for a future /players INDEX (no
+  // league-wide players list endpoint yet — deliberately not a dead link).
   // { href: "/players", label: "Players", key: "players" },
 ];
 

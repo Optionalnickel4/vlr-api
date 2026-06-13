@@ -113,8 +113,8 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 > parked**, see the forward-looking backlog: `frontend/FEATURES.md`.
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
-- **Slices done:** 6 / 7 + stat-ticker + featured-streamers features (slice 5 scoped to team detail + trend; player-detail page carved out — see below)
-- **Frontend tests passing:** 72 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer)
+- **Slices done:** 6 / 7 + stat-ticker + featured-streamers + player-detail page (slice 5 scoped to team detail + trend; the carved-out player-detail page now shipped — see below)
+- **Frontend tests passing:** 105 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page)
 
 ## Slices
 
@@ -126,6 +126,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 - [x] **Slice 6 — match-detail page** (this slice; built against the REAL Phase 7 endpoint — not a stub)
 - [x] **Stat ticker** (broadcast lower-third; presentation aggregate over existing endpoints)
 - [x] **Featured streamers** (top-of-screen watch-live bar; first external API — Twitch Helix)
+- [x] **Player detail page** (the slice-5 carve-out; leads with agent stats, Phase 8 trend secondary)
 - [ ] **Slice 7 — visual polish pass**
 
 ## Slice 1 — scaffold + data layer + fixtures
@@ -284,6 +285,44 @@ So this slice first **built the backend `/match/{id}` endpoint**, then the front
   26 → **32** · live smoke `/match/684612` renders header + map tabs + both scoreboards + round
   strip; `/match/000000` → graceful error; home cards land internally (100 `/match/` links, 0
   vlr.gg match links).
+
+## Player detail page (`/player/[id]`) — the slice-5 carve-out
+
+Mirrors the team-detail page, but inverted to match where the data is RICH. Player
+trend history is THIN at launch (snapshots only accrue when a player page is
+fetched, which didn't exist until now — TenZ has 2 points, most players 0–1), so
+the page **leads with the per-agent stat table** and treats the Phase 8 rating/ACS
+trend as a SECONDARY panel that honestly shows the young/flat state until captures
+build up.
+
+- [x] `src/app/player/[id]/page.tsx` — force-dynamic server component; fetches
+  `getPlayer` + the new `getPlayerTrend` in parallel; identity header (alias, real
+  name, team→`/team/{id}`, country); page-level graceful error ("couldn't load this
+  player", HTTP 200) when detail is absent — same philosophy as the team page.
+- [x] Thin route handlers `/api/player/[id]` + `/api/trends/player/[id]` ({data,
+  stale, error} envelope, `?days=` passthrough, graceful-empty on upstream fail).
+- [x] Data layer: `normalizePlayerTrend` + `getPlayerTrend` (parseNumeric
+  null-not-NaN; trend time-ordered on `captured_at`, never on rating/ACS value);
+  `shouldRenderTrendLine` generalized with a per-scale `epsilon` arg +
+  `PLAYER_FLAT_EPSILON` (0.03 — a player rating moves in hundredths, not hundreds).
+- [x] Components: `PlayerStatsPanel` (headline; per-agent table, agent_stats keys
+  VERBATIM, column order from the data, wide-scroll), `PlayerMatchesPanel` (recent
+  matches, W/L chroma), `PlayerTrendPanel` (reuses Sparkline + the young/flat note;
+  rating line + rating/ACS change·current·peak).
+- [x] Entry points wired: team roster aliases + match-detail scoreboard names now
+  link INTERNALLY to `/player/{id}` (id-preferred, vlr.gg fallback only when no id);
+  SiteHeader `/players` nav left a documented placeholder (no league-wide players
+  index endpoint yet — deliberately not a dead link).
+- [x] Tests `+8` (97 → **105**): `normalizePlayerTrend` (numeric coercion, captured_at
+  ordering w/ string-sort trap on ACS, empty/garbage), player-scale `shouldRenderTrendLine`,
+  and a page guard (`src/app/player.test.ts`: verbatim agent keys render, thin trend →
+  young/flat note not a fake `<svg>` line, upstream fail → graceful error).
+- [x] Verified: `tsc` clean · `eslint` clean · `next build` clean (`/player/[id]` +
+  both API routes dynamic) · Vitest 105 green · live smoke `/player/9` (TenZ) — 200,
+  identity + agent stats (verbatim `K:D`/`KAST`, value `263.8`), trend shows the
+  honest **flat** note (2 identical-rating points → no fake line, no svg), team link
+  internal; `/player/999999999` → graceful unavailable (200); team page roster → 9
+  `/player/` links, match page scoreboard → 10.
 
 ## Stat ticker — broadcast lower-third (presentation aggregate, no new scraping)
 

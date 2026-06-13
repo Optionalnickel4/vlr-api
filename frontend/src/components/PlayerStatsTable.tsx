@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { MatchMapTeam } from "@/types/vlr";
 import { TableShell } from "@/components/TableShell";
 
@@ -47,9 +48,18 @@ export function PlayerStatsTable({ team }: { team: MatchMapTeam }) {
         <tr key={p.playerId ?? `${p.player}-${i}`}>
           <td>
             <span className="flex items-baseline gap-2">
-              <span className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink">
-                {p.player ?? "—"}
-              </span>
+              {p.playerId ? (
+                <Link
+                  href={`/player/${p.playerId}`}
+                  className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink transition-colors hover:text-accent"
+                >
+                  {p.player ?? "—"}
+                </Link>
+              ) : (
+                <span className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink">
+                  {p.player ?? "—"}
+                </span>
+              )}
               {p.agent && (
                 <span className="font-body text-[11px] uppercase tracking-wide text-dim">
                   {p.agent}

@@ -23,8 +23,8 @@ import type {
   NewsArticle,
   PlayerDetail,
   PlayerMatch,
+  PlayerTrend,
   RankedTeam,
-  RatingPoint,
   ResultMatch,
   RosterMember,
   TeamDetail,
@@ -333,23 +333,87 @@ export function normalizeTrend(raw: unknown): TeamTrend[] {
   ];
 }
 
+/** Player trend (Phase 8): the player analog of normalizeTrend. Different upstream
+ *  shape — points are {captured_at, rating, acs, rounds}, there is no results join,
+ *  and the summary carries ACS too. Same discipline: parseNumeric (null-not-NaN)
+ *  at the boundary, and the line is time-ordered on the real captured_at, NEVER on
+ *  the rating value. Undated points sink to the end rather than crashing the sort. */
+export function normalizePlayerTrend(raw: unknown): PlayerTrend[] {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return [];
+  const t = raw as Record<string, unknown>;
+  const trend = Array.isArray(t.rating_trend)
+    ? (t.rating_trend as Record<string, unknown>[])
+    : [];
+  const summaryRaw =
+    t.summary && typeof t.summary === "object"
+      ? (t.summary as Record<string, unknown>)
+      : null;
+  const ratingTrend = trend
+    .map((p) => ({
+      capturedAt: str(p.captured_at),
+      rating: parseNumeric(p.rating),
+      acs: parseNumeric(p.acs),
+      rounds: parseNumeric(p.rounds),
+    }))
+    .sort((a, b) => {
+      const ta = a.capturedAt ? Date.parse(a.capturedAt) : NaN;
+      const tb = b.capturedAt ? Date.parse(b.capturedAt) : NaN;
+      if (Number.isNaN(ta) && Number.isNaN(tb)) return 0;
+      if (Number.isNaN(ta)) return 1;
+      if (Number.isNaN(tb)) return -1;
+      return ta - tb;
+    });
+  return [
+    {
+      playerId: str(t.player_id),
+      player: str(t.player),
+      team: str(t.team),
+      windowDays: parseNumeric(t.window_days),
+      ratingTrend,
+      ratingChange: parseNumeric(t.rating_change),
+      acsChange: parseNumeric(t.acs_change),
+      summary: summaryRaw
+        ? {
+            points: parseNumeric(summaryRaw.points) ?? 0,
+            currentRating: parseNumeric(summaryRaw.current_rating),
+            peakRating: parseNumeric(summaryRaw.peak_rating),
+            currentAcs: parseNumeric(summaryRaw.current_acs),
+            peakAcs: parseNumeric(summaryRaw.peak_acs),
+          }
+        : null,
+      ...(str(t.note) ? { note: str(t.note) as string } : {}),
+    },
+  ];
+}
+
 /** Below this spread (max − min rating across the window) the trend is
  *  effectively flat: a straight line carries no signal and reads as a render
  *  bug, so the panel shows the honest thin-history note instead. NOT a data fix
- *  — a ceiling team genuinely holds rating; this is purely a presentation gate. */
+ *  — a ceiling team genuinely holds rating; this is purely a presentation gate.
+ *  TEAM scale: ratings live around ~1500–2000, so 0.5 is "basically no move". */
 export const FLAT_EPSILON = 0.5;
 
+/** PLAYER scale: a player's rating sits around ~0.8–1.4, so the team's 0.5
+ *  epsilon would mark every real player trend "flat". A move of ~0.03 is already
+ *  meaningful for a player rating — gate the player line on that instead. */
+export const PLAYER_FLAT_EPSILON = 0.03;
+
 /** Whether a trend series has enough real, *moving* data to draw a sparkline.
- *  Two thin states collapse to "no line": fewer than 2 real ratings (history
- *  still young) OR ≥2 ratings with spread < FLAT_EPSILON (the degenerate flat
- *  case — e.g. a rank-1 team pinned at 2000). The honest-state decision lives
- *  here in the tested data layer, not inline in the component. */
-export function shouldRenderTrendLine(points: RatingPoint[]): boolean {
+ *  Two thin states collapse to "no line": fewer than 2 real values (history
+ *  still young) OR ≥2 values with spread < `epsilon` (the degenerate flat case
+ *  — e.g. a rank-1 team pinned at 2000). Generic over any `{ rating }`-shaped
+ *  point so the team AND player panels share it; the per-scale flatness gate is
+ *  the `epsilon` arg. The honest-state decision lives here in the tested data
+ *  layer, not inline in the component. */
+export function shouldRenderTrendLine(
+  points: { rating: number | null }[],
+  epsilon: number = FLAT_EPSILON,
+): boolean {
   const ratings = points
     .map((p) => p.rating)
     .filter((r): r is number => r !== null);
   if (ratings.length < 2) return false;
-  return Math.max(...ratings) - Math.min(...ratings) >= FLAT_EPSILON;
+  return Math.max(...ratings) - Math.min(...ratings) >= epsilon;
 }
 
 // ---- match detail (Phase 7) -------------------------------------------------
@@ -510,6 +574,15 @@ export const getTeamTrend = (id: string, days = 90) =>
   load<TeamTrend>(
     `/trends/team/${encodeURIComponent(id)}?days=${days}`,
     normalizeTrend,
+  );
+
+// Phase 8: player rating/ACS trend over banked PlayerSnapshot history. No
+// snapshots upstream → a clean 404 (load() catches it → graceful-empty); thin
+// history → a valid trend with a young-history note. Server-side fetch only.
+export const getPlayerTrend = (id: string, days = 90) =>
+  load<PlayerTrend>(
+    `/trends/player/${encodeURIComponent(id)}?days=${days}`,
+    normalizePlayerTrend,
   );
 
 // /match/{id} 404s upstream for ids vlr.gg has no page for (clean 404 from the

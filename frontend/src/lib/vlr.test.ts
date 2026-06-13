@@ -13,12 +13,14 @@ import {
   normalizeMatch,
   normalizeNews,
   normalizePlayer,
+  normalizePlayerTrend,
   normalizeRankings,
   normalizeResult,
   normalizeTeam,
   normalizeTrend,
   normalizeUpcoming,
   parseNumeric,
+  PLAYER_FLAT_EPSILON,
   shouldRenderTrendLine,
 } from "@/lib/vlr";
 
@@ -270,6 +272,84 @@ describe("normalizeTrend", () => {
   });
 });
 
+describe("normalizePlayerTrend (Phase 8 player rating/ACS trend)", () => {
+  // mirrors the team-trend shape but with acs/rounds points + ACS summary and no
+  // results join. The real launch shape is THIN (1–2 points per player).
+  const young = {
+    player_id: "9",
+    player: "TenZ",
+    team: "Sentinels",
+    window_days: 90,
+    rating_trend: [
+      { captured_at: "2026-06-08T12:00:00+00:00", rating: 1.15, acs: 251.8, rounds: 9298 },
+    ],
+    rating_change: null,
+    acs_change: null,
+    summary: {
+      points: 1,
+      current_rating: 1.15,
+      peak_rating: 1.15,
+      current_acs: 251.8,
+      peak_acs: 251.8,
+    },
+    note: "thin/young history",
+  };
+
+  it("maps identity + numeric rating/ACS points and summary (null-not-NaN)", () => {
+    const out = normalizePlayerTrend(young);
+    expect(out.length).toBe(1);
+    const t = out[0];
+    expect(t.playerId).toBe("9");
+    expect(t.player).toBe("TenZ");
+    for (const p of t.ratingTrend) {
+      expect(Number.isNaN(p.rating as number)).toBe(false);
+      expect(Number.isNaN(p.acs as number)).toBe(false);
+    }
+    expect(t.summary?.currentAcs).toBe(251.8);
+    expect(t.summary?.peakRating).toBe(1.15);
+    expect(t.note).toContain("young");
+  });
+
+  it("coerces stringy values defensively; unparseable -> null, never NaN", () => {
+    const out = normalizePlayerTrend({
+      player_id: "9",
+      rating_trend: [
+        { captured_at: "2026-06-08T12:00:00+00:00", rating: "1.15", acs: "N/A", rounds: "9298" },
+      ],
+      rating_change: "0.0",
+      acs_change: "garbage",
+      summary: { points: "1", current_rating: "1.15", peak_rating: "1.15", current_acs: "", peak_acs: null },
+    });
+    const t = out[0];
+    expect(t.ratingTrend[0].rating).toBe(1.15);
+    expect(t.ratingTrend[0].acs).toBeNull(); // "N/A" -> null, not NaN
+    expect(t.acsChange).toBeNull(); // "garbage" -> null
+    expect(t.summary?.currentAcs).toBeNull(); // "" -> null
+  });
+
+  it("orders the trend line on captured_at, not lexically or by rating", () => {
+    // same string-sort trap as the team trend, time edition
+    const scrambled = {
+      player_id: "9",
+      rating_trend: [
+        { captured_at: "2026-06-09T12:00:00+00:00", rating: "1.24", acs: "1024", rounds: "100" },
+        { captured_at: "2026-06-07T12:00:00+00:00", rating: "0.98", acs: "998", rounds: "100" },
+        { captured_at: "2026-06-08T12:00:00+00:00", rating: "1.03", acs: "1003", rounds: "100" },
+      ],
+    };
+    const acs = normalizePlayerTrend(scrambled)[0].ratingTrend.map((p) => p.acs);
+    expect(acs).toEqual([998, 1003, 1024]); // chronological, numeric — not "1024" first
+  });
+
+  it("garbage/empty input -> valid empty (no throw)", () => {
+    expect(normalizePlayerTrend("nope")).toEqual([]);
+    expect(normalizePlayerTrend(null)).toEqual([]);
+    const empty = normalizePlayerTrend({ player_id: "9", rating_trend: [] });
+    expect(empty[0].ratingTrend).toEqual([]);
+    expect(empty[0].summary).toBeNull();
+  });
+});
+
 describe("normalizeMatch (Phase 7 match detail)", () => {
   const out = normalizeMatch(match);
   const m = out[0];
@@ -441,5 +521,17 @@ describe("shouldRenderTrendLine (degenerate-trend honest state)", () => {
     expect(shouldRenderTrendLine([pt(1850)])).toBe(false);
     // nulls don't count toward the 2 real ratings needed.
     expect(shouldRenderTrendLine([pt(1850), pt(null), pt(null)])).toBe(false);
+  });
+
+  it("PLAYER scale: the epsilon arg gates flatness on the right magnitude", () => {
+    // player ratings move in hundredths — the team's 0.5 epsilon would call every
+    // real player trend flat. PLAYER_FLAT_EPSILON (0.03) is the right gate.
+    const ratings = (...rs: number[]) => rs.map((r) => ({ rating: r }));
+    // a 0.10 swing is a real player move -> line under the player epsilon...
+    expect(shouldRenderTrendLine(ratings(1.10, 1.20), PLAYER_FLAT_EPSILON)).toBe(true);
+    // ...but flat under the team default (0.5).
+    expect(shouldRenderTrendLine(ratings(1.10, 1.20))).toBe(false);
+    // sub-epsilon wobble is still flat even on the player scale.
+    expect(shouldRenderTrendLine(ratings(1.15, 1.16), PLAYER_FLAT_EPSILON)).toBe(false);
   });
 });

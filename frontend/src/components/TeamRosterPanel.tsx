@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { RosterMember } from "@/types/vlr";
 import { MatchSection } from "@/components/MatchSection";
 import { TableShell } from "@/components/TableShell";
@@ -7,8 +8,9 @@ import { Badge } from "@/components/Badge";
  * TeamRosterPanel — the active roster as a tight broadcast stat table: alias,
  * real name, role, country. Players come first, staff (coach / manager) sink to
  * the bottom under a dim divider so the five starters read at a glance. The
- * captain carries a small accent badge. Every alias links to that player's
- * vlr.gg page (internal player detail is a sibling slice).
+ * captain carries a small accent badge. Each alias links to that player's
+ * INTERNAL detail page (/player/{id}) when we have the id; only members without
+ * a player id fall back to their vlr.gg page.
  */
 function RosterRow({ m }: { m: RosterMember }) {
   const alias = (
@@ -20,7 +22,14 @@ function RosterRow({ m }: { m: RosterMember }) {
     <tr>
       <td>
         <span className="flex items-center gap-2">
-          {m.url ? (
+          {m.playerId ? (
+            <Link
+              href={`/player/${m.playerId}`}
+              className="transition-colors hover:text-accent"
+            >
+              {alias}
+            </Link>
+          ) : m.url ? (
             <a href={m.url} target="_blank" rel="noopener noreferrer">
               {alias}
             </a>

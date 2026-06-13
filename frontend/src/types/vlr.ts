@@ -177,6 +177,40 @@ export interface TeamTrend {
   note?: string;
 }
 
+// ---- player trends (from /trends/player/{id}, Phase 8) ---------------------
+// The player analog of the team rating trend. NOTE: player history is THIN —
+// snapshots only accumulate when a player page is fetched, so most players show
+// the honest young-history note until captures build up. Each point is a
+// rounds-weighted overall rating + ACS for that capture (the backend aggregates
+// the per-agent rows). parseNumeric keeps values null-not-NaN at the boundary.
+
+export interface PlayerRatingPoint {
+  capturedAt: string | null;
+  rating: number | null;
+  acs: number | null;
+  rounds: number | null;
+}
+
+export interface PlayerTrendSummary {
+  points: number;
+  currentRating: number | null;
+  peakRating: number | null;
+  currentAcs: number | null;
+  peakAcs: number | null;
+}
+
+export interface PlayerTrend {
+  playerId: string | null;
+  player: string | null;
+  team: string | null;
+  windowDays: number | null;
+  ratingTrend: PlayerRatingPoint[];
+  ratingChange: number | null;
+  acsChange: number | null;
+  summary: PlayerTrendSummary | null;
+  note?: string;
+}
+
 // ---- match detail (from /match/{id}, Phase 7) ------------------------------
 // The API already coerces scoreboard values: each stat cell is { value, both,
 // t, ct } where `value` is a number|null (KAST/HS% come through parse_percent as
