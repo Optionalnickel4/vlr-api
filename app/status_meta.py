@@ -9,7 +9,7 @@ mirrors these counts; keep the two in sync.
 COMMIT = "9ee985b"
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
-TESTS_PASSING = 79
+TESTS_PASSING = 97
 
 # Where this is deployed (already-public LXC ip; no secrets here).
 DEPLOY = {"lxc": 289, "host": "192.168.1.35"}
@@ -22,6 +22,7 @@ PHASES = [
     {"n": 5, "name": "results backfill",  "desc": "team-page results into match_results, id-join",            "shipped": True},
     {"n": 6, "name": "status dashboard",  "desc": "this page",                                                "shipped": True},
     {"n": 7, "name": "match detail",      "desc": "rich /match/{id} endpoint — header/maps/scoreboards/round timeline", "shipped": True},
+    {"n": 8, "name": "player trends",     "desc": "rating/ACS trend over PlayerSnapshot history (rounds-weighted)", "shipped": True},
 ]
 
 # History tables surfaced on the status page, in display order.

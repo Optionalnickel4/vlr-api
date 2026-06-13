@@ -3,8 +3,8 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 7 / 7
-- **Tests passing:** 79
+- **Phases shipped:** 8 / 8
+- **Tests passing:** 97
 - **Commit:** 9ee985b
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
@@ -48,6 +48,47 @@ deferred vlr-api gaps logged in the frontend slices below.
 - [x] **Phase 5 — results backfill** — team-page results into match_results, id-join
 - [x] **Phase 6 — status dashboard** — self-describing status page (this phase)
 - [x] **Phase 7 — match detail** — rich `/match/{id}` endpoint (header/maps/scoreboards/round timeline + `streams` Twitch channel logins), `refresh_match`, `VlrNotFound` → 404
+- [x] **Phase 8 — player trends** — rating/ACS trend over banked `PlayerSnapshot` history (rounds-weighted overall), `/trends/player/{id}`, no new scraper/table
+
+## Phase 8 — player trends
+
+The player analog of Phase 4's team rating trend. READ-ONLY over banked
+`player_snapshots` — **no new scraper, no new table**. Same coercion discipline:
+the per-agent stat values (`Rating`/`ACS`/`RND`) are raw TEXT, coerced numerically
+and defensively at read time, ordered on `captured_at`, never string-compared.
+
+- [x] `GET /api/v1/trends/player/{id}` (route) — mirrors `/trends/team/{id}` shape;
+  reuses the existing `coerce_float`/`coerce_int`/`_chrono_key` helpers in
+  `app/services/trends.py`. No snapshots at all for the id → clean **404** (the
+  `/history/player` pattern, never an unhandled 500); thin/young history → a valid
+  empty series with an honest `note`, no crash.
+- [x] **Aggregation** (`aggregate_player_stats`): a snapshot is per-agent, so each
+  capture collapses into ONE **rounds-weighted overall** rating + ACS across its
+  agent rows (a 4000-round main agent dominates a 14-round off-pick). An agent row
+  contributes only when its `Rating` parses; ACS is weighted independently
+  (null-on-a-row never drops the rating); a snapshot with no parseable rating is
+  skipped, not invented. VLR shows only the current split — the drift over time is
+  the net-new signal.
+- [x] **Response shape** (`build_player_response`, pure/DB-free): `player_id`,
+  `player`, `team`, `window_days`, `rating_trend` (time-ordered points of
+  `{captured_at, rating, acs, rounds}`), `rating_change`, `acs_change`, `summary`
+  (points / current+peak rating / current+peak ACS — NUMERIC max, never a string
+  max). Identity resolves from ALL rows so a player whose history predates the
+  window still gets a name; the trend respects the window cutoff.
+- [x] Tests (`tests/test_player_trends.py`, **+18**, 79 → 97): rounds-weighted
+  aggregation · string→number coercion · unparseable-rating row skipped · None when
+  no row parses · RND fallback weight · ACS-null-keeps-rating · chronological order
+  on scrambled input · **lexical-trap on ACS** (`"998"`/`"1024"`/`"1003"` → numeric
+  peak 1024, not string max `"998"`) · `metric_change` last−first / `<2` → None ·
+  full response + summary · empty/young → valid empty + note · window cutoff.
+- [x] Verified on the container through the app (real DB + routes, never curl):
+  `player_trend("9")` (TenZ) → 2 points, rounds-weighted rating **1.15**, ACS
+  **251.8** (9298 rounds), `rating_change` 0.0 (two captures ~24h apart on
+  `timespan=all` cumulative stats → drift ≈ 0, honestly thin); route returns
+  **200** (full shape incl. `acs_change`), nonexistent id → **404**, `days=0` →
+  **422**. **Banked player history is still THIN**: `player_snapshots` holds 3 rows
+  across 2 players (id 9 ×2, id 123 ×1) — the trend is real but sparse until more
+  `/player/{id}` fetches accumulate captures.
 
 ## Phase 6 — status dashboard
 

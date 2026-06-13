@@ -18,7 +18,7 @@ from typing import Any
 from sqlalchemy import and_, func, or_, select
 
 from app.core.db import SessionLocal
-from app.models import MatchResult, RankingSnapshot
+from app.models import MatchResult, PlayerSnapshot, RankingSnapshot
 
 
 # ---- coercion (pure) --------------------------------------------------------
@@ -287,3 +287,189 @@ async def team_trend(team_id: str, days: int = 90) -> dict[str, Any]:
         ]
 
     return build_response(team_id, days, snapshot_rows, result_rows)
+
+
+# =============================================================================
+# Player trends (Phase 8) — the player analog of the team rating trend above.
+#
+# Same contract: read-only over banked PlayerSnapshot history, no scraper, no new
+# table. A PlayerSnapshot stores per-agent stat rows (agent_stats JSON) captured
+# per on-demand /player/{id} fetch; the numeric fields (Rating, ACS, RND, ...) are
+# raw TEXT, honest to the scrape. We coerce defensively at READ time, NEVER sort
+# or delta on the strings, and time-order on the real captured_at.
+#
+# A snapshot is per-agent, so to trend a single value per point we aggregate the
+# agent rows into one rounds-weighted overall (rating + ACS) — VLR shows only the
+# current split, so the drift over time is the net-new signal. Pure + DB-free
+# shaping below; the one DB function is at the bottom.
+# =============================================================================
+
+# the verbatim agent_stats keys we trend (display-cased, as scraped — see CLAUDE.md)
+_RATING_KEY = "Rating"
+_ACS_KEY = "ACS"
+_ROUNDS_KEY = "RND"
+
+
+def aggregate_player_stats(agent_stats: Any) -> dict[str, Any] | None:
+    """Collapse one snapshot's per-agent rows into a single rounds-weighted point.
+
+    Rating and ACS are averaged across agents weighted by rounds played (RND), so
+    a 4000-round main agent dominates a 14-round off-pick — the honest "overall"
+    for that capture. An agent row only contributes when its Rating parses; rounds
+    are the weight (falls back to 1 when RND won't parse, so a parseable rating is
+    never silently dropped). ACS is weighted independently (may be null on a row
+    without dropping its rating). Returns None when NO agent row had a parseable
+    rating → the caller skips this snapshot rather than inventing a point.
+    """
+    if not isinstance(agent_stats, list):
+        return None
+    rating_num = rating_den = 0.0
+    acs_num = acs_den = 0.0
+    total_rounds = 0
+    for row in agent_stats:
+        stats = (row or {}).get("stats") or {}
+        rating = coerce_float(stats.get(_RATING_KEY))
+        if rating is None:
+            continue  # the trended stat won't parse → skip this agent row
+        rnd = coerce_int(stats.get(_ROUNDS_KEY))
+        weight = rnd if (rnd is not None and rnd > 0) else 1
+        rating_num += rating * weight
+        rating_den += weight
+        acs = coerce_float(stats.get(_ACS_KEY))
+        if acs is not None:
+            acs_num += acs * weight
+            acs_den += weight
+        if rnd is not None and rnd > 0:
+            total_rounds += rnd
+    if rating_den <= 0:
+        return None
+    return {
+        "rating": round(rating_num / rating_den, 2),
+        "acs": round(acs_num / acs_den, 1) if acs_den > 0 else None,
+        "rounds": total_rounds,
+    }
+
+
+def build_player_trend(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Coerce snapshot rows -> chronological numeric trend, one point per snapshot.
+
+    Each row is {captured_at, agent_stats}. A snapshot is kept only when its agent
+    rows aggregate to a parseable rating; order is by captured_at, NEVER by the
+    (string) rating — so a series like "0.998","1.024","1.003" stays in capture
+    order with numeric values, not lexicographically reshuffled.
+    """
+    points = []
+    for r in rows:
+        agg = aggregate_player_stats(r.get("agent_stats"))
+        if agg is None:
+            continue
+        points.append({"captured_at": r.get("captured_at"), **agg})
+    points.sort(key=_chrono_key)
+    return points
+
+
+def metric_change(trend: list[dict[str, Any]], key: str) -> float | None:
+    """last - first over the points that carry `key`; None with fewer than 2.
+
+    `trend` is already chronological, so this reads the earliest vs latest
+    parseable value — numeric, never a string delta.
+    """
+    vals = [p[key] for p in trend if p.get(key) is not None]
+    if len(vals) < 2:
+        return None
+    return round(vals[-1] - vals[0], 2)
+
+
+def latest_player_field(rows: list[dict[str, Any]], key: str) -> str | None:
+    """The most recent non-empty value of a string field (alias/team) across
+    snapshot rows. None if no snapshot carried one."""
+    named = [r for r in rows if (r.get(key) or "").strip()]
+    if not named:
+        return None
+    named.sort(key=_chrono_key)
+    return named[-1][key].strip()
+
+
+def build_player_response(
+    player_id: str,
+    window_days: int,
+    snapshot_rows: list[dict[str, Any]],
+    cutoff: datetime | None = None,
+) -> dict[str, Any]:
+    """Assemble the player-trend response from row-like dicts — pure, DB-free.
+
+    Mirrors the team-trend shape (rating_trend series + change + summary) so the
+    frontend reuses the same Sparkline/TrendPanel. The trend respects `cutoff`
+    (window edge) when given, but identity (alias/team) resolves from ALL rows —
+    so a player whose only history predates the window still gets a name, never a
+    misleading null. summary stats use NUMERIC max/last over coerced values.
+    """
+    in_window = (
+        snapshot_rows
+        if cutoff is None
+        else [
+            r
+            for r in snapshot_rows
+            if (ts := r.get("captured_at")) is not None and ts >= cutoff
+        ]
+    )
+    trend = build_player_trend(in_window)
+    alias = latest_player_field(snapshot_rows, "alias")
+    team = latest_player_field(snapshot_rows, "team")
+    ratings = [p["rating"] for p in trend if p.get("rating") is not None]
+    accs = [p["acs"] for p in trend if p.get("acs") is not None]
+
+    resp: dict[str, Any] = {
+        "player_id": str(player_id),
+        "player": alias,
+        "team": team,
+        "window_days": window_days,
+        "rating_trend": trend,
+        "rating_change": metric_change(trend, "rating"),
+        "acs_change": metric_change(trend, "acs"),
+        "summary": {
+            "points": len(trend),
+            "current_rating": ratings[-1] if ratings else None,
+            "peak_rating": max(ratings) if ratings else None,
+            "current_acs": accs[-1] if accs else None,
+            "peak_acs": max(accs) if accs else None,
+        },
+    }
+    if not trend:
+        resp["note"] = (
+            "no parseable rating in the window for this player_id "
+            "(rating_trend is empty) — thin/young history"
+        )
+    return resp
+
+
+async def player_trend(player_id: str, days: int = 90) -> dict[str, Any] | None:
+    """Read player_snapshots for a player and shape a rating/ACS trend.
+
+    Reads only. Returns None when the player_id has NO banked snapshots at all (the
+    route maps that to a clean 404, mirroring /history/player). When snapshots
+    exist but the windowed trend is thin/empty, returns a valid empty response —
+    the frontend decides the young-history note. All rows are fetched (per-player
+    history is sparse) so identity resolves even if it predates the window.
+    """
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    async with SessionLocal() as session:
+        snaps = (
+            await session.execute(
+                select(PlayerSnapshot)
+                .where(PlayerSnapshot.player_id == str(player_id))
+                .order_by(PlayerSnapshot.captured_at.asc())
+            )
+        ).scalars().all()
+    if not snaps:
+        return None
+    snapshot_rows = [
+        {
+            "captured_at": s.captured_at,
+            "alias": s.alias,
+            "team": s.team,
+            "agent_stats": s.agent_stats,
+        }
+        for s in snaps
+    ]
+    return build_player_response(player_id, days, snapshot_rows, cutoff)

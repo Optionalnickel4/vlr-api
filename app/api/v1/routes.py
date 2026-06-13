@@ -119,6 +119,17 @@ async def trends_team(team_id: str, days: int = Query(90, ge=1, le=365)):
     return await T.team_trend(team_id, days)
 
 
+@router.get("/trends/player/{player_id}")
+async def trends_player(player_id: str, days: int = Query(90, ge=1, le=365)):
+    # Phase 8: rating/ACS trend over banked PlayerSnapshot history. No snapshots at
+    # all for this id -> clean 404 (mirrors /history/player; never a 500). Snapshots
+    # present but thin/young -> a valid empty series, no crash.
+    resp = await T.player_trend(player_id, days)
+    if resp is None:
+        raise HTTPException(status_code=404, detail=f"no snapshot history for player {player_id}")
+    return resp
+
+
 # ---- history (from Postgres) ----
 @router.get("/history/results")
 async def history_results(limit: int = Query(50, le=500)):
