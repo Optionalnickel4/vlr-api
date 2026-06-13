@@ -39,6 +39,11 @@ import type {
 export const VLR_API_BASE =
   process.env.VLR_API_BASE ?? "http://127.0.0.1:8000/api/v1";
 
+/** The home page (match center) shows a compact SNAPSHOT of this many
+ *  upcoming/results rows each; the full ~50-row lists live on the dedicated
+ *  /schedule and /results pages (same endpoints, no slice). */
+export const HOME_SNAPSHOT_LIMIT = 5;
+
 /** Parse a raw upstream value to a number, or null. Never returns NaN.
  *  "1" -> 1, "2000" -> 2000, "1.17" -> 1.17, "–"/""/null/"19h 34m" -> null. */
 export function parseNumeric(value: unknown): number | null {
