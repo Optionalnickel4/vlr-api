@@ -219,6 +219,41 @@ def _parse_game(game: Node, names: dict[str, str]) -> dict[str, Any]:
     }
 
 
+# ---- streams (Twitch channel logins) --------------------------------------
+def _twitch_login_from_href(href: str) -> str | None:
+    """"https://www.twitch.tv/valorant_br?foo" -> "valorant_br". Only twitch.tv
+    hosts; anything else (YouTube/SOOP/...) -> None."""
+    if not href or S.MATCH_STREAM_TWITCH_HOST not in href:
+        return None
+    tail = href.split(S.MATCH_STREAM_TWITCH_HOST + "/", 1)[-1]
+    tail = tail.split("?", 1)[0].split("#", 1)[0].strip("/")
+    return tail.split("/", 1)[0] or None
+
+
+def _parse_streams(tree: HTMLParser) -> list[str]:
+    """Flat, de-duped list of Twitch channel logins from the match-page streams strip.
+
+    Only the embeddable (mod-embed) entries are Twitch; their inner embed div carries
+    data-site-id = the bare login, read directly (feeds Helix user_login). If that attr
+    is ever missing we fall back to the last path segment of the external twitch.tv href.
+    Non-Twitch platforms have no data-site-id and no twitch.tv link -> skipped. No
+    official/co-streamer distinction (the markup doesn't expose one). Empty list = valid."""
+    out: list[str] = []
+    seen: set[str] = set()
+    for btn in tree.css(S.MATCH_STREAM_BTN):
+        embed = btn.css_first(S.MATCH_STREAM_EMBED)
+        login = (embed.attributes.get(S.MATCH_STREAM_SITE_ID) if embed else None) or ""
+        login = login.strip()
+        if not login:  # attr absent -> fall back to the external twitch.tv link
+            ext = btn.css_first(S.MATCH_STREAM_EXTERNAL)
+            login = _twitch_login_from_href((ext.attributes.get("href", "") if ext else "") or "") or ""
+        if not login or login.lower() in seen:
+            continue
+        seen.add(login.lower())
+        out.append(login)
+    return out
+
+
 # ---- top-level -------------------------------------------------------------
 def parse_match(html: str) -> dict[str, Any]:
     """Pure: HTML -> match detail dict. Network-free (like the other scrapers).
@@ -237,7 +272,13 @@ def parse_match(html: str) -> dict[str, Any]:
             all_maps = {"teams": [{"name": t["name"], "players": t["players"]} for t in parsed["teams"]]}
         else:
             maps.append(parsed)
-    return {"id": None, **_parse_header(tree), "maps": maps, "all_maps": all_maps}
+    return {
+        "id": None,
+        **_parse_header(tree),
+        "streams": _parse_streams(tree),
+        "maps": maps,
+        "all_maps": all_maps,
+    }
 
 
 async def fetch_match(match_id: str) -> dict[str, Any]:

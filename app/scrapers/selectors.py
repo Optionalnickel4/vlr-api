@@ -169,5 +169,18 @@ MATCH_RND_NUM = "div.rnd-num"  # absent on the team-label col -> skip that col
 MATCH_RND_SQ = "div.rnd-sq"  # two per col: [team1, team2]; the winner carries mod-win
 MATCH_RND_IMG = "img"  # win-condition icon: /round/elim|boom|defuse|time.webp
 
+# --- match detail: Twitch stream channels (rides the same match-page fetch) ---
+# The streams strip lists one .match-streams-btn per broadcast. The embeddable
+# Twitch entries carry .mod-embed AND a data-site-id on the inner embed div = the
+# bare Twitch login (e.g. "valorant_br"). Non-Twitch platforms (YouTube/SOOP/
+# CHZZK/Bilibili/...) are plain anchors with NO data-site-id and are skipped. The
+# external link (twitch.tv/<handle>) is a redundant clean source used as a fallback
+# only if data-site-id is ever absent on a mod-embed entry.
+MATCH_STREAM_BTN = "div.match-streams-container div.match-streams-btn.mod-embed"
+MATCH_STREAM_EMBED = "div.match-streams-btn-embed[data-site-id]"  # only entries with the attr
+MATCH_STREAM_SITE_ID = "data-site-id"  # attribute on the embed div = Twitch login
+MATCH_STREAM_EXTERNAL = "a.match-streams-btn-external"  # href fallback: twitch.tv/<handle>
+MATCH_STREAM_TWITCH_HOST = "twitch.tv"  # host guard for the external-href fallback
+
 # id is parsed from href like /310/sentinels or /player/4164/...
 HREF_ID_INDEX = 1  # path segment index for numeric id

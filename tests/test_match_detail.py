@@ -141,6 +141,60 @@ def test_kd_and_fk_diff_keys_distinct():
     assert "KD_+/-" in stats and "FK_+/-" in stats
 
 
+# ---------- streams (Twitch channel logins) ----------
+def test_streams_parse_twitch_logins_from_data_site_id():
+    """Both banked fixtures carry the official-broadcast streams strip; the Twitch
+    logins come straight off data-site-id (the bare Helix user_login)."""
+    d = parse_match(load(FILLED))
+    assert isinstance(d["streams"], list)
+    # the 10 mod-embed Twitch broadcasts, read verbatim from data-site-id
+    assert "valorant" in d["streams"]
+    assert "valorant_br" in d["streams"]
+    assert all(isinstance(s, str) and s.strip() for s in d["streams"])
+    # Twitch-only: YouTube/SOOP/etc. (no data-site-id, no twitch.tv link) are skipped
+    assert all("youtube" not in s.lower() and "/" not in s for s in d["streams"])
+    # de-duped, no empties
+    assert len(d["streams"]) == len(set(d["streams"]))
+
+
+def test_streams_href_fallback_when_data_site_id_missing():
+    """A mod-embed entry without data-site-id falls back to the external twitch.tv
+    href's last path segment."""
+    html = """
+    <div class="match-streams-container">
+      <div class="match-streams-btn mod-embed">
+        <div class="match-streams-btn-embed">no data-site-id here</div>
+        <a class="match-streams-btn-external" href="https://www.twitch.tv/fallback_chan?x=1">x</a>
+      </div>
+    </div>"""
+    assert parse_match(html)["streams"] == ["fallback_chan"]
+
+
+def test_streams_dedupe_and_skip_non_twitch():
+    """The same channel listed twice collapses to one; a non-Twitch mod-embed entry
+    (no data-site-id, no twitch.tv link) is dropped, not emitted as empty/None."""
+    html = """
+    <div class="match-streams-container">
+      <div class="match-streams-btn mod-embed">
+        <div class="match-streams-btn-embed" data-site-id="valorant">v</div>
+        <a class="match-streams-btn-external" href="https://www.twitch.tv/valorant">x</a>
+      </div>
+      <div class="match-streams-btn mod-embed">
+        <div class="match-streams-btn-embed" data-site-id="valorant">dup</div>
+      </div>
+      <div class="match-streams-btn mod-embed">
+        <div class="match-streams-btn-embed">no id</div>
+        <a class="match-streams-btn-external" href="https://www.youtube.com/@x/live">y</a>
+      </div>
+    </div>"""
+    assert parse_match(html)["streams"] == ["valorant"]
+
+
+def test_streams_empty_is_valid():
+    """A match page with no Twitch streams -> empty list, never None, never a crash."""
+    assert parse_match("<html><body>no streams here</body></html>")["streams"] == []
+
+
 # ---------- cross-cutting invariants ----------
 def test_all_player_values_finite_or_none():
     for name in (FILLED, PARTIAL):
