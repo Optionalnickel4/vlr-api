@@ -37,6 +37,12 @@
   --tracking-broadcast: 0.14em;
 }
 
+/* fixed broadcast lower-third height — shared by the ticker footer and the page's
+   reserved bottom padding so the tape can never cover the last row of content. */
+:root {
+  --ticker-h: 2.75rem;
+}
+
 /* atmosphere: a faint cool glow off the top-right + a vertical sink, not a flat
    fill — depth without distracting from the data. */
 body {

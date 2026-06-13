@@ -60,9 +60,13 @@ export function StatTicker({ items }: { items: TickerItem[] }) {
   const durationSeconds = Math.max(24, items.length * 6);
 
   return (
+    // Broadcast lower-third: pinned to the bottom of the viewport, full width,
+    // always visible as the page scrolls. z-40 keeps it above page content but
+    // below any future top-of-stack chrome. The page reserves matching bottom
+    // padding (see page.tsx) so the tape never covers the last row of content.
     <section
       aria-label="Notable stats"
-      className="relative overflow-hidden rounded-[10px] border border-line bg-gradient-to-b from-panel to-panel-2"
+      className="vlr-ticker fixed inset-x-0 bottom-0 z-40 h-[var(--ticker-h)] overflow-hidden border-t border-line bg-gradient-to-b from-panel to-panel-2"
     >
       {/* label cap — sits above the tape, masks the left edge of the scroll */}
       <span className="absolute left-0 top-0 z-10 flex h-full items-center gap-2 bg-panel-2/95 pl-4 pr-5 font-display text-[11px] font-bold uppercase tracking-broadcast text-mut shadow-[8px_0_12px_-4px_rgba(8,10,14,0.9)]">
@@ -72,7 +76,7 @@ export function StatTicker({ items }: { items: TickerItem[] }) {
 
       {/* the scrolling tape: hover pauses it for readability */}
       <div
-        className="vlr-ticker-track flex w-max items-center py-2.5 [animation:vlr-marquee_linear_infinite] hover:[animation-play-state:paused]"
+        className="vlr-ticker-track flex h-full w-max items-center [animation:vlr-marquee_linear_infinite] hover:[animation-play-state:paused]"
         style={{ animationDuration: `${durationSeconds}s` }}
       >
         {/* copy #1 — the real, screen-reader-visible content */}

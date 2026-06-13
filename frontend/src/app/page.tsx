@@ -26,8 +26,17 @@ export default async function MatchCenter() {
     getTicker(),
   ]);
 
+  // The ticker is a fixed footer; reserve matching bottom padding so its tape
+  // never covers the last row of content — but only when it actually renders
+  // (empty tape → the ticker returns null, so no space needs reserving).
+  const hasTicker = ticker.data.length > 0;
+
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+    <main
+      className={`mx-auto w-full max-w-5xl px-6 pt-10 ${
+        hasTicker ? "pb-[calc(var(--ticker-h)+2.5rem)]" : "pb-10"
+      }`}
+    >
       <header className="mb-10 flex items-baseline gap-3">
         <span className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink">
           valstats<span className="text-accent">.</span>
