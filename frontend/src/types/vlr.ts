@@ -272,7 +272,18 @@ export interface FeaturedStream {
 // rating-trend deltas) into a flat, render-ready list. Every metric is a
 // pre-formatted string (dash, never NaN); `tone` carries meaning, not decoration.
 
-export type TickerKind = "acs" | "upset" | "mover" | "trend";
+export type TickerKind =
+  | "acs"
+  | "upset"
+  | "mover"
+  | "trend"
+  // live-match mode (in-game stats derived from the Phase 7 match detail)
+  | "live-score"
+  | "live-performer"
+  | "live-streak"
+  | "live-momentum"
+  | "live-fk"
+  | "live-veto";
 
 /** One scrolling ticker entry. The component is dumb: it styles by `tone` and
  *  prints the strings verbatim. Numbers are already coerced + formatted in the
@@ -294,4 +305,14 @@ export interface TickerSources {
   rankings: RankedTeam[];
   matches: MatchDetail[];
   trends: TeamTrend[];
+}
+
+/** Server-computed seed for the live-ticker island: the live match to poll, the
+ *  seed that fixes the tape order, and the already-ordered initial items. The
+ *  island renders `items` verbatim on first paint (SSR-identical) and reuses
+ *  `seed` to re-order each poll's fresh items so the order never jumps. */
+export interface LiveTickerSeed {
+  matchId: string;
+  seed: number;
+  items: TickerItem[];
 }

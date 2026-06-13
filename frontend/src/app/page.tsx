@@ -3,6 +3,7 @@ import {
   getNews,
   getRankings,
   getResults,
+  getLiveTickerSeed,
   getTicker,
   getUpcoming,
   HOME_SNAPSHOT_LIMIT,
@@ -13,6 +14,7 @@ import { LiveMatches } from "@/components/LiveMatches";
 import { RankingsPanel } from "@/components/RankingsPanel";
 import { NewsPanel } from "@/components/NewsPanel";
 import { StatTicker } from "@/components/StatTicker";
+import { LiveStatTicker } from "@/components/LiveStatTicker";
 import { FeaturedStreamers } from "@/components/FeaturedStreamers";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getFeaturedStreamers } from "@/lib/twitch";
@@ -44,10 +46,15 @@ export default async function MatchCenter() {
   const upcomingSnapshot = upcoming.data.slice(0, HOME_SNAPSHOT_LIMIT);
   const resultsSnapshot = results.data.slice(0, HOME_SNAPSHOT_LIMIT);
 
+  // Live-ticker mode: if a match is live, seed the polling island server-side
+  // (order computed once here, carried into first client render). Otherwise the
+  // ticker stays the static, server-rendered curated tape (no polling).
+  const liveSeed = await getLiveTickerSeed(live.data);
+
   // The ticker is a fixed footer; reserve matching bottom padding so its tape
   // never covers the last row of content — but only when it actually renders
   // (empty tape → the ticker returns null, so no space needs reserving).
-  const hasTicker = ticker.data.length > 0;
+  const hasTicker = liveSeed !== null || ticker.data.length > 0;
 
   return (
     <main
@@ -123,9 +130,14 @@ export default async function MatchCenter() {
           <NewsPanel news={news} />
         </div>
 
-        {/* broadcast lower-third: the curated notable-stats ticker. Hides itself
-            when there's nothing notable to show (empty tape → null). */}
-        <StatTicker items={ticker.data} />
+        {/* broadcast lower-third. When a match is LIVE, the polling island takes
+            over (live in-game stats, LIVE accent); otherwise the static curated
+            tape (server-rendered). Both hide themselves when empty. */}
+        {liveSeed ? (
+          <LiveStatTicker initial={liveSeed} staticItems={ticker.data} />
+        ) : (
+          <StatTicker items={ticker.data} />
+        )}
       </div>
     </main>
   );

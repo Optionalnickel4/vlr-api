@@ -1,0 +1,3873 @@
+{
+  "id": "000000",
+  "event": "Valorant Masters London 2026",
+  "series": "Swiss Stage: Round 2 (0-1)",
+  "status": "live",
+  "format": "BO3",
+  "teams": [
+    {
+      "name": "Dragon Ranger Gaming",
+      "id": "11981",
+      "score": 0,
+      "won": false
+    },
+    {
+      "name": "Xi Lai Gaming",
+      "id": "13581",
+      "score": 0,
+      "won": false
+    }
+  ],
+  "veto": "DRG ban Lotus; XLG ban Ascent; DRG pick Haven; XLG pick Fracture; DRG ban Breeze; XLG ban Pearl; Split remains",
+  "streams": [
+    "valorant",
+    "valorant_br",
+    "valorant_la",
+    "valorantesports_cn",
+    "valorant_fr",
+    "valorant_es",
+    "valorant_tur",
+    "valorant_id",
+    "valorant_jpn",
+    "valorant_th"
+  ],
+  "maps": [
+    {
+      "game_id": "270755",
+      "name": "Haven",
+      "picked": true,
+      "decider": false,
+      "scores": [
+        1.0,
+        0.0
+      ],
+      "teams": [
+        {
+          "name": "Dragon Ranger Gaming",
+          "score": 1.0,
+          "players": [
+            {
+              "player": "vo0kashu",
+              "team": "DRG",
+              "player_id": "3741",
+              "country": "ru",
+              "agent": "cypher",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "A": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": null,
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": null,
+                  "ct": "100%"
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 33.0,
+                  "both": "33%",
+                  "t": null,
+                  "ct": "33%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "Life",
+              "team": "DRG",
+              "player_id": "3028",
+              "country": "cn",
+              "agent": "neon",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "A": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": null,
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": null,
+                  "ct": "100%"
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 25.0,
+                  "both": "25%",
+                  "t": null,
+                  "ct": "25%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "Nicc",
+              "team": "DRG",
+              "player_id": "11524",
+              "country": "tw",
+              "agent": "skye",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "D": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "A": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": null,
+                  "ct": "+1"
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": null,
+                  "ct": "100%"
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 0.0,
+                  "both": "0%",
+                  "t": null,
+                  "ct": "0%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "SpiritZ1",
+              "team": "DRG",
+              "player_id": "31753",
+              "country": "tw",
+              "agent": "waylay",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "A": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "KD_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": null,
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": null,
+                  "ct": "100%"
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 33.0,
+                  "both": "33%",
+                  "t": null,
+                  "ct": "33%"
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "Flex1n",
+              "team": "DRG",
+              "player_id": "4705",
+              "country": "cn",
+              "agent": "omen",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "A": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": null,
+                  "ct": "0"
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": null,
+                  "ct": "100%"
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 0.0,
+                  "both": "0%",
+                  "t": null,
+                  "ct": "0%"
+                },
+                "FK": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "0",
+                  "ct": "1"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "0",
+                  "ct": "+1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xi Lai Gaming",
+          "score": 0.0,
+          "players": [
+            {
+              "player": "WsLeo",
+              "team": "XLG",
+              "player_id": "24308",
+              "country": "tw",
+              "agent": "sova",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 2.0,
+                  "both": "2",
+                  "t": "2",
+                  "ct": "0"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "A": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": 1.0,
+                  "both": "+1",
+                  "t": "+1",
+                  "ct": null
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": "100%",
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": "100%",
+                  "ct": null
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "happywei",
+              "team": "XLG",
+              "player_id": "37927",
+              "country": "tw",
+              "agent": "cypher",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "A": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": null
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": "100%",
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 40.0,
+                  "both": "40%",
+                  "t": "40%",
+                  "ct": null
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "Lysoar",
+              "team": "XLG",
+              "player_id": "37489",
+              "country": "cn",
+              "agent": "omen",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "A": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": null
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": "100%",
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": "100%",
+                  "ct": null
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "NoMan",
+              "team": "XLG",
+              "player_id": "11527",
+              "country": "hk",
+              "agent": "jett",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "A": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "-1",
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": 0.0,
+                  "both": "0%",
+                  "t": "0%",
+                  "ct": null
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                }
+              }
+            },
+            {
+              "player": "Rarga",
+              "team": "XLG",
+              "player_id": "22047",
+              "country": "ru",
+              "agent": "phoenix",
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "D": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "A": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "KD_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "-1",
+                  "ct": null
+                },
+                "KAST": {
+                  "value": 100.0,
+                  "both": "100%",
+                  "t": "100%",
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": 0.0,
+                  "both": "0",
+                  "t": "0",
+                  "ct": "0"
+                },
+                "FD": {
+                  "value": 1.0,
+                  "both": "1",
+                  "t": "1",
+                  "ct": "0"
+                },
+                "FK_+/-": {
+                  "value": -1.0,
+                  "both": "-1",
+                  "t": "-1",
+                  "ct": "0"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "winner": 1,
+          "side": "ct",
+          "outcome": "defuse",
+          "score": "1-0"
+        },
+        {
+          "round": 2,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 3,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 4,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 5,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 6,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 7,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 8,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 9,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 10,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 11,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 12,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 13,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 14,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 15,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 16,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 17,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 18,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 19,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 20,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 21,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 22,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 23,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 24,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        }
+      ]
+    },
+    {
+      "game_id": "270756",
+      "name": "Fracture",
+      "picked": true,
+      "decider": false,
+      "scores": [
+        0.0,
+        0.0
+      ],
+      "teams": [
+        {
+          "name": "Dragon Ranger Gaming",
+          "score": 0.0,
+          "players": [
+            {
+              "player": "Life",
+              "team": "DRG",
+              "player_id": "3028",
+              "country": "cn",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "vo0kashu",
+              "team": "DRG",
+              "player_id": "3741",
+              "country": "ru",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Flex1n",
+              "team": "DRG",
+              "player_id": "4705",
+              "country": "cn",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Nicc",
+              "team": "DRG",
+              "player_id": "11524",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "SpiritZ1",
+              "team": "DRG",
+              "player_id": "31753",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xi Lai Gaming",
+          "score": 0.0,
+          "players": [
+            {
+              "player": "NoMan",
+              "team": "XLG",
+              "player_id": "11527",
+              "country": "hk",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Rarga",
+              "team": "XLG",
+              "player_id": "22047",
+              "country": "ru",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "WsLeo",
+              "team": "XLG",
+              "player_id": "24308",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Lysoar",
+              "team": "XLG",
+              "player_id": "37489",
+              "country": "cn",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "happywei",
+              "team": "XLG",
+              "player_id": "37927",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 2,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 3,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 4,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 5,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 6,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 7,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 8,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 9,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 10,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 11,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 12,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 13,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 14,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 15,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 16,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 17,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 18,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 19,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 20,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 21,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 22,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 23,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 24,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        }
+      ]
+    },
+    {
+      "game_id": "270757",
+      "name": "Split",
+      "picked": false,
+      "decider": true,
+      "scores": [
+        0.0,
+        0.0
+      ],
+      "teams": [
+        {
+          "name": "Dragon Ranger Gaming",
+          "score": 0.0,
+          "players": [
+            {
+              "player": "Life",
+              "team": "DRG",
+              "player_id": "3028",
+              "country": "cn",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "vo0kashu",
+              "team": "DRG",
+              "player_id": "3741",
+              "country": "ru",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Flex1n",
+              "team": "DRG",
+              "player_id": "4705",
+              "country": "cn",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Nicc",
+              "team": "DRG",
+              "player_id": "11524",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "SpiritZ1",
+              "team": "DRG",
+              "player_id": "31753",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Xi Lai Gaming",
+          "score": 0.0,
+          "players": [
+            {
+              "player": "NoMan",
+              "team": "XLG",
+              "player_id": "11527",
+              "country": "hk",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Rarga",
+              "team": "XLG",
+              "player_id": "22047",
+              "country": "ru",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "WsLeo",
+              "team": "XLG",
+              "player_id": "24308",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "Lysoar",
+              "team": "XLG",
+              "player_id": "37489",
+              "country": "cn",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            },
+            {
+              "player": "happywei",
+              "team": "XLG",
+              "player_id": "37927",
+              "country": "tw",
+              "agent": null,
+              "stats": {
+                "R": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ACS": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "K": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "D": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "A": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KD_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "KAST": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "ADR": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "HS%": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FD": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                },
+                "FK_+/-": {
+                  "value": null,
+                  "both": null,
+                  "t": null,
+                  "ct": null
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 2,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 3,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 4,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 5,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 6,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 7,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 8,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 9,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 10,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 11,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 12,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 13,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 14,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 15,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 16,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 17,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 18,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 19,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 20,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 21,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 22,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 23,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        },
+        {
+          "round": 24,
+          "winner": null,
+          "side": null,
+          "outcome": null,
+          "score": null
+        }
+      ]
+    }
+  ],
+  "all_maps": {
+    "teams": [
+      {
+        "name": null,
+        "players": [
+          {
+            "player": "vo0kashu",
+            "team": "DRG",
+            "player_id": "3741",
+            "country": "ru",
+            "agent": "cypher",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "A": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "KD_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": null,
+                "ct": "0"
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": null,
+                "ct": "100%"
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 33.0,
+                "both": "33%",
+                "t": null,
+                "ct": "33%"
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "Life",
+            "team": "DRG",
+            "player_id": "3028",
+            "country": "cn",
+            "agent": "neon",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "A": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "KD_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": null,
+                "ct": "0"
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": null,
+                "ct": "100%"
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 25.0,
+                "both": "25%",
+                "t": null,
+                "ct": "25%"
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "Nicc",
+            "team": "DRG",
+            "player_id": "11524",
+            "country": "tw",
+            "agent": "skye",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "D": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "A": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "KD_+/-": {
+                "value": 1.0,
+                "both": "+1",
+                "t": null,
+                "ct": "+1"
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": null,
+                "ct": "100%"
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 0.0,
+                "both": "0%",
+                "t": null,
+                "ct": "0%"
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "SpiritZ1",
+            "team": "DRG",
+            "player_id": "31753",
+            "country": "tw",
+            "agent": "waylay",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "A": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "KD_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": null,
+                "ct": "0"
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": null,
+                "ct": "100%"
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 33.0,
+                "both": "33%",
+                "t": null,
+                "ct": "33%"
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "Flex1n",
+            "team": "DRG",
+            "player_id": "4705",
+            "country": "cn",
+            "agent": "omen",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "A": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "KD_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": null,
+                "ct": "0"
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": null,
+                "ct": "100%"
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 0.0,
+                "both": "0%",
+                "t": null,
+                "ct": "0%"
+              },
+              "FK": {
+                "value": 1.0,
+                "both": "1",
+                "t": "0",
+                "ct": "1"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 1.0,
+                "both": "+1",
+                "t": "0",
+                "ct": "+1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": null,
+        "players": [
+          {
+            "player": "WsLeo",
+            "team": "XLG",
+            "player_id": "24308",
+            "country": "tw",
+            "agent": "sova",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 2.0,
+                "both": "2",
+                "t": "2",
+                "ct": "0"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "A": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "KD_+/-": {
+                "value": 1.0,
+                "both": "+1",
+                "t": "+1",
+                "ct": null
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": "100%",
+                "ct": null
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 100.0,
+                "both": "100%",
+                "t": "100%",
+                "ct": null
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "happywei",
+            "team": "XLG",
+            "player_id": "37927",
+            "country": "tw",
+            "agent": "cypher",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "A": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "KD_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": null
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": "100%",
+                "ct": null
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 40.0,
+                "both": "40%",
+                "t": "40%",
+                "ct": null
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "Lysoar",
+            "team": "XLG",
+            "player_id": "37489",
+            "country": "cn",
+            "agent": "omen",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "A": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "KD_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": null
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": "100%",
+                "ct": null
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 100.0,
+                "both": "100%",
+                "t": "100%",
+                "ct": null
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "NoMan",
+            "team": "XLG",
+            "player_id": "11527",
+            "country": "hk",
+            "agent": "jett",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "A": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "KD_+/-": {
+                "value": -1.0,
+                "both": "-1",
+                "t": "-1",
+                "ct": null
+              },
+              "KAST": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": 0.0,
+                "both": "0%",
+                "t": "0%",
+                "ct": null
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              }
+            }
+          },
+          {
+            "player": "Rarga",
+            "team": "XLG",
+            "player_id": "22047",
+            "country": "ru",
+            "agent": "phoenix",
+            "stats": {
+              "R": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "ACS": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "K": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "D": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "A": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "KD_+/-": {
+                "value": -1.0,
+                "both": "-1",
+                "t": "-1",
+                "ct": null
+              },
+              "KAST": {
+                "value": 100.0,
+                "both": "100%",
+                "t": "100%",
+                "ct": null
+              },
+              "ADR": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "HS%": {
+                "value": null,
+                "both": null,
+                "t": null,
+                "ct": null
+              },
+              "FK": {
+                "value": 0.0,
+                "both": "0",
+                "t": "0",
+                "ct": "0"
+              },
+              "FD": {
+                "value": 1.0,
+                "both": "1",
+                "t": "1",
+                "ct": "0"
+              },
+              "FK_+/-": {
+                "value": -1.0,
+                "both": "-1",
+                "t": "-1",
+                "ct": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "url": "https://www.vlr.gg/000000"
+}

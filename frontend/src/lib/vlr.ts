@@ -13,6 +13,7 @@ import type {
   AgentStat,
   ApiResponse,
   LiveMatch,
+  LiveTickerSeed,
   MatchDetail,
   MatchMap,
   MatchMapTeam,
@@ -35,6 +36,7 @@ import type {
   TrendResult,
   UpcomingMatch,
 } from "@/types/vlr";
+import { buildLiveTicker, pickLiveMatchId, seededOrder } from "@/lib/liveTicker";
 
 export const VLR_API_BASE =
   process.env.VLR_API_BASE ?? "http://127.0.0.1:8000/api/v1";
@@ -677,6 +679,32 @@ export function buildTicker(src: TickerSources): TickerItem[] {
     if (out.length >= TICKER_MAX) break;
   }
   return out;
+}
+
+// ---- live-ticker seed (server-side; the page hands this to the poll island) --
+
+/** When a match is LIVE, seed the live in-game ticker: pick the live match, fetch
+ *  its detail once, build the tape, and fix its order with a fresh request-time
+ *  seed. Returns null when nothing's live or no stat is derivable → the page
+ *  renders the static curated tape instead. Graceful-empty on any failure. The
+ *  seed/order is computed HERE (server), then carried into the island's first
+ *  render unchanged (hydration-safe — never re-rolled on mount). */
+export async function getLiveTickerSeed(
+  live: LiveMatch[],
+): Promise<LiveTickerSeed | null> {
+  try {
+    const matchId = pickLiveMatchId(live);
+    if (!matchId) return null;
+    const res = await getMatch(matchId);
+    const match = res.data[0];
+    if (!match) return null;
+    const items = buildLiveTicker(match);
+    if (items.length === 0) return null;
+    const seed = (Math.random() * 0x100000000) >>> 0; // request-time, server-side
+    return { matchId, seed, items: seededOrder(items, seed) };
+  } catch {
+    return null;
+  }
 }
 
 /** Aggregate the notable-stats tape. Server-side, force-dynamic via the route.
