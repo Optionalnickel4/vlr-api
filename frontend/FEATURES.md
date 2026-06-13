@@ -6,6 +6,42 @@ this file is the forward-looking backlog. Keep entries to *what it is*, *why it'
 done*, and any *dependency / open decision*. When an item ships, move its record to
 `PROGRESS.md` and drop it here.
 
+---
+
+## North star — vision & context
+
+> **This section is vision/context, not committed scope.** It anchors decisions and
+> priorities; it is **not a task list**. The backlog below is the actual scope.
+
+**"ESPN for Valorant."** The goal is a broadcast-quality esports site: live scores,
+standings, team & player pages, match box scores, news, and watch-live integration —
+**plus the analysis layer on top of the raw data** (rating trends, form, notable-performance
+curation, upset detection) that a raw data mirror like VLR.gg structurally can't provide.
+**The differentiation is context and narrative around the data, not the data alone.**
+
+**What this implies for priorities:**
+- **Player-driven content is core ESPN territory.** Player pages — with the **player-trends
+  API built first** — are on the **critical path**, not a nice-to-have.
+- **Reliability/uptime matters** for a site people actually check. The frontend must become a
+  proper **managed service** (systemd, production build), not a dev process. This elevates the
+  systemd-service infra task.
+- **The differentiation surfaces already built** (team rating-trends, stat-ticker
+  notable-performance curation) **are the actual product, not garnish** — keep investing there.
+
+**Multi-game future (CS2/CSGO is the likely second game):**
+- Architecture should **not actively prevent** a second game, but **do not abstract for it
+  prematurely.** The current patterns — per-source scrapers with selectors isolated in
+  `selectors.py`, the `{data, stale, error}` envelope, the data-layer boundary — are already
+  game-agnostic. A second game = a **new scraper** targeting its source with its own selectors
+  feeding the **same patterns**, not a rewrite.
+- **Light-touch guidance only:** avoid hardcoding `"valorant"` into things that are conceptually
+  a *game dimension*, where keeping it general is cheap. **No refactor needed now.**
+- **Intel for when CS is scoped:** the CS equivalent of VLR.gg is **HLTV.org**, which is
+  significantly more aggressive about anti-scraping (Cloudflare, rate limits) than VLR. The
+  second game will be a **harder scrape** than the first.
+
+---
+
 ## Status at a glance
 
 | Item | Status | Blocked on |
