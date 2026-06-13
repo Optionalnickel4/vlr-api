@@ -245,6 +245,25 @@ export interface MatchDetail {
   teams: MatchTeam[];
   maps: MatchMap[];
   allMaps: { teams: MatchMapTeam[] } | null;
+  /** Twitch channel logins the match page lists (bare user_login, e.g.
+   *  "valorant_br"); the featured-streamers bar unions these across live
+   *  matches and queries Helix for who's actually live. Empty = none. */
+  streams: string[];
+}
+
+// ---- featured streamers (Twitch Helix, server-side only) -------------------
+// The project's first EXTERNAL API integration. The client secret never reaches
+// the browser — all Twitch calls happen server-side in @/lib/twitch. A
+// FeaturedStream is a channel that is LIVE right now and streaming Valorant.
+
+export interface FeaturedStream {
+  login: string; // twitch user_login (channel handle) — lowercased
+  displayName: string | null; // user_name
+  viewers: number | null; // viewer_count (parseNumeric, null-not-NaN)
+  title: string | null;
+  game: string | null; // game_name (filtered to Valorant before display)
+  thumbnail: string | null; // thumbnail_url
+  url: string; // https://www.twitch.tv/<login>
 }
 
 // ---- stat ticker (broadcast lower-third) -----------------------------------

@@ -455,6 +455,11 @@ export function normalizeMatch(raw: unknown): MatchDetail[] {
             ),
           }
         : null,
+      // Twitch channel logins (bare user_login) — drop any empties; the
+      // featured-streamers bar (lib/twitch) unions these across live matches.
+      streams: (Array.isArray(m.streams) ? m.streams : [])
+        .map(str)
+        .filter((s): s is string => Boolean(s)),
     },
   ];
 }

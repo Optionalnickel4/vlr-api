@@ -120,6 +120,7 @@ describe("match-detail hydration (MapTabs island)", () => {
           { name: "NRG", score: null, players: [player("Ethan")] },
         ],
       },
+      streams: [],
     };
     expect(await hydrationErrors(h(MapTabs, { match: live }))).toEqual([]);
   });

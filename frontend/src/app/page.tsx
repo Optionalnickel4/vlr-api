@@ -12,19 +12,23 @@ import { LiveMatches } from "@/components/LiveMatches";
 import { RankingsPanel } from "@/components/RankingsPanel";
 import { NewsPanel } from "@/components/NewsPanel";
 import { StatTicker } from "@/components/StatTicker";
+import { FeaturedStreamers } from "@/components/FeaturedStreamers";
+import { getFeaturedStreamers } from "@/lib/twitch";
 
 // Always fresh: the match center reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
 
 export default async function MatchCenter() {
-  const [results, upcoming, live, rankings, news, ticker] = await Promise.all([
-    getResults(),
-    getUpcoming(),
-    getLive(),
-    getRankings(),
-    getNews(),
-    getTicker(),
-  ]);
+  const [results, upcoming, live, rankings, news, ticker, streamers] =
+    await Promise.all([
+      getResults(),
+      getUpcoming(),
+      getLive(),
+      getRankings(),
+      getNews(),
+      getTicker(),
+      getFeaturedStreamers(),
+    ]);
 
   // The ticker is a fixed footer; reserve matching bottom padding so its tape
   // never covers the last row of content — but only when it actually renders
@@ -48,6 +52,10 @@ export default async function MatchCenter() {
       </header>
 
       <div className="flex flex-col gap-10">
+        {/* watch-live band: Twitch channels live now (event broadcasts ∪ featured
+            handles), Valorant-only, server-shuffled once. Hides when none live. */}
+        <FeaturedStreamers streams={streamers.data} />
+
         {/* live — the one polling island */}
         <LiveMatches initial={live} />
 

@@ -73,6 +73,7 @@ function mkMatch(
       { name: "Bravo", id: "2", score: 1, won: false },
     ],
     maps: [],
+    streams: [],
     allMaps: {
       teams: [
         {
