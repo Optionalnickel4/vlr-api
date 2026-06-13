@@ -6,7 +6,7 @@ mirrors these counts; keep the two in sync.
 """
 
 # Short sha of the release this build corresponds to. Bump per release.
-COMMIT = "1d22037"
+COMMIT = "f415808"
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
 TESTS_PASSING = 75
@@ -21,6 +21,7 @@ PHASES = [
     {"n": 4, "name": "team trends",       "desc": "rating trend joined with results",                         "shipped": True},
     {"n": 5, "name": "results backfill",  "desc": "team-page results into match_results, id-join",            "shipped": True},
     {"n": 6, "name": "status dashboard",  "desc": "this page",                                                "shipped": True},
+    {"n": 7, "name": "match detail",      "desc": "rich /match/{id} endpoint — header/maps/scoreboards/round timeline", "shipped": True},
 ]
 
 # History tables surfaced on the status page, in display order.

@@ -3,9 +3,9 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 6 / 6
-- **Tests passing:** 72
-- **Commit:** 1d22037
+- **Phases shipped:** 7 / 7
+- **Tests passing:** 75
+- **Commit:** f415808
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
 
@@ -47,6 +47,7 @@ deferred vlr-api gaps logged in the frontend slices below.
 - [x] **Phase 4 — team trends** — rating trend joined with results
 - [x] **Phase 5 — results backfill** — team-page results into match_results, id-join
 - [x] **Phase 6 — status dashboard** — self-describing status page (this phase)
+- [x] **Phase 7 — match detail** — rich `/match/{id}` endpoint (header/maps/scoreboards/round timeline), `refresh_match`, `VlrNotFound` → 404
 
 ## Phase 6 — status dashboard
 
