@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { PlayerSearch } from "@/components/PlayerSearch";
 
 /**
  * SiteHeader — the VALSTATS broadcast header + primary nav. The wordmark links
@@ -7,21 +8,14 @@ import { cn } from "@/lib/cn";
  * as part of the broadcast header, not a generic menu: same Saira-condensed
  * uppercase wide-tracked voice, accent only on the active item.
  *
- * Extensible by design — a new top-level page slots in with ONE entry in NAV
- * (the coming /news + /player pages drop straight in).
+ * Extensible by design — a new top-level page slots in with ONE entry in NAV.
  *
- * Responsive: wordmark + page label on the left, nav on the right; the row wraps
- * cleanly on a phone (the nav drops under the wordmark instead of cramping).
+ * Responsive: wordmark + page label on the left, nav + search on the right; the
+ * row wraps cleanly on a phone.
  */
 const NAV: { href: string; label: string; key: string }[] = [
   { href: "/schedule", label: "Schedule", key: "schedule" },
   { href: "/results", label: "Results", key: "results" },
-  // coming soon — slot in with one line each:
-  // { href: "/news", label: "News", key: "news" },
-  // Player DETAIL pages (/player/{id}) now exist, reached via roster + match-
-  // detail name links; this top-nav slot is for a future /players INDEX (no
-  // league-wide players list endpoint yet — deliberately not a dead link).
-  // { href: "/players", label: "Players", key: "players" },
 ];
 
 export function SiteHeader({
@@ -60,6 +54,7 @@ export function SiteHeader({
             {item.label}
           </Link>
         ))}
+        <PlayerSearch />
       </nav>
     </header>
   );

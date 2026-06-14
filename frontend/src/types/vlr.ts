@@ -309,6 +309,19 @@ export interface MatchDetail {
   streams: string[];
 }
 
+// ---- player search (from /players?q=, Phase 10) ----------------------------
+// DB-first: results sourced from PlayerSnapshot history ("db") return faster
+// and include full team/country. VLR autocomplete fallback ("vlr") fires only on
+// a DB miss and may lack country. The frontend shows a subtle source indicator.
+
+export interface PlayerSearchResult {
+  id: string | null;
+  alias: string | null;
+  team: string | null;
+  country: string | null;
+  source: "db" | "vlr";
+}
+
 // ---- featured streamers (Twitch Helix, server-side only) -------------------
 // The project's first EXTERNAL API integration. The client secret never reaches
 // the browser — all Twitch calls happen server-side in @/lib/twitch. A

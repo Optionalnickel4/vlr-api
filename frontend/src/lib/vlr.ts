@@ -25,6 +25,7 @@ import type {
   PlayerDetail,
   PlayerMatch,
   PlayerOverall,
+  PlayerSearchResult,
   PlayerTrend,
   RankedTeam,
   ResultMatch,
@@ -665,6 +666,18 @@ export const getNews = () => load<NewsArticle>("/news", normalizeNews);
 
 export const getPlayer = (id: string) =>
   load<PlayerDetail>(`/player/${encodeURIComponent(id)}`, normalizePlayer);
+
+/** Player search result row (from /players?q=). The backend wraps this in the
+ *  standard {data, stale, error} envelope; this normalizer maps one row. */
+export function normalizePlayerSearch(raw: unknown): PlayerSearchResult[] {
+  return asList(raw).map((r) => ({
+    id: str(r.id),
+    alias: str(r.alias),
+    team: str(r.team),
+    country: str(r.country),
+    source: r.source === "vlr" ? "vlr" : "db",
+  }));
+}
 
 // /team/{id} 500s upstream for ids vlr.gg has no page for — the graceful-empty
 // catch in load() turns that into { data: [], stale: true, error }.
