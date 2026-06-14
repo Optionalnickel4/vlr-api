@@ -16,7 +16,8 @@ import {
 import type { ApiResponse, StatLeader } from "@/types/vlr";
 
 /**
- * StatsLeaderboard — the HLTV-style region-wide player leaderboard (Phase 12).
+ * StatsLeaderboard — the HLTV-style region-wide player leaderboard (Phase 12)
+ * + a broadcast-style Olympic podium for the current top 3.
  *
  * VLR's OWN R2.0 rating is the headline column (emphasized, accent) — we never
  * compute a composite. Region (NA/EU) + timespan (30d/60d/90d/all) toggles
@@ -30,6 +31,10 @@ import type { ApiResponse, StatLeader } from "@/types/vlr";
  * timespan) and the sort is deterministic given (rows, key, dir) — so the SSR
  * render and the first client render are byte-identical. Refetches happen only
  * after a toggle change (post-mount effect, guarded against the initial mount).
+ *
+ * PODIUM: the top-3 island derives from `sorted` (the same memo), so it updates
+ * automatically on any sort/filter change. Renders null for missing slots when
+ * fewer than 3 players are present — no crash on undefined data[2].
  */
 
 const REGION_LABELS: Record<string, string> = { na: "NA", eu: "EU" };
@@ -54,6 +59,67 @@ function num(n: number | null, digits = 0): string {
 }
 function pct(n: number | null): string {
   return n === null ? "—" : `${Math.round(n)}%`;
+}
+
+// ── Podium ────────────────────────────────────────────────────────────────────
+// Visual slot order: silver (left) · gold (center, raised) · bronze (right).
+// Border colors reuse existing design-system tokens — no new colors introduced:
+// warn (#ffb02e, amber) = gold, mut = silver, dim = bronze.
+// Top padding drives the "stepped stand" height when blocks are bottom-aligned.
+const PODIUM_SLOTS = [
+  // visual slot 0 = left  → sorted[1] (rank 2, silver)
+  { rank: 2, borderCls: "border-t-[2px] border-t-mut",  padTop: "pt-6",  r2Cls: "text-ink" },
+  // visual slot 1 = center → sorted[0] (rank 1, gold)
+  { rank: 1, borderCls: "border-t-[3px] border-t-warn", padTop: "pt-10", r2Cls: "text-accent" },
+  // visual slot 2 = right  → sorted[2] (rank 3, bronze)
+  { rank: 3, borderCls: "border-t-[2px] border-t-dim",  padTop: "pt-4",  r2Cls: "text-mut" },
+] as const;
+
+function PodiumBlock({
+  player,
+  slot,
+}: {
+  player: StatLeader | undefined;
+  slot: (typeof PODIUM_SLOTS)[number];
+}) {
+  if (!player) return null;
+  return (
+    <div
+      data-podium-rank={slot.rank}
+      className={cn(
+        "relative flex flex-1 flex-col items-center gap-1 rounded border border-line bg-panel-2 px-3 pb-5",
+        slot.borderCls,
+        slot.padTop,
+      )}
+    >
+      {slot.rank === 1 && (
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-warn/30 bg-warn/10 px-2.5 py-0.5 font-display text-[9px] font-semibold uppercase tracking-broadcast text-warn">
+          Top Rated
+        </span>
+      )}
+      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.16em] text-dim">
+        #{slot.rank}
+      </span>
+      {player.playerId ? (
+        <Link
+          href={`/player/${player.playerId}`}
+          className="text-center font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink hover:text-accent"
+        >
+          {player.player ?? "—"}
+        </Link>
+      ) : (
+        <span className="text-center font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink">
+          {player.player ?? "—"}
+        </span>
+      )}
+      <span className={cn("font-mono text-2xl font-bold tabular-nums", slot.r2Cls)}>
+        {num(player.r2, 2)}
+      </span>
+      <span className="font-display text-[9px] font-semibold uppercase tracking-broadcast text-dim">
+        R2.0
+      </span>
+    </div>
+  );
 }
 
 const COLUMNS: Col[] = [
@@ -240,6 +306,23 @@ export function StatsLeaderboard({
         <p role="alert" className="mb-3 font-body text-[13px] text-down">
           Couldn’t load the leaderboard: {error}
         </p>
+      )}
+
+      {/* Podium — top 3 of the current sorted view (2-1-3 Olympic stand) */}
+      {!isEmpty && (
+        <div
+          className="mb-5 flex items-end gap-3"
+          aria-label="Top 3 players"
+          role="region"
+        >
+          {PODIUM_SLOTS.map((slot) => {
+            // sorted[0]=rank1, sorted[1]=rank2, sorted[2]=rank3
+            const idx = slot.rank - 1;
+            return (
+              <PodiumBlock key={slot.rank} player={sorted[idx]} slot={slot} />
+            );
+          })}
+        </div>
       )}
 
       {isEmpty ? (

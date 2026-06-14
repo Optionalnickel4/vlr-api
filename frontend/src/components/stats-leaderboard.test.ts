@@ -142,9 +142,15 @@ describe("StatsLeaderboard island — SSR ↔ hydrate parity", () => {
   it("renders identically on server and client with zero hydration errors", async () => {
     const initial = envelope(normalizeStats(statsFixture));
     const { ssrHtml, hydrationErrors, root } = await mountIsland(initial);
-    // default R2.0-desc order → Bravo (1.24) renders before Alpha (1.05)
-    expect(ssrHtml.indexOf("Bravo")).toBeGreaterThan(-1);
-    expect(ssrHtml.indexOf("Bravo")).toBeLessThan(ssrHtml.indexOf("Alpha"));
+    // default R2.0-desc: Bravo (1.24) is rank 1 — appears in both podium and table.
+    expect(ssrHtml).toContain("Bravo");
+    // In the table body specifically, R2.0-desc puts Bravo before Alpha.
+    // (The podium renders silver/Alpha left of gold/Bravo, so the raw ssrHtml
+    // indexOf order is now podium-driven — assert on the table body slice only.)
+    const tableStart = ssrHtml.indexOf("<tbody");
+    expect(ssrHtml.indexOf("Bravo", tableStart)).toBeLessThan(
+      ssrHtml.indexOf("Alpha", tableStart),
+    );
     expect(hydrationErrors).toEqual([]);
     root.unmount();
   });
@@ -223,6 +229,103 @@ describe("StatsLeaderboard island — empty + error states", () => {
       error: "upstream timeout",
     });
     expect(container.textContent).toContain("upstream timeout");
+    root.unmount();
+  });
+});
+
+// ── podium island ─────────────────────────────────────────────────────────────
+// Fixture: Alpha r2=1.05 acs=998, Bravo r2=1.24 acs=1024, Charlie r2=null acs=1100.
+// Default sort: R2.0 desc → rank1=Bravo, rank2=Alpha, rank3=Charlie.
+
+describe("StatsLeaderboard island — podium", () => {
+  it("renders rank-1 player in the gold slot with R2.0 headline", async () => {
+    const initial = envelope(normalizeStats(statsFixture));
+    const { container, root } = await mountIsland(initial);
+    const r1 = container.querySelector("[data-podium-rank='1']");
+    expect(r1).not.toBeNull();
+    expect(r1!.textContent).toContain("Bravo"); // top by R2.0
+    expect(r1!.textContent).toContain("1.24"); // Bravo's R2.0
+    root.unmount();
+  });
+
+  it("renders rank-2 and rank-3 players in the flanking slots", async () => {
+    const initial = envelope(normalizeStats(statsFixture));
+    const { container, root } = await mountIsland(initial);
+    const r2 = container.querySelector("[data-podium-rank='2']");
+    const r3 = container.querySelector("[data-podium-rank='3']");
+    expect(r2).not.toBeNull();
+    expect(r3).not.toBeNull();
+    expect(r2!.textContent).toContain("Alpha"); // rank 2 by R2.0
+    expect(r3!.textContent).toContain("Charlie"); // rank 3 (null r2, sinks last)
+    root.unmount();
+  });
+
+  it("podium re-ranks when sort changes to ACS (Charlie rises to #1)", async () => {
+    // ACS desc: Charlie=1100 → rank1, Bravo=1024 → rank2, Alpha=998 → rank3
+    const initial = envelope(normalizeStats(statsFixture));
+    const { container, root } = await mountIsland(initial);
+    const acsHeader = Array.from(container.querySelectorAll("th")).find(
+      (th) => th.textContent?.trim() === "ACS",
+    )!;
+    expect(acsHeader).toBeTruthy();
+    await act(async () => {
+      acsHeader.dispatchEvent(new Event("click", { bubbles: true }));
+    });
+    const r1 = container.querySelector("[data-podium-rank='1']");
+    expect(r1!.textContent).toContain("Charlie");
+    root.unmount();
+  });
+
+  it("podium updates after region toggle changes the data", async () => {
+    const initial = envelope(normalizeStats(statsFixture));
+    // EU response returns a single player — Bravo — as the only result
+    const euBravo = envelope(normalizeStats([statsFixture[1]])); // Bravo only
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(json(euBravo));
+    const { container, root } = await mountIsland(initial);
+
+    const euBtn = Array.from(container.querySelectorAll("button")).find(
+      (b) => b.textContent?.trim() === "EU",
+    )!;
+    await act(async () => {
+      euBtn.dispatchEvent(new Event("click", { bubbles: true }));
+    });
+    await act(async () => { await Promise.resolve(); });
+
+    expect(spy).toHaveBeenCalledWith(expect.stringContaining("region=eu"), expect.anything());
+    const r1 = container.querySelector("[data-podium-rank='1']");
+    expect(r1!.textContent).toContain("Bravo");
+    root.unmount();
+  });
+
+  it("degrades gracefully with 1 player — only rank-1 block renders, no crash", async () => {
+    const one = envelope(normalizeStats(statsFixture).slice(0, 1));
+    const { container, root } = await mountIsland(one);
+    expect(container.querySelector("[data-podium-rank='1']")).not.toBeNull();
+    expect(container.querySelector("[data-podium-rank='2']")).toBeNull();
+    expect(container.querySelector("[data-podium-rank='3']")).toBeNull();
+    root.unmount();
+  });
+
+  it("degrades gracefully with 2 players — no crash on undefined data[2]", async () => {
+    const two = envelope(normalizeStats(statsFixture).slice(0, 2));
+    const { container, root } = await mountIsland(two);
+    expect(container.querySelector("[data-podium-rank='1']")).not.toBeNull();
+    expect(container.querySelector("[data-podium-rank='2']")).not.toBeNull();
+    expect(container.querySelector("[data-podium-rank='3']")).toBeNull();
+    root.unmount();
+  });
+
+  it("gold (#1) block carries the warn border class", async () => {
+    const initial = envelope(normalizeStats(statsFixture));
+    const { container, root } = await mountIsland(initial);
+    const r1 = container.querySelector("[data-podium-rank='1']");
+    expect(r1?.className).toContain("warn");
+    root.unmount();
+  });
+
+  it("podium is absent when the leaderboard is empty (no crash)", async () => {
+    const { container, root } = await mountIsland(envelope([]));
+    expect(container.querySelector("[data-podium-rank='1']")).toBeNull();
     root.unmount();
   });
 });
