@@ -100,11 +100,31 @@ def test_parse_stats_empty_cells_become_null():
 
 def test_parse_stats_never_nan():
     rows = parse_stats(load("stats_na.html"))
-    numeric = [k for k in _ROW_KEYS if k not in ("player", "player_id", "agents")]
+    numeric = [k for k in _ROW_KEYS if k not in ("player", "player_id", "team", "agents")]
     for r in rows:
         for k in numeric:
             v = r[k]
             assert v is None or (isinstance(v, (int, float)) and math.isfinite(v))
+
+
+def test_parse_stats_team_extracted():
+    rows = parse_stats(load("stats_na.html"))
+    assert rows[0]["team"] == "SEN"   # TenZ → Sentinels abbreviation
+    assert rows[1]["team"] == "LEV"   # aspas → Leviatán abbreviation
+
+
+def test_parse_stats_alias_no_team_bleed():
+    # Alias must come from div.text-of only — team tag in div.stats-player-country
+    # must never concatenate into the alias string.
+    rows = parse_stats(load("stats_na.html"))
+    assert rows[0]["player"] == "TenZ"    # NOT "TenZSEN"
+    assert rows[1]["player"] == "aspas"   # NOT "aspasLEV"
+
+
+def test_parse_stats_team_null_when_div_absent():
+    # Row 3 has no div.stats-player-country — team must be None, never crash.
+    rows = parse_stats(load("stats_na.html"))
+    assert rows[2]["team"] is None
 
 
 def test_parse_stats_no_table_returns_empty():

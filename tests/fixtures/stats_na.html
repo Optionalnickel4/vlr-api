@@ -7,7 +7,11 @@
     - the side-split K cell (mod-both=20 vs raw "20119" concatenation trap),
     - the CL fraction column (3/15 and 19/104),
     - the percent columns (KAST/HS%/CL%),
-    - empty cells -> null (the low-sample third row).
+    - empty cells -> null (the low-sample third row),
+    - team tag in div.stats-player-country (live class; recon 2026-06-14),
+    - null team when the div is absent (row 3 — null-safe guard).
+  Alias in div.text-of; team in sibling div.stats-player-country. Raw cell
+  text MUST NOT be used — it would concatenate alias+team ("TenZSEN").
 -->
 <html><body>
 <table class="wf-table">
@@ -24,7 +28,7 @@
       <td class="mod-player">
         <a href="/player/9/tenz">
           <div class="text-of">TenZ</div>
-          <div class="ge-text-light">SEN</div>
+          <div class="stats-player-country">SEN</div>
         </a>
       </td>
       <td>(+1)</td>
@@ -52,7 +56,7 @@
       <td class="mod-player">
         <a href="/player/9999/aspas">
           <div class="text-of">aspas</div>
-          <div class="ge-text-light">LEV</div>
+          <div class="stats-player-country">LEV</div>
         </a>
       </td>
       <td>(+3)</td>
@@ -80,7 +84,6 @@
       <td class="mod-player">
         <a href="/player/123/lowsample">
           <div class="text-of">lowsample</div>
-          <div class="ge-text-light">FA</div>
         </a>
       </td>
       <td></td>

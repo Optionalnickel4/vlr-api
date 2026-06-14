@@ -331,6 +331,7 @@ export interface PlayerSearchResult {
 export interface StatLeader {
   player: string | null;
   playerId: string | null;
+  team: string | null; // short team abbreviation e.g. "SEN" — null when absent
   r2: number | null; // VLR R2.0 — the headline rating
   acs: number | null;
   kd: number | null;

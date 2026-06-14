@@ -112,6 +112,11 @@ function PodiumBlock({
           {player.player ?? "—"}
         </span>
       )}
+      {player.team && (
+        <span className="font-display text-[10px] font-semibold uppercase tracking-broadcast text-dim">
+          {player.team}
+        </span>
+      )}
       <span className={cn("font-mono text-2xl font-bold tabular-nums", slot.r2Cls)}>
         {num(player.r2, 2)}
       </span>
@@ -135,14 +140,22 @@ const COLUMNS: Col[] = [
     key: "player",
     label: "Player",
     align: "left",
-    render: (r) =>
-      r.playerId ? (
-        <Link href={`/player/${r.playerId}`} className="text-ink hover:text-accent">
-          {r.player ?? "—"}
-        </Link>
-      ) : (
-        (r.player ?? "—")
-      ),
+    render: (r) => (
+      <>
+        {r.playerId ? (
+          <Link href={`/player/${r.playerId}`} className="text-ink hover:text-accent">
+            {r.player ?? "—"}
+          </Link>
+        ) : (
+          (r.player ?? "—")
+        )}
+        {r.team && (
+          <span className="block font-display text-[10px] font-semibold uppercase tracking-broadcast text-dim">
+            {r.team}
+          </span>
+        )}
+      </>
+    ),
   },
   { key: "r2", label: "R2.0", align: "right", emphasize: true, render: (r) => num(r.r2, 2) },
   { key: "acs", label: "ACS", align: "right", render: (r) => num(r.acs, 0) },

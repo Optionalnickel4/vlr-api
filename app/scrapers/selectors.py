@@ -193,12 +193,16 @@ STATS_HEADER = "thead th"
 STATS_ROW = "tbody tr"
 STATS_CELL = "td"
 # the player identity cell carries the /player/{id} link + the alias in a text-of
-# div (the team tag trails in a separate ge-text-light div — don't read raw text,
-# it would concatenate alias+team). Detected by header=="Player" OR the mod-player
-# class as a belt-and-suspenders guard.
+# div. The team abbreviation ("SEN", "FLCV") lives in a SIBLING div — class was
+# historically ge-text-light; live markup (recon 2026-06-14) uses stats-player-country
+# (a misnomer — it holds the team tag, not a country, on the /stats page).
+# Read alias and team SEPARATELY from their own selectors; never read raw cell
+# text (it would concatenate alias+team into "TenZSEN"). Detected by
+# header=="Player" OR the mod-player class as a belt-and-suspenders guard.
 STATS_PLAYER_CELL_CLASS = "mod-player"
 STATS_PLAYER_LINK = 'a[href^="/player/"]'
 STATS_PLAYER_ALIAS = "div.text-of"
+STATS_PLAYER_TEAM = "div.stats-player-country"
 # CRITICAL: stat value cells side-split into spans (mod-both = combined, mod-t =
 # attack, mod-ct = defense), exactly like the match scoreboard. Read mod-both;
 # NEVER raw td.text() (it concatenates the three spans into a silently-wrong

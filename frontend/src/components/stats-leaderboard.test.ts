@@ -329,3 +329,41 @@ describe("StatsLeaderboard island — podium", () => {
     root.unmount();
   });
 });
+
+// ── team tag display ──────────────────────────────────────────────────────────
+// Fixture: Alpha team="SEN", Bravo team="LEV", Charlie team=null.
+// Default R2.0-desc: rank1=Bravo(LEV), rank2=Alpha(SEN), rank3=Charlie(null).
+
+describe("StatsLeaderboard island — team tag display", () => {
+  it("renders team tag in the table player column", async () => {
+    const initial = envelope(normalizeStats(statsFixture));
+    const { container, root } = await mountIsland(initial);
+    const tbody = container.querySelector("tbody")!;
+    expect(tbody.textContent).toContain("SEN");
+    expect(tbody.textContent).toContain("LEV");
+    root.unmount();
+  });
+
+  it("renders team tag in the podium block", async () => {
+    const initial = envelope(normalizeStats(statsFixture));
+    const { container, root } = await mountIsland(initial);
+    const r1 = container.querySelector("[data-podium-rank='1']")!;
+    expect(r1.textContent).toContain("LEV"); // Bravo is rank 1
+    const r2 = container.querySelector("[data-podium-rank='2']")!;
+    expect(r2.textContent).toContain("SEN"); // Alpha is rank 2
+    root.unmount();
+  });
+
+  it("null team is silent — no 'null' or 'undefined' text, no crash", async () => {
+    const initial = envelope(normalizeStats(statsFixture));
+    const { container, root } = await mountIsland(initial);
+    // Charlie (rank 3, team=null) must not render the word "null" or "undefined"
+    const r3 = container.querySelector("[data-podium-rank='3']")!;
+    expect(r3.textContent).not.toContain("null");
+    expect(r3.textContent).not.toContain("undefined");
+    // table row for Charlie also clean
+    const tbody = container.querySelector("tbody")!;
+    expect(tbody.textContent).not.toContain("null");
+    root.unmount();
+  });
+});

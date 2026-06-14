@@ -63,7 +63,7 @@ _COLUMN_MAP: dict[str, tuple[str, str]] = {
 # every emitted row carries the full key set (null when absent) so the API/UI
 # shape is stable regardless of which columns a given window happens to fill.
 _ROW_KEYS = (
-    "player", "player_id", "agents", "r2", "acs", "kd", "kast", "adr",
+    "player", "player_id", "team", "agents", "r2", "acs", "kd", "kast", "adr",
     "kpr", "apr", "fkpr", "fdpr", "hs", "clutch_pct", "cl_won", "cl_played",
     "kmax", "rnd", "k", "d", "a", "fk", "fd",
 )
@@ -81,15 +81,25 @@ def _cell_value(cell: Node) -> str:
     return clean_spaces(text_of(both)) if both is not None else clean_spaces(text_of(cell))
 
 
-def _parse_player_cell(cell: Node) -> tuple[Optional[str], Optional[str]]:
-    """(alias, player_id) from the identity cell. Alias from the text-of div (so
-    the trailing team tag doesn't bleed in), id from the /player/{id} link."""
+def _parse_player_cell(cell: Node) -> tuple[Optional[str], Optional[str], Optional[str]]:
+    """(alias, player_id, team) from the identity cell.
+
+    Each field is read from its OWN selector — never from raw cell text (which would
+    concatenate alias+team into "TenZSEN"). The three nodes are siblings under the
+    link, so there is no way one bleeds into another.
+
+    alias  — div.text-of                  e.g. "TenZ"
+    id     — /player/{id} href segment    e.g. "9"
+    team   — div.stats-player-country     e.g. "SEN" (null when absent)
+    """
     link = cell.css_first(S.STATS_PLAYER_LINK)
     href = (link.attributes.get("href", "") if link else "") or ""
     alias = clean_spaces(text_of(cell.css_first(S.STATS_PLAYER_ALIAS)))
     if not alias and link is not None:
         alias = clean_spaces(text_of(link))
-    return (alias or None), id_from_href(href)
+    team_node = cell.css_first(S.STATS_PLAYER_TEAM)
+    team = clean_spaces(text_of(team_node)) or None
+    return (alias or None), id_from_href(href), team
 
 
 def parse_stats(html: str) -> list[dict[str, Any]]:
@@ -111,7 +121,7 @@ def parse_stats(html: str) -> list[dict[str, Any]]:
             classes = cell.attributes.get("class", "") or ""
 
             if label == "Player" or S.STATS_PLAYER_CELL_CLASS in classes:
-                row["player"], row["player_id"] = _parse_player_cell(cell)
+                row["player"], row["player_id"], row["team"] = _parse_player_cell(cell)
                 continue
             if label == "Agents":
                 # junk like '(+1)' / '' — captured trivially, ignored for rating.

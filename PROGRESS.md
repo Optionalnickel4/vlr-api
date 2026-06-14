@@ -4,7 +4,7 @@ Counts here mirror `app/status_meta.py` (the committed source of truth). Keep th
 in sync: bump both in the same commit.
 
 - **Phases shipped:** 12 / 12
-- **Tests passing:** 142
+- **Tests passing:** 145
 - **Commit:** 9ee985b
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
@@ -263,7 +263,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
 - **Slices done:** 6 / 7 + stat-ticker + featured-streamers + player-detail page (slice 5 scoped to team detail + trend; the carved-out player-detail page now shipped — see below)
-- **Frontend tests passing:** 156 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page + player-card aggregates + live-map scorebug + live-match poll island + player search island + stats leaderboard numeric-sort/toggle/hydration + podium top-3/sort-update/graceful-degrade)
+- **Frontend tests passing:** 159 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page + player-card aggregates + live-map scorebug + live-match poll island + player search island + stats leaderboard numeric-sort/toggle/hydration + podium top-3/sort-update/graceful-degrade + team-tag table/podium/null-safe)
 
 ## Slices
 

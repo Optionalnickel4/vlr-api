@@ -690,6 +690,7 @@ export function normalizeStats(raw: unknown): StatLeader[] {
   return asList(raw).map((r) => ({
     player: str(r.player),
     playerId: str(r.player_id),
+    team: str(r.team),
     r2: parseNumeric(r.r2),
     acs: parseNumeric(r.acs),
     kd: parseNumeric(r.kd),
