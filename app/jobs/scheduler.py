@@ -46,5 +46,9 @@ def build_scheduler() -> AsyncIOScheduler:
     # player pre-scrape: twice daily at fixed wall-clock hours (cron, not interval,
     # so it lands at predictable times); max_instances=1 so a long run never overlaps.
     sched.add_job(_tracked("player_prefetch", R.prefetch_upcoming_players), "cron", hour="5,17", id="player_prefetch", max_instances=1)
+    # stats leaderboard: season-aggregate player rankings (R2.0 et al) over na/eu ×
+    # 4 windows. Slow cadence (6h) — these barely move and it's 8 light scrapes per
+    # run; max_instances=1 so a slow run never overlaps. Records vlr:lastrun:stats.
+    sched.add_job(_tracked("stats", R.refresh_all_stats), "interval", hours=6, id="stats", max_instances=1)
     _active = sched
     return sched

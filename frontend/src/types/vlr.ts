@@ -322,6 +322,37 @@ export interface PlayerSearchResult {
   source: "db" | "vlr";
 }
 
+// ---- stats leaderboard (from /stats?region=&timespan=, Phase 12) -----------
+// VLR's region-wide player leaderboard. The headline is `r2` — VLR's OWN R2.0
+// rating (100% fill); we never compute a composite. Every numeric field is
+// `number | null` (parseNumeric null-not-NaN at the boundary) so the client can
+// sort NUMERICALLY — never lexically (the "998" < "1024" string-sort trap). The
+// CL fraction arrives pre-split into clWon / clPlayed ints.
+export interface StatLeader {
+  player: string | null;
+  playerId: string | null;
+  r2: number | null; // VLR R2.0 — the headline rating
+  acs: number | null;
+  kd: number | null;
+  kast: number | null; // percent (bare number, e.g. 78)
+  adr: number | null;
+  kpr: number | null;
+  apr: number | null;
+  fkpr: number | null;
+  fdpr: number | null;
+  hs: number | null; // HS% (bare number)
+  clutchPct: number | null; // CL% (bare number)
+  clWon: number | null;
+  clPlayed: number | null;
+  kmax: number | null;
+  rnd: number | null;
+  k: number | null;
+  d: number | null;
+  a: number | null;
+  fk: number | null;
+  fd: number | null;
+}
+
 // ---- featured streamers (Twitch Helix, server-side only) -------------------
 // The project's first EXTERNAL API integration. The client secret never reaches
 // the browser — all Twitch calls happen server-side in @/lib/twitch. A

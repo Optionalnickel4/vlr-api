@@ -3,8 +3,8 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 11 / 11
-- **Tests passing:** 124
+- **Phases shipped:** 12 / 12
+- **Tests passing:** 142
 - **Commit:** 9ee985b
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
@@ -52,6 +52,43 @@ deferred vlr-api gaps logged in the frontend slices below.
 - [x] **Phase 9 — player pre-scrape** — twice-daily scheduler job banks a `PlayerSnapshot` for every player in the next ~48h of matches (cache-gated), so trend history accumulates instead of waiting for on-demand views
 - [x] **Phase 10 — player search** — `GET /players?q=` hybrid: DB-first over `PlayerSnapshot` (clean read), VLR autocomplete fallback only on a DB miss (cached like the detail endpoints); self-healing as Phase 9 banks more
 - [x] **Phase 11 — live match auto-refresh** — 30s scheduler job re-scrapes each LIVE match's detail + status-aware short cache TTL (live=30s, completed=10m); the match page polls `/api/match/[id]` while live so scores/stats/timeline update without a reload
+- [x] **Phase 12 — stats leaderboard** — HLTV-style region-wide player rankings led by VLR's OWN R2.0 rating (no composite computed); 6h scheduler job warms na/eu × 30d/60d/90d/all into cache; `GET /stats` reads cache-only and returns the `{data, stale, error}` envelope; frontend `/stats` island with region/timespan toggles + numeric-safe sortable columns
+
+## Phase 12 — stats leaderboard (HLTV-style player rankings)
+
+VLR exposes its own **R2.0** rating at 100% fill on `/stats` — so this is mechanical
+scrape + display, no rating formula to design. The headline column IS R2.0; we never
+compute a composite.
+
+- [x] **Scraper (`app/scrapers/stats.py` + selectors)** — header-driven parse of the
+  one `table.wf-table` (recon-confirmed columns: Player, Agents, Rnd, R2.0, ACS, K:D,
+  KAST, ADR, KPR, APR, FKPR, FDPR, HS%, CL%, CL, KMax, K, D, A, FK, FD). New columns
+  fall through harmlessly. **Coercion guards** (the silently-wrong-numbers bug class):
+  every value reads `span.mod-both`, never raw `td.text()` (the K cell would read
+  "20119"); %-columns via `parse_percent`; the **CL fraction `3/15` splits into
+  `cl_won`/`cl_played` ints** via new `parse_fraction` (never a single number);
+  empties → null, never NaN. All selectors in `selectors.py`.
+- [x] **Service + scheduler** — `refresh_stats(region, timespan)` caches one combo;
+  `refresh_all_stats` (job id `stats`, every 6h, `max_instances=1`) warms all 8 combos,
+  skipping a failing one. Registered in `build_scheduler()` + `status_meta.JOBS` +
+  `_tracked` records `vlr:lastrun:stats`. `ttl_stats=21600` (6h, matches the cadence).
+- [x] **Endpoint** — `GET /stats?region={na|eu}&timespan={30d|60d|90d|all}&min_rnd=`
+  reads cache only (cold-miss → single-combo refresh, then re-read), validates region/
+  timespan (400 on bad), optional `min_rnd` drops tiny-sample players. Returns
+  `{data, stale, error}`. World (value-less region) 500s upstream so only na/eu allowed.
+- [x] **Frontend `/stats`** — server-seeded `StatsLeaderboard` island: R2.0 headline
+  (emphasized), NA/EU + 30d/60d/90d/all toggles that refetch `/api/stats`, click-to-sort
+  columns. **Sort is NUMERIC** (`sortLeaders` in the data layer) — never lexical, so 1024
+  sorts above 998 (the "998" < "1024" trap can't happen); default R2.0-desc, nulls sink.
+  Hydration-safe (SSR-seed, deterministic sort). `/stats` nav slot added to `SiteHeader`.
+- [x] Tests: backend `tests/test_stats.py` (**+18**, 124 → 142): `parse_fraction`/`coerce_int`,
+  scraper (mod-both not raw text, %-strip, `3/15`→(3,15)/`19/104`→(19,104), empty→null,
+  never-NaN, full key set), service cache-write (ttl + every-combo + skip-failing),
+  route (envelope shape, `min_rnd` filter, bad-region 400, cold-miss single refresh).
+  `test_status` JOBS list updated. Frontend `stats-leaderboard.test.ts` (**+12**, 136 →
+  148): `normalizeStats` null-not-NaN, **numeric-sort trap guard** (1024 > 998, incl. raw
+  strings), R2.0-desc default + nulls-last, SSR↔hydrate parity, region/timespan toggle
+  refetch, empty/error render.
 
 ## Phase 11 — live match auto-refresh
 
@@ -226,7 +263,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
 - **Slices done:** 6 / 7 + stat-ticker + featured-streamers + player-detail page (slice 5 scoped to team detail + trend; the carved-out player-detail page now shipped — see below)
-- **Frontend tests passing:** 136 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page + player-card aggregates + live-map scorebug + live-match poll island + player search island)
+- **Frontend tests passing:** 148 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page + player-card aggregates + live-map scorebug + live-match poll island + player search island + stats leaderboard numeric-sort/toggle/hydration)
 
 ## Slices
 

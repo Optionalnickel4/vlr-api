@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     ttl_teams: int = 3600
     ttl_news: int = 900
     ttl_search: int = 600  # VLR-autocomplete fallback cache (short — players churn in)
+    ttl_stats: int = 21600  # stats leaderboard — season-aggregate; matches the 6h scrape cadence
 
     # api
     api_prefix: str = "/api/v1"

@@ -76,7 +76,7 @@ def test_status_json_shape(monkeypatch):
     # scheduler: one entry per registered job, last from redis, next null (not running)
     jobs = [s["job"] for s in body["scheduler"]]
     assert jobs == [
-        "upcoming", "live_matches", "results", "news", "events", "rankings", "player_prefetch",
+        "upcoming", "live_matches", "results", "news", "events", "rankings", "player_prefetch", "stats",
     ]
     for s in body["scheduler"]:
         assert set(s) == {"job", "last_run", "next_run"}

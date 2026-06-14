@@ -31,6 +31,7 @@ import type {
   ResultMatch,
   RosterMember,
   SignatureAgent,
+  StatLeader,
   TeamDetail,
   TeamMatch,
   TeamTrend,
@@ -677,6 +678,106 @@ export function normalizePlayerSearch(raw: unknown): PlayerSearchResult[] {
     country: str(r.country),
     source: r.source === "vlr" ? "vlr" : "db",
   }));
+}
+
+// ---- stats leaderboard (Phase 12) ------------------------------------------
+// VLR's region-wide player leaderboard. The headline is R2.0 (VLR's own rating);
+// we never compute a composite. The backend already coerces, but we re-coerce
+// defensively at this boundary (parseNumeric, null-not-NaN) so the client can
+// sort NUMERICALLY — never lexically (the "998" < "1024" string-sort trap).
+
+export function normalizeStats(raw: unknown): StatLeader[] {
+  return asList(raw).map((r) => ({
+    player: str(r.player),
+    playerId: str(r.player_id),
+    r2: parseNumeric(r.r2),
+    acs: parseNumeric(r.acs),
+    kd: parseNumeric(r.kd),
+    kast: parseNumeric(r.kast),
+    adr: parseNumeric(r.adr),
+    kpr: parseNumeric(r.kpr),
+    apr: parseNumeric(r.apr),
+    fkpr: parseNumeric(r.fkpr),
+    fdpr: parseNumeric(r.fdpr),
+    hs: parseNumeric(r.hs),
+    clutchPct: parseNumeric(r.clutch_pct),
+    clWon: parseNumeric(r.cl_won),
+    clPlayed: parseNumeric(r.cl_played),
+    kmax: parseNumeric(r.kmax),
+    rnd: parseNumeric(r.rnd),
+    k: parseNumeric(r.k),
+    d: parseNumeric(r.d),
+    a: parseNumeric(r.a),
+    fk: parseNumeric(r.fk),
+    fd: parseNumeric(r.fd),
+  }));
+}
+
+/** Columns the leaderboard can sort on. "player" sorts alphabetically; every
+ *  other key sorts on its NUMERIC value (never the raw string). */
+export type StatSortKey =
+  | "player"
+  | "r2"
+  | "acs"
+  | "kd"
+  | "kast"
+  | "adr"
+  | "kpr"
+  | "fk"
+  | "hs";
+export type SortDir = "asc" | "desc";
+
+/** R2.0 descending — the leaderboard's natural order (best rating on top). */
+export const DEFAULT_STAT_SORT: StatSortKey = "r2";
+export const DEFAULT_STAT_DIR: SortDir = "desc";
+
+export const STAT_REGIONS = ["na", "eu"] as const;
+export const STAT_TIMESPANS = ["30d", "60d", "90d", "all"] as const;
+
+/** Sort leaderboard rows. CRITICAL: numeric columns compare on the coerced
+ *  number, NEVER the raw string — so 1024 sorts above 998 (the lexical-sort trap
+ *  would put "1024" below "998"). Nulls always sink to the bottom regardless of
+ *  direction. Pure + stable-ish (copies first); returns a new array. */
+export function sortLeaders(
+  rows: StatLeader[],
+  key: StatSortKey,
+  dir: SortDir,
+): StatLeader[] {
+  const sign = dir === "desc" ? -1 : 1;
+  return [...rows].sort((a, b) => {
+    if (key === "player") {
+      return sign * (a.player ?? "").localeCompare(b.player ?? "");
+    }
+    const av = a[key] as number | null;
+    const bv = b[key] as number | null;
+    if (av === null && bv === null) return 0;
+    if (av === null) return 1; // nulls last
+    if (bv === null) return -1;
+    return sign * (av - bv); // NUMERIC compare — never lexical
+  });
+}
+
+/** Load + normalize one leaderboard. The backend returns the {data, stale, error}
+ *  envelope (not a bare list), so this unwraps it rather than going through the
+ *  generic list `load()`. Graceful-empty on any failure. Server-side only. */
+export async function getStats(
+  region: string = "na",
+  timespan: string = "all",
+): Promise<ApiResponse<StatLeader>> {
+  try {
+    const raw = await fetchUpstream(
+      `/stats?region=${encodeURIComponent(region)}&timespan=${encodeURIComponent(timespan)}`,
+    );
+    const env =
+      raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+    return {
+      data: normalizeStats(env.data),
+      stale: env.stale === true,
+      ...(env.error ? { error: String(env.error) } : {}),
+    };
+  } catch (err) {
+    return { data: [], stale: true, error: String(err) };
+  }
 }
 
 // /team/{id} 500s upstream for ids vlr.gg has no page for — the graceful-empty

@@ -11,6 +11,7 @@ from app.scrapers.events import parse_events, parse_news
 from app.scrapers.matches import parse_match_list, split_live_upcoming
 from app.scrapers.players import parse_player
 from app.scrapers.rankings import parse_rankings
+from app.scrapers.stats import parse_stats
 from app.scrapers.teams import parse_team
 
 # real player used to probe the detail-page selectors (TenZ has deep history)
@@ -75,11 +76,26 @@ async def main() -> None:
     if tm["results"]:
         print(f"  result sample: {tm['results'][0]}")
 
+    print("== /stats (region=na, timespan=all) ==")
+    html = await client.get_html("/stats/?region=na&timespan=all")
+    sl = parse_stats(html)
+    print(f"  rows: {len(sl)}")
+    if sl:
+        s0 = sl[0]
+        print(f"  sample: {s0['player']} (id {s0['player_id']})  R2.0={s0['r2']}  "
+              f"ACS={s0['acs']}  KAST={s0['kast']}  CL={s0['cl_won']}/{s0['cl_played']}")
+        # spot-check the column inventory landed (R2.0 is the headline at 100% fill)
+        filled_r2 = sum(1 for r in sl if r["r2"] is not None)
+        print(f"  R2.0 filled: {filled_r2}/{len(sl)}")
+
     await client.aclose()
 
     bad = []
     if not res: bad.append("results")
     if not rk: bad.append("rankings")
+    # stats: rows present AND R2.0 populated (the headline must coerce, not be null)
+    if not (sl and any(r["r2"] is not None for r in sl)):
+        bad.append("stats")
     if not evs: bad.append("events")
     if not nw: bad.append("news")
     # player page: alias + at least one agent row and one match are the invariants

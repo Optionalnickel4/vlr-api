@@ -1,0 +1,109 @@
+<!--
+  Hand-built structural fixture for the vlr.gg /stats leaderboard (Phase 12).
+  The sandbox cannot reach vlr.gg, so this mirrors the KNOWN markup shape
+  (recon-confirmed columns + the match-scoreboard side-split span pattern) so the
+  scraper's STRUCTURE + coercion are testable offline. Live selectors are verified
+  on the container via `python -m app.scrapers.verify`. Three rows exercise:
+    - the side-split K cell (mod-both=20 vs raw "20119" concatenation trap),
+    - the CL fraction column (3/15 and 19/104),
+    - the percent columns (KAST/HS%/CL%),
+    - empty cells -> null (the low-sample third row).
+-->
+<html><body>
+<table class="wf-table">
+  <thead>
+    <tr>
+      <th>Player</th><th>Agents</th><th>Rnd</th><th>R2.0</th><th>ACS</th>
+      <th>K:D</th><th>KAST</th><th>ADR</th><th>KPR</th><th>APR</th>
+      <th>FKPR</th><th>FDPR</th><th>HS%</th><th>CL%</th><th>CL</th>
+      <th>KMax</th><th>K</th><th>D</th><th>A</th><th>FK</th><th>FD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="mod-player">
+        <a href="/player/9/tenz">
+          <div class="text-of">TenZ</div>
+          <div class="ge-text-light">SEN</div>
+        </a>
+      </td>
+      <td>(+1)</td>
+      <td><span class="mod-both">512</span></td>
+      <td><span class="mod-both">1.24</span></td>
+      <td><span class="mod-both">256.4</span></td>
+      <td><span class="mod-both">1.62</span></td>
+      <td><span class="mod-both">78%</span></td>
+      <td><span class="mod-both">168.3</span></td>
+      <td><span class="mod-both">0.82</span></td>
+      <td><span class="mod-both">0.31</span></td>
+      <td><span class="mod-both">0.12</span></td>
+      <td><span class="mod-both">0.09</span></td>
+      <td><span class="mod-both">27%</span></td>
+      <td><span class="mod-both">20%</span></td>
+      <td><span class="mod-both">3/15</span></td>
+      <td><span class="mod-both">34</span></td>
+      <td><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
+      <td><span class="mod-both">14</span></td>
+      <td><span class="mod-both">5</span></td>
+      <td><span class="mod-both">2</span></td>
+      <td><span class="mod-both">1</span></td>
+    </tr>
+    <tr>
+      <td class="mod-player">
+        <a href="/player/9999/aspas">
+          <div class="text-of">aspas</div>
+          <div class="ge-text-light">LEV</div>
+        </a>
+      </td>
+      <td>(+3)</td>
+      <td><span class="mod-both">480</span></td>
+      <td><span class="mod-both">1.05</span></td>
+      <td><span class="mod-both">198.1</span></td>
+      <td><span class="mod-both">1.10</span></td>
+      <td><span class="mod-both">71%</span></td>
+      <td><span class="mod-both">150.0</span></td>
+      <td><span class="mod-both">0.75</span></td>
+      <td><span class="mod-both">0.28</span></td>
+      <td><span class="mod-both">0.10</span></td>
+      <td><span class="mod-both">0.11</span></td>
+      <td><span class="mod-both">24%</span></td>
+      <td><span class="mod-both">18%</span></td>
+      <td><span class="mod-both">19/104</span></td>
+      <td><span class="mod-both">30</span></td>
+      <td><span class="mod-both">18</span></td>
+      <td><span class="mod-both">16</span></td>
+      <td><span class="mod-both">6</span></td>
+      <td><span class="mod-both">3</span></td>
+      <td><span class="mod-both">2</span></td>
+    </tr>
+    <tr>
+      <td class="mod-player">
+        <a href="/player/123/lowsample">
+          <div class="text-of">lowsample</div>
+          <div class="ge-text-light">FA</div>
+        </a>
+      </td>
+      <td></td>
+      <td><span class="mod-both">40</span></td>
+      <td><span class="mod-both">0.98</span></td>
+      <td><span class="mod-both">180.0</span></td>
+      <td><span class="mod-both">0.95</span></td>
+      <td><span class="mod-both">65%</span></td>
+      <td><span class="mod-both">130.0</span></td>
+      <td><span class="mod-both">0.60</span></td>
+      <td><span class="mod-both">0.20</span></td>
+      <td><span class="mod-both">0.05</span></td>
+      <td><span class="mod-both">0.08</span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both">10</span></td>
+      <td><span class="mod-both">12</span></td>
+      <td><span class="mod-both">3</span></td>
+      <td><span class="mod-both">1</span></td>
+      <td><span class="mod-both">1</span></td>
+    </tr>
+  </tbody>
+</table>
+</body></html>

@@ -68,6 +68,40 @@ async def rankings(region: str = Query("all")):
     return await _cached_or_refresh(key, lambda: R.refresh_rankings(region))
 
 
+@router.get("/stats")
+async def stats(
+    region: str = Query("na"),
+    timespan: str = Query("all"),
+    min_rnd: int = Query(0, ge=0, le=100000),
+):
+    """Phase 12: region-wide player leaderboard (VLR R2.0 headline). Reads cache
+    only (the scheduler's `stats` job warms every combo); a cold-start miss
+    triggers a single-combo refresh, then re-reads. Returns the {data, stale,
+    error} envelope — never 500s. `min_rnd` optionally drops tiny-sample players
+    (VLR's list already filters, so it's off by default)."""
+    region = region.lower()
+    if region not in R.STATS_REGIONS:
+        raise HTTPException(400, f"region must be one of {list(R.STATS_REGIONS)}")
+    if timespan not in R.STATS_TIMESPANS:
+        raise HTTPException(400, f"timespan must be one of {list(R.STATS_TIMESPANS)}")
+
+    key = R.CACHE_STATS.format(region=region, timespan=timespan)
+    data = await cache_get(key)
+    stale = False
+    error = None
+    if data is None:
+        try:
+            await R.refresh_stats(region, timespan)
+            data = await cache_get(key)
+        except Exception as exc:
+            error, stale = str(exc), True
+
+    rows = data or []
+    if min_rnd > 0:
+        rows = [r for r in rows if (r.get("rnd") or 0) >= min_rnd]
+    return {"data": rows, "stale": stale, "error": error}
+
+
 @router.get("/events")
 async def events():
     return await _cached_or_refresh(R.CACHE_EVENTS, R.refresh_events)

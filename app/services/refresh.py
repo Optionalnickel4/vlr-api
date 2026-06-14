@@ -20,6 +20,7 @@ from app.scrapers import match_detail as md
 from app.scrapers import matches as mt
 from app.scrapers import players as pl
 from app.scrapers import rankings as rk
+from app.scrapers import stats as st
 from app.scrapers import teams as te
 
 log = logging.getLogger("vlr.refresh")
@@ -33,6 +34,12 @@ CACHE_NEWS = "vlr:news"
 CACHE_PLAYER = "vlr:player:{id}"
 CACHE_TEAM = "vlr:team:{id}"
 CACHE_MATCH = "vlr:match:{id}"
+CACHE_STATS = "vlr:stats:{region}:{timespan}"
+
+# vlr only serves regional leaderboards for an explicit region — a value-less
+# region (World) 500s — so we scrape na/eu × the four windows and no more.
+STATS_REGIONS = ("na", "eu")
+STATS_TIMESPANS = ("30d", "60d", "90d", "all")
 
 
 async def refresh_results() -> int:
@@ -101,6 +108,32 @@ async def refresh_news() -> int:
     data = await ev.fetch_news()
     await cache_set(CACHE_NEWS, data, s.ttl_news)
     return len(data)
+
+
+async def refresh_stats(region: str = "na", timespan: str = "all") -> int:
+    """Scrape one region×timespan leaderboard and cache it (no history table —
+    the leaderboard is a point-in-time aggregate view, like rankings' cache)."""
+    s = get_settings()
+    data = await st.fetch_stats(region, timespan)
+    await cache_set(CACHE_STATS.format(region=region, timespan=timespan), data, s.ttl_stats)
+    return len(data)
+
+
+async def refresh_all_stats() -> int:
+    """Scheduled (~6h): warm every region×timespan leaderboard combo. Season-
+    aggregate stats barely move, so the cadence is slow and polite (8 light
+    scrapes per run). A failure on one combo is logged and skipped, never
+    aborting the rest. Returns the total rows written across all combos."""
+    total = 0
+    for region in STATS_REGIONS:
+        for timespan in STATS_TIMESPANS:
+            try:
+                total += await refresh_stats(region, timespan)
+            except Exception:
+                log.warning("refresh_stats: failed for %s/%s", region, timespan, exc_info=True)
+    log.info("refresh_all_stats: cached %d leaderboard rows across %d combos",
+             total, len(STATS_REGIONS) * len(STATS_TIMESPANS))
+    return total
 
 
 async def refresh_player(player_id: str) -> dict[str, Any]:

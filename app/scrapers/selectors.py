@@ -182,5 +182,28 @@ MATCH_STREAM_SITE_ID = "data-site-id"  # attribute on the embed div = Twitch log
 MATCH_STREAM_EXTERNAL = "a.match-streams-btn-external"  # href fallback: twitch.tv/<handle>
 MATCH_STREAM_TWITCH_HOST = "twitch.tv"  # host guard for the external-href fallback
 
+# --- stats leaderboard page (/stats?region={na|eu}&timespan={30d|60d|90d|all}) ---
+# (Phase 12) VLR's region-wide player leaderboard — ONE wf-table. Header titles
+# drive the stat keys (like the player-page agent table) so a new vlr column just
+# falls through. Confirmed columns (recon): Player, Agents, Rnd, R2.0, ACS, K:D,
+# KAST, ADR, KPR, APR, FKPR, FDPR, HS%, CL%, CL, KMax, K, D, A, FK, FD. R2.0 is
+# VLR's own rating at 100% fill — the headline (we never compute a composite).
+STATS_TABLE = "table.wf-table"
+STATS_HEADER = "thead th"
+STATS_ROW = "tbody tr"
+STATS_CELL = "td"
+# the player identity cell carries the /player/{id} link + the alias in a text-of
+# div (the team tag trails in a separate ge-text-light div — don't read raw text,
+# it would concatenate alias+team). Detected by header=="Player" OR the mod-player
+# class as a belt-and-suspenders guard.
+STATS_PLAYER_CELL_CLASS = "mod-player"
+STATS_PLAYER_LINK = 'a[href^="/player/"]'
+STATS_PLAYER_ALIAS = "div.text-of"
+# CRITICAL: stat value cells side-split into spans (mod-both = combined, mod-t =
+# attack, mod-ct = defense), exactly like the match scoreboard. Read mod-both;
+# NEVER raw td.text() (it concatenates the three spans into a silently-wrong
+# number). Cells with no split just hold plain text (the fallback handles both).
+STATS_VAL_BOTH = "span.mod-both"
+
 # id is parsed from href like /310/sentinels or /player/4164/...
 HREF_ID_INDEX = 1  # path segment index for numeric id

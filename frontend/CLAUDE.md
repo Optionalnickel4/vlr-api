@@ -117,9 +117,12 @@ clearly-marked stub/fixture, gated behind a "match detail pending API support
 `TODO(phase7)` comment. When Phase 7 ships a detail endpoint, swap stub → real
 transform, design unchanged.
 
-## Stats leaderboard — OMIT
-No region-wide stats endpoint in vlr-api. Don't fake or half-build it. Leave out of
-nav or a "coming soon" stub. Decision deferred.
+## Stats leaderboard — BUILT (Phase 12)
+Originally deferred (no region-wide stats endpoint). vlr-api Phase 12 added
+`GET /stats?region={na|eu}&timespan={30d|60d|90d|all}` (VLR's own R2.0 rating as the
+headline — no composite). Frontend: `/stats` route + `StatsLeaderboard` island
+(region/timespan toggles, click-to-sort columns) + `/stats` nav slot. CRITICAL: sort
+on the COERCED numeric (`sortLeaders`), never the raw string (the "998" < "1024" trap).
 
 ## Build order (vertical slices — stop & review at each)
 1. Scaffold Next into `frontend/` + `frontend/CLAUDE.md` + data layer

@@ -1,0 +1,5 @@
+[
+  {"player":"Alpha","player_id":"1","r2":1.05,"acs":998,"kd":1.10,"kast":71,"adr":150,"kpr":0.75,"apr":0.28,"fkpr":0.10,"fdpr":0.11,"hs":24,"clutch_pct":18,"cl_won":19,"cl_played":104,"kmax":30,"rnd":480,"k":18,"d":16,"a":6,"fk":3,"fd":2},
+  {"player":"Bravo","player_id":"2","r2":1.24,"acs":1024,"kd":1.62,"kast":78,"adr":168,"kpr":0.82,"apr":0.31,"fkpr":0.12,"fdpr":0.09,"hs":27,"clutch_pct":20,"cl_won":3,"cl_played":15,"kmax":34,"rnd":512,"k":20,"d":14,"a":5,"fk":2,"fd":1},
+  {"player":"Charlie","player_id":"3","r2":null,"acs":1100,"kd":0.95,"kast":65,"adr":130,"kpr":0.60,"apr":0.20,"fkpr":0.05,"fdpr":0.08,"hs":null,"clutch_pct":null,"cl_won":null,"cl_played":null,"kmax":null,"rnd":40,"k":10,"d":12,"a":3,"fk":1,"fd":1}
+]

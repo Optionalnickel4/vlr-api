@@ -16,6 +16,7 @@ import { PlayerSearch } from "@/components/PlayerSearch";
 const NAV: { href: string; label: string; key: string }[] = [
   { href: "/schedule", label: "Schedule", key: "schedule" },
   { href: "/results", label: "Results", key: "results" },
+  { href: "/stats", label: "Stats", key: "stats" },
 ];
 
 export function SiteHeader({
