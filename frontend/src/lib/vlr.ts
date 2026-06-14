@@ -23,10 +23,12 @@ import type {
   NewsArticle,
   PlayerDetail,
   PlayerMatch,
+  PlayerOverall,
   PlayerTrend,
   RankedTeam,
   ResultMatch,
   RosterMember,
+  SignatureAgent,
   TeamDetail,
   TeamMatch,
   TeamTrend,
@@ -224,6 +226,70 @@ export function normalizePlayer(raw: unknown): PlayerDetail[] {
       matches: normalizePlayerMatches(p.matches),
     },
   ];
+}
+
+/** Round to `d` decimals, returning a plain number (Number(toFixed) avoids the
+ *  trailing-float noise of raw division). */
+function roundTo(n: number, d: number): number {
+  return Number(n.toFixed(d));
+}
+
+/** The card-header overall: a ROUNDS-WEIGHTED collapse of the per-agent rows
+ *  (VLR exposes no totals row — confirmed against real markup — only per-agent
+ *  stats). Mirrors the Phase 8 trend service's weighting EXACTLY: weight by RND,
+ *  fall back to weight 1 so a parseable stat is never dropped, and skip a row
+ *  whose stat doesn't parse. A 5881-round Omen therefore dominates a 15-round
+ *  Harbor — a naive average would let the 15-round line distort the headline.
+ *  K/D is the summed total kills / total deaths (NOT a mean of per-agent ratios).
+ *  Every value via parseNumeric (null-not-NaN); nothing parseable → null. */
+export function playerOverall(agentStats: AgentStat[]): PlayerOverall {
+  let ratingNum = 0;
+  let ratingDen = 0;
+  let acsNum = 0;
+  let acsDen = 0;
+  let totalK = 0;
+  let totalD = 0;
+  for (const row of agentStats) {
+    const s = row.stats;
+    const rnd = parseNumeric(s["RND"]);
+    const weight = rnd !== null && rnd > 0 ? rnd : 1; // fallback so a parseable stat counts
+    const rating = parseNumeric(s["Rating"]);
+    if (rating !== null) {
+      ratingNum += rating * weight;
+      ratingDen += weight;
+    }
+    const acs = parseNumeric(s["ACS"]);
+    if (acs !== null) {
+      acsNum += acs * weight;
+      acsDen += weight;
+    }
+    const k = parseNumeric(s["K"]);
+    const d = parseNumeric(s["D"]);
+    if (k !== null) totalK += k;
+    if (d !== null) totalD += d;
+  }
+  return {
+    rating: ratingDen > 0 ? roundTo(ratingNum / ratingDen, 2) : null,
+    acs: acsDen > 0 ? roundTo(acsNum / acsDen, 1) : null,
+    kd: totalD > 0 ? roundTo(totalK / totalD, 2) : null,
+  };
+}
+
+/** The player's signature agent: the most-played row (by rounds), with its usage
+ *  % read VERBATIM from the "Use" cell ("(286) 48%" → "48%"). Identity only — the
+ *  full stat line stays in the agent table below. Null when there are no rows. */
+export function signatureAgent(agentStats: AgentStat[]): SignatureAgent | null {
+  let best: { agent: string; rounds: number; use: string | undefined } | null = null;
+  for (const row of agentStats) {
+    if (!row.agent) continue;
+    const rounds = parseNumeric(row.stats["RND"]) ?? 0;
+    if (best === null || rounds > best.rounds) {
+      best = { agent: row.agent, rounds, use: row.stats["Use"] };
+    }
+  }
+  if (best === null) return null;
+  const pct = best.use?.match(/(\d+%)/);
+  return { agent: best.agent, usage: pct ? pct[1] : null };
 }
 
 function normalizeRoster(raw: unknown): RosterMember[] {

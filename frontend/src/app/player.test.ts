@@ -11,6 +11,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import PlayerPage from "@/app/player/[id]/page";
+import { normalizePlayer, playerOverall } from "@/lib/vlr";
 import playerFixture from "@/lib/__fixtures__/player.json";
 
 // A deliberately THIN trend (one point) — the expected launch state for almost
@@ -67,6 +68,21 @@ describe("player detail page", () => {
     expect(html).toContain("Rating");
     // a verbatim agent-row value from the fixture (jett ACS)
     expect(html).toContain("263.8");
+  });
+
+  it("renders the player CARD header: weighted headline, signature chip, form", async () => {
+    mockFetch();
+    const html = await render();
+    // headline label is "K/D" (slash) — distinct from the agent table's "K:D" (colon)
+    expect(html).toContain("K/D");
+    expect(html).toContain("ACS");
+    // signature-agent chip ("Main" label) + recent-form strip ("Form" label)
+    expect(html).toContain("Main");
+    expect(html).toContain("Form");
+    // the headline rating is a real weighted number, not a dash
+    const overall = playerOverall(normalizePlayer(playerFixture)[0].agentStats);
+    expect(overall.rating).not.toBeNull();
+    expect(html).toContain((overall.rating as number).toFixed(2));
   });
 
   it("thin trend → honest young-history NOTE, not a fake sparkline line", async () => {

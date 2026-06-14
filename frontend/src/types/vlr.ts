@@ -100,6 +100,19 @@ export interface PlayerDetail {
   matches: PlayerMatch[];
 }
 
+// Card-header aggregates DERIVED from agentStats (VLR has no totals row — only
+// per-agent rows — so these are computed in the data layer, rounds-weighted).
+export interface PlayerOverall {
+  rating: number | null; // rounds-weighted across agents
+  kd: number | null; // total kills / total deaths (summed, not averaged)
+  acs: number | null; // rounds-weighted across agents
+}
+
+export interface SignatureAgent {
+  agent: string; // the most-played agent (by rounds)
+  usage: string | null; // its usage %, verbatim from the "Use" cell (e.g. "48%")
+}
+
 // ---- team detail (from /team/{id}) -----------------------------------------
 // ⚠️ /team/{id} 500s for ids vlr.gg has no page for (upstream 404 → unhandled
 // raise_for_status). The data layer guards this to graceful-empty. See

@@ -21,10 +21,12 @@ import {
   normalizeUpcoming,
   parseNumeric,
   PLAYER_FLAT_EPSILON,
+  playerOverall,
   shouldRenderTrendLine,
+  signatureAgent,
 } from "@/lib/vlr";
 
-import type { RatingPoint } from "@/types/vlr";
+import type { AgentStat, RatingPoint } from "@/types/vlr";
 
 import results from "@/lib/__fixtures__/results.json";
 import upcoming from "@/lib/__fixtures__/upcoming.json";
@@ -192,6 +194,90 @@ describe("normalizePlayer (single object -> one-element list)", () => {
         .agent_stats[0].stats,
     );
     expect(keys).toEqual(rawKeys);
+  });
+});
+
+describe("playerOverall (rounds-weighted card headline)", () => {
+  const agent = (
+    stats: Record<string, string>,
+    name = "x",
+  ): AgentStat => ({ agent: name, stats });
+
+  it("weights by rounds — a heavy agent dominates a light one (NOT a naive mean)", () => {
+    // 1000-round 1.00 main vs 10-round 0.10 off-pick. Weighted ≈ 0.99 (near the
+    // main); a naive average would be 0.55 — the exact distortion we reject.
+    const rows = [
+      agent({ RND: "1000", Rating: "1.00", ACS: "200", K: "800", D: "700" }, "main"),
+      agent({ RND: "10", Rating: "0.10", ACS: "50", K: "5", D: "20" }, "light"),
+    ];
+    const o = playerOverall(rows);
+    expect(o.rating).toBe(0.99); // weighted, not the 0.55 naive mean
+    expect(o.rating).toBeGreaterThan(0.9);
+    expect(o.acs).toBe(198.5); // (200*1000 + 50*10)/1010
+  });
+
+  it("K/D is summed totals (ΣK/ΣD), not an average of per-agent ratios", () => {
+    // per-agent K/D: 2.0 and 0.1; naive mean 1.05. Real overall = 110/150 = 0.73.
+    const rows = [
+      agent({ RND: "100", Rating: "1.1", K: "100", D: "50" }),
+      agent({ RND: "100", Rating: "0.9", K: "10", D: "100" }),
+    ];
+    expect(playerOverall(rows).kd).toBe(0.73);
+  });
+
+  it("RND that won't parse falls back to weight 1 (a parseable stat is never dropped)", () => {
+    const rows = [
+      agent({ RND: "N/A", Rating: "1.00", ACS: "200", K: "1", D: "1" }),
+      agent({ RND: "N/A", Rating: "2.00", ACS: "300", K: "1", D: "1" }),
+    ];
+    // both weight 1 → (1.00 + 2.00)/2 = 1.50
+    expect(playerOverall(rows).rating).toBe(1.5);
+  });
+
+  it("skips rows whose rating doesn't parse, keeps the rest", () => {
+    const rows = [
+      agent({ RND: "1000", Rating: "N/A", ACS: "999", K: "1", D: "1" }), // skipped for rating
+      agent({ RND: "10", Rating: "1.00", ACS: "200", K: "1", D: "1" }),
+    ];
+    expect(playerOverall(rows).rating).toBe(1.0); // only the parseable row counts
+  });
+
+  it("empty / unparseable input → all nulls (dash, never NaN)", () => {
+    expect(playerOverall([])).toEqual({ rating: null, kd: null, acs: null });
+    const garbage = playerOverall([agent({ Rating: "N/A", ACS: "", K: "x", D: "y" })]);
+    expect(garbage.rating).toBeNull();
+    expect(garbage.kd).toBeNull();
+    expect(Number.isNaN(garbage.acs as number)).toBe(false);
+  });
+
+  it("works on the real fixture (finite, null-not-NaN)", () => {
+    const p = normalizePlayer(player)[0];
+    const o = playerOverall(p.agentStats);
+    expect(o.rating).not.toBeNull();
+    expect(Number.isNaN(o.rating as number)).toBe(false);
+    expect(Number.isNaN(o.kd as number)).toBe(false);
+  });
+});
+
+describe("signatureAgent (most-played main + usage)", () => {
+  it("picks the most-played agent by rounds and reads usage % verbatim", () => {
+    const rows = [
+      { agent: "omen", stats: { RND: "5881", Use: "(286) 48%" } },
+      { agent: "astra", stats: { RND: "2012", Use: "(97) 16%" } },
+    ];
+    expect(signatureAgent(rows)).toEqual({ agent: "omen", usage: "48%" });
+  });
+
+  it("skips rows with no agent name; null on empty", () => {
+    expect(signatureAgent([{ agent: null, stats: { RND: "10" } }])).toBeNull();
+    expect(signatureAgent([])).toBeNull();
+  });
+
+  it("usage is null when the Use cell has no percent", () => {
+    expect(signatureAgent([{ agent: "jett", stats: { RND: "5" } }])).toEqual({
+      agent: "jett",
+      usage: null,
+    });
   });
 });
 

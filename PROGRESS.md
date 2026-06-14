@@ -152,7 +152,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
 - **Slices done:** 6 / 7 + stat-ticker + featured-streamers + player-detail page (slice 5 scoped to team detail + trend; the carved-out player-detail page now shipped — see below)
-- **Frontend tests passing:** 105 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page)
+- **Frontend tests passing:** 115 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page + player-card aggregates)
 
 ## Slices
 
@@ -323,6 +323,37 @@ So this slice first **built the backend `/match/{id}` endpoint**, then the front
   26 → **32** · live smoke `/match/684612` renders header + map tabs + both scoreboards + round
   strip; `/match/000000` → graceful error; home cards land internally (100 `/match/` links, 0
   vlr.gg match links).
+
+## Player card header (`/player/[id]` restructure)
+
+Restructured the player page to lead with an ESPN-style **player card** above the
+agent table. Grounding (real markup, Boo id 1144): VLR exposes **no totals row —
+only per-agent rows**, so the card's headline aggregates are computed in the data
+layer, ROUNDS-WEIGHTED (same approach as the Phase 8 trend service).
+
+- [x] `playerOverall` / `signatureAgent` (`lib/vlr.ts`, pure + tested): three
+  headline numbers — overall **Rating** + **ACS** rounds-weighted across agents
+  (weight by RND, fall back to 1, skip rows that don't parse), and **K/D** as
+  summed ΣK/ΣD (not a mean of per-agent ratios). A 5881-round Omen dominates a
+  15-round Harbor — naive avg would read 0.92, weighted reads 1.01. parseNumeric
+  throughout (dash, never NaN). Signature agent = most-played row + usage % verbatim.
+- [x] `PlayerCard` (`components/PlayerCard.tsx`): identity (alias, real name,
+  team→`/team/{id}`, country) · weighted headline stat line · signature-agent chip
+  ("OMEN · 48%") · recent-form W/L dots (most-recent-first, win-green/loss-red) ·
+  compact rating Sparkline that shrinks to the slim young-history note when thin
+  (the degenerate-flat gate — never a fake line). Pure broadcast chroma, same card
+  vocabulary as team/match pages. Page is now card → full 14-agent table → recent
+  matches; the standalone `PlayerTrendPanel` is folded into the card (deleted).
+- [x] Tests `+10` (105 → 115): rounds-weighted overall (heavy agent dominates,
+  not naive), K/D summed aggregate, RND fallback weight, unparseable-row skip,
+  empty→null, real-fixture invariants, signature-agent pick + usage parse; page
+  test asserts the card headline (`K/D` vs the table's `K:D`), Main chip, Form
+  strip, real weighted number. Existing trend young-note + graceful-error intact.
+- [x] Verified: `tsc`/`eslint`/`next build` clean · Vitest 115 green · live smoke
+  `/player/1144` (Boo): card shows **Rating 1.01 / K/D 1.01 / ACS 186** (matches the
+  weighted compute, rejects naive 0.92), **OMEN · 48%** chip, form **L-W-W-W-W…**
+  dots, young-history trend note (no fake line); the full 14-agent table intact
+  below, order card → table → matches.
 
 ## Player detail page (`/player/[id]`) — the slice-5 carve-out
 
