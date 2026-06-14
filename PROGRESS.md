@@ -3,8 +3,8 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 10 / 10
-- **Tests passing:** 118
+- **Phases shipped:** 11 / 11
+- **Tests passing:** 124
 - **Commit:** 9ee985b
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
@@ -51,6 +51,41 @@ deferred vlr-api gaps logged in the frontend slices below.
 - [x] **Phase 8 — player trends** — rating/ACS trend over banked `PlayerSnapshot` history (rounds-weighted overall), `/trends/player/{id}`, no new scraper/table
 - [x] **Phase 9 — player pre-scrape** — twice-daily scheduler job banks a `PlayerSnapshot` for every player in the next ~48h of matches (cache-gated), so trend history accumulates instead of waiting for on-demand views
 - [x] **Phase 10 — player search** — `GET /players?q=` hybrid: DB-first over `PlayerSnapshot` (clean read), VLR autocomplete fallback only on a DB miss (cached like the detail endpoints); self-healing as Phase 9 banks more
+- [x] **Phase 11 — live match auto-refresh** — 30s scheduler job re-scrapes each LIVE match's detail + status-aware short cache TTL (live=30s, completed=10m); the match page polls `/api/match/[id]` while live so scores/stats/timeline update without a reload
+
+## Phase 11 — live match auto-refresh
+
+A live match detail used to freeze: cached scrape-on-miss at `ttl_matches=600s`,
+no job refreshing it, page server-rendered with no polling → 0:0/stale until a
+manual reload outlived the TTL. Three coordinated parts make it self-update.
+
+- [x] **Scheduler job (`refresh_live_matches`, every 30s)** — reads the live list
+  from cache (repopulates it on a miss, since `CACHE_LIVE` is written on a longer
+  cadence than its own TTL) and re-scrapes each currently-LIVE match's detail via
+  `refresh_match`, overwriting its cache. Bounded by the live list (0–4 matches),
+  `max_instances=1`. Registered in `build_scheduler()` + `status_meta.JOBS` (as
+  `live_matches`) + `_tracked` records `vlr:lastrun:live_matches` — surfaces on
+  `/status`. No-op when nothing is live.
+- [x] **Status-aware TTL (`refresh_match`)** — a LIVE match caches SHORT
+  (`ttl_live`, ~30s) so reads never serve 10-min-stale rounds; a completed match
+  keeps the long `ttl_matches`. The job refreshes; the short TTL is the backstop.
+- [x] **Page polls while live (`LiveMatchDetail` island)** — the `/match/[id]`
+  body is now a client island that SSR-seeds from `initial`, and while
+  `status === "live"` polls `/api/match/[id]` every 30s, re-rendering the scorebug
+  / scoreboard / round timeline; keeps last-good on a failed poll and STOPS once
+  the match finals (reverts to the static long-cached render). Hydration-safe:
+  state seeds from `initial`, updates only post-mount — SSR == first client render
+  (mirrors the stat-ticker island; the MapTabs tab selection survives a poll).
+- [x] Tests: backend `tests/test_live_refresh.py` (**+6**, 118 → 124): live→short
+  TTL, completed/unknown→long TTL, job refreshes only live ids (null skipped),
+  empty-list no-op, cache-miss repopulate. Frontend `live-match-detail.test.ts`
+  (**+4**, 124 → 128): SSR↔hydrate parity on a live seed, poll-updates-scorebug,
+  stop-on-final, never-polls-completed. `test_status` JOBS list updated.
+- [x] Verified on the container against the REAL live match 670473: the live list
+  had expired → the job repopulated it and refreshed **1** live match;
+  `vlr:lastrun:live_matches` recorded; `vlr:match:670473` now carries the **short
+  TTL** (≤30s, was 600s) with live data (`status:live`, Split 13-3). `tsc`/`eslint`/
+  `next build` clean.
 
 ## Phase 10 — player search (`GET /api/v1/players?q=`)
 
@@ -191,7 +226,7 @@ Consumes vlr-api server-side at `http://127.0.0.1:8000/api/v1`. Conventions live
 
 - **Stack:** Next 16.2.7 · React 19.2.4 · TypeScript · Tailwind v4 · Framer Motion 12 · Vitest 2
 - **Slices done:** 6 / 7 + stat-ticker + featured-streamers + player-detail page (slice 5 scoped to team detail + trend; the carved-out player-detail page now shipped — see below)
-- **Frontend tests passing:** 124 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page + player-card aggregates + live-map scorebug)
+- **Frontend tests passing:** 128 (Vitest — transforms vs committed real fixtures + SSR→hydrate guards + ticker curation + Twitch data-layer + player-trend/page + player-card aggregates + live-map scorebug + live-match poll island)
 
 ## Slices
 

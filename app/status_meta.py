@@ -9,7 +9,7 @@ mirrors these counts; keep the two in sync.
 COMMIT = "9ee985b"
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
-TESTS_PASSING = 118
+TESTS_PASSING = 124
 
 # Where this is deployed (already-public LXC ip; no secrets here).
 DEPLOY = {"lxc": 289, "host": "192.168.1.35"}
@@ -25,10 +25,11 @@ PHASES = [
     {"n": 8, "name": "player trends",     "desc": "rating/ACS trend over PlayerSnapshot history (rounds-weighted)", "shipped": True},
     {"n": 9, "name": "player pre-scrape", "desc": "twice-daily job banks PlayerSnapshots for next-48h match players (cache-gated)", "shipped": True},
     {"n": 10, "name": "player search",    "desc": "GET /players?q= — DB-first over snapshots, VLR autocomplete fallback on a miss (cached)", "shipped": True},
+    {"n": 11, "name": "live auto-refresh", "desc": "30s job re-scrapes live match detail + status-aware short TTL; page polls while live", "shipped": True},
 ]
 
 # History tables surfaced on the status page, in display order.
 HISTORY_TABLES = ["match_results", "ranking_snapshots", "player_snapshots", "team_snapshots"]
 
 # Registered APScheduler job ids (must match app/jobs/scheduler.py exactly).
-JOBS = ["upcoming", "results", "news", "events", "rankings", "player_prefetch"]
+JOBS = ["upcoming", "live_matches", "results", "news", "events", "rankings", "player_prefetch"]

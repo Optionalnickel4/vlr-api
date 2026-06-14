@@ -22,6 +22,8 @@ from app.scrapers import players as pl
 from app.scrapers import rankings as rk
 from app.scrapers import teams as te
 
+log = logging.getLogger("vlr.refresh")
+
 CACHE_RESULTS = "vlr:results"
 CACHE_UPCOMING = "vlr:upcoming"
 CACHE_LIVE = "vlr:live"
@@ -126,13 +128,50 @@ async def refresh_player(player_id: str) -> dict[str, Any]:
 
 
 async def refresh_match(match_id: str) -> dict[str, Any]:
-    """On-demand: scrape a match-detail page and cache it. Read-on-miss from the
-    route, like player/team. No history table — match detail is a point-in-time
-    view, not a snapshot series (completed matches are immutable; live ones churn)."""
+    """On-demand (route) + scheduled (live-refresh job): scrape a match-detail page
+    and cache it. No history table — match detail is a point-in-time view.
+
+    TTL is status-aware: a LIVE match churns every round, so cache it SHORT
+    (ttl_live, ~30s) — that way even outside the live-refresh job a read never
+    serves 10-min-stale scores. A completed match is immutable, so keep the long
+    ttl_matches. The live-refresh job overwrites the cache every ~30s; the short
+    TTL is the backstop for when it isn't running / between ticks."""
     s = get_settings()
     data = await md.fetch_match(match_id)
-    await cache_set(CACHE_MATCH.format(id=match_id), data, s.ttl_matches)
+    ttl = s.ttl_live if data.get("status") == "live" else s.ttl_matches
+    await cache_set(CACHE_MATCH.format(id=match_id), data, ttl)
     return data
+
+
+async def refresh_live_matches() -> int:
+    """Scheduled (~30s): keep every currently-LIVE match's detail cache fresh so
+    the match page's poll (and a plain reload) returns live scores/stats instead
+    of scrape-on-miss-stale data. Bounded by the live list (usually 0–4 matches).
+
+    Reads the live list from cache (the `upcoming` job owns the list scrape); the
+    list is written on a longer cadence than its own TTL, so repopulate it here on
+    a miss rather than skip a whole cycle. Each live match is re-scraped via
+    refresh_match, which overwrites its cache with the live (short) TTL — and if a
+    match has just FINALED, that same call caches it with the long TTL and the page
+    poll stops on its own."""
+    live = await cache_get(CACHE_LIVE)
+    if live is None:
+        await refresh_upcoming()  # list expired → repopulate (one cheap list scrape)
+        live = await cache_get(CACHE_LIVE)
+    if not live:
+        return 0
+    refreshed = 0
+    for m in live:
+        mid = m.get("id")
+        if not mid:
+            continue
+        try:
+            await refresh_match(str(mid))  # re-scrape + overwrite cache
+            refreshed += 1
+        except Exception:
+            log.warning("refresh_live_matches: failed to refresh %s", mid, exc_info=True)
+    log.info("refresh_live_matches: refreshed %d live match(es)", refreshed)
+    return refreshed
 
 
 def _split_score(raw: Any) -> tuple[str | None, str | None]:
@@ -227,8 +266,6 @@ async def refresh_team(team_id: str) -> dict[str, Any]:
 # player page. NO new scraper: it orchestrates the existing match/team/player
 # fetch paths. The shaping helpers below are pure (no network) so they test on
 # row-like dicts; the orchestrator at the bottom does the fetching + cache gate.
-
-log = logging.getLogger("vlr.prefetch")
 
 PREFETCH_WINDOW_HOURS = 48.0  # bound the job to the imminent matches (stays small)
 
