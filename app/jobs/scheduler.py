@@ -39,5 +39,8 @@ def build_scheduler() -> AsyncIOScheduler:
     sched.add_job(_tracked("news", R.refresh_news), "interval", minutes=15, id="news", max_instances=1)
     sched.add_job(_tracked("events", R.refresh_events), "interval", hours=6, id="events", max_instances=1)
     sched.add_job(_tracked("rankings", R.refresh_rankings), "interval", hours=6, id="rankings", max_instances=1)
+    # player pre-scrape: twice daily at fixed wall-clock hours (cron, not interval,
+    # so it lands at predictable times); max_instances=1 so a long run never overlaps.
+    sched.add_job(_tracked("player_prefetch", R.prefetch_upcoming_players), "cron", hour="5,17", id="player_prefetch", max_instances=1)
     _active = sched
     return sched

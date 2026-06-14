@@ -3,8 +3,8 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 8 / 8
-- **Tests passing:** 97
+- **Phases shipped:** 9 / 9
+- **Tests passing:** 107
 - **Commit:** 9ee985b
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
@@ -49,6 +49,44 @@ deferred vlr-api gaps logged in the frontend slices below.
 - [x] **Phase 6 — status dashboard** — self-describing status page (this phase)
 - [x] **Phase 7 — match detail** — rich `/match/{id}` endpoint (header/maps/scoreboards/round timeline + `streams` Twitch channel logins), `refresh_match`, `VlrNotFound` → 404
 - [x] **Phase 8 — player trends** — rating/ACS trend over banked `PlayerSnapshot` history (rounds-weighted overall), `/trends/player/{id}`, no new scraper/table
+- [x] **Phase 9 — player pre-scrape** — twice-daily scheduler job banks a `PlayerSnapshot` for every player in the next ~48h of matches (cache-gated), so trend history accumulates instead of waiting for on-demand views
+
+## Phase 9 — player pre-scrape (scheduler job)
+
+Phase 8 made player trends queryable, but the history was THIN (snapshots only
+accrued when someone opened a player page). This job seeds that history ahead of
+time. **No new scraper, no new table, no new endpoint** — it orchestrates the
+existing match/team/player fetch paths on a schedule.
+
+- [x] `prefetch_upcoming_players` (`app/services/refresh.py`): twice-daily job.
+  Pulls `/matches`, keeps the **non-TBD** upcoming matches inside a ~48h window
+  (`eta_to_hours`, weeks counted), and for each does ONE match-detail fetch →
+  participant player IDs off the scoreboard (`participant_ids_from_match`), with a
+  fallback to the two header team IDs → team-page rosters (`roster_ids_from_team`,
+  active players only) when the lineup isn't posted yet. De-dupes to unique IDs.
+- [x] **CACHE-GATED snapshot** (the load-bearing invariant): `refresh_player`
+  writes a snapshot on EVERY call with no internal dedup, so the job replicates the
+  route's gate — `cache_get(vlr:player:{id})`; present → SKIP (fetched recently
+  on-demand or by a prior run within `ttl_players`=1h, snapshot already exists),
+  absent → `refresh_player`. Snapshots never duplicate within/across runs and the
+  job cooperates with on-demand views. Logs matches scanned / fetched / skipped.
+- [x] Scheduler registration mirrored in all three places: `build_scheduler()` adds
+  `_tracked("player_prefetch", …)` as a **cron** job (`hour="5,17"` UTC, twice
+  daily, `max_instances=1` so a long run never overlaps); `status_meta.JOBS` gains
+  `"player_prefetch"` so it surfaces on `/status`; `_tracked` records
+  `vlr:lastrun:player_prefetch` on success.
+- [x] Tests (`tests/test_prefetch.py`, **+10**, 97 → 107): pure shaping (eta parse
+  incl. the `1w 1d`=192h trap, TBD-skip, window filter, scoreboard ID extraction +
+  dedupe, staff-excluded roster fallback) and the **cache gate** — asserts
+  `refresh_player` is NOT called for a cache-present player, all-cached → zero
+  refreshes, and the no-lineup → team-roster fallback. `test_status` JOBS list
+  updated for the new job.
+- [x] Verified on the container through the app (real fetches, never curl): one
+  tracked run scanned **4** real ≤48h matches → **40** unique players → **40**
+  fetched, **0** skipped, **0** failed; `player_snapshots` grew **6 → 46** (+40,
+  == fetched); `vlr:lastrun:player_prefetch` recorded. An immediate **second run**
+  (cache now warm) → **40 skipped, 0 fetched, 46 → 46** — proving the gate prevents
+  duplicate-row corruption.
 
 ## Phase 8 — player trends
 

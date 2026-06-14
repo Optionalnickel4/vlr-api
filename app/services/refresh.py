@@ -3,13 +3,15 @@
 The API never calls these directly for live requests; the scheduler does.
 API reads from cache (and DB for history).
 """
+import logging
+import re
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from app.core.cache import cache_set
+from app.core.cache import cache_get, cache_set
 from app.core.config import get_settings
 from app.core.db import SessionLocal
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
@@ -217,3 +219,165 @@ async def refresh_team(team_id: str) -> dict[str, Any]:
             )
             await session.commit()
     return data
+
+
+# ---- player pre-scrape (scheduled twice daily) ------------------------------
+# Banks a PlayerSnapshot for every player in the next ~48h of matches so trend
+# history accumulates ahead of time, instead of waiting for someone to open each
+# player page. NO new scraper: it orchestrates the existing match/team/player
+# fetch paths. The shaping helpers below are pure (no network) so they test on
+# row-like dicts; the orchestrator at the bottom does the fetching + cache gate.
+
+log = logging.getLogger("vlr.prefetch")
+
+PREFETCH_WINDOW_HOURS = 48.0  # bound the job to the imminent matches (stays small)
+
+# vlr eta strings: "15h 1m", "1d 17h", "1w 1d" -> hours (weeks counted too).
+_ETA_UNIT_HOURS = {"w": 168.0, "d": 24.0, "h": 1.0, "m": 1.0 / 60.0}
+
+
+def eta_to_hours(eta: str | None) -> float | None:
+    """Parse a vlr eta string to hours; None when nothing parses (e.g. a TBD card
+    with no eta). Sums every unit token so '1w 1d' is 192h, not 24h."""
+    if not eta:
+        return None
+    total = 0.0
+    matched = False
+    for value, unit in re.findall(r"(\d+)\s*([wdhm])", eta):
+        total += int(value) * _ETA_UNIT_HOURS[unit]
+        matched = True
+    return total if matched else None
+
+
+def match_is_tbd(match: dict[str, Any]) -> bool:
+    """True for a bracket placeholder whose teams aren't resolved yet (TBD/empty)
+    — those carry no players, so the job skips them."""
+    teams = [(t or "").strip() for t in (match.get("teams") or [])]
+    return len(teams) < 2 or any(not t or t.upper() == "TBD" for t in teams)
+
+
+def upcoming_within_window(
+    upcoming: list[dict[str, Any]], window_hours: float = PREFETCH_WINDOW_HOURS
+) -> list[dict[str, Any]]:
+    """The real (non-TBD) upcoming matches whose eta is inside the window."""
+    out: list[dict[str, Any]] = []
+    for m in upcoming:
+        if match_is_tbd(m):
+            continue
+        hours = eta_to_hours(m.get("eta"))
+        if hours is not None and hours <= window_hours:
+            out.append(m)
+    return out
+
+
+def participant_ids_from_match(parsed: dict[str, Any]) -> list[str]:
+    """Participant player IDs off a parsed match's scoreboard (per-map tables +
+    the all-maps aggregate), de-duped with order preserved. Empty when no lineup
+    has been posted yet — the caller then falls back to the team rosters."""
+    ids: list[str] = []
+    seen: set[str] = set()
+    groups: list[dict[str, Any]] = list(parsed.get("maps") or [])
+    if parsed.get("all_maps"):
+        groups.append(parsed["all_maps"])
+    for grp in groups:
+        for team in grp.get("teams") or []:
+            for p in team.get("players") or []:
+                pid = p.get("player_id")
+                if pid and str(pid) not in seen:
+                    seen.add(str(pid))
+                    ids.append(str(pid))
+    return ids
+
+
+def roster_ids_from_team(team_data: dict[str, Any]) -> list[str]:
+    """Active (non-staff) roster player IDs from a parsed team page."""
+    ids: list[str] = []
+    for m in team_data.get("roster") or []:
+        pid = m.get("player_id")
+        if pid and not m.get("is_staff"):
+            ids.append(str(pid))
+    return ids
+
+
+async def _match_player_ids(match: dict[str, Any]) -> list[str]:
+    """One match -> its participant player IDs. ONE match-detail fetch yields both
+    the scoreboard participants (primary) and the header team IDs (fallback): if
+    the lineup isn't posted yet, fetch the two team pages and take their rosters."""
+    mid = match.get("id")
+    if not mid:
+        return []
+    try:
+        parsed = await md.fetch_match(mid)
+    except Exception:
+        log.warning("player_prefetch: match fetch failed for %s", mid, exc_info=True)
+        return []
+
+    ids = participant_ids_from_match(parsed)
+    if ids:
+        return ids
+
+    # fallback: header team ids -> roster player ids (current active roster)
+    out: list[str] = []
+    for team in parsed.get("teams") or []:
+        tid = team.get("id")
+        if not tid:
+            continue
+        try:
+            team_data = await te.fetch_team(tid)
+        except Exception:
+            log.warning("player_prefetch: team fetch failed for %s", tid, exc_info=True)
+            continue
+        out.extend(roster_ids_from_team(team_data))
+    return out
+
+
+async def prefetch_upcoming_players(
+    window_hours: float = PREFETCH_WINDOW_HOURS,
+) -> dict[str, int]:
+    """Scheduled twice daily. Collect every player in the next ~window_hours of
+    matches and bank a PlayerSnapshot per player so trend history accumulates.
+
+    CACHE-GATED (critical): refresh_player writes a snapshot on EVERY call with no
+    internal dedup, so calling it blindly would pollute the history with duplicate
+    rows. We replicate the route's gate per player — cache_get(vlr:player:{id});
+    if present, the detail was fetched recently (on-demand or by a prior run within
+    ttl_players=1h) and a snapshot already exists -> SKIP; only a cache MISS calls
+    refresh_player. So snapshots never duplicate within or across runs, and the job
+    cooperates with on-demand page views. Returns a run summary (also logged)."""
+    split = await mt.fetch_upcoming()
+    matches = upcoming_within_window(split.get("upcoming") or [], window_hours)
+
+    # unique player ids across the whole window (order preserved)
+    player_ids: list[str] = []
+    seen: set[str] = set()
+    for m in matches:
+        for pid in await _match_player_ids(m):
+            if pid not in seen:
+                seen.add(pid)
+                player_ids.append(pid)
+
+    fetched = skipped = failed = 0
+    for pid in player_ids:
+        if await cache_get(CACHE_PLAYER.format(id=pid)) is not None:
+            skipped += 1  # recently fetched -> snapshot exists; don't duplicate
+            continue
+        try:
+            await refresh_player(pid)  # fetch + cache + exactly one snapshot
+            fetched += 1
+        except Exception:
+            failed += 1
+            log.warning("player_prefetch: player fetch failed for %s", pid, exc_info=True)
+
+    summary = {
+        "matches": len(matches),
+        "players": len(player_ids),
+        "fetched": fetched,
+        "skipped": skipped,
+        "failed": failed,
+    }
+    log.info(
+        "player_prefetch: scanned %d matches, %d unique players "
+        "(%d fetched, %d skipped/cache-hit, %d failed)",
+        summary["matches"], summary["players"], fetched, skipped, failed,
+    )
+    return summary
