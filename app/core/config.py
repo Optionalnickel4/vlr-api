@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     ttl_players: int = 3600
     ttl_teams: int = 3600
     ttl_news: int = 900
+    ttl_search: int = 600  # VLR-autocomplete fallback cache (short — players churn in)
 
     # api
     api_prefix: str = "/api/v1"

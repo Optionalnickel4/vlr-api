@@ -3,8 +3,8 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 9 / 9
-- **Tests passing:** 107
+- **Phases shipped:** 10 / 10
+- **Tests passing:** 118
 - **Commit:** 9ee985b
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
@@ -50,6 +50,45 @@ deferred vlr-api gaps logged in the frontend slices below.
 - [x] **Phase 7 — match detail** — rich `/match/{id}` endpoint (header/maps/scoreboards/round timeline + `streams` Twitch channel logins), `refresh_match`, `VlrNotFound` → 404
 - [x] **Phase 8 — player trends** — rating/ACS trend over banked `PlayerSnapshot` history (rounds-weighted overall), `/trends/player/{id}`, no new scraper/table
 - [x] **Phase 9 — player pre-scrape** — twice-daily scheduler job banks a `PlayerSnapshot` for every player in the next ~48h of matches (cache-gated), so trend history accumulates instead of waiting for on-demand views
+- [x] **Phase 10 — player search** — `GET /players?q=` hybrid: DB-first over `PlayerSnapshot` (clean read), VLR autocomplete fallback only on a DB miss (cached like the detail endpoints); self-healing as Phase 9 banks more
+
+## Phase 10 — player search (`GET /api/v1/players?q=`)
+
+A search box source: type a name → that player's `/player/{id}`. Hybrid, and the
+architecture rule holds — DB is primary (clean read over our own banked data); VLR
+is touched ONLY on a DB miss and cached like the scrape-on-miss detail endpoints,
+never per-keystroke.
+
+- [x] **Primary — DB** (`app/services/search.py`): `db_search_stmt` is a pure,
+  compile-assertable statement — `DISTINCT ON (player_id)` with `ORDER BY player_id,
+  captured_at DESC` (latest snapshot per player), `WHERE alias ILIKE %q% OR real_name
+  ILIKE %q%`, capped (`RESULT_CAP=12`). Min-length guard (`≥2`) so a single letter
+  never scans. Returns `{id, alias, team, country, source:"db"}`.
+- [x] **Fallback — VLR autocomplete** (only on a DB miss): `vlr_fallback` fetches
+  `/search/auto/?term=<q>` via the app's throttled client, `parse_vlr_autocomplete`
+  pulls player entries (`value`=alias, id from `/player/(\d+)/`) and skips the
+  category headers / events / teams. Cached per casefolded term (`vlr:search:{term}`,
+  `ttl_search=600`) so a repeated miss doesn't re-hit vlr. `source:"vlr"`.
+- [x] **Self-healing flywheel**: a fallback hit returns immediately; clicking through
+  to `/player/{id}` banks a `PlayerSnapshot` via the existing route, so the player is
+  DB-searchable (`source:"db"`) next time. The fallback never eagerly fetches full
+  player pages.
+- [x] **Graceful** (`{data, stale, error}` envelope): DB error → empty + stale +
+  error (never 500); VLR fallback failure → the empty DB result, gracefully; too-short
+  / empty query → valid empty.
+- [x] Route `GET /players` (`app/api/v1/routes.py`) delegates to the service (the
+  router itself only reads; the service owns the conditional scrape). `ttl_search`
+  added to config.
+- [x] Tests (`tests/test_search.py`, **+11**, 107 → 118): compiled DB statement shape
+  (ILIKE on both name columns, DISTINCT-ON latest-per-player, cap), autocomplete parse
+  (player extraction, category/event/team skip, dedupe, cap, bad-JSON→empty),
+  min-length guard (no DB touch), DB-hit-skips-fallback, empty-DB→fallback, fallback
+  cache (2nd identical miss doesn't re-fetch), DB-error + fallback-error graceful.
+- [x] Verified on the container through the app (real DB + real VLR, never curl):
+  `?q=tenz` and `?q=ten` → DB hit (TenZ id 9, `source:db`, no cache write);
+  `?q=demon1` (not banked) → VLR fallback → Demon1 **id 26171** (+ "LEV Demon1",
+  "Lil Demon1"), `source:vlr`, and `vlr:search:demon1` cached with ttl ≈ 600s;
+  `?q=t` → empty/valid. Fallback cache confirmed live (only the miss wrote a key).
 
 ## Phase 9 — player pre-scrape (scheduler job)
 

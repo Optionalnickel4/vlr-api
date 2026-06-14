@@ -12,6 +12,7 @@ from app.core.db import SessionLocal
 from app.jobs import scheduler as sched_mod
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
 from app.services import refresh as R
+from app.services import search as SR
 from app.services import trends as T
 
 router = APIRouter()
@@ -75,6 +76,15 @@ async def events():
 @router.get("/news")
 async def news():
     return await _cached_or_refresh(R.CACHE_NEWS, R.refresh_news)
+
+
+# ---- player search (DB-first; VLR autocomplete only on a DB miss, cached) -----
+@router.get("/players")
+async def players(q: str = Query("", max_length=64)):
+    # The service reads PlayerSnapshot (clean DB read) and only touches VLR's
+    # typeahead on a DB miss, caching that like the detail endpoints. Returns the
+    # { data, stale, error } envelope; never raises (graceful-empty on failure).
+    return await SR.search_players(q)
 
 
 # ---- player detail (on-demand: scrape-on-miss, cache, persist a snapshot) ----
