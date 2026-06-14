@@ -1,5 +1,6 @@
 import type { MatchDetail } from "@/types/vlr";
 import { cn } from "@/lib/cn";
+import { liveMapScore } from "@/lib/vlr";
 import { Panel } from "@/components/Panel";
 import { Badge } from "@/components/Badge";
 import { LiveBadge } from "@/components/LiveBadge";
@@ -10,10 +11,16 @@ import { ScoreDisplay } from "@/components/ScoreDisplay";
  * teams with the series score (winner lit green), a status/format marker, the
  * veto/picks strip, and an "Open on VLR.gg" source link. Mirrors the match-card
  * language used in the center, scaled up to a page header.
+ *
+ * During a LIVE match whose series is still 0:0 (a map is in progress but not yet
+ * awarded), the scorebug shows the live MAP score (e.g. 9–3) with a "MAP n · name"
+ * caption instead of the misleading 0:0 series score — see `liveMapScore`. Once a
+ * map is won (series 1:0+) or the match is final, it's the series score as before.
  */
 export function MatchHeader({ match }: { match: MatchDetail }) {
   const [t1, t2] = match.teams;
   const live = match.status === "live";
+  const liveMap = liveMapScore(match);
   const TEAM =
     "font-display text-2xl font-bold uppercase tracking-[0.03em] leading-none sm:text-3xl";
 
@@ -49,12 +56,30 @@ export function MatchHeader({ match }: { match: MatchDetail }) {
         >
           {t1?.name ?? "TBD"}
         </a>
-        <ScoreDisplay
-          score1={t1?.score ?? null}
-          score2={t2?.score ?? null}
-          decided={match.status === "final"}
-          size="lg"
-        />
+        {liveMap ? (
+          // live, series still level → show the in-progress MAP score, captioned
+          // so it reads as the current map, not the series. No winner color
+          // (decided=false): the map's still being played.
+          <div className="flex flex-col items-center gap-1.5">
+            <ScoreDisplay
+              score1={liveMap.score1}
+              score2={liveMap.score2}
+              decided={false}
+              size="lg"
+            />
+            <span className="font-display text-[10px] font-semibold uppercase tracking-[0.16em] text-mut">
+              Map {liveMap.mapNumber}
+              {liveMap.name ? ` · ${liveMap.name}` : ""}
+            </span>
+          </div>
+        ) : (
+          <ScoreDisplay
+            score1={t1?.score ?? null}
+            score2={t2?.score ?? null}
+            decided={match.status === "final"}
+            size="lg"
+          />
+        )}
         <a
           href={t2?.id ? `/team/${t2.id}` : undefined}
           className={cn(

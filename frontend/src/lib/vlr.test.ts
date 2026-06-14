@@ -12,6 +12,7 @@ import {
   normalizeLive,
   normalizeMatch,
   normalizeNews,
+  liveMapScore,
   normalizePlayer,
   normalizePlayerTrend,
   normalizeRankings,
@@ -26,7 +27,7 @@ import {
   signatureAgent,
 } from "@/lib/vlr";
 
-import type { AgentStat, RatingPoint } from "@/types/vlr";
+import type { AgentStat, MatchDetail, RatingPoint } from "@/types/vlr";
 
 import results from "@/lib/__fixtures__/results.json";
 import upcoming from "@/lib/__fixtures__/upcoming.json";
@@ -433,6 +434,81 @@ describe("normalizePlayerTrend (Phase 8 player rating/ACS trend)", () => {
     const empty = normalizePlayerTrend({ player_id: "9", rating_trend: [] });
     expect(empty[0].ratingTrend).toEqual([]);
     expect(empty[0].summary).toBeNull();
+  });
+});
+
+describe("liveMapScore (live scorebug: in-progress map, not the 0:0 series)", () => {
+  // minimal MatchDetail factory — liveMapScore only reads status, teams[].score,
+  // and maps[].{scores,name}.
+  const mk = (
+    status: string | null,
+    seriesScores: [number, number],
+    maps: { name: string; scores: [number, number] }[],
+  ): MatchDetail =>
+    ({
+      id: "x",
+      event: null,
+      series: null,
+      status,
+      format: null,
+      url: null,
+      veto: null,
+      teams: [
+        { name: "A", id: "1", score: seriesScores[0], won: false },
+        { name: "B", id: "2", score: seriesScores[1], won: false },
+      ],
+      maps: maps.map((m) => ({
+        gameId: null,
+        name: m.name,
+        picked: false,
+        decider: false,
+        scores: m.scores,
+        teams: [],
+        rounds: [],
+      })),
+      allMaps: null,
+      streams: [],
+    }) as MatchDetail;
+
+  it("live + series 0:0 + a map at 9-3 → the live map score (not 0:0)", () => {
+    const m = mk("live", [0, 0], [
+      { name: "Split", scores: [9, 3] },
+      { name: "Lotus", scores: [0, 0] },
+    ]);
+    expect(liveMapScore(m)).toEqual({
+      mapNumber: 1,
+      name: "Split",
+      score1: 9,
+      score2: 3,
+    });
+  });
+
+  it("picks the in-progress map by rounds played (max total), 1-based number", () => {
+    const m = mk("live", [0, 0], [
+      { name: "Split", scores: [0, 0] },
+      { name: "Lotus", scores: [7, 5] }, // the one actually being played
+    ]);
+    expect(liveMapScore(m)).toMatchObject({ mapNumber: 2, name: "Lotus", score1: 7 });
+  });
+
+  it("series already decided (1:0) → null, keep showing the series score", () => {
+    const m = mk("live", [1, 0], [
+      { name: "Split", scores: [13, 9] },
+      { name: "Lotus", scores: [9, 3] },
+    ]);
+    expect(liveMapScore(m)).toBeNull();
+  });
+
+  it("final match → null (series score is correct)", () => {
+    expect(liveMapScore(mk("final", [2, 1], [{ name: "Split", scores: [13, 9] }]))).toBeNull();
+  });
+
+  it("live but no map started yet (all 0-0) → null (0:0 is honest)", () => {
+    expect(liveMapScore(mk("live", [0, 0], [{ name: "Split", scores: [0, 0] }]))).toBeNull();
+  });
+
+  it("upcoming/non-live → null", () => {
+    expect(liveMapScore(mk(null, [0, 0], [{ name: "Split", scores: [3, 1] }]))).toBeNull();
   });
 });
 

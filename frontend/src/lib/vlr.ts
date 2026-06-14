@@ -12,6 +12,7 @@
 import type {
   AgentStat,
   ApiResponse,
+  LiveMapScore,
   LiveMatch,
   MatchDetail,
   MatchMap,
@@ -597,6 +598,41 @@ export function normalizeMatch(raw: unknown): MatchDetail[] {
         .filter((s): s is string => Boolean(s)),
     },
   ];
+}
+
+/** During a LIVE match the team-level `score` is the SERIES score (maps won),
+ *  which stays 0:0 until a map is awarded — so the scorebug reads 0:0 even while
+ *  the current map is at e.g. 9–3. This returns the in-progress map's round score
+ *  so the scorebug can show it instead. Returns null (→ show the series score)
+ *  when: the match isn't live, a map has already been won (series underway — the
+ *  series score is correct then), or no map has started yet (0:0 is honest).
+ *
+ *  With the series level at 0:0, exactly one map is in progress and the rest are
+ *  0–0, so the live map is simply the one with rounds played (max total score). */
+export function liveMapScore(match: MatchDetail): LiveMapScore | null {
+  if (match.status !== "live") return null;
+  const [t1, t2] = match.teams;
+  const seriesDecided = (t1?.score ?? 0) > 0 || (t2?.score ?? 0) > 0;
+  if (seriesDecided) return null; // a map's been won → the series score is right
+
+  let bestIdx = -1;
+  let bestTotal = 0;
+  match.maps.forEach((mp, i) => {
+    const total = (mp.scores[0] ?? 0) + (mp.scores[1] ?? 0);
+    if (total > bestTotal) {
+      bestTotal = total;
+      bestIdx = i;
+    }
+  });
+  if (bestIdx < 0) return null; // no map has started → 0:0 is the honest value
+
+  const mp = match.maps[bestIdx];
+  return {
+    mapNumber: bestIdx + 1,
+    name: mp.name,
+    score1: mp.scores[0] ?? null,
+    score2: mp.scores[1] ?? null,
+  };
 }
 
 // ---- loaders (graceful-empty) ----------------------------------------------

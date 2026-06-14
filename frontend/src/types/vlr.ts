@@ -281,6 +281,17 @@ export interface MatchTeam {
   won: boolean;
 }
 
+/** The in-progress map's live round score, surfaced by the scorebug during a LIVE
+ *  match whose SERIES is still level (no map awarded yet) — so the big number
+ *  reads e.g. 9–3 (the live map) instead of the 0:0 series score. Null when the
+ *  series score is the right thing to show (a map's been won, final, or upcoming). */
+export interface LiveMapScore {
+  mapNumber: number; // 1-based play order
+  name: string | null;
+  score1: number | null;
+  score2: number | null;
+}
+
 export interface MatchDetail {
   id: string | null;
   event: string | null;
