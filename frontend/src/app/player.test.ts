@@ -136,11 +136,16 @@ describe("player page — Phase 13 Rating Breakdown card", () => {
     mockFetch({ dims: DIMS_FIXTURE });
     const html = await render();
     expect(html).toContain("Rating Breakdown");
-    // All four dimension labels must appear
+    // Bar labels (mixed-case source, rendered uppercase by CSS)
     expect(html).toContain("Firepower");
     expect(html).toContain("Entry");
     expect(html).toContain("Consistency");
     expect(html).toContain("Clutch");
+    // SVG radar axis labels — must be exact uppercase strings in the SVG text elements
+    expect(html).toContain("FIREPOWER");
+    expect(html).toContain("ENTRY");
+    expect(html).toContain("CONSISTENCY");
+    expect(html).toContain("CLUTCH");
   });
 
   it("bars show the correct ordinal label with region (e.g. '75th in NA')", async () => {

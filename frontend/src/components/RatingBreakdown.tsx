@@ -73,6 +73,7 @@ function RadarChart({
       height={200}
       aria-hidden="true"
       className="shrink-0"
+      overflow="visible"
     >
       {/* axis lines */}
       <line x1={CX} y1={CY} x2={CX} y2={CY - MAX_R} stroke="currentColor" strokeOpacity={0.15} strokeWidth={1} />
