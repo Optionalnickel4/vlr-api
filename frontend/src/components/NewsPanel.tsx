@@ -44,6 +44,9 @@ function NewsRow({ article }: { article: NewsArticle }) {
   );
 }
 
+// Landing teaser shows this many items; full /news page shows all.
+const NEWS_TEASER_LIMIT = 5;
+
 export function NewsPanel({
   news,
   viewAllHref,
@@ -53,14 +56,16 @@ export function NewsPanel({
   viewAllHref?: string;
   viewAllLabel?: string;
 }) {
-  const rows = news.data;
+  const allRows = news.data;
+  // viewAllHref present ↔ landing teaser — cap rows so the panel stays scannable.
+  const rows = viewAllHref ? allRows.slice(0, NEWS_TEASER_LIMIT) : allRows;
 
   return (
     <MatchSection
       title="News"
-      count={rows.length}
+      count={allRows.length}
       stale={news.stale}
-      isEmpty={rows.length === 0}
+      isEmpty={allRows.length === 0}
       emptyLabel="No news right now."
       viewAllHref={viewAllHref}
       viewAllLabel={viewAllLabel}

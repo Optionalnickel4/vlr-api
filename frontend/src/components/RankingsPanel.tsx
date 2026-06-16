@@ -14,7 +14,38 @@ import { TableShell } from "@/components/TableShell";
  * rank + rating are already coerced to `number | null` in the data layer
  * (parseNumeric, null-not-NaN) — nothing here sorts on the raw upstream string
  * (the Phase 4 string-sort trap); the list arrives in upstream rank order.
+ *
+ * The upstream list is REGION-GROUPED: rank resets to 1 at each region boundary
+ * (Europe 1-10, Americas 1-10, …). On the landing teaser we show the top N per
+ * region so every region is represented; the full /rankings page shows all rows.
  */
+
+// Landing teaser: take this many rows from each region group.
+const RANKINGS_TEASER_PER_REGION = 5;
+
+/**
+ * Split a flat rank-ordered list into region groups (rank decreases = new region),
+ * then return the first n rows from each group concatenated.
+ */
+function topPerRegion(rows: RankedTeam[], n: number): RankedTeam[] {
+  if (!rows.length) return [];
+  const groups: RankedTeam[][] = [];
+  let current: RankedTeam[] = [];
+
+  for (const row of rows) {
+    const prev = current.at(-1)?.rank ?? null;
+    // rank resets (e.g. 10 → 1) mark a region boundary
+    if (current.length > 0 && row.rank !== null && prev !== null && row.rank < prev) {
+      groups.push(current);
+      current = [];
+    }
+    current.push(row);
+  }
+  if (current.length) groups.push(current);
+
+  return groups.flatMap((g) => g.slice(0, n));
+}
+
 export function RankingsPanel({
   rankings,
   viewAllHref,
@@ -24,14 +55,17 @@ export function RankingsPanel({
   viewAllHref?: string;
   viewAllLabel?: string;
 }) {
-  const rows = rankings.data;
+  const allRows = rankings.data;
+  // viewAllHref present ↔ landing teaser — cap to top N per region so every
+  // region is represented without any one region dominating the panel.
+  const rows = viewAllHref ? topPerRegion(allRows, RANKINGS_TEASER_PER_REGION) : allRows;
 
   return (
     <MatchSection
       title="Rankings"
-      count={rows.length}
+      count={allRows.length}
       stale={rankings.stale}
-      isEmpty={rows.length === 0}
+      isEmpty={allRows.length === 0}
       emptyLabel="No rankings available."
       viewAllHref={viewAllHref}
       viewAllLabel={viewAllLabel}

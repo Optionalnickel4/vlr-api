@@ -53,6 +53,26 @@ const SAMPLE_RANKINGS = [
   { team_id: "2", rank: "1", team: "Sentinels", country: "United States", rating: "1024" },
 ];
 
+// 10 news items — landing should show exactly 5, /news full page all 10.
+const NEWS_MANY = Array.from({ length: 10 }, (_, i) => ({
+  title: `Breaking news item ${i}`,
+  description: "desc",
+  meta: `• June 2026 • by author${i}`,
+  url: `https://www.vlr.gg/news/${i}`,
+}));
+// 7 EU teams (rank 1-7) + 7 NA teams (rank 1-7, rank resets = new region).
+// Landing teaser should show 5 EU + 5 NA = 10; full page all 14.
+const RANKINGS_MULTI = [
+  ...Array.from({ length: 7 }, (_, i) => ({
+    team_id: String(i + 1), rank: String(i + 1), team: `EU Team ${i + 1}`,
+    country: "Germany", rating: String(2000 - i * 50),
+  })),
+  ...Array.from({ length: 7 }, (_, i) => ({
+    team_id: String(i + 100), rank: String(i + 1), team: `NA Team ${i + 1}`,
+    country: "United States", rating: String(1900 - i * 50),
+  })),
+];
+
 /** Route the data layer's single fetch boundary: full upcoming/results, empty
  *  for everything else; ticker/streamer fan-out (match detail, trends) → 404 →
  *  graceful-empty, so only the upcoming/results cards appear. */
@@ -67,6 +87,21 @@ function mockFetch() {
     if (url.includes("/rankings")) return jsonResponse([]);
     if (url.includes("/news")) return jsonResponse([]);
     return jsonResponse({}, 404); // match detail / trends fan-out → graceful
+  }) as typeof fetch);
+}
+
+/** Returns multi-item news + multi-region rankings to exercise teaser caps. */
+function mockFetchMulti() {
+  return vi.spyOn(globalThis, "fetch").mockImplementation((async (
+    input: string | URL | Request,
+  ) => {
+    const url = String(input);
+    if (url.includes("/matches/upcoming")) return jsonResponse(UPCOMING);
+    if (url.includes("/matches/results")) return jsonResponse(RESULTS);
+    if (url.includes("/matches/live")) return jsonResponse([]);
+    if (url.includes("/rankings")) return jsonResponse(RANKINGS_MULTI);
+    if (url.includes("/news")) return jsonResponse(NEWS_MANY);
+    return jsonResponse({}, 404);
   }) as typeof fetch);
 }
 
@@ -150,6 +185,38 @@ describe("news + rankings full pages and see-all links", () => {
     mockFetchFull();
     const html = renderToStaticMarkup(await RankingsPage());
     expect(html).toContain("Sentinels");
+    expect(html).not.toContain("Full rankings");
+  });
+});
+
+describe("teaser caps: news capped at 5, rankings capped per region", () => {
+  it("landing news shows ≤5 items; /news full page shows all 10", async () => {
+    mockFetchMulti();
+    const landingHtml = renderToStaticMarkup(await MatchCenter());
+    const newsHtml = renderToStaticMarkup(await NewsPage());
+    // landing: only 5 of the 10 "Breaking news item N" headlines appear
+    expect(count(landingHtml, "Breaking news item")).toBe(5);
+    // full page: all 10 appear and there is no see-all footer
+    expect(count(newsHtml, "Breaking news item")).toBe(10);
+    expect(newsHtml).not.toContain("All news");
+  });
+
+  it("landing rankings teaser shows top of each region, not just the first region", async () => {
+    mockFetchMulti();
+    const html = renderToStaticMarkup(await MatchCenter());
+    // both EU and NA representatives must appear
+    expect(html).toContain("EU Team 1");
+    expect(html).toContain("NA Team 1");
+    // entries beyond the per-region cap (rank 6 and 7) must not appear
+    expect(html).not.toContain("EU Team 6");
+    expect(html).not.toContain("NA Team 6");
+  });
+
+  it("/rankings full page is uncapped — shows all 14 rows across both regions", async () => {
+    mockFetchMulti();
+    const html = renderToStaticMarkup(await RankingsPage());
+    expect(html).toContain("EU Team 7");
+    expect(html).toContain("NA Team 7");
     expect(html).not.toContain("Full rankings");
   });
 });
