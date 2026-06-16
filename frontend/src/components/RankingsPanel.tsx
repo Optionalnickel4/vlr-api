@@ -20,8 +20,8 @@ import { TableShell } from "@/components/TableShell";
  * region so every region is represented; the full /rankings page shows all rows.
  */
 
-// Landing teaser: take this many rows from each region group.
-const RANKINGS_TEASER_PER_REGION = 5;
+// Landing teaser: "regional kings" — the #1 team from every region only.
+const RANKINGS_TEASER_PER_REGION = 1;
 
 /**
  * Split a flat rank-ordered list into region groups (rank decreases = new region),
@@ -56,8 +56,7 @@ export function RankingsPanel({
   viewAllLabel?: string;
 }) {
   const allRows = rankings.data;
-  // viewAllHref present ↔ landing teaser — cap to top N per region so every
-  // region is represented without any one region dominating the panel.
+  // viewAllHref present ↔ landing teaser ("regional kings" — #1 per region only).
   const rows = viewAllHref ? topPerRegion(allRows, RANKINGS_TEASER_PER_REGION) : allRows;
 
   return (

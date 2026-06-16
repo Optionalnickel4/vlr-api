@@ -201,15 +201,15 @@ describe("teaser caps: news capped at 5, rankings capped per region", () => {
     expect(newsHtml).not.toContain("All news");
   });
 
-  it("landing rankings teaser shows top of each region, not just the first region", async () => {
+  it("landing rankings teaser is #1-per-region only: EU #1 and NA #1 appear, rank-2+ do not", async () => {
     mockFetchMulti();
     const html = renderToStaticMarkup(await MatchCenter());
-    // both EU and NA representatives must appear
+    // regional kings: #1 from every region must appear
     expect(html).toContain("EU Team 1");
     expect(html).toContain("NA Team 1");
-    // entries beyond the per-region cap (rank 6 and 7) must not appear
-    expect(html).not.toContain("EU Team 6");
-    expect(html).not.toContain("NA Team 6");
+    // rank-2+ from any region must NOT appear (proves #1-per-region, not 5-per-region)
+    expect(html).not.toContain("EU Team 2");
+    expect(html).not.toContain("NA Team 2");
   });
 
   it("/rankings full page is uncapped — shows all 14 rows across both regions", async () => {
