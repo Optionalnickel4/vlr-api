@@ -17,6 +17,8 @@ const NAV: { href: string; label: string; key: string }[] = [
   { href: "/schedule", label: "Schedule", key: "schedule" },
   { href: "/results", label: "Results", key: "results" },
   { href: "/stats", label: "Stats", key: "stats" },
+  { href: "/rankings", label: "Rankings", key: "rankings" },
+  { href: "/news", label: "News", key: "news" },
 ];
 
 export function SiteHeader({

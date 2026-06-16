@@ -4,8 +4,23 @@ Counts here mirror `app/status_meta.py` (the committed source of truth). Keep th
 in sync: bump both in the same commit.
 
 - **Phases shipped:** 13 / 13
-- **Tests passing:** 169 backend + 164 frontend
+- **Tests passing:** 170 backend + 168 frontend
 - **Commit:** phase13
+
+## Diagnostics conventions
+
+Lessons from debugging sessions — apply before assuming a scraper or selector is broken.
+
+1. **Null/missing field? Check the HTTP status first.** When `GET /player/{id}` returns
+   `alias: null`, reach for `curl -s http://127.0.0.1:8000/api/v1/player/{id} | jq .` and
+   look at the status + top-level error before opening the scraper. A 404 means the
+   id doesn't exist or the cache is cold; a 200 with null means the scraper parsed but
+   the field is absent/unexpected. These are different root causes with different fixes.
+
+2. **Endpoint naming: singular vs plural matters.** Player DETAIL is `/player/{id}`
+   (singular — the `/player/` prefix, same as vlr.gg's own URL shape). Player
+   DIMENSIONS is `/players/{id}/dimensions` (plural — the stats-leaderboard family).
+   Mixing them gives a 404 that looks like a bug but is just the wrong path.
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
 

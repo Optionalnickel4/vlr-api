@@ -105,10 +105,10 @@ export default async function MatchCenter() {
           </MatchSection>
         </div>
 
-        {/* rankings + news */}
+        {/* rankings + news — snapshotted panels link out to their full pages */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
-          <RankingsPanel rankings={rankings} />
-          <NewsPanel news={news} />
+          <RankingsPanel rankings={rankings} viewAllHref="/rankings" viewAllLabel="Full rankings" />
+          <NewsPanel news={news} viewAllHref="/news" viewAllLabel="All news" />
         </div>
       </div>
     </main>

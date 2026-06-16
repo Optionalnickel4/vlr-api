@@ -44,7 +44,15 @@ function NewsRow({ article }: { article: NewsArticle }) {
   );
 }
 
-export function NewsPanel({ news }: { news: ApiResponse<NewsArticle> }) {
+export function NewsPanel({
+  news,
+  viewAllHref,
+  viewAllLabel,
+}: {
+  news: ApiResponse<NewsArticle>;
+  viewAllHref?: string;
+  viewAllLabel?: string;
+}) {
   const rows = news.data;
 
   return (
@@ -54,6 +62,8 @@ export function NewsPanel({ news }: { news: ApiResponse<NewsArticle> }) {
       stale={news.stale}
       isEmpty={rows.length === 0}
       emptyLabel="No news right now."
+      viewAllHref={viewAllHref}
+      viewAllLabel={viewAllLabel}
     >
       {rows.map((a, i) => (
         <NewsRow key={a.url ?? `${a.title}-${i}`} article={a} />

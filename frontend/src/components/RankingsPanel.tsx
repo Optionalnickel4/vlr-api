@@ -15,7 +15,15 @@ import { TableShell } from "@/components/TableShell";
  * (parseNumeric, null-not-NaN) — nothing here sorts on the raw upstream string
  * (the Phase 4 string-sort trap); the list arrives in upstream rank order.
  */
-export function RankingsPanel({ rankings }: { rankings: ApiResponse<RankedTeam> }) {
+export function RankingsPanel({
+  rankings,
+  viewAllHref,
+  viewAllLabel,
+}: {
+  rankings: ApiResponse<RankedTeam>;
+  viewAllHref?: string;
+  viewAllLabel?: string;
+}) {
   const rows = rankings.data;
 
   return (
@@ -25,6 +33,8 @@ export function RankingsPanel({ rankings }: { rankings: ApiResponse<RankedTeam> 
       stale={rankings.stale}
       isEmpty={rows.length === 0}
       emptyLabel="No rankings available."
+      viewAllHref={viewAllHref}
+      viewAllLabel={viewAllLabel}
     >
       <TableShell
         columns={[

@@ -13,6 +13,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import MatchCenter from "@/app/page";
 import SchedulePage from "@/app/schedule/page";
 import ResultsPage from "@/app/results/page";
+import NewsPage from "@/app/news/page";
+import RankingsPage from "@/app/rankings/page";
 import { HOME_SNAPSHOT_LIMIT } from "@/lib/vlr";
 
 const FULL = 50;
@@ -44,6 +46,13 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+const SAMPLE_NEWS = [
+  { title: "Top fragger transfer shakes up roster", description: "Details inside.", meta: "• June 2026 • by staff", url: "https://www.vlr.gg/news/1/stub" },
+];
+const SAMPLE_RANKINGS = [
+  { team_id: "2", rank: "1", team: "Sentinels", country: "United States", rating: "1024" },
+];
+
 /** Route the data layer's single fetch boundary: full upcoming/results, empty
  *  for everything else; ticker/streamer fan-out (match detail, trends) → 404 →
  *  graceful-empty, so only the upcoming/results cards appear. */
@@ -58,6 +67,21 @@ function mockFetch() {
     if (url.includes("/rankings")) return jsonResponse([]);
     if (url.includes("/news")) return jsonResponse([]);
     return jsonResponse({}, 404); // match detail / trends fan-out → graceful
+  }) as typeof fetch);
+}
+
+/** Like mockFetch but returns sample news + rankings so see-all links render. */
+function mockFetchFull() {
+  return vi.spyOn(globalThis, "fetch").mockImplementation((async (
+    input: string | URL | Request,
+  ) => {
+    const url = String(input);
+    if (url.includes("/matches/upcoming")) return jsonResponse(UPCOMING);
+    if (url.includes("/matches/results")) return jsonResponse(RESULTS);
+    if (url.includes("/matches/live")) return jsonResponse([]);
+    if (url.includes("/rankings")) return jsonResponse(SAMPLE_RANKINGS);
+    if (url.includes("/news")) return jsonResponse(SAMPLE_NEWS);
+    return jsonResponse({}, 404);
   }) as typeof fetch);
 }
 
@@ -97,5 +121,35 @@ describe("landing snapshot vs dedicated full-list pages", () => {
     mockFetch();
     const html = renderToStaticMarkup(await ResultsPage());
     expect(count(html, 'href="/match/r')).toBe(FULL);
+  });
+});
+
+describe("news + rankings full pages and see-all links", () => {
+  it("home nav always includes News and Rankings links", async () => {
+    mockFetch();
+    const html = renderToStaticMarkup(await MatchCenter());
+    expect(html).toContain('href="/news"');
+    expect(html).toContain('href="/rankings"');
+  });
+
+  it("home shows All news and Full rankings see-all links when panels have data", async () => {
+    mockFetchFull();
+    const html = renderToStaticMarkup(await MatchCenter());
+    expect(html).toContain("All news");
+    expect(html).toContain("Full rankings");
+  });
+
+  it("/news full page renders the feed without a see-all footer", async () => {
+    mockFetchFull();
+    const html = renderToStaticMarkup(await NewsPage());
+    expect(html).toContain("Top fragger transfer");
+    expect(html).not.toContain("All news");
+  });
+
+  it("/rankings full page renders the table without a see-all footer", async () => {
+    mockFetchFull();
+    const html = renderToStaticMarkup(await RankingsPage());
+    expect(html).toContain("Sentinels");
+    expect(html).not.toContain("Full rankings");
   });
 });
