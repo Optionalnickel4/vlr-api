@@ -237,10 +237,37 @@ async def test_route_player_not_in_cohort_404(monkeypatch):
     async def fake_cache_get(_key):
         return cohort
 
+    async def fake_refresh_stats(_region, _timespan):
+        pass
+
     monkeypatch.setattr(routes, "cache_get", fake_cache_get)
+    monkeypatch.setattr(R, "refresh_stats", fake_refresh_stats)
     with pytest.raises(HTTPException) as ei:
         await routes.player_dimensions("99999", region="na", timespan="all")
     assert ei.value.status_code == 404
+
+
+async def test_route_cache_race_fallback_resolves(monkeypatch):
+    """Empty initial cohort (mid-rewarm) triggers one recompute and succeeds."""
+    cohort = load_cohort()
+    cache_calls = [0]
+
+    async def fake_cache_get(_key):
+        cache_calls[0] += 1
+        if cache_calls[0] == 1:
+            return []  # empty on first read — scheduler is mid-rewarm
+        return cohort  # populated after recompute
+
+    async def fake_refresh_stats(_region, _timespan):
+        pass
+
+    monkeypatch.setattr(routes, "cache_get", fake_cache_get)
+    monkeypatch.setattr(R, "refresh_stats", fake_refresh_stats)
+
+    resp = await routes.player_dimensions("9", region="na", timespan="all")
+    assert resp["player_id"] == "9"
+    assert "firepower" in resp
+    assert cache_calls[0] == 2  # initial empty read + post-recompute read
 
 
 async def test_route_returns_dimension_shape(monkeypatch):

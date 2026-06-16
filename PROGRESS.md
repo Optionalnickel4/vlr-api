@@ -76,25 +76,29 @@ scraping, no new selectors. Computes over stats we already have from /stats.
   `player_id`; returns `{player_id, region, timespan, firepower, entry, consistency,
   clutch, low_confidence}`. 404 when player not in that leaderboard. 400 on bad
   region/timespan. No scraping inline.
+  - [x] **Cache-race fallback** (fix): empty or partial cohort during a scheduler
+    re-warm window triggers ONE fresh recompute before concluding 404. Player absent
+    after recompute → genuine 404; cohort still empty → 503.
 - [x] **Frontend: `RatingBreakdown.tsx`** — four-axis radar (diamond SVG; Firepower
   top, Entry right, Consistency bottom, Clutch left; grid at 25/50/75/100%;
   teal accent fill); four labeled bars "FIREPOWER — 94th in NA" (ordinal
   formatting: 1st/2nd/3rd/4th…); low-confidence dimensions faded (opacity-50) +
-  asterisk + `title="Limited sample — low confidence"`. Component returns `null`
-  when no dims available (player not on any leaderboard → hidden, never an error).
+  asterisk + `title="Limited sample — low confidence"`. Out-of-cohort players (APAC/
+  VN, not in NA or EU) see an explanatory empty state ("Rating breakdown unavailable
+  — this player isn't in the NA or EU leaderboard.") instead of a silent blank.
 - [x] **Player detail page** — `getPlayerDimensions(id)` tries `na` then `eu`
   (player appears in exactly one regional leaderboard); fetched in parallel with
   `getPlayer`+`getPlayerTrend`; `<RatingBreakdown dims={dims} />` inserted between
   `PlayerCard` and `PlayerStatsPanel`.
-- [x] **Tests**: backend `tests/test_dimensions.py` (**+24**, 145→169): pctile
+- [x] **Tests**: backend `tests/test_dimensions.py` (**+25**, 145→170): pctile
   invariants (min/max/median/none/singleton), None exclusion from denominator, all
   four dimension formulas hand-computed against the stats fixture cohort, FDPR
   inversion, all six low-confidence threshold tests, null-stats never-NaN,
   missing-stat safe, invariant (top-R2.0 TenZ scores >70 on ≥2 dims), route 400/
-  404 + happy-path shape. Frontend `player.test.ts` (**+5**, 159→164): card
-  renders with all four labels, ordinal bar format ("75th in NA"), low-confidence
-  asterisk + tooltip, no card when not on leaderboard, normalizePlayerDimensions
-  mapping.
+  404 + happy-path shape + cache-race fallback resolves. Frontend `player.test.ts`
+  (**+5**, 159→164): card renders with all four labels, ordinal bar format ("75th in
+  NA"), low-confidence asterisk + tooltip, out-of-cohort empty-state message,
+  normalizePlayerDimensions mapping.
 
 ## Phase 12 — stats leaderboard (HLTV-style player rankings)
 

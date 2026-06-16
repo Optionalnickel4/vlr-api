@@ -162,11 +162,15 @@ describe("player page — Phase 13 Rating Breakdown card", () => {
     expect(html).toContain("Limited sample");
   });
 
-  it("no breakdown card when player is not on any regional leaderboard", async () => {
-    // dims=null → 404 from both na and eu → getPlayerDimensions returns empty → card hidden
+  it("out-of-cohort player sees explanatory empty state, not silence", async () => {
+    // dims=null → 404 from both na and eu → getPlayerDimensions returns {data:[],stale:false}
+    // Component renders the card frame with a quiet 'not in leaderboard' message.
     mockFetch({ dims: null });
     const html = await render();
-    expect(html).not.toContain("Rating Breakdown");
+    expect(html).toContain("Rating Breakdown");
+    expect(html).toContain("NA or EU leaderboard");
+    // No ordinal bars for a player not in any cohort
+    expect(html).not.toContain("th in NA");
     // The player card and stats table still render normally
     expect(html).toContain("TenZ");
     expect(html).toContain("Agent Stats");

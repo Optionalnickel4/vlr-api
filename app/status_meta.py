@@ -9,7 +9,7 @@ mirrors these counts; keep the two in sync.
 COMMIT = "phase13"
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
-TESTS_PASSING = 169
+TESTS_PASSING = 170
 
 # Where this is deployed (already-public LXC ip; no secrets here).
 DEPLOY = {"lxc": 289, "host": "192.168.1.35"}

@@ -138,16 +138,29 @@ async def player_dimensions(
             cohort = await cache_get(key)
         except Exception as exc:
             raise HTTPException(503, f"cohort unavailable: {exc}")
-    if not cohort:
-        raise HTTPException(503, "cohort unavailable")
 
+    # Empty or partial cohort may reflect a mid-rewarm window where the scheduler
+    # is repopulating the key. Recompute once and retry before concluding 404.
     player_row = next(
-        (r for r in cohort if str(r.get("player_id")) == str(player_id)), None
+        (r for r in (cohort or []) if str(r.get("player_id")) == str(player_id)), None
     )
-    if player_row is None:
-        raise HTTPException(
-            404, f"player {player_id} not found in {region}/{timespan} leaderboard"
+    if not cohort or player_row is None:
+        try:
+            await R.refresh_stats(region, timespan)
+            refreshed = await cache_get(key)
+            if refreshed:
+                cohort = refreshed
+        except Exception:
+            pass
+        if not cohort:
+            raise HTTPException(503, "cohort unavailable")
+        player_row = next(
+            (r for r in cohort if str(r.get("player_id")) == str(player_id)), None
         )
+        if player_row is None:
+            raise HTTPException(
+                404, f"player {player_id} not found in {region}/{timespan} leaderboard"
+            )
 
     dims = compute_dimensions(player_row, cohort)
     return {"player_id": player_id, "region": region, "timespan": timespan, **dims}

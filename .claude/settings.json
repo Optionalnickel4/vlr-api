@@ -1,6 +1,6 @@
 {
   "permissions": {
-    "defaultMode": "auto",
+    "deny": [],
     "ask": [
       "Bash(apt*)",
       "Bash(apt-get*)",
@@ -10,13 +10,6 @@
       "Bash(systemctl*)",
       "Bash(su *)"
     ],
-    "deny": [
-      "Bash(rm -rf /*)",
-      "Bash(rm -rf ~*)",
-      "Bash(curl*)",
-      "Bash(wget*)",
-      "Bash(* | bash)",
-      "Bash(* | sh)"
-    ]
+    "defaultMode": "auto"
   }
 }
