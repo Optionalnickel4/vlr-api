@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { getPlayer, getPlayerTrend } from "@/lib/vlr";
+import { getPlayer, getPlayerDimensions, getPlayerTrend } from "@/lib/vlr";
 import { Panel } from "@/components/Panel";
 import { Badge } from "@/components/Badge";
 import { PlayerCard } from "@/components/PlayerCard";
 import { PlayerStatsPanel } from "@/components/PlayerStatsPanel";
 import { PlayerMatchesPanel } from "@/components/PlayerMatchesPanel";
+import { RatingBreakdown } from "@/components/RatingBreakdown";
 
 // Always fresh: the player page reflects vlr-api's current cache on each load.
 // Server-side fetch only — the browser never touches vlr-api directly; this
@@ -41,9 +42,14 @@ export default async function PlayerPage({
 }) {
   const { id } = await params;
 
-  // Fetch detail (the rich, headline data) + trend (secondary, usually thin) in
-  // parallel. Both loaders catch upstream 404/500 → { data: [], stale: true }.
-  const [player, trend] = await Promise.all([getPlayer(id), getPlayerTrend(id)]);
+  // Fetch detail + trend + dimensions in parallel. All loaders catch upstream
+  // 404/500 → { data: [], stale: true }. Dimensions are graceful-empty when the
+  // player isn't on any regional leaderboard (e.g. a staff member).
+  const [player, trend, dims] = await Promise.all([
+    getPlayer(id),
+    getPlayerTrend(id),
+    getPlayerDimensions(id),
+  ]);
   const detail = player.data[0] ?? null;
 
   // No player detail = the /player/{id} endpoint failed (or genuinely empty). We
@@ -80,6 +86,9 @@ export default async function PlayerPage({
         {/* the always-populated headline: identity, weighted overall stat line,
             signature agent, recent form, compact trend */}
         <PlayerCard player={detail} trend={trend} />
+
+        {/* Phase 13: four-dimension rating breakdown (below the player card) */}
+        <RatingBreakdown dims={dims} />
 
         {/* the deep stats: the full per-agent table carries the detail */}
         <PlayerStatsPanel agentStats={detail.agentStats} />

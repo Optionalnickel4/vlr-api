@@ -6,10 +6,10 @@ mirrors these counts; keep the two in sync.
 """
 
 # Short sha of the release this build corresponds to. Bump per release.
-COMMIT = "9ee985b"
+COMMIT = "phase13"
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
-TESTS_PASSING = 145
+TESTS_PASSING = 169
 
 # Where this is deployed (already-public LXC ip; no secrets here).
 DEPLOY = {"lxc": 289, "host": "192.168.1.35"}
@@ -27,6 +27,7 @@ PHASES = [
     {"n": 10, "name": "player search",    "desc": "GET /players?q= — DB-first over snapshots, VLR autocomplete fallback on a miss (cached)", "shipped": True},
     {"n": 11, "name": "live auto-refresh", "desc": "30s job re-scrapes live match detail + status-aware short TTL; page polls while live", "shipped": True},
     {"n": 12, "name": "stats leaderboard", "desc": "HLTV-style player rankings — VLR R2.0 headline; 6h scheduled scrape of na/eu × 4 windows into cache; GET /stats", "shipped": True},
+    {"n": 13, "name": "dimension-split rating", "desc": "Firepower/Entry/Consistency/Clutch as 0-100 cohort percentiles; GET /players/{id}/dimensions; radar + bars on player page", "shipped": True},
 ]
 
 # History tables surfaced on the status page, in display order.

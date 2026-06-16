@@ -354,6 +354,22 @@ export interface StatLeader {
   fd: number | null;
 }
 
+// ---- dimension-split rating (Phase 13) ------------------------------------
+// Four dimensions — Firepower / Entry / Consistency / Clutch — computed as
+// 0-100 cohort percentiles over the same leaderboard /stats uses. Supplements
+// R2.0 (never replaces it). low_confidence flags mark dimensions with thin data.
+
+export interface PlayerDimensions {
+  playerId: string | null;
+  region: string | null;   // "na" | "eu"
+  timespan: string | null;
+  firepower: number | null;    // 0-100 percentile
+  entry: number | null;
+  consistency: number | null;
+  clutch: number | null;
+  lowConfidence: string[]; // "clutch" | "all"
+}
+
 // ---- featured streamers (Twitch Helix, server-side only) -------------------
 // The project's first EXTERNAL API integration. The client secret never reaches
 // the browser — all Twitch calls happen server-side in @/lib/twitch. A

@@ -3,9 +3,9 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 12 / 12
-- **Tests passing:** 145
-- **Commit:** 9ee985b
+- **Phases shipped:** 13 / 13
+- **Tests passing:** 169 backend + 164 frontend
+- **Commit:** phase13
 
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
 
@@ -53,6 +53,48 @@ deferred vlr-api gaps logged in the frontend slices below.
 - [x] **Phase 10 — player search** — `GET /players?q=` hybrid: DB-first over `PlayerSnapshot` (clean read), VLR autocomplete fallback only on a DB miss (cached like the detail endpoints); self-healing as Phase 9 banks more
 - [x] **Phase 11 — live match auto-refresh** — 30s scheduler job re-scrapes each LIVE match's detail + status-aware short cache TTL (live=30s, completed=10m); the match page polls `/api/match/[id]` while live so scores/stats/timeline update without a reload
 - [x] **Phase 12 — stats leaderboard** — HLTV-style region-wide player rankings led by VLR's OWN R2.0 rating (no composite computed); 6h scheduler job warms na/eu × 30d/60d/90d/all into cache; `GET /stats` reads cache-only and returns the `{data, stale, error}` envelope; frontend `/stats` island with region/timespan toggles + numeric-safe sortable columns
+- [x] **Phase 13 — dimension-split rating** — four-dimension breakdown (Firepower/Entry/Consistency/Clutch) as 0-100 cohort percentiles; `GET /players/{id}/dimensions?region=&timespan=`; radar chart + labeled bars on player detail page; low-confidence flags; `app/ratings/dimensions.py` pure compute module
+
+## Phase 13 — dimension-split rating (Firepower/Entry/Consistency/Clutch)
+
+A four-dimension player rating breakdown computed as 0-100 cohort percentiles.
+Supplements R2.0 — R2.0 stays the headline; this adds CONTEXT to it. No new
+scraping, no new selectors. Computes over stats we already have from /stats.
+
+- [x] **`app/ratings/dimensions.py`** — pure `compute_dimensions(player_stats, cohort) -> dict`
+  with a `pctile(value, all_values) -> 0-100` helper (strict-below formula;
+  min→0, max→100, median→50, None→0, <2 cohort→50). Derived stats: `fk_fd_ratio`,
+  `fk_share`, `clutch_vol_adj` computed per-player AND across the full cohort.
+  FDPR inverted in CONSISTENCY (fewer first-deaths = better). Weights LOCKED:
+  `FIREPOWER = 0.40*acs + 0.25*kpr + 0.20*kd + 0.15*kmax`;
+  `ENTRY = 0.45*fk_fd + 0.30*fkpr + 0.25*fk_share`;
+  `CONSISTENCY = 0.55*kast + 0.25*apr + 0.20*(100-fdpr)`;
+  `CLUTCH = 0.40*clutch_pct + 0.35*vol_adj + 0.25*kd`.
+  Low-confidence flags: `"clutch"` if `cl_played < 5`; `"all"` if `rnd < 100`.
+- [x] **`GET /players/{id}/dimensions?region=&timespan=`** — reads the cached
+  cohort (cold-miss → single-combo refresh, same as /stats); finds the player by
+  `player_id`; returns `{player_id, region, timespan, firepower, entry, consistency,
+  clutch, low_confidence}`. 404 when player not in that leaderboard. 400 on bad
+  region/timespan. No scraping inline.
+- [x] **Frontend: `RatingBreakdown.tsx`** — four-axis radar (diamond SVG; Firepower
+  top, Entry right, Consistency bottom, Clutch left; grid at 25/50/75/100%;
+  teal accent fill); four labeled bars "FIREPOWER — 94th in NA" (ordinal
+  formatting: 1st/2nd/3rd/4th…); low-confidence dimensions faded (opacity-50) +
+  asterisk + `title="Limited sample — low confidence"`. Component returns `null`
+  when no dims available (player not on any leaderboard → hidden, never an error).
+- [x] **Player detail page** — `getPlayerDimensions(id)` tries `na` then `eu`
+  (player appears in exactly one regional leaderboard); fetched in parallel with
+  `getPlayer`+`getPlayerTrend`; `<RatingBreakdown dims={dims} />` inserted between
+  `PlayerCard` and `PlayerStatsPanel`.
+- [x] **Tests**: backend `tests/test_dimensions.py` (**+24**, 145→169): pctile
+  invariants (min/max/median/none/singleton), None exclusion from denominator, all
+  four dimension formulas hand-computed against the stats fixture cohort, FDPR
+  inversion, all six low-confidence threshold tests, null-stats never-NaN,
+  missing-stat safe, invariant (top-R2.0 TenZ scores >70 on ≥2 dims), route 400/
+  404 + happy-path shape. Frontend `player.test.ts` (**+5**, 159→164): card
+  renders with all four labels, ordinal bar format ("75th in NA"), low-confidence
+  asterisk + tooltip, no card when not on leaderboard, normalizePlayerDimensions
+  mapping.
 
 ## Phase 12 — stats leaderboard (HLTV-style player rankings)
 

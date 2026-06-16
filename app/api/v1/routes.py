@@ -11,6 +11,7 @@ from app.core.http import VlrNotFound
 from app.core.db import SessionLocal
 from app.jobs import scheduler as sched_mod
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
+from app.ratings.dimensions import compute_dimensions
 from app.services import refresh as R
 from app.services import search as SR
 from app.services import trends as T
@@ -110,6 +111,46 @@ async def events():
 @router.get("/news")
 async def news():
     return await _cached_or_refresh(R.CACHE_NEWS, R.refresh_news)
+
+
+# ---- dimension-split rating (Phase 13: pure percentile computation over cohort) ----
+@router.get("/players/{player_id}/dimensions")
+async def player_dimensions(
+    player_id: str,
+    region: str = Query("na"),
+    timespan: str = Query("all"),
+):
+    """Four-dimension rating breakdown (Firepower/Entry/Consistency/Clutch) as
+    0-100 cohort percentiles over the same region+timespan leaderboard /stats uses.
+    Never scrapes inline — reads the cached cohort (single-combo refresh on a cold
+    miss, exactly like /stats). Returns 404 when the player isn't in that cohort."""
+    region = region.lower()
+    if region not in R.STATS_REGIONS:
+        raise HTTPException(400, f"region must be one of {list(R.STATS_REGIONS)}")
+    if timespan not in R.STATS_TIMESPANS:
+        raise HTTPException(400, f"timespan must be one of {list(R.STATS_TIMESPANS)}")
+
+    key = R.CACHE_STATS.format(region=region, timespan=timespan)
+    cohort = await cache_get(key)
+    if cohort is None:
+        try:
+            await R.refresh_stats(region, timespan)
+            cohort = await cache_get(key)
+        except Exception as exc:
+            raise HTTPException(503, f"cohort unavailable: {exc}")
+    if not cohort:
+        raise HTTPException(503, "cohort unavailable")
+
+    player_row = next(
+        (r for r in cohort if str(r.get("player_id")) == str(player_id)), None
+    )
+    if player_row is None:
+        raise HTTPException(
+            404, f"player {player_id} not found in {region}/{timespan} leaderboard"
+        )
+
+    dims = compute_dimensions(player_row, cohort)
+    return {"player_id": player_id, "region": region, "timespan": timespan, **dims}
 
 
 # ---- player search (DB-first; VLR autocomplete only on a DB miss, cached) -----

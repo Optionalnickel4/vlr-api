@@ -23,6 +23,7 @@ import type {
   MatchTeam,
   NewsArticle,
   PlayerDetail,
+  PlayerDimensions,
   PlayerMatch,
   PlayerOverall,
   PlayerSearchResult,
@@ -801,6 +802,45 @@ export const getPlayerTrend = (id: string, days = 90) =>
     `/trends/player/${encodeURIComponent(id)}?days=${days}`,
     normalizePlayerTrend,
   );
+
+// ---- dimension-split rating (Phase 13) -------------------------------------
+
+/** Normalize one dimensions response object into the typed shape. */
+export function normalizePlayerDimensions(raw: unknown): PlayerDimensions[] {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return [];
+  const d = raw as Record<string, unknown>;
+  return [
+    {
+      playerId: str(d.player_id),
+      region: str(d.region),
+      timespan: str(d.timespan),
+      firepower: parseNumeric(d.firepower),
+      entry: parseNumeric(d.entry),
+      consistency: parseNumeric(d.consistency),
+      clutch: parseNumeric(d.clutch),
+      lowConfidence: Array.isArray(d.low_confidence)
+        ? (d.low_confidence as unknown[]).map(String).filter(Boolean)
+        : [],
+    },
+  ];
+}
+
+/** Fetch dimension scores for a player. Tries NA first, then EU, so a player
+ *  is found regardless of which regional leaderboard they appear on. Returns
+ *  a graceful-empty envelope when the player isn't on any leaderboard. */
+export async function getPlayerDimensions(
+  id: string,
+  timespan = "all",
+): Promise<ApiResponse<PlayerDimensions>> {
+  for (const region of ["na", "eu"] as const) {
+    const result = await load<PlayerDimensions>(
+      `/players/${encodeURIComponent(id)}/dimensions?region=${region}&timespan=${timespan}`,
+      normalizePlayerDimensions,
+    );
+    if (result.data.length > 0) return result;
+  }
+  return { data: [], stale: false };
+}
 
 // /match/{id} 404s upstream for ids vlr.gg has no page for (clean 404 from the
 // Phase 7 endpoint) — load()'s catch turns that into { data: [], stale, error }.
