@@ -85,3 +85,35 @@ class TeamSnapshot(Base):
     captured_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_now, index=True
     )
+
+
+class Cs2MatchResult(Base):
+    """A completed CS2 (HLTV) match, captured once. Dedup on hltv match id.
+
+    Parallel to MatchResult but for the CS2 source. Tablename is
+    `cs2_match_results` so it's clearly separable in psql / metrics dashboards
+    from the VLR `match_results` table. Columns mirror VLR where the semantics
+    overlap (team_a, team_b, score_a, score_b, event, url) and add CS2-specific
+    fields where the markup gave us extras (format, stars, unix_ms).
+    """
+
+    __tablename__ = "cs2_match_results"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    hltv_id: Mapped[str] = mapped_column(String(32), unique=True, index=True)
+    team_a: Mapped[str | None] = mapped_column(String(128))
+    team_b: Mapped[str | None] = mapped_column(String(128))
+    score_a: Mapped[int | None] = mapped_column(Integer)
+    score_b: Mapped[int | None] = mapped_column(Integer)
+    winner: Mapped[str | None] = mapped_column(String(8))  # "team_a" | "team_b"
+    event: Mapped[str | None] = mapped_column(String(256))
+    format: Mapped[str | None] = mapped_column(String(8))  # "bo1" | "bo3" | "bo5"
+    stars: Mapped[int | None] = mapped_column(Integer)  # HLTV importance 0-5
+    match_slug: Mapped[str | None] = mapped_column(String(256))
+    url: Mapped[str | None] = mapped_column(Text)
+    unix_ms: Mapped[int | None] = mapped_column(
+        Integer, index=True
+    )  # match start time, ms since epoch
+    captured_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_now, index=True
+    )

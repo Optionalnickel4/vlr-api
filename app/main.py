@@ -5,6 +5,7 @@ from fastapi import FastAPI
 
 from app.api.status_html import router as status_html_router
 from app.api.v1.routes import router as v1_router
+from app.api.v1.routes_cs2 import router as v1_cs2_router
 from app.core.config import get_settings
 from app.core.db import init_db
 from app.jobs.scheduler import build_scheduler
@@ -28,6 +29,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="vlr-api", version="0.1.0", lifespan=lifespan)
 app.include_router(v1_router, prefix=settings.api_prefix)
+app.include_router(v1_cs2_router, prefix=settings.api_prefix)
 # status dashboard HTML at the root (no api prefix): GET / and GET /status
 app.include_router(status_html_router)
 
