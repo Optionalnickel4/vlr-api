@@ -182,3 +182,176 @@ async def fetch_results() -> list[dict[str, Any]]:
     client = get_client()
     resp = await client.get("/results")
     return parse_results(resp.text)
+
+
+# --- /matches (upcoming + live) parser ---------------------------------------
+#
+# Output shape for parse_upcoming (locked by tests/cs2/test_upcoming.py):
+#
+#     {
+#         "id":          int,        # data-match-id on the wrapper
+#         "url":         str,        # href of a.match-info
+#         "match_slug":  str,        # trailing slug after the ID
+#         "team_a":      str,        # first div.match-teamname
+#         "team_b":      str,        # second div.match-teamname
+#         "team_a_id":   str,        # team1 attribute on the wrapper
+#         "team_b_id":   str,        # team2 attribute on the wrapper
+#         "format":      "bo1" | "bo3" | "bo5",   # div.match-meta text
+#         "stars":       int,        # data-stars on the wrapper (0-5)
+#         "stage":       str,        # div.match-stage text ("Semifinal", etc.)
+#         "region":      str,        # data-region on the wrapper ("Europe", etc.)
+#         "event_type":  str,        # data-eventtype ("ranked" | "lan" | "online")
+#         "event_id":    int | None, # data-event-id (cross-ref to events.py)
+#         "unix_ms":     int | None, # data-unix on div.match-time
+#         "live":        bool,       # `live` attribute == "true" on the wrapper
+#     }
+
+
+def _id_and_slug_from_match_href(href: str) -> tuple[Optional[int], str]:
+    """HLTV match hrefs: /matches/2395347/chicken-coop-vs-overtake-sector-...
+
+    Returns (id, slug). id is None if the href doesn't match the shape.
+    Used by both parse_upcoming (href on a.match-info) and parse_match_detail.
+    """
+    href = href or ""
+    if not href.startswith("/matches/"):
+        return None, ""
+    parts = href.strip("/").split("/")
+    if len(parts) < 2 or not parts[1].isdigit():
+        return None, ""
+    return int(parts[1]), "/".join(parts[2:])
+
+
+def _parse_upcoming_match(wrapper: Node) -> Optional[dict[str, Any]]:
+    """Parse a single <div class="match-wrapper"> block."""
+    match_id_raw = (wrapper.attributes.get("data-match-id", "") or "").strip()
+    if not match_id_raw.isdigit():
+        return None
+    match_id = int(match_id_raw)
+
+    # Time/format anchor: a.match-info. The href here is the canonical /matches/{id}/{slug}.
+    info_anchor = wrapper.css_first(S.UPCOMING_TIME_ANCHOR)
+    if info_anchor is None:
+        return None
+    href = info_anchor.attributes.get("href", "") or ""
+    parsed_id, slug = _id_and_slug_from_match_href(href)
+    if parsed_id is None:
+        return None
+    # The data-match-id is the authoritative source; trust it if the href disagrees.
+    if parsed_id != match_id:
+        slug = slug  # keep the slug from href even if id parsing fell back
+
+    # Time: data-unix on div.match-time. Some matches (esp. live ones) lack it.
+    time_node = info_anchor.css_first(S.UPCOMING_TIME)
+    unix_ms_raw = ""
+    if time_node is not None:
+        unix_ms_raw = (time_node.attributes.get("data-unix", "") or "").strip()
+    unix_ms = _coerce_int(unix_ms_raw)
+
+    # Format: text content of div.match-meta.
+    fmt = _clean_spaces(_text(info_anchor.css_first(S.UPCOMING_FORMAT)))
+
+    # Teams: a.match-teams with two div.match-teamname children in document order.
+    teams_anchor = wrapper.css_first(S.UPCOMING_TEAMS_ANCHOR)
+    if teams_anchor is None:
+        return None
+    team_names = teams_anchor.css(S.UPCOMING_TEAM_NAME)
+    if len(team_names) < 2:
+        return None
+    team_a = _text(team_names[0])
+    team_b = _text(team_names[1])
+    if not team_a or not team_b:
+        return None
+
+    # Stars: data-stars attribute (already an int on the wrapper).
+    stars_raw = (wrapper.attributes.get("data-stars", "") or "").strip()
+    stars = _coerce_int(stars_raw) or 0
+
+    # Region + event_type + event_id from wrapper attributes.
+    region = (wrapper.attributes.get("data-region", "") or "").strip()
+    event_type = (wrapper.attributes.get("data-eventtype", "") or "").strip()
+    event_id_raw = (wrapper.attributes.get("data-event-id", "") or "").strip()
+    event_id = _coerce_int(event_id_raw)
+
+    # Stage: optional div.match-stage (semifinal, group stage, etc.).
+    stage = _clean_spaces(_text(wrapper.css_first(S.UPCOMING_STAGE)))
+
+    # Team IDs from the wrapper attributes (used by the frontend to link to
+    # the team profile route).
+    team_a_id = (wrapper.attributes.get("team1", "") or "").strip()
+    team_b_id = (wrapper.attributes.get("team2", "") or "").strip()
+
+    # Live marker: the `live` attribute on the wrapper. The only reliable
+    # signal in the markup. Captures to False when no matches are live (the
+    # captured fixture has 0 live="true" wrappers; live matches get rendered
+    # by the scorebot JS, not the /matches page directly).
+    live = (wrapper.attributes.get("live", "") or "").lower() == "true"
+
+    return {
+        "id": match_id,
+        "url": href,
+        "match_slug": slug,
+        "team_a": team_a,
+        "team_b": team_b,
+        "team_a_id": team_a_id,
+        "team_b_id": team_b_id,
+        "format": fmt,
+        "stars": stars,
+        "stage": stage,
+        "region": region,
+        "event_type": event_type,
+        "event_id": event_id,
+        "unix_ms": unix_ms,
+        "live": live,
+    }
+
+
+def parse_upcoming(html: str) -> list[dict[str, Any]]:
+    """Pure: HLTV /matches HTML -> list of upcoming-match dicts.
+
+    Robust against empty / non-HLTV input (returns []). Malformed individual
+    wrappers are skipped rather than raising — the parser returns a partial
+    list so a single markup glitch can't break the whole endpoint.
+
+    NB: HLTV's /matches page contains BOTH live and upcoming matches (the
+    live ones carry live="true" on the wrapper). Callers that want them
+    separated should use split_live_upcoming(). The /cs2/matches/live route
+    returns [] in v1 because HLTV renders live matches via the scorebot
+    websocket (data-scoreboturls on /live), not via static HTML on /matches.
+    See tests/cs2/test_upcoming.py::test_parse_upcoming_live_is_false_in_fixture.
+    """
+    if not html:
+        return []
+    tree = HTMLParser(html)
+    out: list[dict[str, Any]] = []
+    for wrapper in tree.css(S.UPCOMING_MATCH):
+        parsed = _parse_upcoming_match(wrapper)
+        if parsed is not None:
+            out.append(parsed)
+    return out
+
+
+def split_live_upcoming(matches: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """Route matches into live[] vs upcoming[] based on the `live` bool field.
+
+    Parallel to app.scrapers.matches.split_live_upcoming but for the CS2
+    schema. Kept as a separate function (not merged into parse_upcoming)
+    so a caller that wants the full list unfiltered can have it.
+    """
+    live = [m for m in matches if m.get("live") is True]
+    upcoming = [m for m in matches if not m.get("live")]
+    return {"live": live, "upcoming": upcoming}
+
+
+async def fetch_upcoming() -> dict[str, list[dict[str, Any]]]:
+    """Fetch /matches from HLTV and return {live, upcoming} split.
+
+    The /cs2/matches/live route reads `result["live"]`; if HLTV is rendering
+    live matches via scorebot (no static markup), this list is empty by design
+    and the frontend should surface "no live matches right now" rather than
+    a 200-with-data surprise.
+    """
+    from app.cs2.http import get_client
+    client = get_client()
+    resp = await client.get("/matches")
+    return split_live_upcoming(parse_upcoming(resp.text))

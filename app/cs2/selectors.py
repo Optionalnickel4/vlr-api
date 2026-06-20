@@ -105,23 +105,59 @@ RESULTS_FORMAT = "div.map.map-text"
 RESULTS_STARS_CONTAINER = "div.stars"
 RESULTS_STAR = "i.star"
 
-# --- /matches page (upcoming matches) — DISCOVERED BUT NOT YET PARSED ---
+# --- /matches page (upcoming matches) — DISCOVERED 2026-06-20 ---
 
-# Discovered structure (Phase B only parses /results; /matches parser is
-# Phase B-2):
-#   div.match-zone-wrapper[data-zonedgrouping-entry-unix="..."]
-#     div.match-wrapper[data-match-id][data-stars][data-match-link]
-#       a[href^="/matches/"] containing:
-#         div.team (two, ordered)
-#         div.match-time[data-unix][data-time-format]
-#         div.match-meta (format like "bo3")
-#         span.event-name (from a sibling plausible-event-name anchor)
+# Outer wrapper per day-group (data-zonedgrouping-entry-unix is the day start).
+# We don't use this for splitting today/tomorrow; we just read the timestamp
+# to backfill matches that lack a per-match unix attribute.
 UPCOMING_ZONE = "div.match-zone-wrapper"
+
+# Each individual match. The data-* attributes are HLTV's source of truth:
+#   data-match-id  : int, the canonical HLTV match id
+#   data-stars     : int 0-5, HLTV importance rating
+#   data-event-id  : int, the event this match belongs to (cross-reference to events.py)
+#   data-region    : "Europe" | "North America" | "South America" | "Asia" | "Oceania" | etc.
+#   data-eventtype : "ranked" | "lan" | "online"
+#   live           : "true" | "false" — the only reliable live-marker we found
+#                    (per-wrapper; there were 0 with live="true" in the snapshot
+#                    because no matches were live at capture time)
+#   team1, team2   : HLTV team IDs (string). Useful for cross-referencing the
+#                    team profile route.
 UPCOMING_MATCH = "div.match-wrapper"
+# Live marker is the `live` attribute on the wrapper, NOT a CSS class. The
+# parser reads it via attribute lookup, not via this CSS selector. We keep
+# the constant as documentation of where the value lives.
+UPCOMING_LIVE_ATTR = "live"
+
+# Two anchors per match:
+#   - the time/meta anchor (class="match-info a-reset") carries time + format
+#   - the teams anchor (class="match-teams a-reset") carries the two team names
+# We use a single href selector and read both anchors via position.
+UPCOMING_TIME_ANCHOR = "a.match-info"
+UPCOMING_TEAMS_ANCHOR = "a.match-teams"
+# Fallback selector if the classes change: any anchor whose href starts with /matches/.
+# We prefer the class-based selectors above (more specific) and fall back to this.
 UPCOMING_MATCH_LINK = "a[href^='/matches/']"
-UPCOMING_TIME = "div.match-time"
-UPCOMING_FORMAT = "div.match-meta"
+
+# Inside the time/meta anchor:
+UPCOMING_TIME = "div.match-time"  # data-unix (ms), data-time-format ("HH:mm")
+UPCOMING_FORMAT = "div.match-meta"  # text content is "bo1" | "bo3" | "bo5"
+
+# Inside the teams anchor:
+UPCOMING_TEAM_NAME = "div.match-teamname"
+UPCOMING_TEAM_CELL = "div.match-team"
+
+# Event: each match has an event link elsewhere in its zone-group with an
+# <img alt="..."> whose alt is the event name. We don't link per-match (the
+# HLTV markup doesn't carry it on every match-wrapper), so we expose the
+# event_id from data-event-id and let the frontend cross-reference via the
+# events cache. v2 can join per-match event names once HLTV exposes them
+# on every wrapper.
+UPCOMING_STAGE = "div.match-stage"  # "Semifinal", "Group A Winners' Match", etc.
 
 # --- shared (both pages) ---
 # /matches/{id} canonical page for a single match — used to build absolute URLs.
+# IMPORTANT: HLTV returns 404 for /matches/{id} alone; the slug is REQUIRED.
+# See fixtures/match_2395001.html — the working URL was
+# /matches/2395001/spirit-vs-falcons-iem-cologne-major-2026
 MATCH_PATH_PREFIX = "/matches/"

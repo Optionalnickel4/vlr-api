@@ -90,3 +90,29 @@ async def refresh_results() -> int:
             await session.commit()
     log.info("cs2.refresh.results: %d rows (HLTV), %d upserted", len(data), len(rows))
     return len(data)
+
+
+async def refresh_upcoming() -> dict[str, int]:
+    """Scrape HLTV /matches, split into live + upcoming, cache both.
+
+    Returns {"live": N, "upcoming": M} so the scheduler can log both counts
+    in one shot. We cache upcoming with a short TTL (60s) — it changes fast
+    as matches move from upcoming -> live -> completed — and live with an
+    even shorter TTL (30s) when HLTV is actually rendering live matches via
+    the static markup path. Today the live list is always empty (HLTV renders
+    live via scorebot JS, not /matches HTML), but the cache key is wired so
+    v2's scorebot integration has a drop-in cache layer.
+
+    NOTE: this does NOT write to cs2_match_results. Upcoming matches aren't
+    completed yet — they only land in the history table once /results picks
+    them up after the match finishes.
+    """
+    data = await cs2_matches.fetch_upcoming()
+    await cache_set(CACHE_UPCOMING, data["upcoming"], 60)
+    await cache_set(CACHE_LIVE, data["live"], 30)
+    log.info(
+        "cs2.refresh.upcoming: %d upcoming + %d live",
+        len(data["upcoming"]),
+        len(data["live"]),
+    )
+    return {"live": len(data["live"]), "upcoming": len(data["upcoming"])}

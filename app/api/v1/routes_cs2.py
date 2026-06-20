@@ -59,3 +59,35 @@ async def results():
     full schema). Empty list when the scheduler hasn't populated yet.
     """
     return await _cached_or_refresh(R.CACHE_RESULTS, R.refresh_results)
+
+
+@router.get("/matches/upcoming")
+async def upcoming():
+    """Upcoming CS2 matches from HLTV /matches.
+
+    Same dict shape as parse_upcoming. Filters out matches where live=True
+    so this endpoint only surfaces future / unscheduled ones. The frontend
+    reads /matches/upcoming for the "upcoming" tab and /matches/live for
+    the live tab (the latter is always empty in v1 — see live endpoint).
+    """
+    # refresh_upcoming populates BOTH CACHE_UPCOMING and CACHE_LIVE; we read
+    # only CACHE_UPCOMING here. A future optimization could read both lists
+    # in one refresh and avoid the second cache key, but v1 keeps the split
+    # so the live cache has its own TTL (30s vs 60s).
+    return await _cached_or_refresh(R.CACHE_UPCOMING, R.refresh_upcoming)
+
+
+@router.get("/matches/live")
+async def live():
+    """Live CS2 matches from HLTV.
+
+    Returns [] in v1. HLTV renders live matches via the scorebot websocket
+    on /live (data-scoreboturls on the live page), not via static HTML on
+    /matches. The /matches live="true" attribute is the only static-marker
+    we found, and it didn't carry any matches at our capture time. v2
+    wires the scorebot websocket so this endpoint returns real data.
+
+    The endpoint exists now so the frontend can wire to it without churn;
+    it's just always empty.
+    """
+    return await _cached_or_refresh(R.CACHE_LIVE, R.refresh_upcoming)

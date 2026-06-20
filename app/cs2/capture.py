@@ -38,8 +38,18 @@ async def main(results_only: bool) -> int:
     FIXTURES.mkdir(parents=True, exist_ok=True)
     paths = ["/results"]
     if not results_only:
-        # Phase C additions; left here as a TODO so the script grows naturally.
-        paths.extend(["/matches", "/rankings", "/events", "/news"])
+        # Phase B-2 + C additions; left here as a TODO so the script grows naturally.
+        paths.extend(
+            [
+                "/matches",                # upcoming + live
+                "/ranking/teams",          # world rankings (regional not available in v1)
+                "/events",                 # events list
+                "/news/archive",           # news
+                # Match detail + team profile + player profile are captured by the
+                # entity-specific tests rather than the bulk capture (they need a
+                # real ID + slug pair).
+            ]
+        )
     failures = 0
     for path in paths:
         try:
