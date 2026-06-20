@@ -41,6 +41,13 @@ CACHE_STATS = "vlr:stats:{region}:{timespan}"
 STATS_REGIONS = ("na", "eu")
 STATS_TIMESPANS = ("30d", "60d", "90d", "all")
 
+# /rankings allowed regions. "all" is the world view; the rest are the
+# regional slugs vlr.gg actually serves. The route validates against this to
+# prevent the 6h scheduled job from looping over a bogus value forever.
+RANKINGS_REGIONS = ("all", "na", "eu", "north-america", "emea", "brazil",
+                    "asia-pacific", "korea", "japan", "latin-america", "oceania",
+                    "mena", "china", "collegiate")
+
 
 async def refresh_results() -> int:
     s = get_settings()
