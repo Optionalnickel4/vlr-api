@@ -91,3 +91,14 @@ def get_client() -> VlrClient:
     if _client is None:
         _client = VlrClient()
     return _client
+
+
+async def close_client() -> None:
+    """Close the lazy httpx pool. Safe to call when no client was ever created.
+    Called from the FastAPI lifespan on shutdown + the standalone scheduler."""
+    global _client
+    if _client is not None:
+        try:
+            await _client.aclose()
+        finally:
+            _client = None
