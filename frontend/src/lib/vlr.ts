@@ -827,19 +827,23 @@ export function normalizePlayerDimensions(raw: unknown): PlayerDimensions[] {
 
 /** Fetch dimension scores for a player. Tries NA first, then EU, so a player
  *  is found regardless of which regional leaderboard they appear on. Returns
- *  a graceful-empty envelope when the player isn't on any leaderboard. */
+ *  a graceful-empty envelope when the player isn't on any leaderboard; marks
+ *  the envelope stale if EITHER region call failed (so the radar panel can
+ *  render the 'degraded' state when both lookups fail). */
 export async function getPlayerDimensions(
   id: string,
   timespan = "all",
 ): Promise<ApiResponse<PlayerDimensions>> {
+  let stale = false;
   for (const region of ["na", "eu"] as const) {
     const result = await load<PlayerDimensions>(
       `/players/${encodeURIComponent(id)}/dimensions?region=${region}&timespan=${timespan}`,
       normalizePlayerDimensions,
     );
     if (result.data.length > 0) return result;
+    if (result.stale) stale = true;
   }
-  return { data: [], stale: false };
+  return { data: [], stale };
 }
 
 // /match/{id} 404s upstream for ids vlr.gg has no page for (clean 404 from the
