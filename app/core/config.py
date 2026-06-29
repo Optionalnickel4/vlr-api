@@ -17,6 +17,7 @@ class Settings(BaseSettings):
 
     # redis
     redis_url: str = "redis://localhost:***@localhost:5432/vlr"
+    database_url: str = ""
 
     # cache TTLs (seconds)
     ttl_live: int = 30
