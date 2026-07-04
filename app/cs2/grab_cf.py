@@ -76,8 +76,13 @@ async def _grab() -> tuple[str, str]:
 
     s = get_hltv_settings()
     # headless=False is deliberate — see module docstring ("Why not headless").
-    # Run this script under xvfb-run so a real display isn't required.
-    browser = await uc.start(headless=False)
+    # sandbox=False is required in most containers/LXCs regardless of which user
+    # launches Chromium — nodriver auto-disables the sandbox when IT detects
+    # root, but that check doesn't fire when running under `sudo -u vlr` (a
+    # non-root user), and LXC containers typically lack the SUID sandbox helper
+    # binary either way. Without this, Chromium fails to launch at all with
+    # "Failed to connect to browser".
+    browser = await uc.start(headless=False, sandbox=False)
     try:
         tab = await browser.get(s.base_url)
 
