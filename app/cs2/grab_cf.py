@@ -11,10 +11,18 @@ issued plus the exact User-Agent that earned it.
 
 Requires:
     - A system Chromium/Chrome binary (apt install chromium)
+    - A virtual display, since this runs NOT headless (apt install xvfb) — see below
     - The scrape-browser extra: pip install -e '.[scrape-browser]'
 
-Usage:
-    python -m app.cs2.grab_cf
+Usage (note xvfb-run — see "Why not headless" below):
+    xvfb-run -a python -m app.cs2.grab_cf
+
+Why not headless: Cloudflare's challenge fingerprints headless Chromium directly
+(separately from the TLS/UA checks cloudscraper already handles) and will loop
+the challenge forever rather than clear it. Real ("headed") Chromium clears it
+in a few seconds. On a container/LXC with no X server, `xvfb-run` gives Chromium
+a virtual display to render into so "headed" mode still works without a real
+monitor attached.
 
 This OVERWRITES the HLTV_CF_CLEARANCE and HLTV_USER_AGENT lines in .env (adds
 them if missing). Restart whatever's using HltvSettings (the API process
@@ -67,23 +75,28 @@ async def _grab() -> tuple[str, str]:
     from app.core.config import get_hltv_settings
 
     s = get_hltv_settings()
-    browser = await uc.start(headless=True)
+    # headless=False is deliberate — see module docstring ("Why not headless").
+    # Run this script under xvfb-run so a real display isn't required.
+    browser = await uc.start(headless=False)
     try:
         tab = await browser.get(s.base_url)
 
         # Poll for the challenge to clear. HLTV's JS challenge normally resolves
-        # in a few seconds; we give it generous headroom and fail loudly if it
-        # doesn't (rather than silently capturing a still-challenged cookie).
+        # in a few seconds in headed mode; we give it generous headroom and fail
+        # loudly if it doesn't (rather than silently capturing a still-challenged
+        # cookie).
         cleared = False
+        last_html = ""
         for _ in range(30):
-            html = await tab.get_content()
-            if not any(marker in html.lower() for marker in CHALLENGE_MARKERS):
+            last_html = await tab.get_content()
+            if not any(marker in last_html.lower() for marker in CHALLENGE_MARKERS):
                 cleared = True
                 break
             await asyncio.sleep(1)
 
         if not cleared:
             print("FAIL: challenge did not clear after 30s.", file=sys.stderr)
+            print(f"Last page content (first 500 chars):\n{last_html[:500]}", file=sys.stderr)
             sys.exit(1)
 
         cookies = await browser.cookies.get_all()
@@ -92,10 +105,11 @@ async def _grab() -> tuple[str, str]:
             print("FAIL: page cleared but no cf_clearance cookie was set.", file=sys.stderr)
             sys.exit(1)
 
-        user_agent = await tab.evaluate("navigator.userAgent")
+        user_agent = await tab.evaluate("navigator.userAgent", return_by_value=True)
         return cf_cookie.value, user_agent
     finally:
-        await browser.stop()
+        # Browser.stop() is synchronous in nodriver — do NOT await it.
+        browser.stop()
 
 
 def main() -> None:
