@@ -69,6 +69,17 @@ class Cs2HttpClient:
         self._max_retries = s.max_retries
         self._lock = asyncio.Lock()
         self._last_request_at = 0.0
+        # If grab_cf.py has captured a live cf_clearance cookie, ride it along on
+        # every request. cloudscraper's TLS fingerprint alone stopped being enough
+        # (confirmed 2026-07, HLTV started serving the JS challenge to the sandbox/
+        # claude-dev egress); the cookie is what actually gets past it. The cookie
+        # is bound to the UA that solved the challenge, so we don't override self._ua
+        # separately — HLTV_USER_AGENT and HLTV_CF_CLEARANCE are written together by
+        # grab_cf.py and must be kept in sync.
+        if s.cf_clearance:
+            host = self._base.split("://", 1)[-1].split("/", 1)[0]
+            domain = "." + host if not host.startswith(".") else host
+            self._scraper.cookies.set("cf_clearance", s.cf_clearance, domain=domain)
 
     async def _throttle(self) -> None:
         async with self._lock:

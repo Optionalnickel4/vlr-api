@@ -22,6 +22,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3", "pytest-asyncio>=0.24", "anyio>=4.6"]
+# Only needed to run app/cs2/grab_cf.py (the manual cf_clearance refresh script).
+# Not a runtime dependency of the API/scheduler — cloudscraper alone is enough
+# once a valid cookie is on hand. Requires a system Chromium/Chrome binary.
+scrape-browser = ["nodriver>=0.36"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

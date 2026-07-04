@@ -66,6 +66,15 @@ class HltvSettings(BaseSettings):
     request_timeout: float = 30.0
     max_retries: int = 3
 
+    # cf_clearance cookie captured by app/cs2/grab_cf.py (nodriver solves HLTV's
+    # JS challenge once; this is the resulting token). Empty string = not set,
+    # Cs2HttpClient falls back to cloudscraper's TLS-only bypass (v1 behavior).
+    # This is tied to the browser fingerprint that earned it — grab_cf.py writes
+    # BOTH this and user_agent together so they stay in sync. Short-lived
+    # (observed ~hours, not days); re-run grab_cf.py and restart the process
+    # (API and/or hltv-scheduler) when requests start throwing CloudflareChallengeError.
+    cf_clearance: str = ""
+
 
 @lru_cache
 def get_settings() -> Settings:
