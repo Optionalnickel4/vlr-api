@@ -39,9 +39,13 @@ _PCT = "pct"
 
 # header label (verbatim as vlr prints it) -> (output key, coercion kind).
 # Player / Agents / CL are handled specially below, not through this map.
+# vlr's 2026 stats-page rewrite shortened two header labels ("R2.0" -> "R",
+# "KMax" -> "KMAX"); both spellings are mapped so old fixtures and live markup
+# coerce identically.
 _COLUMN_MAP: dict[str, tuple[str, str]] = {
     "Rnd": ("rnd", _NUM),
     "R2.0": ("r2", _NUM),
+    "R": ("r2", _NUM),
     "ACS": ("acs", _NUM),
     "K:D": ("kd", _NUM),
     "KAST": ("kast", _PCT),
@@ -53,6 +57,7 @@ _COLUMN_MAP: dict[str, tuple[str, str]] = {
     "HS%": ("hs", _PCT),
     "CL%": ("clutch_pct", _PCT),
     "KMax": ("kmax", _NUM),
+    "KMAX": ("kmax", _NUM),
     "K": ("k", _NUM),
     "D": ("d", _NUM),
     "A": ("a", _NUM),

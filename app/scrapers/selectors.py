@@ -99,7 +99,10 @@ PLAYER_SELF_LINK = "a.player-stats-filter-btn"
 PLAYER_TEAM = 'a.wf-module-item[href^="/team/"]'
 PLAYER_TEAM_NAME = 'div[style*="font-weight: 500"]'
 # per-agent stats table (header titles drive the stat keys, agent name = img alt)
-PLAYER_STATS_TABLE = "div.wf-card.mod-table table.wf-table"
+# vlr's 2026 stats-page rewrite dropped the `mod-table` container class and renamed
+# the table class wf-table -> st-table; the old shape is kept as a fallback since
+# tests/fixtures/player_tenz.html still captures the pre-rewrite markup.
+PLAYER_STATS_TABLE = "div.wf-card.mod-dark table.st-table, div.wf-card.mod-table table.wf-table"
 PLAYER_STATS_HEADER = "thead th"
 PLAYER_STATS_ROW = "tbody tr"
 PLAYER_STATS_CELL = "td"
@@ -183,12 +186,16 @@ MATCH_STREAM_EXTERNAL = "a.match-streams-btn-external"  # href fallback: twitch.
 MATCH_STREAM_TWITCH_HOST = "twitch.tv"  # host guard for the external-href fallback
 
 # --- stats leaderboard page (/stats?region={na|eu}&timespan={30d|60d|90d|all}) ---
-# (Phase 12) VLR's region-wide player leaderboard — ONE wf-table. Header titles
+# (Phase 12) VLR's region-wide player leaderboard — ONE table. Header titles
 # drive the stat keys (like the player-page agent table) so a new vlr column just
 # falls through. Confirmed columns (recon): Player, Agents, Rnd, R2.0, ACS, K:D,
 # KAST, ADR, KPR, APR, FKPR, FDPR, HS%, CL%, CL, KMax, K, D, A, FK, FD. R2.0 is
 # VLR's own rating at 100% fill — the headline (we never compute a composite).
-STATS_TABLE = "table.wf-table"
+# vlr's 2026 stats-page rewrite renamed the table class wf-table -> st-table (and
+# also shortened header labels: "R2.0" -> "R", "KMax" -> "KMAX" — handled in
+# stats.py's _COLUMN_MAP, which accepts both spellings). The old class is kept as
+# a fallback since tests/fixtures/stats_na.html still captures pre-rewrite markup.
+STATS_TABLE = "table.st-table, table.wf-table"
 STATS_HEADER = "thead th"
 STATS_ROW = "tbody tr"
 STATS_CELL = "td"
@@ -202,7 +209,9 @@ STATS_CELL = "td"
 STATS_PLAYER_CELL_CLASS = "mod-player"
 STATS_PLAYER_LINK = 'a[href^="/player/"]'
 STATS_PLAYER_ALIAS = "div.text-of"
-STATS_PLAYER_TEAM = "div.stats-player-country"
+# vlr's 2026 stats-page rewrite renamed this class stats-player-country -> st-pl-country;
+# the old class is kept as a fallback for tests/fixtures/stats_na.html.
+STATS_PLAYER_TEAM = "div.st-pl-country, div.stats-player-country"
 # CRITICAL: stat value cells side-split into spans (mod-both = combined, mod-t =
 # attack, mod-ct = defense), exactly like the match scoreboard. Read mod-both;
 # NEVER raw td.text() (it concatenates the three spans into a silently-wrong
