@@ -5,13 +5,19 @@ Verify against live pages with: python -m app.scrapers.verify
 """
 
 # --- results / matches list (a.match-item cards) ---
+# TEAMS/SCORES are single selectors on purpose (2026-07-15 audit): the old
+# comma-fallbacks (div.text-of / div.js-spoiler) ALSO matched live nodes — the
+# team-name div nests a text-of child and the score div carries js-spoiler as a
+# second class — so the union returned 4 nodes per card and the parser's [:2]
+# truncation was only correct by document-order luck. The primaries alone match
+# 2/2 on every live card; do not re-add fallbacks that can double-match.
 MATCH_CARD = "a.match-item"
 MATCH_TIME = "div.match-item-time"
-MATCH_TEAMS = "div.match-item-vs-team-name, div.match-item-vs div.text-of"
-MATCH_SCORES = "div.match-item-vs-team-score, div.js-spoiler"
+MATCH_TEAMS = "div.match-item-vs-team-name"
+MATCH_SCORES = "div.match-item-vs-team-score"
 MATCH_EVENT = "div.match-item-event"
 MATCH_EVENT_SERIES = "div.match-item-event-series"
-MATCH_STATUS = "div.ml-status, span.ml-status"
+MATCH_STATUS = "div.ml-status"
 MATCH_ETA = "div.ml-eta"
 
 # --- rankings (team rows) ---
@@ -23,9 +29,16 @@ MATCH_ETA = "div.ml-eta"
 #    the rich <div class="rank-item wf-card"> rows that DO carry the W/L record,
 #    streak, and earnings. The team text nests a #tag + the country div, so the
 #    parser strips the country suffix off the team name.
-RANK_ROW = "div.rank-item, tr.rank-item, tr.wf-card.mod-hover"
+# Each comma pair below is regional-form, world-form — BOTH are live (audited
+# 2026-07-15: div.* on regional rows, td.* on world rows; they never co-occur
+# in one row so the union can't double-match).
+RANK_ROW = "div.rank-item, tr.wf-card.mod-hover"
 RANK_NUM = "div.rank-item-rank-num, td.rank-item-rank"
-RANK_TEAM_NAME = "div.rank-item-team-name, div.ge-text, td.rank-item-team a div"
+# The team-name node nests a #tag span (ge-text-light) and the country div; the
+# parser reads the node's DIRECT text only (text(deep=False)), which excludes
+# both children — never strip suffixes off the deep text (the tag span produced
+# "100 Thieves#XSN" that way).
+RANK_TEAM_NAME = "div.ge-text, td.rank-item-team a div"
 RANK_COUNTRY = "div.rank-item-team-country"
 RANK_RATING = "div.rank-item-rating, td.rank-item-rating"
 # The W/L record is "wins–losses" (en-dash) text in div.rank-item-record. There are
@@ -48,12 +61,14 @@ EVENT_DESC_LABEL = "div.event-item-desc-item-label"
 EVENT_REGION = "div.event-item-desc-item.mod-location i"
 
 # --- news ---
-# vlr news rows are <a class="wf-module-item"> with inline-styled (class-less)
-# title/desc divs; only the meta line keeps a class (ge-text-light).
-NEWS_ITEM = "a.wf-module-item, a.news-item"
-NEWS_TITLE = 'div.news-item-title, div[style*="font-weight: 700"]'
-NEWS_DESC = 'div.news-item-desc, div[style*="font-size: 13px"]'
-NEWS_DATE = "div.news-item-meta, div.ge-text-light"
+# vlr news rows are <a class="wf-module-item"> with inline-styled (CLASS-LESS)
+# title/desc divs; only the meta line keeps a class (ge-text-light). The
+# style-based selectors are the ONLY signal live markup exposes (audited
+# 2026-07-15 — the old news-item-* classes match nothing and were retired).
+NEWS_ITEM = "a.wf-module-item"
+NEWS_TITLE = 'div[style*="font-weight: 700"]'
+NEWS_DESC = 'div[style*="font-size: 13px"]'
+NEWS_DATE = "div.ge-text-light"
 
 # --- team detail page (/team/{id}/{slug}) ---
 # header
@@ -82,8 +97,11 @@ TEAM_MATCH_GAME_ROW_CLASS = "m-item-games-item"
 # series/stage text that trails it in the same container (label-bleed guard).
 TEAM_MATCH_EVENT = "div.m-item-event div.text-of"
 TEAM_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
-# opponent team link, when the card exposes one (the card itself is an <a> to the
-# match, so a nested team <a> is often absent — opponent_id is null in that case).
+# Opponent team link: ALWAYS absent on live markup (audited 2026-07-15 — the
+# card itself is the only <a>; vlr exposes no opponent team id on match cards),
+# so opponent_id is ALWAYS null. Kept because the frontend transform consumes
+# the key (frontend/src/lib/vlr.ts maps it to opponentId); if vlr ever nests a
+# team link this starts filling for free.
 TEAM_MATCH_OPPONENT_LINK = 'div.m-item-team.mod-right a[href*="/team/"]'
 TEAM_MATCH_RESULT = "div.m-item-result"
 TEAM_MATCH_DATE = "div.m-item-date"
@@ -118,7 +136,6 @@ PLAYER_AGENT_IMG = "img"
 # recent match history cards
 PLAYER_MATCH_CARD = "a.m-item"
 PLAYER_MATCH_EVENT = "div.m-item-event div.text-of"
-PLAYER_MATCH_TEAM_NAME = "span.m-item-team-name"
 PLAYER_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
 PLAYER_MATCH_RESULT = "div.m-item-result"
 
@@ -178,7 +195,6 @@ MATCH_SB_PCT_KEYS = ("KAST", "HS%")
 
 # --- match detail: header / maps / rounds (the rich page shape) ---
 # header: event link wraps a bold event-name div + a series/stage div
-MATCH_H_EVENT_LINK = "a.match-header-event"
 MATCH_H_EVENT_NAME = 'a.match-header-event div[style*="font-weight: 700"]'
 MATCH_H_SERIES = "div.match-header-event-series"
 # the two team links carry the team id (href) + mod-1/mod-2 ordering
@@ -218,15 +234,43 @@ MATCH_STREAM_TWITCH_HOST = "twitch.tv"  # host guard for the external-href fallb
 
 # --- stats leaderboard page (/stats?region={na|eu}&timespan={30d|60d|90d|all}) ---
 # (Phase 12) VLR's region-wide player leaderboard — ONE table (table.st-table,
-# confirmed live 2026-07-14 post-rewrite). Header titles drive the stat keys
-# (like the player-page agent table) so a new vlr column just falls through.
-# Confirmed columns (recon): Player, Agents, Maps, Rnd, R, ACS, K:D, KAST, ADR,
-# KPR, APR, FK:FD, FKPR, FDPR, HS%, CL%, CL, KMAX, K, D, A, FK, FD. R is VLR's
-# own rating at 100% fill — the headline (we never compute a composite).
+# confirmed live 2026-07-14 post-rewrite). Every value <td> carries a
+# machine-readable data-col attribute (same scheme as the match-scoreboard
+# div-grid) — STATS_COL_KEYS maps those straight to our stat keys, replacing
+# the old header-title mapping (retired 2026-07-15: keying by data-col can't
+# break when vlr reorders columns or renames a header label). NB vlr's data-col
+# names don't always mirror the header text: header "FKPR" is data-col "fbpr",
+# "HS%" is "hsp", "CL%" is "clp". R is VLR's own rating at 100% fill — the
+# headline (we never compute a composite). An unmapped data-col (e.g. "maps",
+# "fkfd", or a brand-new vlr column) falls through harmlessly.
 STATS_TABLE = "table.st-table"
-STATS_HEADER = "thead th"
 STATS_ROW = "tbody tr"
 STATS_CELL = "td"
+STATS_COL_ATTR = "data-col"
+STATS_COL_AGENTS = "agents"  # handled specially (junk like "43%+4", not a stat)
+STATS_COL_CL = "cl"  # the "won/played" fraction — two ints, never one number
+STATS_COL_KEYS = {
+    "rnd": "rnd",
+    "rating2": "r2",
+    "acs": "acs",
+    "kd": "kd",
+    "kast": "kast",
+    "adr": "adr",
+    "kpr": "kpr",
+    "apr": "apr",
+    "fbpr": "fkpr",
+    "fdpr": "fdpr",
+    "hsp": "hs",
+    "clp": "clutch_pct",
+    "kmax": "kmax",
+    "k": "k",
+    "d": "d",
+    "a": "a",
+    "fk": "fk",
+    "fd": "fd",
+}
+# the % stats among the mapped OUTPUT keys (parse_percent, '78%' -> 78.0)
+STATS_PCT_KEYS = ("kast", "hs", "clutch_pct")
 # the player identity cell carries the /player/{id} link + the alias in a text-of
 # div. The team abbreviation ("SEN", "FLCV") lives in a SIBLING div, class
 # st-pl-country (a misnomer — it holds the team tag, not a country, on the
@@ -238,10 +282,11 @@ STATS_PLAYER_CELL_CLASS = "mod-player"
 STATS_PLAYER_LINK = 'a[href^="/player/"]'
 STATS_PLAYER_ALIAS = "div.text-of"
 STATS_PLAYER_TEAM = "div.st-pl-country"
-# CRITICAL: stat value cells side-split into spans (mod-both = combined, mod-t =
-# attack, mod-ct = defense), exactly like the match scoreboard. Read mod-both;
-# NEVER raw td.text() (it concatenates the three spans into a silently-wrong
-# number). Cells with no split just hold plain text (the fallback handles both).
+# Side-split guard: the 2026 stats table holds PLAIN-TEXT cells (no side-split
+# spans — audited live 2026-07-15), so raw cell text is currently safe. The
+# mod-both preference stays as a cheap guard: if vlr ever re-adds side-split
+# spans (as the match scoreboard has), reading raw text would concatenate them
+# into a silently-wrong number (the K=13 -> "1385" bug class).
 STATS_VAL_BOTH = "span.mod-both"
 
 # id is parsed from href like /310/sentinels or /player/4164/...

@@ -78,10 +78,10 @@ def test_parse_stats_prefers_mod_both_when_side_split_present():
     # wrongly concatenate mod-both/mod-t/mod-ct into "20119".
     html = """
     <table class="st-table"><thead><tr>
-      <th class="mod-player">Player</th><th>K</th>
+      <th class="mod-player">Player</th><th data-col="k">K</th>
     </tr></thead><tbody><tr>
       <td class="mod-player"><a href="/player/1/x"><div class="text-of">x</div></a></td>
-      <td><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
+      <td data-col="k"><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
     </tr></tbody></table>
     """
     rows = parse_stats(html)

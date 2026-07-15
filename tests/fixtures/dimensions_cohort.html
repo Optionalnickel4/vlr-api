@@ -6,10 +6,15 @@
   cohort rather than real vlr.gg data (which drifts and won't hand-verify
   cleanly). tests/fixtures/stats_na.html is the separate live-captured fixture
   used by test_stats.py for scraper STRUCTURE tests — do not conflate the two.
-  Markup shape (table.st-table, div.st-pl-country, header "R"/"KMAX") mirrors
-  vlr's 2026 stats-page rewrite so this exercises the same selectors as live.
+  Markup shape (table.st-table, div.st-pl-country, data-col attributes on the
+  value cells) mirrors vlr's 2026 stats-page rewrite so this exercises the same
+  selectors as live. NB vlr's data-col names don't mirror the header labels:
+  FKPR is data-col "fbpr", HS% is "hsp", CL% is "clp" (see STATS_COL_KEYS).
+  Values are UNCHANGED from the pre-data-col version of this fixture, so the
+  hand-computed dimension arithmetic in test_dimensions.py is untouched.
   Three rows:
-    - the side-split K cell (mod-both=20 vs raw "20119" concatenation trap),
+    - the side-split K cell (mod-both=20 vs raw "20119" concatenation trap;
+      live 2026 cells are plain text, but the mod-both guard must keep working),
     - the CL fraction column (3/15 and 19/104),
     - the percent columns (KAST/HS%/CL%),
     - empty cells -> null (the low-sample third row),
@@ -21,10 +26,16 @@
 <table class="st-table">
   <thead>
     <tr>
-      <th>Player</th><th>Agents</th><th>Rnd</th><th>R</th><th>ACS</th>
-      <th>K:D</th><th>KAST</th><th>ADR</th><th>KPR</th><th>APR</th>
-      <th>FKPR</th><th>FDPR</th><th>HS%</th><th>CL%</th><th>CL</th>
-      <th>KMAX</th><th>K</th><th>D</th><th>A</th><th>FK</th><th>FD</th>
+      <th class="mod-player">Player</th><th data-col="agents">Agents</th>
+      <th data-col="rnd">Rnd</th><th data-col="rating2">R</th>
+      <th data-col="acs">ACS</th><th data-col="kd">K:D</th>
+      <th data-col="kast">KAST</th><th data-col="adr">ADR</th>
+      <th data-col="kpr">KPR</th><th data-col="apr">APR</th>
+      <th data-col="fbpr">FKPR</th><th data-col="fdpr">FDPR</th>
+      <th data-col="hsp">HS%</th><th data-col="clp">CL%</th>
+      <th data-col="cl">CL</th><th data-col="kmax">KMAX</th>
+      <th data-col="k">K</th><th data-col="d">D</th><th data-col="a">A</th>
+      <th data-col="fk">FK</th><th data-col="fd">FD</th>
     </tr>
   </thead>
   <tbody>
@@ -35,26 +46,26 @@
           <div class="st-pl-country">SEN</div>
         </a>
       </td>
-      <td>(+1)</td>
-      <td><span class="mod-both">512</span></td>
-      <td><span class="mod-both">1.24</span></td>
-      <td><span class="mod-both">256.4</span></td>
-      <td><span class="mod-both">1.62</span></td>
-      <td><span class="mod-both">78%</span></td>
-      <td><span class="mod-both">168.3</span></td>
-      <td><span class="mod-both">0.82</span></td>
-      <td><span class="mod-both">0.31</span></td>
-      <td><span class="mod-both">0.12</span></td>
-      <td><span class="mod-both">0.09</span></td>
-      <td><span class="mod-both">27%</span></td>
-      <td><span class="mod-both">20%</span></td>
-      <td><span class="mod-both">3/15</span></td>
-      <td><span class="mod-both">34</span></td>
-      <td><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
-      <td><span class="mod-both">14</span></td>
-      <td><span class="mod-both">5</span></td>
-      <td><span class="mod-both">2</span></td>
-      <td><span class="mod-both">1</span></td>
+      <td data-col="agents">(+1)</td>
+      <td data-col="rnd"><span class="mod-both">512</span></td>
+      <td data-col="rating2"><span class="mod-both">1.24</span></td>
+      <td data-col="acs"><span class="mod-both">256.4</span></td>
+      <td data-col="kd"><span class="mod-both">1.62</span></td>
+      <td data-col="kast"><span class="mod-both">78%</span></td>
+      <td data-col="adr"><span class="mod-both">168.3</span></td>
+      <td data-col="kpr"><span class="mod-both">0.82</span></td>
+      <td data-col="apr"><span class="mod-both">0.31</span></td>
+      <td data-col="fbpr"><span class="mod-both">0.12</span></td>
+      <td data-col="fdpr"><span class="mod-both">0.09</span></td>
+      <td data-col="hsp"><span class="mod-both">27%</span></td>
+      <td data-col="clp"><span class="mod-both">20%</span></td>
+      <td data-col="cl"><span class="mod-both">3/15</span></td>
+      <td data-col="kmax"><span class="mod-both">34</span></td>
+      <td data-col="k"><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
+      <td data-col="d"><span class="mod-both">14</span></td>
+      <td data-col="a"><span class="mod-both">5</span></td>
+      <td data-col="fk"><span class="mod-both">2</span></td>
+      <td data-col="fd"><span class="mod-both">1</span></td>
     </tr>
     <tr>
       <td class="mod-player">
@@ -63,26 +74,26 @@
           <div class="st-pl-country">LEV</div>
         </a>
       </td>
-      <td>(+3)</td>
-      <td><span class="mod-both">480</span></td>
-      <td><span class="mod-both">1.05</span></td>
-      <td><span class="mod-both">198.1</span></td>
-      <td><span class="mod-both">1.10</span></td>
-      <td><span class="mod-both">71%</span></td>
-      <td><span class="mod-both">150.0</span></td>
-      <td><span class="mod-both">0.75</span></td>
-      <td><span class="mod-both">0.28</span></td>
-      <td><span class="mod-both">0.10</span></td>
-      <td><span class="mod-both">0.11</span></td>
-      <td><span class="mod-both">24%</span></td>
-      <td><span class="mod-both">18%</span></td>
-      <td><span class="mod-both">19/104</span></td>
-      <td><span class="mod-both">30</span></td>
-      <td><span class="mod-both">18</span></td>
-      <td><span class="mod-both">16</span></td>
-      <td><span class="mod-both">6</span></td>
-      <td><span class="mod-both">3</span></td>
-      <td><span class="mod-both">2</span></td>
+      <td data-col="agents">(+3)</td>
+      <td data-col="rnd"><span class="mod-both">480</span></td>
+      <td data-col="rating2"><span class="mod-both">1.05</span></td>
+      <td data-col="acs"><span class="mod-both">198.1</span></td>
+      <td data-col="kd"><span class="mod-both">1.10</span></td>
+      <td data-col="kast"><span class="mod-both">71%</span></td>
+      <td data-col="adr"><span class="mod-both">150.0</span></td>
+      <td data-col="kpr"><span class="mod-both">0.75</span></td>
+      <td data-col="apr"><span class="mod-both">0.28</span></td>
+      <td data-col="fbpr"><span class="mod-both">0.10</span></td>
+      <td data-col="fdpr"><span class="mod-both">0.11</span></td>
+      <td data-col="hsp"><span class="mod-both">24%</span></td>
+      <td data-col="clp"><span class="mod-both">18%</span></td>
+      <td data-col="cl"><span class="mod-both">19/104</span></td>
+      <td data-col="kmax"><span class="mod-both">30</span></td>
+      <td data-col="k"><span class="mod-both">18</span></td>
+      <td data-col="d"><span class="mod-both">16</span></td>
+      <td data-col="a"><span class="mod-both">6</span></td>
+      <td data-col="fk"><span class="mod-both">3</span></td>
+      <td data-col="fd"><span class="mod-both">2</span></td>
     </tr>
     <tr>
       <td class="mod-player">
@@ -90,26 +101,26 @@
           <div class="text-of">lowsample</div>
         </a>
       </td>
-      <td></td>
-      <td><span class="mod-both">40</span></td>
-      <td><span class="mod-both">0.98</span></td>
-      <td><span class="mod-both">180.0</span></td>
-      <td><span class="mod-both">0.95</span></td>
-      <td><span class="mod-both">65%</span></td>
-      <td><span class="mod-both">130.0</span></td>
-      <td><span class="mod-both">0.60</span></td>
-      <td><span class="mod-both">0.20</span></td>
-      <td><span class="mod-both">0.05</span></td>
-      <td><span class="mod-both">0.08</span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both">10</span></td>
-      <td><span class="mod-both">12</span></td>
-      <td><span class="mod-both">3</span></td>
-      <td><span class="mod-both">1</span></td>
-      <td><span class="mod-both">1</span></td>
+      <td data-col="agents"></td>
+      <td data-col="rnd"><span class="mod-both">40</span></td>
+      <td data-col="rating2"><span class="mod-both">0.98</span></td>
+      <td data-col="acs"><span class="mod-both">180.0</span></td>
+      <td data-col="kd"><span class="mod-both">0.95</span></td>
+      <td data-col="kast"><span class="mod-both">65%</span></td>
+      <td data-col="adr"><span class="mod-both">130.0</span></td>
+      <td data-col="kpr"><span class="mod-both">0.60</span></td>
+      <td data-col="apr"><span class="mod-both">0.20</span></td>
+      <td data-col="fbpr"><span class="mod-both">0.05</span></td>
+      <td data-col="fdpr"><span class="mod-both">0.08</span></td>
+      <td data-col="hsp"><span class="mod-both"></span></td>
+      <td data-col="clp"><span class="mod-both"></span></td>
+      <td data-col="cl"><span class="mod-both"></span></td>
+      <td data-col="kmax"><span class="mod-both"></span></td>
+      <td data-col="k"><span class="mod-both">10</span></td>
+      <td data-col="d"><span class="mod-both">12</span></td>
+      <td data-col="a"><span class="mod-both">3</span></td>
+      <td data-col="fk"><span class="mod-both">1</span></td>
+      <td data-col="fd"><span class="mod-both">1</span></td>
     </tr>
   </tbody>
 </table>

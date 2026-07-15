@@ -1,22 +1,58 @@
 <html><body>
-<div class="rank-item">
-  <a href="/310/sentinels">
-    <div class="rank-item-rank-num">1</div>
-    <div class="rank-item-team-name">Sentinels</div>
-    <div class="rank-item-team-country">United States</div>
-    <div class="rank-item-rating">1024</div>
-    <div class="rank-item-record">12W - 3L</div>
-    <div class="rank-item-earnings">$250,000</div>
-  </a>
-</div>
-<div class="rank-item">
-  <a href="/2593/paper-rex">
-    <div class="rank-item-rank-num">2</div>
-    <div class="rank-item-team-name">Paper Rex</div>
-    <div class="rank-item-team-country">Singapore</div>
-    <div class="rank-item-rating">998</div>
-    <div class="rank-item-record">10W - 4L</div>
-    <div class="rank-item-earnings">$180,000</div>
-  </a>
+<!-- Faithful trim of a real vlr WORLD rankings page (/rankings, captured live
+     2026-07-14). The world view is a stripped-down table — key real-markup
+     traits reproduced verbatim:
+       - rows are <tr class="wf-card mod-hover"> inside table.wf-faux-table
+         (NOT the regional div.rank-item cards; see rankings_regional.html)
+       - only rank / team / rating columns — NO record, streak, or earnings
+         (those fields are legitimately null on this view)
+       - the team-name <div> is CLASS-LESS and nests the country div as a child
+         (direct-text read; deep text would concatenate "…Czech Republic" in)
+       - every cell wraps its value in an <a href="/team/{id}/{slug}"> -->
+<div class="world-rankings-container">
+	<div class="world-rankings-col">
+		<h2 class="wf-label mod-large mod-world">
+			Europe				</h2>
+		<table class="wf-faux-table mod-teams mod-world">
+			<tbody>
+				<tr class="wf-card mod-hover ">
+					<td class="rank-item-rank" data-sort-value="1000">
+						<a href="/team/876/enterprise-esports" style="font-weight: 400;">
+							1									</a>
+					</td>
+					<td data-sort-value="Enterprise Esports" class="rank-item-team">
+						<a href="/team/876/enterprise-esports" class="">
+							<img src="//owcdn.net/img/68643d0b1c72b.png" alt="Enterprise Esports">
+							<div>
+								Enterprise Esports											<div class="rank-item-team-country">Czech Republic</div>
+							</div>
+						</a>
+					</td>
+					<td data-sort-value="2010" class="rank-item-rating mod-world">
+						<a href="/team/876/enterprise-esports">
+							2000									</a>
+					</td>
+				</tr>
+				<tr class="wf-card mod-hover ">
+					<td class="rank-item-rank" data-sort-value="999">
+						<a href="/team/2059/team-vitality" style="font-weight: 400;">
+							2									</a>
+					</td>
+					<td data-sort-value="Team Vitality" class="rank-item-team">
+						<a href="/team/2059/team-vitality" class="">
+							<img src="//owcdn.net/img/6466d79e1ed40.png" alt="Team Vitality">
+							<div>
+								Team Vitality											<div class="rank-item-team-country">Europe</div>
+							</div>
+						</a>
+					</td>
+					<td data-sort-value="1950" class="rank-item-rating mod-world">
+						<a href="/team/2059/team-vitality">
+							1940									</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 </body></html>

@@ -29,14 +29,23 @@ def _split_record(raw: str | None) -> tuple[str | None, str | None]:
     return nums[0], nums[1]
 
 
+def _team_name(row: Node) -> str:
+    """The team-name node's DIRECT text only. The node nests a #tag span
+    (regional) and the country div (both views) as CHILDREN — deep text would
+    concatenate them in ("100 Thieves#XSN United States"), and suffix-stripping
+    the country back off still left the tag (the bug shipped by the old
+    approach). text(deep=False) excludes every child in one move."""
+    node = row.css_first(S.RANK_TEAM_NAME)
+    if node is None:
+        return ""
+    return clean_spaces(node.text(deep=False))
+
+
 def _parse_row(row: Node) -> dict[str, Any]:
     link = row.css_first("a")
     href = link.attributes.get("href", "") if link else ""
     country = clean_spaces(first_text(row, S.RANK_COUNTRY))
-    team = clean_spaces(first_text(row, S.RANK_TEAM_NAME))
-    # live markup nests the country inside the team-name node; strip the suffix
-    if country and team.endswith(country):
-        team = team[: -len(country)].strip()
+    team = _team_name(row)
     # current/rating-window record (the first of the two record nodes); split into
     # clean wins/losses so each coerces numerically. Null on the world view.
     record = clean_spaces(first_text(row, S.RANK_RECORD)) or None

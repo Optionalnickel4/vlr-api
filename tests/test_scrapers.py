@@ -66,14 +66,17 @@ def test_live_card_has_live_status():
 
 # ---------- rankings ----------
 def test_parse_rankings():
+    # rankings.html is the WORLD view (real trim) — the class-less team div
+    # nests the country div, so the name must come out clean, country-free.
     rows = parse_rankings(load("rankings.html"))
     assert len(rows) == 2
     assert rows[0]["rank"] == "1"
-    assert rows[0]["team"] == "Sentinels"
-    assert rows[0]["team_id"] == "310"
-    assert rows[0]["rating"] == "1024"
-    assert rows[1]["team"] == "Paper Rex"
-    assert rows[1]["country"] == "Singapore"
+    assert rows[0]["team"] == "Enterprise Esports"
+    assert rows[0]["team_id"] == "876"
+    assert rows[0]["rating"] == "2000"
+    assert rows[0]["country"] == "Czech Republic"
+    assert rows[1]["team"] == "Team Vitality"
+    assert rows[1]["country"] == "Europe"
 
 
 # ---------- rankings: W/L record (Item 1 — regional layout) ----------
@@ -152,9 +155,9 @@ def test_parse_events_strips_desc_labels():
 def test_parse_news():
     news = parse_news(load("news.html"))
     assert len(news) == 2
-    assert news[0]["title"].startswith("Star duelist")
-    assert news[0]["url"] == "https://www.vlr.gg/news/410000/some-roster-move"
-    assert news[1]["title"].startswith("Patch 9.0")
+    assert news[0]["title"].startswith("nAts to miss")
+    assert news[0]["url"] == "https://www.vlr.gg/715457/nats-to-miss-first-game-of-stage-2-against-eternal-fire"
+    assert news[1]["title"].startswith("GIANTX finalizes")
 
 
 def test_parse_news_skips_titleless():
