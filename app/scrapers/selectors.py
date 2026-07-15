@@ -123,33 +123,56 @@ PLAYER_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
 PLAYER_MATCH_RESULT = "div.m-item-result"
 
 # --- match detail page (/{match_id}/...) — scoreboard (Phase 7) ---
-# The per-map scoreboards are <table class="wf-table-inset mod-overview"> — there
-# are 8 (per-map × per-team + the all-maps aggregate). This is NOT the player-page
-# PLAYER_STATS_TABLE. Header row drives the stat columns:
-#   ['', '', 'R','ACS','K','D','A','+/–','KAST','ADR','HS%','FK','FD','+/–']
-MATCH_SB_TABLE = "table.wf-table-inset.mod-overview"
-MATCH_SB_HEADER = "thead th"
-MATCH_SB_ROW = "tbody tr"
-MATCH_SB_CELL = "td"
-# identity: name nests a 700-weight div.text-of (alias) + a div.ge-text-light (team
-# tag); a flag <i> carries the country; the <a> carries the player id.
-MATCH_SB_PLAYER = "td.mod-player"
+# vlr's 2026 match-page rewrite dropped the <table class="wf-table-inset mod-overview">
+# scoreboard entirely in favor of a div grid: div.ovw-table > div.ovw-row (one
+# div.ovw-row.mod-head + one div.ovw-row per player). There are 8 ovw-tables per
+# page (per-map x per-team + the all-maps aggregate), confirmed live 2026-07-15.
+# Each stat-bearing element (9 top-level div.ovw-cell[data-col] + the 3 K/D/A
+# spans nested inside div.ovw-cell.mod-kda) carries its own machine-readable
+# data-col ("rating2", "kd-diff", ...) -- MATCH_SB_COL_KEYS maps those straight
+# to our stat keys, so unlike the old table there's no header-text parsing and no
+# need to disambiguate the two identical "+/-" header labels by a class marker.
+MATCH_SB_TABLE = "div.ovw-table"
+MATCH_SB_ROW = "div.ovw-row"
+MATCH_SB_CELL = "div.ovw-cell"
+# any element carrying data-col is a value to read: the 9 direct cells PLUS the
+# 3 kills/deaths/assists spans nested inside the mod-kda cell (which itself has
+# no data-col). Selecting on the attribute -- not a fixed set of classes -- means
+# we don't have to special-case the kda cell's extra nesting level.
+MATCH_SB_STAT_CELL = "[data-col]"
+MATCH_SB_COL_KEYS = {
+    "rating2": "R",
+    "acs": "ACS",
+    "kills": "K",
+    "deaths": "D",
+    "assists": "A",
+    "kd-diff": "KD_+/-",
+    "kast": "KAST",
+    "adr": "ADR",
+    "hsp": "HS%",
+    "fb": "FK",
+    "fd": "FD",
+    "fk-diff": "FK_+/-",
+}
+# identity: div.ovw-player nests the player <a>, whose ovw-player-name (alias) and
+# ovw-player-tag (team) divs sit alongside a flag <i>; div.ovw-agents (a SIBLING of
+# ovw-player inside the SAME mod-player cell, not a separate td like the old table)
+# holds the agent image.
+MATCH_SB_PLAYER = "div.ovw-cell.mod-player"
 MATCH_SB_PLAYER_LINK = 'a[href^="/player/"]'
-MATCH_SB_PLAYER_ALIAS = "div.text-of"
-MATCH_SB_PLAYER_TEAM = "div.ge-text-light"
+MATCH_SB_PLAYER_ALIAS = "div.ovw-player-name"
+MATCH_SB_PLAYER_TEAM = "div.ovw-player-tag"
 MATCH_SB_PLAYER_FLAG = "i.flag"
-MATCH_SB_AGENT = "td.mod-agents img"  # agent name = img alt
-# CRITICAL: every value cell is td.mod-stat and holds THREE side-split spans —
-# mod-both (combined), mod-t (attack), mod-ct (defense). Read mod-both; NEVER
-# td.text(), which concatenates all three into a silently-wrong number (e.g. K=13
-# renders raw as "1385"). mod-t/mod-ct are real attack/defense data, not artifacts.
-MATCH_SB_STAT_CELL = "td.mod-stat"
+MATCH_SB_AGENT = "div.ovw-agents img"  # agent name = img alt
+# CRITICAL: every stat element holds THREE side-split spans -- mod-both (combined),
+# mod-t (attack), mod-ct (defense) -- now wrapped in an extra span.side, but the
+# mod-* class names themselves are unchanged from the old table markup. Read
+# mod-both; NEVER the cell's raw text, which concatenates all three into a
+# silently-wrong number (e.g. K=13 renders raw as "1385"). mod-t/mod-ct are real
+# attack/defense data, not artifacts.
 MATCH_SB_VAL_BOTH = "span.mod-both"
 MATCH_SB_VAL_T = "span.mod-t"
 MATCH_SB_VAL_CT = "span.mod-ct"
-# the two '+/–' headers collide; disambiguate the diff cells by these class markers
-MATCH_SB_CLS_KD_DIFF = "mod-kd-diff"
-MATCH_SB_CLS_FK_DIFF = "mod-fk-diff"
 # the % columns whose values go through parse_percent
 MATCH_SB_PCT_KEYS = ("KAST", "HS%")
 

@@ -31,16 +31,6 @@ _LEADING_INDEX = re.compile(r"^\s*\d+\s*")  # "1Pearl" -> "Pearl"
 
 
 # ---- scoreboard cells (per-player stat rows) -------------------------------
-def _stat_key(header: str, cls: str) -> str | None:
-    """Column key from the header, disambiguating the two identical '+/–' headers
-    via the cell's diff class (kd-diff vs fk-diff)."""
-    if S.MATCH_SB_CLS_KD_DIFF in cls:
-        return "KD_+/-"
-    if S.MATCH_SB_CLS_FK_DIFF in cls:
-        return "FK_+/-"
-    return header or None
-
-
 def _coerce(key: str, both: str | None) -> float | None:
     """KAST and HS% carry a percent sign -> parse_percent; the rest -> parse_numeric.
     Both return None (never NaN) for empty live-partial cells."""
@@ -75,27 +65,25 @@ def _parse_identity(tr: Node) -> dict[str, Any]:
     }
 
 
-def _parse_player_row(tr: Node, headers: list[str]) -> dict[str, Any]:
+def _parse_player_row(tr: Node) -> dict[str, Any]:
     agent_img = tr.css_first(S.MATCH_SB_AGENT)
     agent = (agent_img.attributes.get("alt") if agent_img else None) or None
     stats: dict[str, Any] = {}
-    for i, td in enumerate(tr.css(S.MATCH_SB_CELL)):
-        cls = td.attributes.get("class", "") or ""
-        if "mod-stat" not in cls:  # skip the player + agent cells
-            continue
-        key = _stat_key(headers[i] if i < len(headers) else "", cls)
+    # every data-col element is a value: the 9 top-level cells PLUS the 3
+    # kills/deaths/assists spans nested inside the mod-kda cell (see selectors.py)
+    for node in tr.css(S.MATCH_SB_STAT_CELL):
+        key = S.MATCH_SB_COL_KEYS.get(node.attributes.get("data-col") or "")
         if not key:
             continue
-        both, t, ct = _read_stat(td)
+        both, t, ct = _read_stat(node)
         # value reads mod-both, NEVER the concatenated raw cell text
         stats[key] = {"value": _coerce(key, both), "both": both, "t": t, "ct": ct}
     return {**_parse_identity(tr), "agent": agent, "stats": stats}
 
 
 def _parse_table(table: Node) -> list[dict[str, Any]]:
-    headers = [clean_spaces(text_of(th)) for th in table.css(S.MATCH_SB_HEADER)]
     return [
-        _parse_player_row(tr, headers)
+        _parse_player_row(tr)
         for tr in table.css(S.MATCH_SB_ROW)
         if tr.css(S.MATCH_SB_CELL)
     ]

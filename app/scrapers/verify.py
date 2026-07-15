@@ -8,6 +8,7 @@ import asyncio
 
 from app.core.http import get_client
 from app.scrapers.events import parse_events, parse_news
+from app.scrapers.match_detail import parse_match
 from app.scrapers.matches import parse_match_list, split_live_upcoming
 from app.scrapers.players import parse_player
 from app.scrapers.rankings import parse_rankings
@@ -76,6 +77,24 @@ async def main() -> None:
     if tm["results"]:
         print(f"  result sample: {tm['results'][0]}")
 
+    # match-detail scoreboard: this page shape was NOT covered here before (the
+    # blind spot that let the 2026 table -> div-grid scoreboard rewrite ship
+    # silently, see selectors.py MATCH_SB_*) -- pick the most recent COMPLETED
+    # result dynamically so this check never goes stale.
+    print("== match scoreboard (first completed result) ==")
+    mt = None
+    if res:
+        mid = res[0]["id"]
+        html = await client.get_html(f"/{mid}")
+        mt = parse_match(html)
+        rows = [p for m in mt["maps"] for t in m["teams"] for p in t["players"]]
+        print(f"  match {mid}: maps={len(mt['maps'])}  scoreboard rows={len(rows)}")
+        if rows:
+            p0 = rows[0]
+            acs = p0["stats"].get("ACS", {}).get("value")
+            k = p0["stats"].get("K", {}).get("value")
+            print(f"  sample: {p0['player']} ({p0['agent']})  ACS={acs}  K={k}")
+
     print("== /stats (region=na, timespan=all) ==")
     html = await client.get_html("/stats/?region=na&timespan=all")
     sl = parse_stats(html)
@@ -105,6 +124,17 @@ async def main() -> None:
     # (upcoming may legitimately be empty out of season, so it is not checked here)
     if not (tm["name"] and tm["roster"] and tm["results"]):
         bad.append("team")
+    # match scoreboard: nonzero rows AND at least one sane, non-concatenated stat
+    # (a concatenated cell like K="1385" would still be a nonzero float, so check
+    # magnitude too -- a real single-map K/ACS never reaches these bounds)
+    sb_rows = [p for m in mt["maps"] for t in m["teams"] for p in t["players"]] if mt else []
+    sb_ok = bool(sb_rows) and any(
+        (p["stats"].get("K", {}).get("value") or 0) < 100
+        and (p["stats"].get("ACS", {}).get("value") or 0) < 1000
+        for p in sb_rows
+    )
+    if not sb_ok:
+        bad.append("match scoreboard")
     print()
     if bad:
         print(f"NEEDS FIXING in selectors.py: {', '.join(bad)}")
