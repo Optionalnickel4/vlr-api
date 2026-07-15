@@ -22,6 +22,45 @@ Lessons from debugging sessions — apply before assuming a scraper or selector 
    DIMENSIONS is `/players/{id}/dimensions` (plural — the stats-leaderboard family).
    Mixing them gives a 404 that looks like a bug but is just the wrong path.
 
+## Selector audit pass (2026-07-15) — Phase 3: cleanup + verify hardening
+
+Follow-up to the 2026 vlr rewrite adaptations. Tests stay at **173** (expectations
+updated, none added/removed).
+
+1. **Regional rankings #tag pollution — FIXED.** The regional team-name node
+   (`div.ge-text`) nests the roster #tag span AND the country div as children; the
+   old deep-text + country-suffix-strip left `"100 Thieves#XSN"`. The parser now
+   reads the node's **direct text only** (`text(deep=False)`), excluding every
+   child in one move. Verified against the live NA capture: 194/194 clean names.
+2. **Stats leaderboard keyed by `data-col` — MIGRATED.** `/stats` value cells carry
+   vlr's machine-readable `data-col` attrs (same scheme as the match scoreboard);
+   `STATS_COL_KEYS` replaces the header-title map, killing the parallel-scheme
+   hazard (column reorders / header renames can't shift values). NB vlr's names
+   differ from headers: `fbpr`=FKPR, `hsp`=HS%, `clp`=CL%.
+3. **Double-matching list alternates dropped.** `MATCH_TEAMS`/`MATCH_SCORES` lost
+   their nested comma-fallbacks (`div.text-of` / `div.js-spoiler`) — both ALSO
+   matched live nodes, returning 4/card with `[:2]` truncation correct only by
+   document order. Primaries alone match 2/2 on all 50 live cards of each list page.
+4. **Dead weight removed.** Retired never-matching alternates (`span.ml-status`,
+   `a.news-item`, `div.news-item-meta`, `tr.rank-item`, `div.rank-item-team-name`)
+   and unreferenced constants (`PLAYER_MATCH_TEAM_NAME`, `MATCH_H_EVENT_LINK`).
+5. **`opponent_id` KEPT (always null).** `frontend/src/lib/vlr.ts` maps it to
+   `opponentId`, so the key stays; the comment now states vlr exposes NO opponent
+   team link on match cards (it was never "often" — it's always null).
+6. **Stale synthetic fixtures rebuilt from real captures.** `rankings.html` (world
+   view) and `news.html` still used pre-rewrite markup the selectors no longer
+   target; both are now faithful trims of live pages captured 2026-07-14.
+7. **`verify` extended** (all checks offline-validated against the captures, with
+   negative controls): regional rankings fetch (record/earnings present, no `#` in
+   names — would have caught fix 1), johnqt(1265)=Sentinels / TenZ=null current-team
+   pair, per-card ml-status ∈ {live,upcoming,completed} without requiring a live
+   match, match header teams/format + completed-map rounds, `/search/auto` JSON
+   shape (player hits carry id+alias), and semantically-scoped child-field asserts
+   (numeric scores on COMPLETED cards only — upcoming's `–` placeholder is valid).
+
+> Selector changes still need a container run of `python -m app.scrapers.verify`
+> (sandbox has no vlr.gg access; checks were validated against banked captures).
+
 ## vlr-api repair pass (2026-06-10) — three bundled selector/endpoint fixes
 
 Container-verified through the app's httpx client (never curl). Resolves the three
