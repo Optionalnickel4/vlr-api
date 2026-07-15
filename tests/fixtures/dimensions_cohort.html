@@ -1,0 +1,116 @@
+<!--
+  Hand-built synthetic cohort for the Phase 13 dimension-split rating formulas
+  (tests/test_dimensions.py). This is DELIBERATELY NOT a live capture — the
+  dimension tests hand-verify exact percentile arithmetic (see the worked
+  comments in test_dimensions.py), which needs a small, fixed, round-numbered
+  cohort rather than real vlr.gg data (which drifts and won't hand-verify
+  cleanly). tests/fixtures/stats_na.html is the separate live-captured fixture
+  used by test_stats.py for scraper STRUCTURE tests — do not conflate the two.
+  Markup shape (table.st-table, div.st-pl-country, header "R"/"KMAX") mirrors
+  vlr's 2026 stats-page rewrite so this exercises the same selectors as live.
+  Three rows:
+    - the side-split K cell (mod-both=20 vs raw "20119" concatenation trap),
+    - the CL fraction column (3/15 and 19/104),
+    - the percent columns (KAST/HS%/CL%),
+    - empty cells -> null (the low-sample third row),
+    - team tag in div.st-pl-country; null team when the div is absent (row 3).
+  Alias in div.text-of; team in sibling div.st-pl-country. Raw cell
+  text MUST NOT be used — it would concatenate alias+team ("TenZSEN").
+-->
+<html><body>
+<table class="st-table">
+  <thead>
+    <tr>
+      <th>Player</th><th>Agents</th><th>Rnd</th><th>R</th><th>ACS</th>
+      <th>K:D</th><th>KAST</th><th>ADR</th><th>KPR</th><th>APR</th>
+      <th>FKPR</th><th>FDPR</th><th>HS%</th><th>CL%</th><th>CL</th>
+      <th>KMAX</th><th>K</th><th>D</th><th>A</th><th>FK</th><th>FD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="mod-player">
+        <a href="/player/9/tenz">
+          <div class="text-of">TenZ</div>
+          <div class="st-pl-country">SEN</div>
+        </a>
+      </td>
+      <td>(+1)</td>
+      <td><span class="mod-both">512</span></td>
+      <td><span class="mod-both">1.24</span></td>
+      <td><span class="mod-both">256.4</span></td>
+      <td><span class="mod-both">1.62</span></td>
+      <td><span class="mod-both">78%</span></td>
+      <td><span class="mod-both">168.3</span></td>
+      <td><span class="mod-both">0.82</span></td>
+      <td><span class="mod-both">0.31</span></td>
+      <td><span class="mod-both">0.12</span></td>
+      <td><span class="mod-both">0.09</span></td>
+      <td><span class="mod-both">27%</span></td>
+      <td><span class="mod-both">20%</span></td>
+      <td><span class="mod-both">3/15</span></td>
+      <td><span class="mod-both">34</span></td>
+      <td><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
+      <td><span class="mod-both">14</span></td>
+      <td><span class="mod-both">5</span></td>
+      <td><span class="mod-both">2</span></td>
+      <td><span class="mod-both">1</span></td>
+    </tr>
+    <tr>
+      <td class="mod-player">
+        <a href="/player/9999/aspas">
+          <div class="text-of">aspas</div>
+          <div class="st-pl-country">LEV</div>
+        </a>
+      </td>
+      <td>(+3)</td>
+      <td><span class="mod-both">480</span></td>
+      <td><span class="mod-both">1.05</span></td>
+      <td><span class="mod-both">198.1</span></td>
+      <td><span class="mod-both">1.10</span></td>
+      <td><span class="mod-both">71%</span></td>
+      <td><span class="mod-both">150.0</span></td>
+      <td><span class="mod-both">0.75</span></td>
+      <td><span class="mod-both">0.28</span></td>
+      <td><span class="mod-both">0.10</span></td>
+      <td><span class="mod-both">0.11</span></td>
+      <td><span class="mod-both">24%</span></td>
+      <td><span class="mod-both">18%</span></td>
+      <td><span class="mod-both">19/104</span></td>
+      <td><span class="mod-both">30</span></td>
+      <td><span class="mod-both">18</span></td>
+      <td><span class="mod-both">16</span></td>
+      <td><span class="mod-both">6</span></td>
+      <td><span class="mod-both">3</span></td>
+      <td><span class="mod-both">2</span></td>
+    </tr>
+    <tr>
+      <td class="mod-player">
+        <a href="/player/123/lowsample">
+          <div class="text-of">lowsample</div>
+        </a>
+      </td>
+      <td></td>
+      <td><span class="mod-both">40</span></td>
+      <td><span class="mod-both">0.98</span></td>
+      <td><span class="mod-both">180.0</span></td>
+      <td><span class="mod-both">0.95</span></td>
+      <td><span class="mod-both">65%</span></td>
+      <td><span class="mod-both">130.0</span></td>
+      <td><span class="mod-both">0.60</span></td>
+      <td><span class="mod-both">0.20</span></td>
+      <td><span class="mod-both">0.05</span></td>
+      <td><span class="mod-both">0.08</span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both"></span></td>
+      <td><span class="mod-both">10</span></td>
+      <td><span class="mod-both">12</span></td>
+      <td><span class="mod-both">3</span></td>
+      <td><span class="mod-both">1</span></td>
+      <td><span class="mod-both">1</span></td>
+    </tr>
+  </tbody>
+</table>
+</body></html>

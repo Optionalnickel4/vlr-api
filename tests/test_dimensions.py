@@ -24,8 +24,11 @@ FIX = Path(__file__).parent / "fixtures"
 
 
 def load_cohort() -> list[dict]:
-    """The 3-row cohort parsed from the stats fixture (no network)."""
-    return parse_stats((FIX / "stats_na.html").read_text())
+    """The 3-row hand-built cohort (no network). Deliberately its own fixture,
+    separate from tests/fixtures/stats_na.html (which is a live-captured,
+    real-data fixture for scraper structure tests) — the formulas below hand-
+    verify exact percentile arithmetic and need fixed, round-numbered values."""
+    return parse_stats((FIX / "dimensions_cohort.html").read_text())
 
 
 # ---------- pctile helper ----------
@@ -59,9 +62,9 @@ def test_pctile_none_values_excluded_from_denominator():
     assert pctile(20.0, [10.0, None, 20.0]) == 100.0
 
 
-# ---------- dimension formulas (hand-computed against stats_na fixture) ----------
+# ---------- dimension formulas (hand-computed against dimensions_cohort fixture) ----------
 #
-# Cohort (3 rows from stats_na.html after parse_stats):
+# Cohort (3 rows from dimensions_cohort.html after parse_stats):
 #   TenZ   (id=9):    acs=256.4, kd=1.62, kpr=0.82, kmax=34,  kast=78.0, apr=0.31
 #                     fdpr=0.09, fkpr=0.12, clutch_pct=20.0, cl_won=3,  cl_played=15
 #                     rnd=512, k=20, d=14, fk=2, fd=1

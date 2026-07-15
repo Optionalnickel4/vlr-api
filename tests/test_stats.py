@@ -48,9 +48,14 @@ def test_coerce_int_null_not_nan():
 
 
 # ---------- scraper ----------
+# stats_na.html holds 5 REAL rows captured live (region=na, timespan=all,
+# 2026-07-14): slowly/keiko/Derke/FT/Neon. Deliberately picked for a spread of
+# invariant states (clutched vs never-clutched, Rnd 105..630) — but every
+# assertion below checks STRUCTURE/TYPE/invariant, never a specific live
+# rating/ACS/K:D number, since those drift on every future recapture.
 def test_parse_stats_row_count_and_full_key_set():
     rows = parse_stats(load("stats_na.html"))
-    assert len(rows) == 3
+    assert len(rows) == 5
     # every row carries the complete, stable key set (null where absent)
     for r in rows:
         assert set(r.keys()) == set(_ROW_KEYS)
@@ -58,44 +63,67 @@ def test_parse_stats_row_count_and_full_key_set():
 
 def test_parse_stats_identity_and_headline():
     rows = parse_stats(load("stats_na.html"))
-    top = rows[0]
-    assert top["player"] == "TenZ"          # alias from text-of, NOT "TenZSEN"
-    assert top["player_id"] == "9"          # from the /player/{id} link
-    # R2.0 is VLR's own rating headline — a float, at 100% fill
-    assert top["r2"] == 1.24
-    assert isinstance(top["r2"], float)
-    assert all(r["r2"] is not None for r in rows)
+    for r in rows:
+        assert isinstance(r["player"], str) and r["player"].strip()
+        assert r["player_id"] and r["player_id"].isdigit()
+    # "R" (formerly "R2.0") is VLR's own rating headline — a float, at 100% fill
+    assert all(isinstance(r["r2"], float) for r in rows)
 
 
-def test_parse_stats_reads_mod_both_not_raw_text():
-    # the K cell holds mod-both=20 + mod-t=11 + mod-ct=9; raw td.text() would
-    # concatenate to "20119" (silently wrong). mod-both gives the right 20.
-    rows = parse_stats(load("stats_na.html"))
+def test_parse_stats_prefers_mod_both_when_side_split_present():
+    # vlr's current /stats markup no longer side-splits value cells (plain td
+    # text now), but the coercion helper still prefers span.mod-both when
+    # present — the same contract MATCH_SB_VAL_BOTH relies on for the match
+    # scoreboard — in case vlr reintroduces the split. Raw td.text() would
+    # wrongly concatenate mod-both/mod-t/mod-ct into "20119".
+    html = """
+    <table class="st-table"><thead><tr>
+      <th class="mod-player">Player</th><th>K</th>
+    </tr></thead><tbody><tr>
+      <td class="mod-player"><a href="/player/1/x"><div class="text-of">x</div></a></td>
+      <td><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
+    </tr></tbody></table>
+    """
+    rows = parse_stats(html)
     assert rows[0]["k"] == 20.0
     assert rows[0]["k"] != 20119
 
 
 def test_parse_stats_percent_columns_stripped():
-    top = parse_stats(load("stats_na.html"))[0]
-    assert top["kast"] == 78.0          # '78%' -> 78.0
-    assert top["hs"] == 27.0
-    assert top["clutch_pct"] == 20.0
+    rows = parse_stats(load("stats_na.html"))
+    # every row on this slice has KAST/HS filled — a clean %-strip to a 0..100 float
+    for r in rows:
+        for key in ("kast", "hs"):
+            assert isinstance(r[key], float) and 0.0 <= r[key] <= 100.0
+    # CL% is null exactly where the row never clutched (see clutch-fraction test)
+    for r in rows:
+        assert r["clutch_pct"] is None or (isinstance(r["clutch_pct"], float) and 0.0 <= r["clutch_pct"] <= 100.0)
 
 
 def test_parse_stats_clutch_fraction_split():
     rows = parse_stats(load("stats_na.html"))
-    assert (rows[0]["cl_won"], rows[0]["cl_played"]) == (3, 15)
-    assert (rows[1]["cl_won"], rows[1]["cl_played"]) == (19, 104)
-    assert rows[1]["player_id"] == "9999"
+    by_player = {r["player"]: r for r in rows}
+    # keiko/Derke/Neon clutched at least once this window -> a clean won/played split
+    for name in ("keiko", "Derke", "Neon"):
+        r = by_player[name]
+        assert isinstance(r["cl_won"], int) and isinstance(r["cl_played"], int)
+        assert 0 <= r["cl_won"] <= r["cl_played"]
+    # slowly/FT never clutched -> td class="mod-empty" -> both null, never a false 0
+    for name in ("slowly", "FT"):
+        r = by_player[name]
+        assert r["cl_won"] is None and r["cl_played"] is None
 
 
-def test_parse_stats_empty_cells_become_null():
-    low = parse_stats(load("stats_na.html"))[2]
-    assert low["hs"] is None
-    assert low["clutch_pct"] is None
-    assert low["cl_won"] is None and low["cl_played"] is None
-    assert low["kmax"] is None
-    assert low["r2"] == 0.98  # present values still parse around the empties
+def test_parse_stats_empty_clutch_does_not_break_other_fields():
+    # a null CL/CL% is column-local — every OTHER stat on the same row still
+    # coerces normally around it (present values parse fine around the empties).
+    rows = parse_stats(load("stats_na.html"))
+    by_player = {r["player"]: r for r in rows}
+    for name in ("slowly", "FT"):
+        r = by_player[name]
+        assert r["clutch_pct"] is None
+        assert isinstance(r["r2"], float)
+        assert isinstance(r["acs"], float)
 
 
 def test_parse_stats_never_nan():
@@ -107,24 +135,34 @@ def test_parse_stats_never_nan():
             assert v is None or (isinstance(v, (int, float)) and math.isfinite(v))
 
 
-def test_parse_stats_team_extracted():
+def test_parse_stats_team_present_for_every_row():
     rows = parse_stats(load("stats_na.html"))
-    assert rows[0]["team"] == "SEN"   # TenZ → Sentinels abbreviation
-    assert rows[1]["team"] == "LEV"   # aspas → Leviatán abbreviation
+    assert all(isinstance(r["team"], str) and r["team"].strip() for r in rows)
 
 
 def test_parse_stats_alias_no_team_bleed():
-    # Alias must come from div.text-of only — team tag in div.stats-player-country
-    # must never concatenate into the alias string.
+    # Alias must come from div.text-of only — the team tag in div.st-pl-country
+    # must never concatenate into the alias string (raw cell text is e.g.
+    # "slowlyTYL", "keikoNRG" — exactly the label-bleed trap this guards against).
     rows = parse_stats(load("stats_na.html"))
-    assert rows[0]["player"] == "TenZ"    # NOT "TenZSEN"
-    assert rows[1]["player"] == "aspas"   # NOT "aspasLEV"
+    for r in rows:
+        assert r["player"] and r["team"]
+        assert not r["player"].endswith(r["team"])
+        assert r["team"] not in r["player"]
 
 
 def test_parse_stats_team_null_when_div_absent():
-    # Row 3 has no div.stats-player-country — team must be None, never crash.
-    rows = parse_stats(load("stats_na.html"))
-    assert rows[2]["team"] is None
+    # a genuinely teamless (free-agent) row has no div.st-pl-country at all —
+    # team must resolve to None, never crash. None of the five real rows in
+    # stats_na.html happen to be teamless, so this exercises the null-safe
+    # guard directly against a minimal synthetic snippet.
+    html = """
+    <table class="st-table"><thead><tr><th class="mod-player">Player</th></tr></thead>
+    <tbody><tr><td class="mod-player"><a href="/player/1/loner">
+      <div class="text-of">loner</div></a></td></tr></tbody></table>
+    """
+    rows = parse_stats(html)
+    assert rows[0]["team"] is None
 
 
 def test_parse_stats_no_table_returns_empty():
@@ -204,21 +242,21 @@ async def test_stats_route_envelope_from_cache(monkeypatch):
     resp = await routes.stats(region="na", timespan="all", min_rnd=0)
     assert set(resp.keys()) == {"data", "stale", "error"}
     assert resp["stale"] is False and resp["error"] is None
-    assert len(resp["data"]) == 3
+    assert len(resp["data"]) == 5
 
 
 async def test_stats_route_min_rnd_filters(monkeypatch):
-    rows = parse_stats(load("stats_na.html"))  # rnd = 512, 480, 40
+    rows = parse_stats(load("stats_na.html"))  # rnd = 280, 404, 383, 105, 630
 
     async def fake_cache_get(key):
         return rows
 
     monkeypatch.setattr(routes, "cache_get", fake_cache_get)
 
-    resp = await routes.stats(region="na", timespan="all", min_rnd=100)
-    # the 40-round low-sample player is dropped; the two real ones remain
-    assert len(resp["data"]) == 2
-    assert all((r["rnd"] or 0) >= 100 for r in resp["data"])
+    resp = await routes.stats(region="na", timespan="all", min_rnd=300)
+    # the two players below the 300-round threshold (105, 280) are dropped
+    assert len(resp["data"]) == 3
+    assert all((r["rnd"] or 0) >= 300 for r in resp["data"])
 
 
 async def test_stats_route_uppercases_and_rejects_bad_region(monkeypatch):

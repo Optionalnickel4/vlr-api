@@ -1,112 +1,161 @@
 <!--
-  Hand-built structural fixture for the vlr.gg /stats leaderboard (Phase 12).
-  The sandbox cannot reach vlr.gg, so this mirrors the KNOWN markup shape
-  (recon-confirmed columns + the match-scoreboard side-split span pattern) so the
-  scraper's STRUCTURE + coercion are testable offline. Live selectors are verified
-  on the container via `python -m app.scrapers.verify`. Three rows exercise:
-    - the side-split K cell (mod-both=20 vs raw "20119" concatenation trap),
-    - the CL fraction column (3/15 and 19/104),
-    - the percent columns (KAST/HS%/CL%),
-    - empty cells -> null (the low-sample third row),
-    - team tag in div.stats-player-country (live class; recon 2026-06-14),
-    - null team when the div is absent (row 3 — null-safe guard).
-  Alias in div.text-of; team in sibling div.stats-player-country. Raw cell
-  text MUST NOT be used — it would concatenate alias+team ("TenZSEN").
+  Structural fixture for the vlr.gg /stats leaderboard (Phase 12), RECAPTURED
+  from LIVE vlr.gg (region=na, timespan=all) on 2026-07-14 after vlr's 2026
+  stats-page rewrite (table.wf-table -> table.st-table; div.stats-player-country
+  -> div.st-pl-country; header "R2.0" -> "R", "KMax" -> "KMAX"; per-value
+  side-split spans (mod-both/mod-t/mod-ct) were DROPPED — value cells are now
+  plain td text, except CL which nests span.st-cl-x / span.st-cl-y around a
+  literal "/" separator (text_of still yields "12/39" cleanly).
+  Five real rows (raw markup, verbatim) selected to cover:
+    - CL populated (keiko 12/39, Derke 3/41, Neon 10/83) vs CL empty/never-
+      clutched (slowly, FT) -> class="mod-empty", exercising the null path,
+    - a wide Rnd spread (105..630) for the min_rnd filter test,
+    - team tag in div.st-pl-country, alias in div.text-of (label-bleed guard:
+      raw cell text is "slowlyTYL" — alias and team MUST be read separately).
+  Tests assert STRUCTURE + INVARIANTS only (types, null-ness, key sets) —
+  never a specific rating/ACS/K:D value, since those are live numbers that
+  drift on every future recapture.
 -->
 <html><body>
-<table class="wf-table">
-  <thead>
-    <tr>
-      <th>Player</th><th>Agents</th><th>Rnd</th><th>R2.0</th><th>ACS</th>
-      <th>K:D</th><th>KAST</th><th>ADR</th><th>KPR</th><th>APR</th>
-      <th>FKPR</th><th>FDPR</th><th>HS%</th><th>CL%</th><th>CL</th>
-      <th>KMax</th><th>K</th><th>D</th><th>A</th><th>FK</th><th>FD</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="mod-player">
-        <a href="/player/9/tenz">
-          <div class="text-of">TenZ</div>
-          <div class="stats-player-country">SEN</div>
-        </a>
-      </td>
-      <td>(+1)</td>
-      <td><span class="mod-both">512</span></td>
-      <td><span class="mod-both">1.24</span></td>
-      <td><span class="mod-both">256.4</span></td>
-      <td><span class="mod-both">1.62</span></td>
-      <td><span class="mod-both">78%</span></td>
-      <td><span class="mod-both">168.3</span></td>
-      <td><span class="mod-both">0.82</span></td>
-      <td><span class="mod-both">0.31</span></td>
-      <td><span class="mod-both">0.12</span></td>
-      <td><span class="mod-both">0.09</span></td>
-      <td><span class="mod-both">27%</span></td>
-      <td><span class="mod-both">20%</span></td>
-      <td><span class="mod-both">3/15</span></td>
-      <td><span class="mod-both">34</span></td>
-      <td><span class="mod-both">20</span><span class="mod-t">11</span><span class="mod-ct">9</span></td>
-      <td><span class="mod-both">14</span></td>
-      <td><span class="mod-both">5</span></td>
-      <td><span class="mod-both">2</span></td>
-      <td><span class="mod-both">1</span></td>
-    </tr>
-    <tr>
-      <td class="mod-player">
-        <a href="/player/9999/aspas">
-          <div class="text-of">aspas</div>
-          <div class="stats-player-country">LEV</div>
-        </a>
-      </td>
-      <td>(+3)</td>
-      <td><span class="mod-both">480</span></td>
-      <td><span class="mod-both">1.05</span></td>
-      <td><span class="mod-both">198.1</span></td>
-      <td><span class="mod-both">1.10</span></td>
-      <td><span class="mod-both">71%</span></td>
-      <td><span class="mod-both">150.0</span></td>
-      <td><span class="mod-both">0.75</span></td>
-      <td><span class="mod-both">0.28</span></td>
-      <td><span class="mod-both">0.10</span></td>
-      <td><span class="mod-both">0.11</span></td>
-      <td><span class="mod-both">24%</span></td>
-      <td><span class="mod-both">18%</span></td>
-      <td><span class="mod-both">19/104</span></td>
-      <td><span class="mod-both">30</span></td>
-      <td><span class="mod-both">18</span></td>
-      <td><span class="mod-both">16</span></td>
-      <td><span class="mod-both">6</span></td>
-      <td><span class="mod-both">3</span></td>
-      <td><span class="mod-both">2</span></td>
-    </tr>
-    <tr>
-      <td class="mod-player">
-        <a href="/player/123/lowsample">
-          <div class="text-of">lowsample</div>
-        </a>
-      </td>
-      <td></td>
-      <td><span class="mod-both">40</span></td>
-      <td><span class="mod-both">0.98</span></td>
-      <td><span class="mod-both">180.0</span></td>
-      <td><span class="mod-both">0.95</span></td>
-      <td><span class="mod-both">65%</span></td>
-      <td><span class="mod-both">130.0</span></td>
-      <td><span class="mod-both">0.60</span></td>
-      <td><span class="mod-both">0.20</span></td>
-      <td><span class="mod-both">0.05</span></td>
-      <td><span class="mod-both">0.08</span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both"></span></td>
-      <td><span class="mod-both">10</span></td>
-      <td><span class="mod-both">12</span></td>
-      <td><span class="mod-both">3</span></td>
-      <td><span class="mod-both">1</span></td>
-      <td><span class="mod-both">1</span></td>
-    </tr>
-  </tbody>
-</table>
+<table class="st-table mod-hide-maps mod-hide-fbpr mod-hide-fdpr mod-hide-fk mod-hide-fd" id="st-table" data-toggle="agents,maps,rnd,rating2,acs,kd,kast,adr,kpr,apr,fkfd,fbpr,fdpr,hsp,clp,cl,kmax,k,d,a,fk,fd" data-defon="agents,rnd,rating2,acs,kd,kast,adr,kpr,apr,fkfd,hsp,clp,cl,kmax,k,d,a">
+				<thead>
+					<tr>
+						<th class="mod-player">Player</th>
+						<th class="mod-agents" data-col="agents" title="Agents played">Agents</th>
+						<th class="st-th-sort" data-col="maps" title="Maps played"><i></i><a class="st-sort" href="/stats?sort=maps&amp;dir=desc">Maps</a></th><th class="st-th-sort" data-col="rnd" title="Rounds played"><i></i><a class="st-sort" href="/stats?sort=rnd&amp;dir=desc">Rnd</a></th><th class="st-th-sort mod-desc" data-col="rating2" title="Rating"><i></i><a class="st-sort" href="/stats?sort=rating2&amp;dir=asc">R</a></th><th class="st-th-sort" data-col="acs" title="Average combat score"><i></i><a class="st-sort" href="/stats?sort=acs&amp;dir=desc">ACS</a></th><th class="st-th-sort" data-col="kd" title="Kills : deaths"><i></i><a class="st-sort" href="/stats?sort=kd&amp;dir=desc">K:D</a></th><th class="st-th-sort" data-col="kast" title="Kill / assist / trade / survive %"><i></i><a class="st-sort" href="/stats?sort=kast&amp;dir=desc">KAST</a></th><th class="st-th-sort" data-col="adr" title="Average damage per round"><i></i><a class="st-sort" href="/stats?sort=adr&amp;dir=desc">ADR</a></th><th class="st-th-sort" data-col="kpr" title="Kills per round"><i></i><a class="st-sort" href="/stats?sort=kpr&amp;dir=desc">KPR</a></th><th class="st-th-sort" data-col="apr" title="Assists per round"><i></i><a class="st-sort" href="/stats?sort=apr&amp;dir=desc">APR</a></th><th class="st-th-sort" data-col="fkfd" title="First kills : First deaths"><i></i><a class="st-sort" href="/stats?sort=fkfd&amp;dir=desc">FK:FD</a></th><th class="st-th-sort" data-col="fbpr" title="First kills per round"><i></i><a class="st-sort" href="/stats?sort=fbpr&amp;dir=desc">FKPR</a></th><th class="st-th-sort" data-col="fdpr" title="First deaths per round"><i></i><a class="st-sort" href="/stats?sort=fdpr&amp;dir=desc">FDPR</a></th><th class="st-th-sort" data-col="hsp" title="Headshot %"><i></i><a class="st-sort" href="/stats?sort=hsp&amp;dir=desc">HS%</a></th><th class="st-th-sort" data-col="clp" title="Clutch success %"><i></i><a class="st-sort" href="/stats?sort=clp&amp;dir=desc">CL%</a></th><th class="st-th-sort" data-col="cl" title="Clutches won / played"><i></i><a class="st-sort" href="/stats?sort=cl&amp;dir=desc">CL</a></th><th class="st-th-sort" data-col="kmax" title="Most kills in a map"><i></i><a class="st-sort" href="/stats?sort=kmax&amp;dir=desc">K<sup>MAX</sup></a></th><th class="st-th-sort" data-col="k" title="Total kills"><i></i><a class="st-sort" href="/stats?sort=k&amp;dir=desc">K</a></th><th class="st-th-sort" data-col="d" title="Total deaths"><i></i><a class="st-sort" href="/stats?sort=d&amp;dir=desc">D</a></th><th class="st-th-sort" data-col="a" title="Total assists"><i></i><a class="st-sort" href="/stats?sort=a&amp;dir=desc">A</a></th><th class="st-th-sort" data-col="fk" title="Total first kills"><i></i><a class="st-sort" href="/stats?sort=fk&amp;dir=desc">FK</a></th><th class="st-th-sort" data-col="fd" title="Total first deaths"><i></i><a class="st-sort" href="/stats?sort=fd&amp;dir=desc">FD</a></th>					</tr>
+				</thead>
+				
+				<tbody>
+<tr>
+							<td class="mod-player mod-a">
+								<a href="/player/41739/slowly">
+									<i class="flag mod-cn"></i>
+									<div class="st-pl-meta">
+										<div class="st-pl-name text-of">slowly</div>
+																														<div class="st-pl-country">TYL</div>									</div>
+								</a>
+							</td>
+							<td class="mod-agents" data-col="agents">
+								<div>
+																																															<span class="st-agent">
+											<img src="/img/vlr/game/agents/sova.png">
+											<span class="st-agent-n">43%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/chamber.png">
+											<span class="st-agent-n">14%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/fade.png">
+											<span class="st-agent-n">14%</span>
+										</span>
+																		<div class="st-agent-more">+4</div>								</div>
+							</td>
+							<td data-col="maps">14</td><td data-col="rnd">280</td><td class="mod-color-sq" data-col="rating2" style="--stat-h:264" title="R">1.44</td><td class="mod-color-sq" data-col="acs" style="--stat-h:141" title="ACS">210</td><td class="mod-color-sq" data-col="kd" style="--stat-h:167" title="K:D">1.16</td><td class="mod-color-sq" data-col="kast" style="--stat-h:195" title="KAST">80%</td><td class="mod-color-sq" data-col="adr" style="--stat-h:231" title="ADR">171.9</td><td class="mod-color-sq" data-col="kpr" style="--stat-h:143" title="KPR">0.74</td><td class="mod-color-sq" data-col="apr" style="--stat-h:97" title="APR">0.24</td><td class="mod-color-sq" data-col="fkfd" style="--stat-h:231" title="FK:FD">2.50</td><td class="mod-color-sq" data-col="fbpr" style="--stat-h:270" title="FKPR">0.27</td><td class="mod-color-sq" data-col="fdpr" style="--stat-h:109" title="FDPR">0.11</td><td class="mod-color-sq" data-col="hsp" style="--stat-h:168" title="HS%">33%</td><td class="mod-empty" data-col="clp"></td><td class="mod-empty" data-col="cl"></td><td class="mod-a mod-kmax" data-col="kmax"><a href="/701032/tyloo-vs-trace-esports-vct-2026-china-stage-2-w1/?game=273960">22</a></td><td data-col="k">206</td><td data-col="d">178</td><td data-col="a">67</td><td data-col="fk">20</td><td data-col="fd">8</td>						</tr>
+<tr>
+							<td class="mod-player mod-a">
+								<a href="/player/11494/keiko">
+									<i class="flag mod-gb"></i>
+									<div class="st-pl-meta">
+										<div class="st-pl-name text-of">keiko</div>
+																														<div class="st-pl-country">NRG</div>									</div>
+								</a>
+							</td>
+							<td class="mod-agents" data-col="agents">
+								<div>
+																																															<span class="st-agent">
+											<img src="/img/vlr/game/agents/phoenix.png">
+											<span class="st-agent-n">37%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/omen.png">
+											<span class="st-agent-n">26%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/jett.png">
+											<span class="st-agent-n">21%</span>
+										</span>
+																		<div class="st-agent-more">+2</div>								</div>
+							</td>
+							<td data-col="maps">19</td><td data-col="rnd">404</td><td class="mod-color-sq" data-col="rating2" style="--stat-h:194" title="R">1.23</td><td class="mod-color-sq" data-col="acs" style="--stat-h:193" title="ACS">237</td><td class="mod-color-sq" data-col="kd" style="--stat-h:196" title="K:D">1.25</td><td class="mod-color-sq" data-col="kast" style="--stat-h:142" title="KAST">74%</td><td class="mod-color-sq" data-col="adr" style="--stat-h:188" title="ADR">155.7</td><td class="mod-color-sq" data-col="kpr" style="--stat-h:203" title="KPR">0.85</td><td class="mod-color-sq" data-col="apr" style="--stat-h:142" title="APR">0.32</td><td class="mod-color-sq" data-col="fkfd" style="--stat-h:149" title="FK:FD">1.47</td><td class="mod-color-sq" data-col="fbpr" style="--stat-h:141" title="FKPR">0.12</td><td class="mod-color-sq" data-col="fdpr" style="--stat-h:139" title="FDPR">0.08</td><td class="mod-color-sq" data-col="hsp" style="--stat-h:139" title="HS%">30%</td><td class="mod-color-sq" data-col="clp" style="--stat-h:235" title="CL%">31%</td><td data-col="cl"><span class="st-cl"><span class="st-cl-x">12</span>/<span class="st-cl-y">39</span></span></td><td class="mod-a mod-kmax" data-col="kmax"><a href="/684613/xi-lai-gaming-vs-nrg-valorant-masters-london-2026-r1/?game=270747">34</a></td><td data-col="k">342</td><td data-col="d">274</td><td data-col="a">128</td><td data-col="fk">50</td><td data-col="fd">34</td>						</tr>
+<tr>
+							<td class="mod-player mod-a">
+								<a href="/player/5022/derke">
+									<i class="flag mod-fi"></i>
+									<div class="st-pl-meta">
+										<div class="st-pl-name text-of">Derke</div>
+																														<div class="st-pl-country">VIT</div>									</div>
+								</a>
+							</td>
+							<td class="mod-agents" data-col="agents">
+								<div>
+																																															<span class="st-agent">
+											<img src="/img/vlr/game/agents/jett.png">
+											<span class="st-agent-n">42%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/raze.png">
+											<span class="st-agent-n">37%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/neon.png">
+											<span class="st-agent-n">21%</span>
+										</span>
+																										</div>
+							</td>
+							<td data-col="maps">19</td><td data-col="rnd">383</td><td class="mod-color-sq" data-col="rating2" style="--stat-h:168" title="R">1.15</td><td class="mod-color-sq" data-col="acs" style="--stat-h:205" title="ACS">243</td><td class="mod-color-sq" data-col="kd" style="--stat-h:189" title="K:D">1.23</td><td class="mod-color-sq" data-col="kast" style="--stat-h:124" title="KAST">72%</td><td class="mod-color-sq" data-col="adr" style="--stat-h:195" title="ADR">158.2</td><td class="mod-color-sq" data-col="kpr" style="--stat-h:203" title="KPR">0.85</td><td class="mod-color-sq" data-col="apr" style="--stat-h:80" title="APR">0.21</td><td class="mod-color-sq" data-col="fkfd" style="--stat-h:129" title="FK:FD">1.22</td><td class="mod-color-sq" data-col="fbpr" style="--stat-h:179" title="FKPR">0.16</td><td class="mod-color-sq" data-col="fdpr" style="--stat-h:88" title="FDPR">0.13</td><td class="mod-color-sq" data-col="hsp" style="--stat-h:72" title="HS%">23%</td><td class="mod-color-sq" data-col="clp" style="--stat-h:68" title="CL%">7%</td><td data-col="cl"><span class="st-cl"><span class="st-cl-x">3</span>/<span class="st-cl-y">41</span></span></td><td class="mod-a mod-kmax" data-col="kmax"><a href="/670467/team-heretics-vs-team-vitality-valorant-masters-london-2026-ubqf/?game=267808">23</a></td><td data-col="k">326</td><td data-col="d">266</td><td data-col="a">81</td><td data-col="fk">61</td><td data-col="fd">50</td>						</tr>
+<tr>
+							<td class="mod-player mod-a">
+								<a href="/player/64029/ft">
+									<i class="flag mod-cn"></i>
+									<div class="st-pl-meta">
+										<div class="st-pl-name text-of">FT</div>
+																														<div class="st-pl-country">BLG</div>									</div>
+								</a>
+							</td>
+							<td class="mod-agents" data-col="agents">
+								<div>
+																																															<span class="st-agent">
+											<img src="/img/vlr/game/agents/waylay.png">
+											<span class="st-agent-n">40%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/omen.png">
+											<span class="st-agent-n">20%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/phoenix.png">
+											<span class="st-agent-n">20%</span>
+										</span>
+																		<div class="st-agent-more">+1</div>								</div>
+							</td>
+							<td data-col="maps">5</td><td data-col="rnd">105</td><td class="mod-color-sq" data-col="rating2" style="--stat-h:98" title="R">0.94</td><td class="mod-color-sq" data-col="acs" style="--stat-h:111" title="ACS">195</td><td class="mod-color-sq" data-col="kd" style="--stat-h:100" title="K:D">0.95</td><td class="mod-color-sq" data-col="kast" style="--stat-h:107" title="KAST">70%</td><td class="mod-color-sq" data-col="adr" style="--stat-h:107" title="ADR">125.1</td><td class="mod-color-sq" data-col="kpr" style="--stat-h:99" title="KPR">0.66</td><td class="mod-color-sq" data-col="apr" style="--stat-h:80" title="APR">0.21</td><td class="mod-color-sq" data-col="fkfd" style="--stat-h:118" title="FK:FD">1.09</td><td class="mod-color-sq" data-col="fbpr" style="--stat-h:131" title="FKPR">0.11</td><td class="mod-color-sq" data-col="fdpr" style="--stat-h:119" title="FDPR">0.10</td><td class="mod-color-sq" data-col="hsp" style="--stat-h:159" title="HS%">32%</td><td class="mod-empty" data-col="clp"></td><td class="mod-empty" data-col="cl"></td><td class="mod-a mod-kmax" data-col="kmax"><a href="/701030/bilibili-gaming-vs-wolves-esports-vct-2026-china-stage-2-w1/?game=273955">19</a></td><td data-col="k">69</td><td data-col="d">73</td><td data-col="a">22</td><td data-col="fk">12</td><td data-col="fd">11</td>						</tr>
+<tr>
+							<td class="mod-player mod-a">
+								<a href="/player/29243/neon">
+									<i class="flag mod-ar"></i>
+									<div class="st-pl-meta">
+										<div class="st-pl-name text-of">Neon</div>
+																														<div class="st-pl-country">LEV</div>									</div>
+								</a>
+							</td>
+							<td class="mod-agents" data-col="agents">
+								<div>
+																																															<span class="st-agent">
+											<img src="/img/vlr/game/agents/chamber.png">
+											<span class="st-agent-n">45%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/jett.png">
+											<span class="st-agent-n">23%</span>
+										</span>
+																													<span class="st-agent">
+											<img src="/img/vlr/game/agents/omen.png">
+											<span class="st-agent-n">23%</span>
+										</span>
+																		<div class="st-agent-more">+1</div>								</div>
+							</td>
+							<td data-col="maps">31</td><td data-col="rnd">630</td><td class="mod-color-sq" data-col="rating2" style="--stat-h:188" title="R">1.21</td><td class="mod-color-sq" data-col="acs" style="--stat-h:164" title="ACS">222</td><td class="mod-color-sq" data-col="kd" style="--stat-h:234" title="K:D">1.37</td><td class="mod-color-sq" data-col="kast" style="--stat-h:142" title="KAST">74%</td><td class="mod-color-sq" data-col="adr" style="--stat-h:162" title="ADR">146.0</td><td class="mod-color-sq" data-col="kpr" style="--stat-h:181" title="KPR">0.81</td><td class="mod-color-sq" data-col="apr" style="--stat-h:102" title="APR">0.25</td><td class="mod-color-sq" data-col="fkfd" style="--stat-h:153" title="FK:FD">1.52</td><td class="mod-color-sq" data-col="fbpr" style="--stat-h:179" title="FKPR">0.16</td><td class="mod-color-sq" data-col="fdpr" style="--stat-h:119" title="FDPR">0.10</td><td class="mod-color-sq" data-col="hsp" style="--stat-h:120" title="HS%">28%</td><td class="mod-color-sq" data-col="clp" style="--stat-h:103" title="CL%">12%</td><td data-col="cl"><span class="st-cl"><span class="st-cl-x">10</span>/<span class="st-cl-y">83</span></span></td><td class="mod-a mod-kmax" data-col="kmax"><a href="/670466/paper-rex-vs-leviat-n-valorant-masters-london-2026-ubqf/?game=267805">28</a></td><td data-col="k">508</td><td data-col="d">371</td><td data-col="a">155</td><td data-col="fk">100</td><td data-col="fd">66</td>						</tr>
+				</tbody>
+			</table>
 </body></html>

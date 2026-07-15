@@ -99,10 +99,9 @@ PLAYER_SELF_LINK = "a.player-stats-filter-btn"
 PLAYER_TEAM = 'a.wf-module-item[href^="/team/"]'
 PLAYER_TEAM_NAME = 'div[style*="font-weight: 500"]'
 # per-agent stats table (header titles drive the stat keys, agent name = img alt)
-# vlr's 2026 stats-page rewrite dropped the `mod-table` container class and renamed
-# the table class wf-table -> st-table; the old shape is kept as a fallback since
-# tests/fixtures/player_tenz.html still captures the pre-rewrite markup.
-PLAYER_STATS_TABLE = "div.wf-card.mod-dark table.st-table, div.wf-card.mod-table table.wf-table"
+# vlr's 2026 stats-page rewrite dropped the `mod-table` container class and
+# renamed the table class wf-table -> st-table (confirmed live 2026-07-14).
+PLAYER_STATS_TABLE = "div.wf-card.mod-dark table.st-table"
 PLAYER_STATS_HEADER = "thead th"
 PLAYER_STATS_ROW = "tbody tr"
 PLAYER_STATS_CELL = "td"
@@ -186,32 +185,27 @@ MATCH_STREAM_EXTERNAL = "a.match-streams-btn-external"  # href fallback: twitch.
 MATCH_STREAM_TWITCH_HOST = "twitch.tv"  # host guard for the external-href fallback
 
 # --- stats leaderboard page (/stats?region={na|eu}&timespan={30d|60d|90d|all}) ---
-# (Phase 12) VLR's region-wide player leaderboard — ONE table. Header titles
-# drive the stat keys (like the player-page agent table) so a new vlr column just
-# falls through. Confirmed columns (recon): Player, Agents, Rnd, R2.0, ACS, K:D,
-# KAST, ADR, KPR, APR, FKPR, FDPR, HS%, CL%, CL, KMax, K, D, A, FK, FD. R2.0 is
-# VLR's own rating at 100% fill — the headline (we never compute a composite).
-# vlr's 2026 stats-page rewrite renamed the table class wf-table -> st-table (and
-# also shortened header labels: "R2.0" -> "R", "KMax" -> "KMAX" — handled in
-# stats.py's _COLUMN_MAP, which accepts both spellings). The old class is kept as
-# a fallback since tests/fixtures/stats_na.html still captures pre-rewrite markup.
-STATS_TABLE = "table.st-table, table.wf-table"
+# (Phase 12) VLR's region-wide player leaderboard — ONE table (table.st-table,
+# confirmed live 2026-07-14 post-rewrite). Header titles drive the stat keys
+# (like the player-page agent table) so a new vlr column just falls through.
+# Confirmed columns (recon): Player, Agents, Maps, Rnd, R, ACS, K:D, KAST, ADR,
+# KPR, APR, FK:FD, FKPR, FDPR, HS%, CL%, CL, KMAX, K, D, A, FK, FD. R is VLR's
+# own rating at 100% fill — the headline (we never compute a composite).
+STATS_TABLE = "table.st-table"
 STATS_HEADER = "thead th"
 STATS_ROW = "tbody tr"
 STATS_CELL = "td"
 # the player identity cell carries the /player/{id} link + the alias in a text-of
-# div. The team abbreviation ("SEN", "FLCV") lives in a SIBLING div — class was
-# historically ge-text-light; live markup (recon 2026-06-14) uses stats-player-country
-# (a misnomer — it holds the team tag, not a country, on the /stats page).
-# Read alias and team SEPARATELY from their own selectors; never read raw cell
-# text (it would concatenate alias+team into "TenZSEN"). Detected by
-# header=="Player" OR the mod-player class as a belt-and-suspenders guard.
+# div. The team abbreviation ("SEN", "FLCV") lives in a SIBLING div, class
+# st-pl-country (a misnomer — it holds the team tag, not a country, on the
+# /stats page; confirmed live 2026-07-14). Read alias and team SEPARATELY from
+# their own selectors; never read raw cell text (it would concatenate alias+team
+# into "slowlyTYL"). Detected by header=="Player" OR the mod-player class as a
+# belt-and-suspenders guard.
 STATS_PLAYER_CELL_CLASS = "mod-player"
 STATS_PLAYER_LINK = 'a[href^="/player/"]'
 STATS_PLAYER_ALIAS = "div.text-of"
-# vlr's 2026 stats-page rewrite renamed this class stats-player-country -> st-pl-country;
-# the old class is kept as a fallback for tests/fixtures/stats_na.html.
-STATS_PLAYER_TEAM = "div.st-pl-country, div.stats-player-country"
+STATS_PLAYER_TEAM = "div.st-pl-country"
 # CRITICAL: stat value cells side-split into spans (mod-both = combined, mod-t =
 # attack, mod-ct = defense), exactly like the match scoreboard. Read mod-both;
 # NEVER raw td.text() (it concatenates the three spans into a silently-wrong
