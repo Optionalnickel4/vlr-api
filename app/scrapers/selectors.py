@@ -95,7 +95,16 @@ PLAYER_REAL = "h2.player-real-name"
 PLAYER_COUNTRY_FLAG = "div.player-header i.flag"
 # self-id lives in the timespan filter buttons: /player/9/tenz/?timespan=30d
 PLAYER_SELF_LINK = "a.player-stats-filter-btn"
-# current team = the first team module-item on the page; name sits in a 500-weight div
+# The "Current Teams" card holds ONLY the player's real club roster spot(s).
+# National/event-representative teams -- and genuinely past clubs -- land in a
+# separate "Past Teams" card instead, even while the national entry is still
+# active with no end date. So PLAYER_TEAM must be scoped to the wf-card that
+# immediately follows the "Current Teams" <h2> (found via PLAYER_TEAM_HEADING),
+# never css_first()'d against the whole page -- that would grab the first entry
+# of Past Teams instead, e.g. TenZ's national "Canada" team outranking his club.
+# A player with no "Current Teams" heading at all has no current club and should
+# resolve to a null team, not fall back to Past Teams.
+PLAYER_TEAM_HEADING = "h2.wf-label.mod-large"
 PLAYER_TEAM = 'a.wf-module-item[href^="/team/"]'
 PLAYER_TEAM_NAME = 'div[style*="font-weight: 500"]'
 # per-agent stats table (header titles drive the stat keys, agent name = img alt)

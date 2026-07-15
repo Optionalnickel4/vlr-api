@@ -174,11 +174,44 @@ def test_parse_player_identity():
     assert isinstance(p["country"], str) and p["country"].strip()
 
 
-def test_parse_player_team_is_present_but_not_pinned():
+def test_parse_player_team_none_when_no_current_teams_section():
+    # TenZ currently has no "Current Teams" card at all -- only "Past Teams",
+    # whose first entry is his national team (Canada). Regression guard for the
+    # bug where css_first() on the whole page grabbed that national entry as
+    # if it were his club: team must resolve to null, never fall back to it.
     p = parse_player(load("player_tenz.html"))
-    # a non-empty team string + numeric id — but we do NOT assert *which* team
+    assert p["team"] is None
+    assert p["team_id"] is None
+    assert p["team_url"] is None
+
+
+def test_parse_player_team_resolves_to_club_not_national():
+    # johnqt (id 1265) has a "Current Teams" card (Sentinels) AND a "Past Teams"
+    # card whose first/most-recent entry is his national team (Morocco, still
+    # active with no end date). Team must resolve to the club, not the national
+    # team, even though the national entry is more recent.
+    p = parse_player(load("player_johnqt.html"))
+    assert p["team"] == "Sentinels"
+    assert p["team_id"] == "2"
+    assert p["team_url"] == "https://www.vlr.gg/team/2/sentinels"
+
+
+def test_parse_player_team_club_only_no_national():
+    # A player whose "Past Teams" card has no national-team entry at all --
+    # confirms club resolution doesn't depend on a national entry being present.
+    p = parse_player(load("player_victor.html"))
     assert isinstance(p["team"], str) and p["team"].strip()
     assert p["team_id"] and p["team_id"].isdigit()
+
+
+def test_parse_player_team_null_for_teamless_player():
+    # No "Current Teams" or "Past Teams" section at all (free agent / minimal
+    # page) -- must not crash, team fields all resolve to null.
+    html = "<html><body><h1 id='wf-title'>Nobody</h1></body></html>"
+    p = parse_player(html)
+    assert p["team"] is None
+    assert p["team_id"] is None
+    assert p["team_url"] is None
 
 
 def test_parse_player_agent_stats_structure():

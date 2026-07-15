@@ -17,8 +17,24 @@ def _country_from_flag(flag: Node | None) -> str | None:
     return None
 
 
+def _current_team_card(tree: HTMLParser) -> Node | None:
+    """The wf-card immediately after the "Current Teams" <h2>, if any.
+
+    That heading/card boundary is vlr's own split between the player's real
+    club roster spot and everything else -- see PLAYER_TEAM_HEADING for why.
+    """
+    for heading in tree.css(S.PLAYER_TEAM_HEADING):
+        if clean_spaces(text_of(heading)) != "Current Teams":
+            continue
+        sibling = heading.next
+        while sibling is not None and sibling.tag != "div":
+            sibling = sibling.next
+        return sibling
+    return None
+
+
 def _parse_team(card: Node | None) -> dict[str, Any]:
-    """First team module-item on the page = the player's current/most recent team."""
+    """First team module-item in the "Current Teams" card = the player's club."""
     if card is None:
         return {"team": None, "team_id": None, "team_url": None}
     href = card.attributes.get("href", "") or ""
@@ -71,12 +87,14 @@ def parse_player(html: str) -> dict[str, Any]:
     tree = HTMLParser(html)
     self_link = tree.css_first(S.PLAYER_SELF_LINK)
     player_id = id_from_href(self_link.attributes.get("href", "")) if self_link else None
+    team_card = _current_team_card(tree)
+    team_node = team_card.css_first(S.PLAYER_TEAM) if team_card is not None else None
     return {
         "id": player_id,
         "alias": clean_spaces(text_of(tree.css_first(S.PLAYER_ALIAS))) or None,
         "real_name": clean_spaces(text_of(tree.css_first(S.PLAYER_REAL))) or None,
         "country": _country_from_flag(tree.css_first(S.PLAYER_COUNTRY_FLAG)),
-        **_parse_team(tree.css_first(S.PLAYER_TEAM)),
+        **_parse_team(team_node),
         "agent_stats": _parse_agent_stats(tree),
         "matches": [_parse_match(c) for c in tree.css(S.PLAYER_MATCH_CARD)],
     }
