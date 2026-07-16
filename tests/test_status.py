@@ -53,7 +53,9 @@ def test_status_json_shape(monkeypatch):
 
     assert body["service"] == "vlr-api"
     assert body["commit"] == meta.COMMIT
-    assert body["deploy"] == {"lxc": 289, "host": "192.168.1.35"}
+    # deploy is resolved at process start from the serving machine, not committed
+    assert set(body["deploy"]) == {"hostname"}
+    assert body["deploy"]["hostname"] and isinstance(body["deploy"]["hostname"], str)
     assert body["checks"] == {"postgres": True, "redis": True}
 
     # history: one row per known table, in order, each with table/rows/newest

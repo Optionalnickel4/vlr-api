@@ -46,8 +46,7 @@ def render_status_page() -> str:
     )
     html = _TEMPLATE
     html = html.replace("__COMMIT__", meta.COMMIT)
-    html = html.replace("__LXC__", str(meta.DEPLOY["lxc"]))
-    html = html.replace("__HOST__", str(meta.DEPLOY["host"]))
+    html = html.replace("__HOSTNAME__", meta.DEPLOY["hostname"])
     html = html.replace("__TILES__", tiles)
     html = html.replace("__PHASES__", _phase_rows())
     return html
@@ -185,7 +184,7 @@ _TEMPLATE = """<!doctype html>
     </div>
     <div class="meta">
       <div><span id="livedot" class="live-dot"></span><b id="livelabel">live status loading…</b></div>
-      <div>deploy <b>LXC __LXC__</b> · <b>__HOST__</b></div>
+      <div>deploy <b>__HOSTNAME__</b></div>
       <div>commit <b>__COMMIT__</b></div>
     </div>
   </header>

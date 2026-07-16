@@ -1,18 +1,43 @@
-"""Static, committed project metadata for the status dashboard (Phase 6).
+"""Project metadata for the status dashboard (Phase 6).
 
-This is the versioned source of truth that ships with the code. It is NOT computed
-at runtime — bump the constants in the same commit that earns them. PROGRESS.md
-mirrors these counts; keep the two in sync.
+Phase/test counts are the versioned source of truth that ships with the code —
+bump them in the same commit that earns them (PROGRESS.md mirrors these counts;
+keep the two in sync). COMMIT and DEPLOY are resolved once at process start so
+they always report the machine and checkout actually serving the page.
 """
+import socket
+import subprocess
+from pathlib import Path
 
-# Short sha of the release this build corresponds to. Bump per release.
-COMMIT = "phase13"
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _git_short_commit() -> str:
+    """Short sha of the running checkout; never raises (the status page must not 500)."""
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=_PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        sha = out.stdout.strip()
+        if out.returncode == 0 and sha:
+            return sha
+    except Exception:
+        pass
+    return "unknown"
+
+
+# Resolved once at import — no per-request shell-outs.
+COMMIT = _git_short_commit()
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
 TESTS_PASSING = 173
 
-# Where this is deployed (already-public LXC ip; no secrets here).
-DEPLOY = {"lxc": 289, "host": "192.168.1.35"}
+# Where this is running (hostname of the serving machine; no secrets here).
+DEPLOY = {"hostname": socket.gethostname()}
 
 PHASES = [
     {"n": 1, "name": "league listings",  "desc": "results, upcoming/live, rankings, events, news + history", "shipped": True},
