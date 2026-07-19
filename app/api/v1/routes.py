@@ -65,6 +65,9 @@ async def live():
 
 @router.get("/rankings")
 async def rankings(region: str = Query("all")):
+    region = region.lower()
+    if region not in R.RANKINGS_REGIONS:
+        raise HTTPException(400, f"region must be one of {list(R.RANKINGS_REGIONS)}")
     key = R.CACHE_RANKINGS.format(region=region)
     return await _cached_or_refresh(key, lambda: R.refresh_rankings(region))
 

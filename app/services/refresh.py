@@ -41,6 +41,15 @@ CACHE_STATS = "vlr:stats:{region}:{timespan}"
 STATS_REGIONS = ("na", "eu")
 STATS_TIMESPANS = ("30d", "60d", "90d", "all")
 
+# vlr.gg ranking slugs (/rankings/<region>; "all" is the bare /rankings page).
+# Unknown slugs 404 upstream, and the route triggers an inline refresh on a
+# cache miss — so a bogus ?region= would otherwise keep failing against vlr on
+# every request. The route rejects anything not listed here.
+RANKINGS_REGIONS = (
+    "all", "north-america", "europe", "brazil", "asia-pacific", "korea",
+    "china", "japan", "la-s", "la-n", "oceania", "gc", "mena", "collegiate",
+)
+
 
 async def refresh_results() -> int:
     s = get_settings()

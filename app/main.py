@@ -7,6 +7,7 @@ from app.api.status_html import router as status_html_router
 from app.api.v1.routes import router as v1_router
 from app.core.config import get_settings
 from app.core.db import init_db
+from app.core.http import aclose_client
 from app.jobs.scheduler import build_scheduler
 
 logging.basicConfig(level=logging.INFO)
@@ -21,9 +22,12 @@ async def lifespan(app: FastAPI):
     if settings.enable_scheduler:
         _scheduler = build_scheduler()
         _scheduler.start()
-    yield
-    if _scheduler:
-        _scheduler.shutdown(wait=False)
+    try:
+        yield
+    finally:
+        if _scheduler:
+            _scheduler.shutdown(wait=False)
+        await aclose_client()
 
 
 app = FastAPI(title="vlr-api", version="0.1.0", lifespan=lifespan)

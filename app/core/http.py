@@ -91,3 +91,11 @@ def get_client() -> VlrClient:
     if _client is None:
         _client = VlrClient()
     return _client
+
+
+async def aclose_client() -> None:
+    """Close the shared lazy client on shutdown. No-op if never created."""
+    global _client
+    if _client is not None:
+        await _client.aclose()
+        _client = None

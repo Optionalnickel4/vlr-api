@@ -9,6 +9,7 @@ import asyncio
 import logging
 
 from app.core.db import init_db
+from app.core.http import aclose_client
 from app.jobs.scheduler import build_scheduler
 
 logging.basicConfig(level=logging.INFO)
@@ -24,6 +25,7 @@ async def main() -> None:
             await asyncio.sleep(3600)
     except (KeyboardInterrupt, asyncio.CancelledError):
         sched.shutdown()
+        await aclose_client()
 
 
 if __name__ == "__main__":
