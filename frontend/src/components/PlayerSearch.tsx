@@ -85,8 +85,18 @@ export function PlayerSearch() {
 
   const showDropdown = open;
 
+  // ARIA combobox pattern: the WRAPPER carries role="combobox" + aria-expanded +
+  // aria-controls (input has implicit role="textbox" and can't carry those).
+  // The listbox is the sibling with the matching id.
   return (
-    <div ref={containerRef} className="relative">
+    <div
+      ref={containerRef}
+      className="relative"
+      role="combobox"
+      aria-expanded={showDropdown}
+      aria-haspopup="listbox"
+      aria-controls="player-search-listbox"
+    >
       <input
         type="search"
         value={query}
@@ -94,8 +104,6 @@ export function PlayerSearch() {
         onKeyDown={handleKeyDown}
         placeholder="Search players…"
         aria-label="Search players"
-        aria-expanded={showDropdown}
-        aria-haspopup="listbox"
         className={cn(
           "w-36 rounded border border-line bg-panel px-2.5 py-1",
           "font-body text-[12px] text-ink placeholder:text-dim",
@@ -106,6 +114,7 @@ export function PlayerSearch() {
 
       {showDropdown && (
         <div
+          id="player-search-listbox"
           role="listbox"
           aria-label="Player results"
           className={cn(

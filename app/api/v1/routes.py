@@ -65,6 +65,13 @@ async def live():
 
 @router.get("/rankings")
 async def rankings(region: str = Query("all")):
+    # /stats validates region against an allow-list to prevent bogus values
+    # making the scheduled scrape loop forever. Mirror that here: vlr serves
+    # a known set of regional slugs, anything else 400s before we cache.
+    if region not in R.RANKINGS_REGIONS:
+        raise HTTPException(
+            400, f"region must be one of {list(R.RANKINGS_REGIONS)}"
+        )
     key = R.CACHE_RANKINGS.format(region=region)
     return await _cached_or_refresh(key, lambda: R.refresh_rankings(region))
 

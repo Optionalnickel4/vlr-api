@@ -9,6 +9,7 @@ import asyncio
 import logging
 
 from app.core.db import init_db
+from app.core.http import close_client
 from app.jobs.scheduler import build_scheduler
 
 logging.basicConfig(level=logging.INFO)
@@ -23,7 +24,11 @@ async def main() -> None:
         while True:
             await asyncio.sleep(3600)
     except (KeyboardInterrupt, asyncio.CancelledError):
+        pass
+    finally:
         sched.shutdown()
+        # Mirror the API lifespan: release the lazy httpx pool cleanly.
+        await close_client()
 
 
 if __name__ == "__main__":

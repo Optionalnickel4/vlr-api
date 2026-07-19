@@ -223,23 +223,23 @@ export function RatingBreakdown({
 }) {
   const d = dims.data[0] ?? null;
 
-  // Both NA and EU returned 404 → sentinel {data:[], stale:false} from getPlayerDimensions.
-  // Show an explanatory card instead of silently vanishing.
-  if (!d && !dims.stale) {
-    return (
-      <Panel className="p-5 sm:p-6">
-        <h2 className="mb-3 font-display text-[11px] font-semibold uppercase tracking-[0.18em] text-dim">
-          Rating Breakdown
-        </h2>
-        <p className="font-body text-sm text-dim">
-          Rating breakdown unavailable — this player isn&apos;t in the NA or EU leaderboard.
-        </p>
-      </Panel>
-    );
-  }
-
-  // Network error or upstream failure — don't surface a broken card.
-  if (!d) return null;
+    // No dimensions row → either the player isn't in the cohort, OR both region
+    // lookups failed. Either way, the honest user-facing answer is the same:
+    // "rating breakdown unavailable — player isn't on a leaderboard we use".
+    // Returning null here would make the card silently vanish, which reads as
+    // "the page broke", so always show the explanatory panel.
+    if (!d) {
+      return (
+        <Panel className="p-5 sm:p-6">
+          <h2 className="mb-3 font-display text-[11px] font-semibold uppercase tracking-[0.18em] text-dim">
+            Rating Breakdown
+          </h2>
+          <p className="font-body text-sm text-dim">
+            Rating breakdown unavailable — this player isn&apos;t in the NA or EU leaderboard.
+          </p>
+        </Panel>
+      );
+    }
 
   const region = d.region ?? "na";
   const lc = d.lowConfidence;
