@@ -223,8 +223,9 @@ export function RatingBreakdown({
 }) {
   const d = dims.data[0] ?? null;
 
-  // Both NA and EU returned 404 → sentinel {data:[], stale:false} from getPlayerDimensions.
-  // Show an explanatory card instead of silently vanishing.
+  // Both NA and EU answered 404 (player not in either cohort) → getPlayerDimensions
+  // returns {data:[], stale:false}. Show an explanatory card instead of silently
+  // vanishing. Actual lookup failures arrive as stale:true and fall through to null.
   if (!d && !dims.stale) {
     return (
       <Panel className="p-5 sm:p-6">

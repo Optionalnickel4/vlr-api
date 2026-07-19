@@ -168,7 +168,7 @@ describe("player page — Phase 13 Rating Breakdown card", () => {
   });
 
   it("out-of-cohort player sees explanatory empty state, not silence", async () => {
-    // dims=null → 404 from both na and eu → getPlayerDimensions returns {data:[],stale:false}
+    // dims=null → clean 404 from both na and eu → getPlayerDimensions returns {data:[],stale:false}
     // Component renders the card frame with a quiet 'not in leaderboard' message.
     mockFetch({ dims: null });
     const html = await render();

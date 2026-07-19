@@ -8,6 +8,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   fetchUpstream,
+  getPlayerDimensions,
   getResults,
   normalizeLive,
   normalizeMatch,
@@ -626,6 +627,20 @@ describe("graceful-empty on failure (never throws to the page)", () => {
       expect.objectContaining({ data: [], stale: true }),
     );
     expect(res.error).toContain("ECONNREFUSED");
+  });
+
+  it("getPlayerDimensions: both regions 404 → stale:false (genuinely out of cohort)", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response("not found", { status: 404 }),
+    );
+    const res = await getPlayerDimensions("999999");
+    expect(res).toEqual(expect.objectContaining({ data: [], stale: false }));
+  });
+
+  it("getPlayerDimensions: both regions fail (non-404) → stale:true, not a false 'not on leaderboard'", async () => {
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("ECONNREFUSED"));
+    const res = await getPlayerDimensions("9");
+    expect(res).toEqual(expect.objectContaining({ data: [], stale: true }));
   });
 });
 

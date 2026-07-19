@@ -93,9 +93,11 @@ export function PlayerSearch() {
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder="Search players…"
+        role="combobox"
         aria-label="Search players"
         aria-expanded={showDropdown}
-        aria-haspopup="listbox"
+        aria-controls="player-search-listbox"
+        aria-autocomplete="list"
         className={cn(
           "w-36 rounded border border-line bg-panel px-2.5 py-1",
           "font-body text-[12px] text-ink placeholder:text-dim",
@@ -106,6 +108,7 @@ export function PlayerSearch() {
 
       {showDropdown && (
         <div
+          id="player-search-listbox"
           role="listbox"
           aria-label="Player results"
           className={cn(

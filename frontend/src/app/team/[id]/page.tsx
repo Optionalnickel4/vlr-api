@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTeam, getTeamTrend } from "@/lib/vlr";
 import { Panel } from "@/components/Panel";
 import { Badge } from "@/components/Badge";
@@ -15,18 +16,18 @@ function PageFrame({ children }: { children: React.ReactNode }) {
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-10">
       <header className="mb-8 flex items-baseline gap-3">
-        <a
+        <Link
           href="/"
           className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink"
         >
           valstats<span className="text-accent">.</span>
-        </a>
+        </Link>
         <span className="font-display text-[13px] font-semibold uppercase tracking-broadcast text-mut">
           team
         </span>
-        <a href="/" className="ml-auto font-mono text-xs text-dim hover:text-mut">
+        <Link href="/" className="ml-auto font-mono text-xs text-dim hover:text-mut">
           ← match center
-        </a>
+        </Link>
       </header>
       {children}
     </main>
@@ -62,12 +63,12 @@ export default async function TeamPage({
             <span className="font-mono text-mut">{id}</span>. It may not exist,
             or vlr-api couldn&apos;t reach it right now.
           </p>
-          <a
+          <Link
             href="/"
             className="mt-2 font-display text-[13px] font-semibold uppercase tracking-[0.12em] text-accent"
           >
             ← back to match center
-          </a>
+          </Link>
         </Panel>
       </PageFrame>
     );

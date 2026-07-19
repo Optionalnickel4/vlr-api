@@ -826,20 +826,28 @@ export function normalizePlayerDimensions(raw: unknown): PlayerDimensions[] {
 }
 
 /** Fetch dimension scores for a player. Tries NA first, then EU, so a player
- *  is found regardless of which regional leaderboard they appear on. Returns
- *  a graceful-empty envelope when the player isn't on any leaderboard. */
+ *  is found regardless of which regional leaderboard they appear on. Empty
+ *  envelope semantics: stale=false only when both regions answered (404 = not
+ *  on that leaderboard); stale=true when a lookup actually failed. */
 export async function getPlayerDimensions(
   id: string,
   timespan = "all",
 ): Promise<ApiResponse<PlayerDimensions>> {
+  let stale = false;
   for (const region of ["na", "eu"] as const) {
     const result = await load<PlayerDimensions>(
       `/players/${encodeURIComponent(id)}/dimensions?region=${region}&timespan=${timespan}`,
       normalizePlayerDimensions,
     );
     if (result.data.length > 0) return result;
+    // A 404 is the endpoint's clean "not in this cohort" answer, not
+    // degradation (fetchUpstream's own error format, matched here). Anything
+    // else — network down, 5xx — means we can't actually say, so the empty
+    // envelope must read stale (RatingBreakdown hides rather than claiming
+    // "not on any leaderboard").
+    if (result.stale && !/-> 404$/.test(result.error ?? "")) stale = true;
   }
-  return { data: [], stale: false };
+  return { data: [], stale };
 }
 
 // /match/{id} 404s upstream for ids vlr.gg has no page for (clean 404 from the
