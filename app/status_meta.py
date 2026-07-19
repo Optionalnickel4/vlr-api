@@ -34,7 +34,7 @@ def _git_short_commit() -> str:
 COMMIT = _git_short_commit()
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
-TESTS_PASSING = 173
+TESTS_PASSING = 178
 
 # Where this is running (hostname of the serving machine; no secrets here).
 DEPLOY = {"hostname": socket.gethostname()}

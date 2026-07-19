@@ -4,7 +4,7 @@ Counts here mirror `app/status_meta.py` (the committed source of truth). Keep th
 in sync: bump both in the same commit.
 
 - **Phases shipped:** 13 / 13
-- **Tests passing:** 173 backend + 171 frontend
+- **Tests passing:** 178 backend + 173 frontend
 - **Commit:** phase13
 
 ## Diagnostics conventions
