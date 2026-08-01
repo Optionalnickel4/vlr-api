@@ -1,44 +1,47 @@
 import { getUpcoming } from "@/lib/vlr";
-import { MatchCard } from "@/components/MatchCard";
-import { MatchSection } from "@/components/MatchSection";
+import { buildSchedule } from "@/lib/schedule";
+import { ScheduleBoard } from "@/components/ScheduleBoard";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SectionHeading } from "@/components/Panel";
 
-// The full upcoming list (the home page shows only a 5-row snapshot). Same data
-// layer as the match center — no new API; the endpoint already serves the full
-// list. force-dynamic so it reflects vlr-api's current cache on each load.
+// Same data layer as the match center — no new API; the endpoint already serves
+// the full upcoming list. force-dynamic so it reflects vlr-api's current cache
+// on each load AND so the DERIVED match day (eta + now, see lib/schedule) is
+// computed against a fresh "now" every request.
 export const dynamic = "force-dynamic";
 
 /**
- * /schedule — the complete upcoming-matches list, one readable column (same
- * MatchCard styling as the home snapshot). Single column reads cleanly on a
- * phone; centered + width-capped on desktop so rows don't stretch.
+ * /schedule — a broadcast-styled schedule: a "NEXT UP" hero for the soonest
+ * match, then day sections (TODAY / TOMORROW / weekday) with matches sub-grouped
+ * under a single event label each. Typographic crests stand in for logos (vlr's
+ * match-list payload has no logo URLs). Width-capped + centered so rows don't
+ * stretch on desktop; degrades to a single readable column on a phone.
  */
 export default async function SchedulePage() {
   const upcoming = await getUpcoming();
+  const board = buildSchedule(upcoming.data, new Date());
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
+    <main className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
       <SiteHeader label="schedule" active="schedule" />
-      <MatchSection
-        title="Upcoming"
+
+      <SectionHeading className="mb-5">
+        Schedule
+        <span className="font-mono text-[11px] font-normal tracking-normal text-dim">
+          {upcoming.data.length}
+        </span>
+        {upcoming.stale && (
+          <span className="font-mono text-[10px] tracking-normal text-warn">
+            stale
+          </span>
+        )}
+      </SectionHeading>
+
+      <ScheduleBoard
+        board={board}
         count={upcoming.data.length}
         stale={upcoming.stale}
-        isEmpty={upcoming.data.length === 0}
-        emptyLabel="No upcoming matches scheduled."
-      >
-        {upcoming.data.map((m, i) => (
-          <MatchCard
-            key={m.id ?? `${m.team1}-${m.team2}-${i}`}
-            state="upcoming"
-            team1={m.team1}
-            team2={m.team2}
-            event={m.event}
-            series={m.series}
-            label={m.timeUntil}
-            id={m.id}
-          />
-        ))}
-      </MatchSection>
+      />
     </main>
   );
 }

@@ -25,13 +25,17 @@ export interface ResultMatch {
   url: string | null;
 }
 
-/** A scheduled match (from /matches/upcoming). No real timestamp upstream —
- *  the countdown is the eta display string only. */
+/** A scheduled match (from /matches/upcoming). No real (absolute) timestamp
+ *  upstream — the countdown is the eta display string only, and `startTime` is
+ *  a bare clock string (e.g. "9:00 AM") with no date/zone. The schedule page
+ *  DERIVES a calendar day from `timeUntil` + now for grouping (see lib/schedule);
+ *  it is approximate, not a real kickoff time. */
 export interface UpcomingMatch {
   id: string | null;
   team1: string | null;
   team2: string | null;
-  timeUntil: string | null; // eta
+  timeUntil: string | null; // eta, e.g. "2h 15m" / "1d 4h"
+  startTime: string | null; // raw clock display, e.g. "9:00 AM" (no date/zone)
   series: string | null;
   event: string | null;
   url: string | null;

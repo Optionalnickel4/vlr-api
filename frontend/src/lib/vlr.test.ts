@@ -94,8 +94,9 @@ describe("normalizeUpcoming", () => {
 
   it("maps eta to timeUntil and has no score fields", () => {
     expect(out.length).toBe((upcoming as unknown[]).length);
-    const raw0 = (upcoming as { eta?: string }[])[0];
+    const raw0 = (upcoming as { eta?: string; time?: string }[])[0];
     expect(out[0].timeUntil).toBe(raw0.eta ?? null);
+    expect(out[0].startTime).toBe(raw0.time ?? null); // raw clock carried through
     expect("score1" in out[0]).toBe(false);
   });
 

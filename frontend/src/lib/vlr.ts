@@ -8,6 +8,30 @@
 // - Loaders are graceful-empty: on any failure they return
 //   { data: [], stale: true, error } and never throw to the page.
 // - UI never sees raw vlr-api JSON; all mapping lives here + in @/types/vlr.
+//
+// WHY SERVER-SIDE ONLY. VLR_API_BASE points at 127.0.0.1:8000 — vlr-api is not
+// exposed publicly and has no CORS middleware, so a browser fetch would fail by
+// construction, not by policy. Everything here runs in a server component or a
+// route handler under `frontend/src/app/api/*`, which is what lets the backend
+// stay unexposed and secret-free.
+//
+// WHY GRACEFUL-EMPTY IS THE CORE INVARIANT. This UI renders scraped data about
+// a live esport: upstream is routinely partial, stale, or briefly down, and a
+// thrown error in a server component blanks the WHOLE page, not one panel. So
+// every loader collapses failure into `{ data: [], stale: true, error }` and
+// each panel decides how to degrade. `stale` means "we could not confirm this
+// is current" — it is a render hint, never an error to surface raw.
+//
+// TWO UPSTREAM SHAPES, ONE OUTPUT SHAPE. Most vlr-api endpoints return a bare
+// list or object; /stats and /players return their own {data, stale, error}
+// envelope. `load()` handles the first kind, and getStats/search unwrap the
+// second by hand. Everything leaving this file is a uniform ApiResponse<T>,
+// which is why single-object endpoints (player, team, match detail) are wrapped
+// as one-element arrays rather than given a special envelope.
+//
+// THE STRING-SORT TRAP. Upstream numbers arrive as vlr rendered them ("1024",
+// "998", "–"). Coerce with parseNumeric before comparing ANYTHING: sorted as
+// strings, "1024" < "998". See sortLeaders, which is where this bit hardest.
 
 import type {
   AgentStat,
@@ -51,7 +75,22 @@ export const VLR_API_BASE =
 export const HOME_SNAPSHOT_LIMIT = 5;
 
 /** Parse a raw upstream value to a number, or null. Never returns NaN.
- *  "1" -> 1, "2000" -> 2000, "1.17" -> 1.17, "–"/""/null/"19h 34m" -> null. */
+ *  "1" -> 1, "2000" -> 2000, "1.17" -> 1.17, "–"/""/null/"19h 34m" -> null.
+ *
+ *  NaN is the case this exists to prevent. It survives arithmetic, renders as
+ *  "NaN" in the UI, and serializes to invalid JSON — so a single bad cell would
+ *  otherwise poison a whole stat table silently. null is loud by comparison:
+ *  components already render it as "—".
+ *
+ *  Deliberately mirrors the backend's `parse_numeric` (app/scrapers/_util.py) so
+ *  a value coerces identically on both sides of the wire. Verified against the
+ *  full vlr input domain — "", "–", "TBD", "78%", "1,024", "+4", "nan",
+ *  "Infinity", "1e5", whitespace — where the two agree exactly. They differ only
+ *  on literal forms vlr's HTML cannot produce: JS `Number()` accepts hex/octal/
+ *  binary ("0x10" -> 16) which Python's `float()` rejects, and Python accepts
+ *  underscore separators ("1_000" -> 1000.0) which JS rejects. Unreachable from
+ *  scraped markup, but do not rely on the two being interchangeable for
+ *  arbitrary input. */
 export function parseNumeric(value: unknown): number | null {
   if (value === null || value === undefined) return null;
   if (typeof value === "number") return Number.isFinite(value) ? value : null;
@@ -132,6 +171,7 @@ export function normalizeUpcoming(raw: unknown): UpcomingMatch[] {
       team1,
       team2,
       timeUntil: str(m.eta),
+      startTime: str(m.time), // raw clock display; already in the card payload
       series: str(m.series),
       event: str(m.event),
       url: str(m.url),
@@ -640,6 +680,18 @@ export function liveMapScore(match: MatchDetail): LiveMapScore | null {
 
 // ---- loaders (graceful-empty) ----------------------------------------------
 
+/** Fetch + transform one endpoint into the uniform envelope. The graceful-empty
+ *  contract lives here, so every `getX` below inherits it for free.
+ *
+ *  The catch is broad on purpose: a network failure, a non-2xx, and a transform
+ *  that chokes on an unexpected shape are all the same thing from the page's
+ *  point of view — we have no data to draw. Note the error string is
+ *  fetchUpstream's format ("vlr-api /path -> 404"), which getPlayerDimensions
+ *  pattern-matches to tell a clean 404 from real degradation; keep that format
+ *  stable if you touch it.
+ *
+ *  Only for endpoints returning a BARE payload. /stats and /players ship their
+ *  own envelope and are unwrapped separately. */
 async function load<T>(
   path: string,
   transform: (raw: unknown) => T[],
