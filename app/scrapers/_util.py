@@ -1,3 +1,19 @@
+"""Shared node-reading and coercion helpers for the scrapers.
+
+The single rule that shapes every function here: SCRAPED DATA IS ALWAYS PARTIAL,
+so a missing or malformed value must become None — never a crash, never NaN, and
+never a plausible-looking wrong number. vlr pages legitimately serve empty stat
+cells (a live match has no rating yet), absent nodes (world rankings have no W/L
+column), and placeholder dashes, all of which reach these functions.
+
+NaN is called out explicitly because it is the dangerous case: it survives float()
+and arithmetic, serializes as invalid JSON, and only surfaces as a broken chart
+far downstream. The frontend's parseNumeric mirrors this contract exactly, so a
+value coerces identically on both sides of the wire.
+
+Every helper takes `object` rather than `str` on purpose — callers pass whatever
+came out of the DOM without pre-checking its type.
+"""
 import math
 import re
 from typing import Optional
@@ -6,6 +22,7 @@ from selectolax.parser import Node
 
 
 def text_of(node: Optional[Node], default: str = "") -> str:
+    """Stripped text of a node that may not exist — the css_first() companion."""
     return node.text(strip=True) if node is not None else default
 
 
@@ -63,12 +80,24 @@ def parse_fraction(raw: object) -> tuple[Optional[int], Optional[int]]:
 
 
 def first_text(parent: Node, selector: str, default: str = "") -> str:
+    """Text of the first match, or `default` when nothing matches.
+
+    Beware on side-split cells: this reads the whole subtree, so on the match
+    scoreboard it would concatenate mod-both/mod-t/mod-ct. Those cells go
+    through match_detail._read_stat instead.
+    """
     return text_of(parent.css_first(selector), default)
 
 
 def id_from_href(href: str) -> Optional[str]:
     """vlr hrefs look like /310/sentinels, /event/2498/..., /player/4164/aspas.
-    Return the first all-numeric path segment."""
+    Return the first all-numeric path segment.
+
+    Scanning for the first numeric segment (rather than indexing a fixed
+    position) is what lets one helper serve every entity: the id sits at index 0
+    for matches but index 1 for players/teams/events. It does mean a slug that
+    is purely digits would win if it came first — no live vlr slug is.
+    """
     for seg in href.strip("/").split("/"):
         if seg.isdigit():
             return seg
@@ -76,6 +105,13 @@ def id_from_href(href: str) -> Optional[str]:
 
 
 def clean_spaces(s: str) -> str:
+    """Collapse runs of whitespace to single spaces and trim.
+
+    vlr's HTML is pretty-printed, so text that renders as one line arrives with
+    embedded newlines and tabs. Applied to every scraped string so cached and
+    persisted values are stable — without it the same value hashes/compares
+    differently depending on vlr's indentation.
+    """
     return re.sub(r"\s+", " ", s).strip()
 
 

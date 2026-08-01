@@ -1,3 +1,19 @@
+"""The single, shared, throttled HTTP client for vlr.gg.
+
+ALL outbound traffic to vlr.gg goes through the one process-wide VlrClient — not
+as a convenience, but because the politeness throttle is only meaningful if it
+is global. Two clients means two request streams and the min-interval guarantee
+is gone. Never construct VlrClient directly; call get_client().
+
+vlr.gg is volunteer-run, has no official API, and gives us no rate-limit
+contract. Our side of the bargain is a truthful User-Agent (with a contact URL),
+a hard floor between requests, and backoff instead of hammering when it is
+struggling. That is why the scheduler batches scraping on a cadence and the API
+never scrapes per request.
+
+Retry policy in one line: transient (429, 5xx, transport errors) backs off and
+retries; final (404, and anything else non-2xx such as 403) raises immediately.
+"""
 import asyncio
 import time
 
@@ -38,6 +54,14 @@ class VlrClient:
         self._last_request = 0.0
 
     async def _throttle(self) -> None:
+        """Block until min_request_interval has elapsed since the last request.
+
+        The sleep happens while HOLDING the lock, which serializes every caller —
+        concurrent scrapes queue up rather than all waking at once and firing a
+        burst. That is the point: this is a global rate limiter, not a
+        per-coroutine delay. It also means scrape concurrency buys you nothing;
+        throughput is fixed at one request per interval.
+        """
         async with self._lock:
             now = time.monotonic()
             wait = self._settings.min_request_interval - (now - self._last_request)
@@ -52,6 +76,8 @@ class VlrClient:
         s = self._settings
         last_exc: Exception | None = None
         for attempt in range(s.max_retries):
+            # Throttle inside the retry loop, so a backoff-and-retry storm can
+            # never bypass the politeness floor.
             await self._throttle()
             try:
                 resp = await self._client.get(path)
@@ -87,6 +113,11 @@ _client: VlrClient | None = None
 
 
 def get_client() -> VlrClient:
+    """The shared client, created on first use.
+
+    Lazy so that merely importing a scraper opens no sockets — the whole test
+    suite imports these modules and never touches the network.
+    """
     global _client
     if _client is None:
         _client = VlrClient()
@@ -94,7 +125,12 @@ def get_client() -> VlrClient:
 
 
 async def aclose_client() -> None:
-    """Close the shared lazy client on shutdown. No-op if never created."""
+    """Close the shared lazy client on shutdown. No-op if never created.
+
+    Resets the global too, so a subsequent get_client() builds a fresh client
+    rather than handing back a closed one — which matters for the one-shot CLI
+    entry points (capture, verify) and for tests that exercise lifespan twice.
+    """
     global _client
     if _client is not None:
         await _client.aclose()

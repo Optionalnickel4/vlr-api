@@ -8,6 +8,13 @@ Fetches one region + each time-window, dumps:
 
 Run ON THE CONTAINER (needs internet):
     python -m app.scrapers.stats_recon
+
+This is a THROWAWAY EXPLORATION TOOL, not part of the serving path — it exists to
+answer "what columns does vlr actually expose, and how often are they filled?"
+before a column is committed to in selectors.py. It deliberately does NOT import
+the STATS_* selectors: keying off raw <thead>/<td> position is the point, since a
+recon run that used our selectors could only ever confirm what we already parse.
+Nothing here is covered by tests and no caller depends on its output shape.
 """
 import asyncio
 import sys
@@ -43,7 +50,10 @@ def _parse_stats_table(html: str) -> dict:
     """Return column names, per-column fill rates, player count, and raw sample."""
     tree = HTMLParser(html)
 
-    # Find the main stats table — vlr uses wf-table on this page
+    # Find the main stats table — vlr uses wf-table on this page.
+    # NB vlr's 2026 rewrite renamed this class to st-table (see STATS_TABLE in
+    # selectors.py), so on current markup the first branch misses and the
+    # any-<table> fallback is what actually carries this script.
     table = tree.css_first("table.wf-table")
     if table is None:
         # Try any table

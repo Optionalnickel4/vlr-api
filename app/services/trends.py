@@ -95,7 +95,11 @@ def derive_result(
     score_b: Any,
 ) -> str | None:
     """win/loss for team_name given which side it was on + the scores. None if the
-    scores don't parse or the team can't be matched to a side (never raises)."""
+    scores don't parse or the team can't be matched to a side (never raises).
+
+    NOTE: superseded in the live path by _team_side + _result_from_scores, which
+    prefer team ids over name matching. Nothing but the tests calls this now.
+    """
     sa, sb = coerce_int(score_a), coerce_int(score_b)
     if sa is None or sb is None:
         return None

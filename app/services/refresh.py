@@ -1,7 +1,43 @@
 """Orchestration: scrape vlr -> write cache -> persist history.
 
-The API never calls these directly for live requests; the scheduler does.
-API reads from cache (and DB for history).
+The one place that is allowed to scrape. Everything above it reads; everything
+below it parses. If you are adding a new dataset, it gets a refresh_* here, a
+CACHE_* key, a TTL in core/config.py, and (if scheduled) a job in app/jobs.
+
+CACHE IS WRITTEN BEFORE THE DB, ALWAYS. The cache is what serves requests, so
+getting fresh data in front of readers takes priority over banking it. The
+consequence is worth internalizing: a DB write that fails is INVISIBLE to
+readers — the API keeps serving correct, fresh data while history silently stops
+accumulating. That is exactly how the SQL_ASCII encoding trap hides (see
+app/core/db.py), and it is why the /status page reports row counts per table
+rather than trusting that "the API works" means writes are landing.
+
+TWO TRIGGERS, one module:
+  - SCHEDULED (app/jobs/scheduler.py) — the list endpoints. results, upcoming,
+    live matches, news, events, rankings, stats. These keep the cache warm so a
+    request never has to scrape.
+  - ON-DEMAND (called by a router on a cache miss) — the detail endpoints.
+    refresh_player, refresh_team, refresh_match. There is no cadence that could
+    cover every player and team on vlr.gg, so a cold detail page pays for one
+    scrape. This is the deliberate exception to "the API never scrapes"; it is
+    bounded by the TTL and by the politeness throttle in core/http.py.
+  - The exception to the exception: prefetch_upcoming_players walks the next
+    ~48h of fixtures on a schedule so trend history accumulates before anyone
+    asks. See its docstring for the cache gate that keeps it from duplicating
+    snapshots.
+
+HISTORY WRITES AND THEIR DEDUP (all append-only — see app/models):
+  match_results     <- refresh_results, refresh_team. Dedup: UNIQUE vlr_id via
+                       ON CONFLICT DO NOTHING, so re-scraping is a cheap no-op.
+  ranking_snapshots <- refresh_rankings. NO dedup by design — every scrape is a
+                       new point; that IS the time series.
+  player_snapshots  <- refresh_player. NO internal dedup: every call writes a
+                       row. Callers must gate on the cache (see the prefetch job).
+  team_snapshots    <- refresh_team. Dedup: skip if a row for this team landed
+                       inside ttl_teams, since rosters barely change.
+
+Return values are counts/summaries for the scheduler's logs, not data — nothing
+reads them for correctness.
 """
 import logging
 import re
@@ -25,6 +61,11 @@ from app.scrapers import teams as te
 
 log = logging.getLogger("vlr.refresh")
 
+# Cache keys. Scheme: "vlr:<entity>[:<discriminator>...]". Every parameter that
+# changes the payload MUST be in the key — region and timespan below are there
+# because /stats?region=eu and ?region=na are different datasets, not different
+# views of one. Templates (not f-strings at the call site) so the key for a
+# dataset is defined once, next to the TTL that governs it.
 CACHE_RESULTS = "vlr:results"
 CACHE_UPCOMING = "vlr:upcoming"
 CACHE_LIVE = "vlr:live"
@@ -52,10 +93,24 @@ RANKINGS_REGIONS = (
 
 
 async def refresh_results() -> int:
+    """Scheduled (10m): cache the completed-results feed and bank new matches.
+
+    The rolling feed only shows the most recent ~50 matches globally, so this is
+    a sampling of history, not a complete one — a busy day can push a tier-1
+    series off the feed between ticks. refresh_team's backfill is what fills
+    those gaps for teams anyone actually looks at.
+
+    Rows here carry NO team ids: the results cards expose only names (see
+    scrapers/matches.py), which is why the trend join has a name-matching
+    fallback for id-less rows.
+    """
     s = get_settings()
     data = await mt.fetch_results()
     await cache_set(CACHE_RESULTS, data, s.ttl_results)
     # persist completed matches (idempotent upsert on vlr_id)
+    # The index juggling below is defensive, not decorative: `teams`/`scores` are
+    # whatever the card had, and a malformed or in-progress card can yield fewer
+    # than 2 of either. Banking a partial row beats dropping the match.
     rows = [
         {
             "vlr_id": m["id"],
@@ -80,6 +135,16 @@ async def refresh_results() -> int:
 
 
 async def refresh_upcoming() -> int:
+    """Scheduled (60s): ONE /matches scrape feeding TWO caches at different TTLs.
+
+    The live list gets ttl_live (~30s) because a match starting or ending changes
+    it; the upcoming list gets the longer ttl_results because a fixture list days
+    out doesn't move. Splitting the TTLs rather than the scrape is the point —
+    the same page serves both, so a shorter TTL on `live` costs nothing extra
+    upstream. Note ttl_live is shorter than this job's 60s cadence, so the live
+    key can briefly expire between ticks; refresh_live_matches repopulates it
+    rather than skipping a cycle.
+    """
     s = get_settings()
     split = await mt.fetch_upcoming()
     await cache_set(CACHE_LIVE, split["live"], s.ttl_live)
@@ -88,9 +153,22 @@ async def refresh_upcoming() -> int:
 
 
 async def refresh_rankings(region: str = "all") -> int:
+    """Scheduled (6h, "all") + on-demand per region: cache standings, bank a snapshot.
+
+    Every run appends a fresh row per team — no dedup, because the whole point is
+    the time series. That makes this the one job whose history grows unbounded
+    with cadence, so the 6h interval is a storage decision as much as a
+    politeness one.
+
+    Note the scheduler only runs the default "all" region; other regions are
+    banked only when someone requests them (the route refreshes on a cache miss),
+    so regional series are as sparse as their traffic.
+    """
     s = get_settings()
     data = await rk.fetch_rankings(region)
     await cache_set(CACHE_RANKINGS.format(region=region), data, s.ttl_rankings)
+    # Unnamed rows are parse debris (a layout row, or a selector that half-broke);
+    # banking them would put nameless points in the series forever.
     snaps = [
         RankingSnapshot(
             team_id=r["team_id"], team=r["team"], region=region,
@@ -150,6 +228,11 @@ async def refresh_player(player_id: str) -> dict[str, Any]:
 
     Detail pages are not scheduled — this runs on a cache miss from the route.
     Each scrape writes one PlayerSnapshot so agent-stat trends can be charted.
+
+    ⚠️ There is NO dedup here: every call appends a snapshot row. That is correct
+    for the route (a cache miss means ttl_players has elapsed, so the point is
+    genuinely new), but it makes this function unsafe to call in a loop. Any
+    batch caller must gate on the cache first — see prefetch_upcoming_players.
     """
     s = get_settings()
     data = await pl.fetch_player(player_id)

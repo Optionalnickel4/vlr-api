@@ -1,3 +1,14 @@
+"""Process-wide settings, from environment or .env, all prefixed VLR_.
+
+Every value has a working default so the app boots with no configuration at all
+(that is what lets tests import the whole app without a .env). Override in
+production by env var: the field `min_request_interval` is `VLR_MIN_REQUEST_INTERVAL`.
+
+The TTLs below are the cache half of the freshness contract; the scheduler in
+app/jobs sets the other half. Read them together — a TTL much shorter than its
+scrape cadence just means the API serves misses (and, for detail routes,
+refreshes inline) rather than fresher data.
+"""
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -11,7 +22,12 @@ class Settings(BaseSettings):
     user_agent: str = (
         "vlr-api/0.1 (self-hosted; +https://jushosting.dev) httpx"
     )
-    min_request_interval: float = 1.5  # seconds between requests to vlr
+    # Politeness floor: seconds between ANY two requests to vlr, enforced
+    # globally across the whole process (VlrClient._throttle). vlr.gg is a
+    # volunteer-run site with no API and no rate-limit contract — this number is
+    # the main thing keeping us a good citizen. Lower it and you are gambling
+    # with the project's access.
+    min_request_interval: float = 1.5
     request_timeout: float = 20.0
     max_retries: int = 3
 
@@ -21,7 +37,9 @@ class Settings(BaseSettings):
     # postgres
     database_url: str = "postgresql+asyncpg://vlr:vlr@localhost:5432/vlr"
 
-    # cache TTLs (seconds)
+    # Cache TTLs (seconds). Each is set from how fast the underlying data can
+    # actually change, not from how often anyone asks for it: a live scoreboard
+    # moves every round, a season-aggregate leaderboard moves once a day.
     ttl_live: int = 30
     ttl_results: int = 600
     ttl_matches: int = 600
@@ -35,6 +53,11 @@ class Settings(BaseSettings):
 
     # api
     api_prefix: str = "/api/v1"
+    # True (default) runs the scraping scheduler inside the API process — fine
+    # for the single-worker deployment this ships with. Set False and run
+    # `python -m app.jobs.run` separately (deploy/vlr-scheduler.service) if you
+    # ever scale the API past one worker: otherwise every worker starts its own
+    # copy of every cron job and multiplies the load on vlr.gg.
     enable_scheduler: bool = True
 
 

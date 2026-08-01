@@ -1,3 +1,35 @@
+"""The public JSON API. Reads cache and Postgres; the list endpoints never scrape.
+
+THREE RESPONSE SHAPES live here, and knowing which is which saves an afternoon:
+
+  1. BARE payload — results, upcoming, live, rankings, events, news, and the
+     detail endpoints. A list or dict straight from the cache. An empty list
+     means "nothing cached and the refresh produced nothing", which is
+     indistinguishable from "vlr has no matches today" — deliberately, since
+     both are non-errors.
+  2. {data, stale, error} ENVELOPE — /stats and /players only. These can fail
+     partially (a leaderboard combo that won't scrape, a DB that's down) and the
+     frontend needs to render something while saying so. They never 500.
+  3. RAISES 404 — /history/* and /trends/player when an id has no banked rows,
+     because "we have no history for this id" is a real, actionable answer
+     rather than an empty success.
+
+New endpoints should match the shape of their neighbours; the mix is historical,
+not a design with a rule behind it.
+
+SCRAPING FROM A ROUTE. The architecture says the API never scrapes, and the list
+endpoints hold to it — a miss means the scheduler hasn't run yet. The detail
+endpoints (player/team/match) DO scrape on a cache miss, because no cadence
+could pre-warm every player and team on vlr.gg. That path is bounded by the
+cache TTL and serialized by the global throttle in core/http.py, so a cold burst
+queues rather than stampeding vlr.
+
+VALUES ARE RAW STRINGS. Scores, ratings and ranks come back as vlr rendered them
+("13", "1024", "–"), never coerced. Consumers must coerce at read time and must
+never sort or compare them as strings — "998" > "1024" lexicographically, which
+is how a rating chart silently reorders itself. See app/services/trends.py,
+which does this correctly, and frontend/src/lib/vlr.ts for the mirror contract.
+"""
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
@@ -40,7 +72,23 @@ _CACHE_KEYS = [
 
 
 async def _cached_or_refresh(key: str, refresher) -> Any:
-    """Read from cache; if empty (cold start), trigger a refresh once."""
+    """Read from cache; if empty (cold start), trigger a refresh once.
+
+    The refresh is a COLD-START fallback, not the normal path — in steady state
+    the scheduler has always written the key first. It exists so a freshly
+    booted process (or a flushed Redis) serves data on the first request instead
+    of an empty list until the next tick.
+
+    Exactly one retry, never a loop: if the refresh ran and the key is still
+    empty, vlr genuinely returned nothing and retrying would just hammer it.
+
+    Returns [] rather than None on failure so the response stays a valid JSON
+    array — every list consumer can iterate the result unconditionally. Note
+    this also means a refresh that RAISED propagates (a 500), while one that
+    merely produced nothing returns []. Concurrent cold requests each call the
+    refresher, but they serialize on the throttle in core/http.py, so the cost
+    is latency rather than a burst at vlr.
+    """
     data = await cache_get(key)
     if data is None:
         await refresher()
@@ -60,11 +108,16 @@ async def upcoming():
 
 @router.get("/matches/live")
 async def live():
+    # refresh_upcoming (not a "refresh_live") on purpose: one /matches scrape
+    # fills both the live and upcoming keys, so a cold miss on either warms both.
     return await _cached_or_refresh(R.CACHE_LIVE, R.refresh_upcoming)
 
 
 @router.get("/rankings")
 async def rankings(region: str = Query("all")):
+    # The allow-list is a real guard, not input hygiene: an unknown slug 404s at
+    # vlr, and because a cache miss triggers a refresh, an unvalidated ?region=
+    # would send a failed upstream fetch on EVERY request for that slug.
     region = region.lower()
     if region not in R.RANKINGS_REGIONS:
         raise HTTPException(400, f"region must be one of {list(R.RANKINGS_REGIONS)}")
@@ -142,8 +195,12 @@ async def player_dimensions(
         except Exception as exc:
             raise HTTPException(503, f"cohort unavailable: {exc}")
 
-    # Empty or partial cohort may reflect a mid-rewarm window where the scheduler
-    # is repopulating the key. Recompute once and retry before concluding 404.
+    # A missing player is ambiguous: they may genuinely not be on the leaderboard,
+    # OR we may have caught the key mid-rewarm while the scheduler repopulates it.
+    # Refreshing once and re-checking is what distinguishes the two — without it,
+    # a real player 404s intermittently depending on scrape timing. Bounded to a
+    # single extra refresh, and a failure here falls through to the 404/503 below
+    # rather than propagating.
     player_row = next(
         (r for r in (cohort or []) if str(r.get("player_id")) == str(player_id)), None
     )
@@ -181,6 +238,12 @@ async def players(q: str = Query("", max_length=64)):
 # ---- player detail (on-demand: scrape-on-miss, cache, persist a snapshot) ----
 @router.get("/player/{player_id}")
 async def player(player_id: str):
+    # The cache miss is what gates snapshot history: refresh_player writes a
+    # PlayerSnapshot on every call, so this route banks at most one row per
+    # ttl_players per player. Don't "optimize" by always refreshing.
+    #
+    # Unlike /team and /match below, a VlrNotFound here is NOT caught, so an
+    # unknown player id surfaces as a 500 rather than a 404.
     data = await cache_get(R.CACHE_PLAYER.format(id=player_id))
     if data is None:
         data = await R.refresh_player(player_id)
@@ -232,6 +295,12 @@ async def trends_player(player_id: str, days: int = Query(90, ge=1, le=365)):
 
 
 # ---- history (from Postgres) ----
+# The only endpoints that read Postgres rather than Redis, and the only ones that
+# 404 on an empty result: an id with no banked rows is a meaningful answer, not
+# an empty success. Rows come back exactly as stored — rank/rating/scores are raw
+# TEXT (see app/models), so callers coerce at read time and must never sort on
+# them as strings. `limit` is capped on every route because these tables grow
+# without bound and an uncapped scan is the one query here that could hurt.
 @router.get("/history/results")
 async def history_results(limit: int = Query(50, le=500)):
     async with SessionLocal() as session:

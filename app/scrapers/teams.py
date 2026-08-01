@@ -1,3 +1,23 @@
+"""Team-detail scraper (/team/{id}) — header, roster, and match history.
+
+Two things on this page resist a naive css_first()/css() sweep, and both are
+handled here rather than in selectors.py because they need traversal, not a
+selector:
+
+1. ROSTER SECTIONS. Players and staff are NOT in separate containers — they are
+   one flat list of div.team-roster-item inside a single wf-card, with
+   div.wf-module-label ("players" / "staff") acting as an in-band separator. The
+   only way to know which section an item belongs to is a document-order walk
+   (_parse_roster). Selecting roster items globally loses is_staff entirely, and
+   other cards on the page reuse wf-module-label for rank/record — hence the
+   _closest_card scoping.
+
+2. RESULTS vs UPCOMING. vlr does not mark scheduled matches; it marks PLAYED
+   ones with a mod-win/mod-loss class on the result node. So "played" is the
+   positive test and everything else falls through to upcoming (_parse_matches).
+
+Pure parse (parse_team) + a thin fetch. No cache, no DB — see services/refresh.py.
+"""
 from typing import Any
 
 from selectolax.parser import HTMLParser, Node
@@ -63,6 +83,11 @@ def _parse_roster(tree: HTMLParser) -> list[dict[str, Any]]:
 
 
 def _is_game_row(card: Node) -> bool:
+    """True for the per-map expandable sub-rows nested under a match card.
+
+    They reuse the a.m-item class, so without this filter every Bo3 contributes
+    four rows (the series + one per map) and the team's result count inflates.
+    """
     return S.TEAM_MATCH_GAME_ROW_CLASS in (card.attributes.get("class", "") or "")
 
 
@@ -106,10 +131,16 @@ def _parse_matches(tree: HTMLParser) -> tuple[list[dict], list[dict]]:
 def parse_team(html: str) -> dict[str, Any]:
     """Pure: HTML -> team detail dict. Network-free (like the other scrapers)."""
     tree = HTMLParser(html)
+    # The page never states its own team id in the body; the active nav tab's
+    # href (/team/2/sentinels/) is the only place it appears. fetch_team
+    # overwrites this with the requested id anyway — it matters only for
+    # parse_team() called directly on saved HTML (tests, verify).
     self_link = tree.css_first(S.TEAM_SELF_LINK)
     team_id = id_from_href(self_link.attributes.get("href", "")) if self_link else None
     logo = tree.css_first(S.TEAM_LOGO)
     logo_src = (logo.attributes.get("src") if logo else None) or None
+    # vlr serves logos protocol-relative ("//owcdn.net/..."); left as-is they
+    # resolve against file:// in a Next.js <img> and silently 404.
     if logo_src and logo_src.startswith("//"):
         logo_src = "https:" + logo_src
     results, upcoming = _parse_matches(tree)
@@ -129,6 +160,8 @@ def parse_team(html: str) -> dict[str, Any]:
 async def fetch_team(team_id: str) -> dict[str, Any]:
     html = await get_client().get_html(f"/team/{team_id}")
     data = parse_team(html)
-    # trust the requested id over the scraped one
+    # Trust the requested id over the scraped one: vlr redirects id-only URLs to
+    # the slug form, and a dead TEAM_SELF_LINK selector would otherwise write a
+    # null id into the cache/DB under a perfectly valid key.
     data["id"] = str(team_id)
     return data

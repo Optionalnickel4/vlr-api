@@ -34,6 +34,9 @@ def _git_short_commit() -> str:
 COMMIT = _git_short_commit()
 
 # Committed constant — do NOT compute at runtime. Bump when you add tests.
+# Running the suite to render a status page would make an operator page depend on
+# pytest being installed and on shelling out per request; a stale number is a far
+# cheaper failure than that.
 TESTS_PASSING = 178
 
 # Where this is running (hostname of the serving machine; no secrets here).
@@ -59,4 +62,8 @@ PHASES = [
 HISTORY_TABLES = ["match_results", "ranking_snapshots", "player_snapshots", "team_snapshots"]
 
 # Registered APScheduler job ids (must match app/jobs/scheduler.py exactly).
+# These strings are the join key between three places: the job id registered in
+# scheduler.py, the `vlr:lastrun:{job}` cache key it writes, and this list that
+# the status page iterates. A typo doesn't error — the job silently reports
+# "never ran" forever. Add a job there, add its id here.
 JOBS = ["upcoming", "live_matches", "results", "news", "events", "rankings", "player_prefetch", "stats"]

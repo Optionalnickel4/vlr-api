@@ -1,3 +1,12 @@
+// Root layout — the app shell: the three broadcast typefaces, page metadata, and
+// the persistent lower-third ticker that follows every route.
+//
+// Fonts come through `next/font`, which downloads and SELF-HOSTS them at build
+// time. That matters for this deployment: the container serves the dashboard on
+// a LAN with no guarantee of outbound internet at request time, so a runtime
+// Google Fonts request would be a hard dependency on something that may not be
+// reachable. Nothing here fetches at request time — see the two comments in the
+// body below for the only other subtle things in this file.
 import type { Metadata } from "next";
 import { Saira, Saira_Condensed, JetBrains_Mono } from "next/font/google";
 import "./globals.css";

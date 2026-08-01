@@ -1,3 +1,28 @@
+"""APScheduler cadences — the only thing that causes routine scraping.
+
+Every job is a `services.refresh` coroutine on an interval. Two conventions hold
+across all of them, and both matter more than they look:
+
+  - max_instances=1, always. Jobs are I/O-bound behind a GLOBAL politeness
+    throttle (core/http.py), so a slow run and its successor would not run in
+    parallel — they would queue on the same lock and each make the other later.
+    Overlap here converts a slow scrape into a growing backlog.
+  - Cadences are chosen against the TTL of what they refresh (core/config.py).
+    A job slower than its TTL means the cache expires between runs and readers
+    see misses; much faster means wasted requests to vlr.gg. Change one, check
+    the other.
+
+Cadence rationale, briefly: `upcoming` (60s) and `live_matches` (30s) track
+things that change during a match; `results` (10m) and `news` (15m) track a feed
+that appends; `events`/`rankings`/`stats` (6h) track things that move on the
+scale of a season. `player_prefetch` uses cron rather than interval so it lands
+at predictable off-peak hours instead of drifting with process restarts.
+
+State is in-memory only — there is no job store, so restarting the process
+reschedules everything from now and a tick missed during downtime is simply
+skipped, never replayed. That is fine because every job is a full refresh, not
+an increment.
+"""
 import logging
 from collections.abc import Awaitable, Callable
 
@@ -32,6 +57,13 @@ def _tracked(job_name: str, fn: Callable[[], Awaitable]) -> Callable[[], Awaitab
 
 
 def build_scheduler() -> AsyncIOScheduler:
+    """Construct the scheduler and register every job. Does NOT start it.
+
+    Building and starting are separate so the caller owns lifetime — the API
+    starts it inside lifespan, the standalone worker in app/jobs/run.py starts
+    it directly. UTC because cron hours must not shift under the host's timezone
+    or DST.
+    """
     global _active
     sched = AsyncIOScheduler(timezone="UTC")
     sched.add_job(_tracked("upcoming", R.refresh_upcoming), "interval", seconds=60, id="upcoming", max_instances=1)

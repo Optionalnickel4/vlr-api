@@ -1,3 +1,20 @@
+"""Team rankings scraper — /rankings (world) and /rankings/{region}.
+
+ONE parser, TWO markup shapes. vlr serves a stripped table for the world view
+and rich div rows for regional views (full detail in the RANK_* block of
+selectors.py). The practical consequence for anyone reading this output:
+
+  - world rows have NO W/L record and NO earnings — record/wins/losses/earnings
+    are legitimately null there. Do not "fix" that by widening the selectors;
+    the columns genuinely don't exist in that layout.
+  - `rank` and `rating` come back as STRINGS, matching the rest of the scrapers.
+    Coercion happens downstream so an unparseable value degrades to null instead
+    of failing the whole page.
+
+The region slug is the FULL name ("north-america"), not vlr's nav abbreviation
+("na"). Callers validate the slug against an allow-list before it reaches here —
+an unknown slug makes vlr serve a 404 page that parses to zero rows.
+"""
 import re
 from typing import Any
 
