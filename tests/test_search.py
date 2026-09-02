@@ -179,3 +179,160 @@ async def test_vlr_fallback_failure_returns_graceful_empty(monkeypatch):
     monkeypatch.setattr(S, "get_client", lambda: FakeClient())
     res = await S.search_players("zzzobscure")
     assert res["data"] == [] and res["stale"] is True and "vlr 503" in res["error"]
+
+
+# ============================================================================
+# TEAM SEARCH — same hybrid contract, keyed on TeamSnapshot.name. Mirrors the
+# player suite above: pure statement/parser tests + the mocked orchestrator.
+# ============================================================================
+def _team_sql(q: str, cap: int = 12) -> str:
+    stmt = S.db_team_search_stmt(q, cap)
+    return str(
+        stmt.compile(dialect=postgresql.dialect(), compile_kwargs={"literal_binds": True})
+    ).lower()
+
+
+def test_team_db_stmt_ilikes_name_distinct_latest_capped():
+    sql = _team_sql("sen", cap=5)
+    assert "ilike" in sql and "%sen%" in sql
+    assert "distinct on" in sql and "team_id" in sql  # latest snapshot per team
+    assert "captured_at" in sql and "desc" in sql
+    assert "limit 5" in sql
+
+
+# same /search/auto response the player parser reads — team entries must survive,
+# players/events/category headers must be dropped.
+def test_parse_team_autocomplete_keeps_teams_skips_players_events_headers():
+    hits = S.parse_vlr_team_autocomplete(REAL_AUTO)
+    assert [(h["id"], h["name"]) for h in hits] == [("2", "Sentinels")]
+    assert all(h["source"] == "vlr" and h["tag"] is None for h in hits)
+
+
+def test_parse_team_autocomplete_dedupes_by_id_and_caps():
+    dupe = json.dumps(
+        [
+            {"id": "/search/r/team/2/sen", "value": "Sentinels"},
+            {"id": "/search/r/team/2/zz", "value": "Sentinels again"},  # same id -> deduped
+            {"id": "/search/r/team/1034/nrg", "value": "NRG"},
+            {"id": "/search/r/team/120/c9", "value": "Cloud9"},
+        ]
+    )
+    assert [h["id"] for h in S.parse_vlr_team_autocomplete(dupe, cap=2)] == ["2", "1034"]
+
+
+def test_parse_team_autocomplete_bad_or_nonlist_json_is_empty():
+    assert S.parse_vlr_team_autocomplete("not json at all") == []
+    assert S.parse_vlr_team_autocomplete("{}") == []
+
+
+async def test_team_min_length_guard_returns_empty_without_touching_db(monkeypatch):
+    async def boom(*a, **k):
+        raise AssertionError("db_team_search must not run for a too-short query")
+
+    monkeypatch.setattr(S, "db_team_search", boom)
+    assert await S.search_teams("s") == {"data": [], "stale": False, "error": None}
+
+
+async def test_team_db_hit_returns_db_source_and_skips_fallback(monkeypatch):
+    async def fake_db(q, cap):
+        return [{"id": "2", "name": "Sentinels", "tag": None, "country": "United States", "source": "db"}]
+
+    async def no_vlr(*a, **k):
+        raise AssertionError("VLR fallback must not run on a DB hit")
+
+    monkeypatch.setattr(S, "db_team_search", fake_db)
+    monkeypatch.setattr(S, "vlr_team_fallback", no_vlr)
+    res = await S.search_teams("sentinels")
+    assert res["stale"] is False and res["error"] is None
+    assert res["data"][0]["id"] == "2" and res["data"][0]["source"] == "db"
+
+
+async def test_team_empty_db_triggers_vlr_fallback(monkeypatch):
+    calls = {"html": 0}
+
+    async def empty_db(q, cap):
+        return []
+
+    async def miss(key):
+        return None
+
+    async def noop_set(key, val, ttl):
+        return None
+
+    class FakeClient:
+        async def get_html(self, path):
+            calls["html"] += 1
+            assert "term=sentinels" in path
+            return REAL_AUTO
+
+    monkeypatch.setattr(S, "db_team_search", empty_db)
+    monkeypatch.setattr(S, "cache_get", miss)
+    monkeypatch.setattr(S, "cache_set", noop_set)
+    monkeypatch.setattr(S, "get_client", lambda: FakeClient())
+
+    res = await S.search_teams("sentinels")
+    assert [h["id"] for h in res["data"]] == ["2"]
+    assert all(h["source"] == "vlr" for h in res["data"])
+    assert calls["html"] == 1
+
+
+async def test_team_fallback_is_cached_second_identical_miss_does_not_refetch(monkeypatch):
+    store: dict[str, object] = {}
+    calls = {"html": 0}
+
+    async def empty_db(q, cap):
+        return []
+
+    async def fake_get(key):
+        return store.get(key)
+
+    async def fake_set(key, val, ttl):
+        store[key] = val
+
+    class FakeClient:
+        async def get_html(self, path):
+            calls["html"] += 1
+            return REAL_AUTO
+
+    monkeypatch.setattr(S, "db_team_search", empty_db)
+    monkeypatch.setattr(S, "cache_get", fake_get)
+    monkeypatch.setattr(S, "cache_set", fake_set)
+    monkeypatch.setattr(S, "get_client", lambda: FakeClient())
+
+    await S.search_teams("sentinels")
+    res2 = await S.search_teams("sentinels")  # same term -> served from cache
+    assert calls["html"] == 1
+    assert [h["id"] for h in res2["data"]] == ["2"]
+
+
+async def test_team_uses_a_separate_cache_namespace_from_players():
+    # a team miss and a player miss for the same term must not collide
+    assert S.CACHE_TEAM_SEARCH != S.CACHE_SEARCH
+    assert S.CACHE_TEAM_SEARCH.format(term="x") != S.CACHE_SEARCH.format(term="x")
+
+
+async def test_team_db_error_is_graceful_not_a_crash(monkeypatch):
+    async def boom_db(q, cap):
+        raise RuntimeError("pg down")
+
+    monkeypatch.setattr(S, "db_team_search", boom_db)
+    res = await S.search_teams("sentinels")
+    assert res["data"] == [] and res["stale"] is True and "pg down" in res["error"]
+
+
+async def test_team_vlr_fallback_failure_returns_graceful_empty(monkeypatch):
+    async def empty_db(q, cap):
+        return []
+
+    async def miss(key):
+        return None
+
+    class FakeClient:
+        async def get_html(self, path):
+            raise RuntimeError("vlr 503")
+
+    monkeypatch.setattr(S, "db_team_search", empty_db)
+    monkeypatch.setattr(S, "cache_get", miss)
+    monkeypatch.setattr(S, "get_client", lambda: FakeClient())
+    res = await S.search_teams("zzzobscure")
+    assert res["data"] == [] and res["stale"] is True and "vlr 503" in res["error"]

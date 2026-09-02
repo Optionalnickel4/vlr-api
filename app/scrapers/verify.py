@@ -23,7 +23,8 @@ from app.scrapers.players import parse_player
 from app.scrapers.rankings import parse_rankings
 from app.scrapers.stats import parse_stats
 from app.scrapers.teams import parse_team
-from app.services.search import parse_vlr_autocomplete
+from app.services.assistant import team_match
+from app.services.search import parse_vlr_autocomplete, search_teams
 
 # real player used to probe the detail-page selectors (TenZ has deep history).
 # TenZ is retired from pro play -> also the NULL control for current-team
@@ -37,10 +38,15 @@ PROBE_PLAYER_CLUB_ID = "1265"
 PROBE_PLAYER_CLUB_TEAM = "Sentinels"
 # real team used to probe the team-page selectors (Sentinels = id 2)
 PROBE_TEAM_ID = "2"
+# team NAME the assistant/team-search endpoints resolve against — a stable, always
+# -present org. Name->id resolution is the whole assistant contract; if this stops
+# returning a numeric id, every assistant question silently breaks.
+PROBE_TEAM_NAME = "Sentinels"
 # regional rankings slug (full name, not the nav abbreviation)
 PROBE_REGION = "north-america"
 
 _STATUSES = {"live", "upcoming", "completed"}
+_ASSISTANT_STATES = {"live", "upcoming", "completed", "none"}
 
 
 # ---- pure checks (parsed data in, failure strings out) ----------------------
@@ -126,6 +132,52 @@ def _check_autocomplete(raw: str | bytes) -> list[str]:
     if malformed:
         return [f"search-auto: {len(malformed)} hits missing id/alias (e.g. {malformed[:2]})"]
     return []
+
+
+def _check_team_search(res: dict[str, Any], name: str) -> list[str]:
+    """The team-search envelope must resolve a known name to at least one hit that
+    carries a numeric id + a name. This is the name->id primitive the assistant
+    (and later the frontend) sits on — a silent zero-result here breaks both."""
+    if not isinstance(res, dict) or "data" not in res:
+        return [f"team-search: not an envelope for {name!r}"]
+    hits = res.get("data") or []
+    if not hits:
+        return [f"team-search: {name!r} resolved to zero teams (DB + VLR both empty?)"]
+    top = hits[0]
+    if not (top.get("id") and str(top["id"]).isdigit()):
+        return [f"team-search: top hit for {name!r} has no numeric id ({top!r})"]
+    if not top.get("name"):
+        return [f"team-search: top hit for {name!r} has no name ({top!r})"]
+    return []
+
+
+def _check_assistant(ans: dict[str, Any], name: str) -> list[str]:
+    """The assistant envelope must resolve the team (numeric id) and carry a known
+    `state`. LIVE (rare) must include a current-map round score; upcoming/completed
+    must name an opponent. state=none with no error would mean the team resolved but
+    has no live/next/last match at all — flagged, since a known org rarely has none."""
+    if not isinstance(ans, dict) or "data" not in ans:
+        return [f"assistant: not an envelope for {name!r}"]
+    body = ans.get("data") or {}
+    state = body.get("state")
+    if state not in _ASSISTANT_STATES:
+        return [f"assistant: {name!r} state {state!r} not in {_ASSISTANT_STATES}"]
+    team = body.get("team")
+    if not (team and str(team.get("id") or "").isdigit()):
+        return [f"assistant: {name!r} did not resolve to a numeric team id ({team!r})"]
+    bad: list[str] = []
+    match = body.get("match")
+    if state == "live":
+        cm = (match or {}).get("current_map") or {}
+        rs = cm.get("round_score") or {}
+        if rs.get("team") is None or rs.get("opponent") is None:
+            bad.append(f"assistant: {name!r} is LIVE but has no current-map round score ({cm!r})")
+    elif state in {"upcoming", "completed"}:
+        if not (match and match.get("opponent")):
+            bad.append(f"assistant: {name!r} {state} match has no opponent ({match!r})")
+    elif state == "none" and not ans.get("error"):
+        bad.append(f"assistant: {name!r} resolved but has NO live/next/last match (unexpected for a known org)")
+    return bad
 
 
 def _check_current_team(pl: dict[str, Any], expect_club: str | None, who: str) -> list[str]:
@@ -285,6 +337,24 @@ async def main() -> None:
     if hits:
         print(f"  sample: {hits[0]}")
     bad += auto_bad
+
+    # team search + assistant: real name->id resolution end to end. These exercise
+    # the services (DB-first, then VLR fallback) exactly as the routes do, so a
+    # broken resolver or a dead assistant branch surfaces here, not in production.
+    print(f"== team search (q={PROBE_TEAM_NAME!r}) ==")
+    tsearch = await search_teams(PROBE_TEAM_NAME)
+    print(f"  hits: {len(tsearch.get('data') or [])}  stale={tsearch.get('stale')}")
+    if tsearch.get("data"):
+        print(f"  sample: {tsearch['data'][0]}")
+    bad += _check_team_search(tsearch, PROBE_TEAM_NAME)
+
+    print(f"== assistant/team-match (name={PROBE_TEAM_NAME!r}) ==")
+    ans = await team_match(PROBE_TEAM_NAME)
+    body = ans.get("data") or {}
+    print(f"  state: {body.get('state')}  team: {body.get('team')}  stale={ans.get('stale')}")
+    if body.get("match"):
+        print(f"  match: {body['match']}")
+    bad += _check_assistant(ans, PROBE_TEAM_NAME)
 
     await client.aclose()
 

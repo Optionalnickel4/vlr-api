@@ -37,7 +37,7 @@ COMMIT = _git_short_commit()
 # Running the suite to render a status page would make an operator page depend on
 # pytest being installed and on shelling out per request; a stale number is a far
 # cheaper failure than that.
-TESTS_PASSING = 178
+TESTS_PASSING = 206
 
 # Where this is running (hostname of the serving machine; no secrets here).
 DEPLOY = {"hostname": socket.gethostname()}
@@ -56,6 +56,7 @@ PHASES = [
     {"n": 11, "name": "live auto-refresh", "desc": "30s job re-scrapes live match detail + status-aware short TTL; page polls while live", "shipped": True},
     {"n": 12, "name": "stats leaderboard", "desc": "HLTV-style player rankings — VLR R2.0 headline; 6h scheduled scrape of na/eu × 4 windows into cache; GET /stats", "shipped": True},
     {"n": 13, "name": "dimension-split rating", "desc": "Firepower/Entry/Consistency/Clutch as 0-100 cohort percentiles; GET /players/{id}/dimensions; radar + bars on player page", "shipped": True},
+    {"n": 14, "name": "team search + assistant", "desc": "GET /teams?q= (name->id, DB-first + VLR autocomplete fallback) + GET /assistant/team-match?name= (deterministic LIVE>NEXT>LAST with live current-map round score)", "shipped": True},
 ]
 
 # History tables surfaced on the status page, in display order.

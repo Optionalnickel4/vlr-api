@@ -44,6 +44,7 @@ from app.core.db import SessionLocal
 from app.jobs import scheduler as sched_mod
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
 from app.ratings.dimensions import compute_dimensions
+from app.services import assistant as AS
 from app.services import refresh as R
 from app.services import search as SR
 from app.services import trends as T
@@ -233,6 +234,25 @@ async def players(q: str = Query("", max_length=64)):
     # typeahead on a DB miss, caching that like the detail endpoints. Returns the
     # { data, stale, error } envelope; never raises (graceful-empty on failure).
     return await SR.search_players(q)
+
+
+# ---- team search (DB-first over team_snapshots; VLR autocomplete on a miss) ----
+@router.get("/teams")
+async def teams(q: str = Query("", max_length=64)):
+    # The name->id primitive the assistant sits on. Reads TeamSnapshot (clean DB
+    # read) and only touches VLR's typeahead on a DB miss, caching that like the
+    # detail endpoints. Returns the { data, stale, error } envelope; never raises.
+    return await SR.search_teams(q)
+
+
+# ---- assistant: one deterministic name-driven "team's most relevant match" ----
+@router.get("/assistant/team-match")
+async def assistant_team_match(name: str = Query("", max_length=64)):
+    # Orchestration over data the API already has: resolve the name, then return
+    # LIVE (with map + current-map round score) / NEXT / LAST in priority order.
+    # `data.state` is always live|upcoming|completed|none. Envelope shape; a
+    # not-found team is a clean envelope error, never a 500.
+    return await AS.team_match(name)
 
 
 # ---- player detail (on-demand: scrape-on-miss, cache, persist a snapshot) ----

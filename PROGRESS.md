@@ -3,9 +3,41 @@
 Counts here mirror `app/status_meta.py` (the committed source of truth). Keep them
 in sync: bump both in the same commit.
 
-- **Phases shipped:** 13 / 13
-- **Tests passing:** 178 backend + 173 frontend
-- **Commit:** phase13
+- **Phases shipped:** 14 / 14
+- **Tests passing:** 206 backend + 173 frontend
+- **Commit:** phase14
+
+## Phase 14 — team search + assistant (2026-09-02)
+
+Closes the name-resolution gap for the Command Central / Jarvis assistant, which
+refers to teams by NAME while every other endpoint keys by numeric id.
+
+1. **`GET /api/v1/teams?q=<name>`** — team-search primitive. DB-first over
+   `team_snapshots.name` (DISTINCT-ON team_id, latest snapshot), VLR `/search/auto`
+   fallback on a miss (cached, own `vlr:search:team:` namespace). Mirrors player
+   search exactly (`services/search.py`). Envelope `{data, stale, error}`; hits are
+   `{id, name, tag, country, source}` (`tag` is always null — not banked in
+   team_snapshots; `/team/{id}` carries it downstream). Never 500s.
+2. **`GET /api/v1/assistant/team-match?name=<name>`** — one deterministic answer.
+   Resolves the name via the primitive, then returns the team's single most
+   relevant match in fixed priority **LIVE > NEXT > LAST**, with `data.state` ∈
+   `live|upcoming|completed|none` so the LLM branches unconditionally. LIVE carries
+   map-level score AND the current-map ROUND score, oriented to the team. Pure
+   orchestration over existing caches + the bounded on-demand detail refreshes
+   (`services/assistant.py`); no new scraping, no new selectors. Team-not-found is a
+   clean envelope error, never a 500.
+3. **Round-score null-stub rule.** A live map's `rounds[]` ends in a not-yet-played
+   null-stub round (winner/side/outcome/score all None). `count_map_rounds` counts
+   only rounds with a real winner, so a map with 6 played + 1 null stub reports 6,
+   not 7 (asserted directly in `tests/test_assistant.py`).
+4. **verify.py** now resolves a known name ("Sentinels") through both `search_teams`
+   and `team_match` end-to-end — the same silent-break blind-spot class we've been
+   closing (a new endpoint absent from verify).
+5. **Tests (+28, 178 → 206):** `tests/test_search.py` +10 (team statement shape,
+   autocomplete team-filter/dedup/bad-json, DB-hit/miss/fallback/cache-namespace/
+   graceful); `tests/test_assistant.py` +18 (null-stub round counting, current-map
+   pick, side alignment, live-card matching, shaping, and the orchestrator's
+   LIVE/upcoming/completed/none/not-found/degrade paths).
 
 ## Diagnostics conventions
 
