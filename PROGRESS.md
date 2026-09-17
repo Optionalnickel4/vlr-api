@@ -4,8 +4,37 @@ Counts here mirror `app/status_meta.py` (the committed source of truth). Keep th
 in sync: bump both in the same commit.
 
 - **Phases shipped:** 14 / 14
-- **Tests passing:** 206 backend + 173 frontend
+- **Tests passing:** 207 backend + 173 frontend
 - **Commit:** phase14
+
+## Bugfix — map-name/duration label-bleed (2026-09-06)
+
+Reported via `/api/v1/match/734314`: every map's `name` carried a trailing
+duration ("Abyss55:04" instead of "Abyss"), while scores/rounds/teams were fine.
+
+Root cause, found via the app's httpx client against the live page (never curl):
+vlr's `div.map` wraps the name in its own `font-weight:700` node (name text +
+an inline PICK/DEC marker span) with a **sibling** `div.map-duration` ("mm:ss")
+right next to it. `match_detail.py` read `div.map`'s raw `text()` — concatenating
+name + PICK/DEC + duration — then stripped only the PICK/DEC token, leaving the
+duration bled into `name`. Same label-bleed class already handled elsewhere
+(`selectors.py`), just not here.
+
+Also found live: vlr moved the games-nav item (`MATCH_NAV_ITEM`, the preferred
+name source before falling back to `div.map`) from a `<div>` to an `<a>` tag,
+so the div-scoped selector matched nothing and every map silently fell through
+to the polluted fallback path. Both fixed together since the second is what
+made the first load-bearing on every request instead of a rare fallback.
+
+Fix: added `MATCH_GAME_MAP_NAME` (the name node alone, scoped under `div.map`)
+and `MATCH_GAME_MAP_DURATION` (the sibling node); `_parse_game` now reads the
+name from the dedicated node and exposes duration as its own `duration` field
+(kept, not discarded) instead of folding it into `name`. `MATCH_NAV_ITEM`
+loosened to match by class regardless of tag. verify.py's `_check_match_detail`
+gained a cheap `\d+:\d+` guard on map names to close the silent-break gap.
+Tests: `+1` (label-bleed regression, real captured markup shape) plus an
+`isalpha()` invariant added to the existing maps test. Verified live against
+matches 734314 and 747672. 206 → 207.
 
 ## Phase 14 — team search + assistant (2026-09-02)
 

@@ -37,7 +37,7 @@ COMMIT = _git_short_commit()
 # Running the suite to render a status page would make an operator page depend on
 # pytest being installed and on shelling out per request; a stale number is a far
 # cheaper failure than that.
-TESTS_PASSING = 206
+TESTS_PASSING = 207
 
 # Where this is running (hostname of the serving machine; no secrets here).
 DEPLOY = {"hostname": socket.gethostname()}

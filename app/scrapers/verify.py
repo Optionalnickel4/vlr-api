@@ -13,6 +13,7 @@ script, which defeats its purpose.
 """
 import asyncio
 import json
+import re
 from typing import Any
 
 from app.core.http import get_client
@@ -99,10 +100,17 @@ def _check_regional_rankings(rows: list[dict[str, Any]]) -> list[str]:
     return bad
 
 
+_MAP_DURATION_RE = re.compile(r"\d+:\d+")
+
+
 def _check_match_detail(mt: dict[str, Any]) -> list[str]:
     """On a COMPLETED match: header must name both teams and carry a BoN format,
     and at least one played map must have a round timeline. (A live/partial map
-    with few rounds is fine — this probes the most recent completed result.)"""
+    with few rounds is fine — this probes the most recent completed result.)
+
+    Also guards the map-name label-bleed class: the map-duration node
+    ("mm:ss") sits right next to the name node in vlr's markup, so a selector
+    slip bleeds the duration back into the name (e.g. "Abyss55:04")."""
     bad: list[str] = []
     named = [t for t in mt["teams"] if t.get("name")]
     if len(named) != 2:
@@ -113,6 +121,9 @@ def _check_match_detail(mt: dict[str, Any]) -> list[str]:
         bad.append("match-detail: no per-map games parsed")
     elif not any(m["rounds"] for m in mt["maps"]):
         bad.append("match-rounds: no map has a round timeline (completed match must)")
+    bled = [m["name"] for m in mt["maps"] if m["name"] and _MAP_DURATION_RE.search(m["name"])]
+    if bled:
+        bad.append(f"match-map-name: duration bled into name(s) {bled} (want e.g. 'Abyss', not 'Abyss55:04')")
     return bad
 
 

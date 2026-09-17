@@ -183,9 +183,10 @@ def _parse_game(game: Node, names: dict[str, str]) -> dict[str, Any]:
     tables = game.css(S.MATCH_SB_TABLE)  # [team1, team2]
     team_names = [clean_spaces(text_of(n)) or None for n in game.css(S.MATCH_GAME_HEADER_TEAM)]
     scores = [parse_numeric(text_of(s)) for s in game.css(S.MATCH_GAME_HEADER_SCORE)]
-    map_text = clean_spaces(text_of(game.css_first(S.MATCH_GAME_MAP)))
-    picked = S.MATCH_GAME_PICK_TOKEN in map_text
-    name = names.get(gid or "", "") or _LEADING_INDEX.sub("", map_text.replace(S.MATCH_GAME_PICK_TOKEN, "")) or None
+    map_name_text = clean_spaces(text_of(game.css_first(S.MATCH_GAME_MAP_NAME)))
+    picked = S.MATCH_GAME_PICK_TOKEN in map_name_text
+    name = names.get(gid or "", "") or _LEADING_INDEX.sub("", map_name_text.replace(S.MATCH_GAME_PICK_TOKEN, "")) or None
+    duration = clean_spaces(text_of(game.css_first(S.MATCH_GAME_MAP_DURATION))) or None
 
     teams = []
     for i, table in enumerate(tables):
@@ -199,6 +200,7 @@ def _parse_game(game: Node, names: dict[str, str]) -> dict[str, Any]:
     return {
         "game_id": gid,
         "name": name,
+        "duration": duration,
         "picked": picked,
         "decider": not picked,  # the one map neither side picked
         "scores": [t["score"] for t in teams] or None,

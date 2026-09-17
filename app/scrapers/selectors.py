@@ -207,11 +207,17 @@ MATCH_H_VETO = "div.match-header-note"
 # per-map game containers (one per map + an aggregate with data-game-id="all")
 MATCH_GAME = "div.vm-stats-game"
 MATCH_GAME_ALL_ID = "all"  # the aggregate game's data-game-id
-MATCH_NAV_ITEM = "div.vm-stats-gamesnav-item"  # data-game-id -> "1Pearl" etc.
-MATCH_GAME_MAP = "div.map"  # text like "PearlPICK37:17"; carries the PICK marker
+MATCH_NAV_ITEM = ".vm-stats-gamesnav-item"  # data-game-id -> "1Pearl" etc; vlr moved this from a div to an <a> tag, so match by class only
+MATCH_GAME_MAP = "div.map"  # container: name node + a SIBLING map-duration node
+# the map name lives in its own font-weight:700 div (name text + an inline PICK/DEC
+# marker span); a separate sibling div.map-duration ("mm:ss") is NOT part of the name.
+# Reading div.map's raw text() concatenates both -> "Abyss" + "PICK" + "55:04" ->
+# label-bleed ("Abyss55:04") once the PICK token is stripped. Read the name node alone.
+MATCH_GAME_MAP_NAME = 'div.map div[style*="font-weight: 700"]'
+MATCH_GAME_MAP_DURATION = "div.map div.map-duration"  # "mm:ss", its own field
 MATCH_GAME_HEADER_SCORE = "div.vm-stats-game-header div.score"
 MATCH_GAME_HEADER_TEAM = "div.vm-stats-game-header div.team-name"
-MATCH_GAME_PICK_TOKEN = "PICK"  # presence in the .map text => a team-picked map
+MATCH_GAME_PICK_TOKEN = "PICK"  # presence in the map-name text => a team-picked map
 # round timeline: one row of square-cols per map; each col = a round
 MATCH_RND_ROW = "div.vlr-rounds-row"
 MATCH_RND_COL = "div.vlr-rounds-row-col"

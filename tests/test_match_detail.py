@@ -70,6 +70,9 @@ def test_maps_names_pick_decider_and_scores():
     assert len(d["maps"]) == 3
     by_name = {m["name"]: m for m in d["maps"]}
     assert set(by_name) == {"Lotus", "Breeze", "Split"}
+    # names are pure map names -- no leftover PICK/DEC token or map-duration digits
+    for name in by_name:
+        assert name.isalpha()
     # two picked maps + exactly one decider (neither team picked it)
     assert sum(1 for m in d["maps"] if m["decider"]) == 1
     assert sum(1 for m in d["maps"] if m["picked"]) == 2
@@ -78,6 +81,40 @@ def test_maps_names_pick_decider_and_scores():
     # every map has both teams with five players each
     for m in d["maps"]:
         assert [len(t["players"]) for t in m["teams"]] == [5, 5]
+
+
+def test_map_name_excludes_duration_label_bleed():
+    """vlr's div.map wraps the name (its own font-weight:700 node, PICK/DEC span
+    included) and a SIBLING div.map-duration ("mm:ss") -- reading div.map's raw
+    text concatenates both into "Abyss55:04". This pins the real markup shape
+    (captured live off match 734314, 2026-09-06) and proves the name comes back
+    clean with the duration split into its own field."""
+    html = """
+    <div class="vm-stats-game " data-game-id="280058">
+        <div class="vm-stats-game-header">
+            <div class="team">
+                <div class="score">10</div>
+                <div><div class="team-name">NRG</div></div>
+            </div>
+            <div class="map">
+                <div style="font-weight: 700; font-size: 20px;">
+                    <span style="position: relative;">
+                        Abyss<span class="picked mod-1 ge-text-light">PICK</span>
+                    </span>
+                </div>
+                <div class="map-duration ge-text-light">55:04</div>
+            </div>
+            <div class="team mod-right">
+                <div class="score">13</div>
+                <div><div class="team-name">LOUD</div></div>
+            </div>
+        </div>
+    </div>"""
+    m = parse_match(html)["maps"][0]
+    assert m["name"] == "Abyss"
+    assert not any(c.isdigit() for c in m["name"])
+    assert m["duration"] == "55:04"
+    assert m["picked"] is True
 
 
 def test_all_maps_aggregate_present():
