@@ -274,8 +274,9 @@ because this environment blocks socket creation. No production service was used.
 ## Commit state
 
 Delivery branch: **`v2`**, based on
-`9f4b8cbf22a38bed15163dc353634ad241dbd9ea`. The implementation, tests, this report,
-and the two relevant earlier handoff documents are committed together. Resolve
-the implementation commit with `git log -1 --format=%H -- docs/PHASE1_CACHE_HANDOFF.md`;
-the report does not embed its own commit hash. The normal push target is
-`origin/v2` only. No commits, pushes, or merges target `main` or `master`.
+`9f4b8cbf22a38bed15163dc353634ad241dbd9ea`. Implementation commit:
+**`93ea25ed105b2349a96e262a176241a44cc36906`**. It contains the implementation,
+tests, this report, and the two relevant earlier handoff documents. A subsequent
+documentation-only commit records that implementation hash here. The normal push
+target and intended upstream are `origin/v2` only. No commits, pushes, or merges
+target `main` or `master`. The unrelated `.gitignore` change remains uncommitted.
