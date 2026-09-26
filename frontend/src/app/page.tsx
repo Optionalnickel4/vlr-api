@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import {
   getLive,
   getNews,
@@ -11,9 +12,8 @@ import { MatchSection } from "@/components/MatchSection";
 import { LiveMatches } from "@/components/LiveMatches";
 import { RankingsPanel } from "@/components/RankingsPanel";
 import { NewsPanel } from "@/components/NewsPanel";
-import { FeaturedStreamers } from "@/components/FeaturedStreamers";
+import { StreamersSection } from "@/components/StreamersSection";
 import { SiteHeader } from "@/components/SiteHeader";
-import { getFeaturedStreamers } from "@/lib/twitch";
 
 // Always fresh: the match center reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
@@ -26,14 +26,13 @@ export const dynamic = "force-dynamic";
  * scrolls; on desktop the two snapshots sit side by side.
  */
 export default async function MatchCenter() {
-  const [results, upcoming, live, rankings, news, streamers] =
+  const [results, upcoming, live, rankings, news] =
     await Promise.all([
       getResults(),
       getUpcoming(),
       getLive(),
       getRankings(),
       getNews(),
-      getFeaturedStreamers(),
     ]);
 
   // Snapshot: the next-5 upcoming + most-recent-5 results (the lists arrive
@@ -48,7 +47,9 @@ export default async function MatchCenter() {
       <div className="flex flex-col gap-8 sm:gap-10">
         {/* watch-live band: Twitch channels live now (event broadcasts ∪ featured
             handles), Valorant-only, server-shuffled once. Hides when none live. */}
-        <FeaturedStreamers streams={streamers.data} />
+        <Suspense fallback={null}>
+          <StreamersSection />
+        </Suspense>
 
         {/* live — the one polling island */}
         <LiveMatches initial={live} />

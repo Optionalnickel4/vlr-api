@@ -17,6 +17,7 @@ export function MatchSection({
   children,
   count,
   stale = false,
+  staleLabel,
   isEmpty = false,
   emptyLabel = "Nothing here right now.",
   aside,
@@ -27,6 +28,7 @@ export function MatchSection({
   children?: ReactNode;
   count?: number;
   stale?: boolean;
+  staleLabel?: string;
   isEmpty?: boolean;
   emptyLabel?: string;
   aside?: ReactNode;
@@ -45,11 +47,16 @@ export function MatchSection({
         {aside && <span className="ml-1">{aside}</span>}
       </SectionHeading>
       <Panel className="overflow-hidden">
-        {isEmpty ? (
-          <p className="px-4 py-6 text-center font-body text-sm text-dim">
-            {stale ? "Source unavailable — showing nothing." : emptyLabel}
+        {stale && (
+          <p role="status" className="px-4 py-3 font-body text-sm text-warn">
+            {staleLabel ?? (isEmpty ? "Updates unavailable." : "Updates unavailable — showing last available data.")}
           </p>
-        ) : (
+        )}
+        {isEmpty ? (!stale && (
+          <p className="px-4 py-6 text-center font-body text-sm text-dim">
+            {emptyLabel}
+          </p>
+        )) : (
           <>
             {children}
             {viewAllHref && (

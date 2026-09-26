@@ -5,30 +5,69 @@ import type { ApiResponse, LiveMatch } from "@/types/vlr";
 import { MatchSection } from "@/components/MatchSection";
 import { MatchCard } from "@/components/MatchCard";
 
+const POLL_INTERVAL_MS = 30_000;
+const POLL_TIMEOUT_MS = 15_000;
+
+function isLiveResponse(value: unknown): value is ApiResponse<LiveMatch> {
+  if (!value || typeof value !== "object") return false;
+  const res = value as Record<string, unknown>;
+  if (res.stale !== false || (res.error !== undefined && res.error !== "")) return false;
+  if (!Array.isArray(res.data)) return false;
+  return res.data.every((row: unknown) => {
+    if (!row || typeof row !== "object") return false;
+    const match = row as Record<string, unknown>;
+    return ["id", "team1", "team2", "series", "event", "url"].every(
+      key => match[key] === null || typeof match[key] === "string",
+    ) && ["score1", "score2"].every(
+      key => match[key] === null || (typeof match[key] === "number" && Number.isFinite(match[key])),
+    );
+  });
+}
+
 /**
  * LiveMatches — the one polling island on the page. Seeded with server-rendered
- * data (no empty flash), then refetches /api/matches/live every 30s (matching
- * the upstream live TTL). A failed poll keeps the last good data rather than
- * blanking the section. Out of season this is simply empty — a valid state.
+ * data, then polls 30s after each completed attempt. Failed/invalid updates keep
+ * the last successful scores; only a valid empty response clears them.
  */
 export function LiveMatches({ initial }: { initial: ApiResponse<LiveMatch> }) {
   const [res, setRes] = useState(initial);
 
   useEffect(() => {
     let alive = true;
+    let nextPoll: ReturnType<typeof setTimeout>;
+    let deadline: ReturnType<typeof setTimeout> | undefined;
+    let controller: AbortController | undefined;
+    const markFailed = () => {
+      if (alive) setRes(previous => ({ ...previous, stale: true, error: "Live updates unavailable" }));
+    };
     const tick = async () => {
+      const request = new AbortController();
+      controller = request;
+      deadline = setTimeout(() => {
+        request.abort();
+        markFailed();
+      }, POLL_TIMEOUT_MS);
       try {
-        const r = await fetch("/api/matches/live", { cache: "no-store" });
-        const next = (await r.json()) as ApiResponse<LiveMatch>;
+        const r = await fetch("/api/matches/live", { cache: "no-store", signal: request.signal });
+        if (!r.ok) throw new Error("Live update failed");
+        const next: unknown = await r.json();
+        if (request.signal.aborted || !isLiveResponse(next)) throw new Error("Invalid live update");
         if (alive) setRes(next);
       } catch {
-        /* transient — keep the last good payload */
+        markFailed();
+      } finally {
+        clearTimeout(deadline);
+        // Schedule only after settlement, including body parsing. Even a
+        // transport that ignores abort cannot overlap or publish a late result.
+        if (alive) nextPoll = setTimeout(tick, POLL_INTERVAL_MS);
       }
     };
-    const id = setInterval(tick, 30_000);
+    nextPoll = setTimeout(tick, POLL_INTERVAL_MS);
     return () => {
       alive = false;
-      clearInterval(id);
+      clearTimeout(nextPoll);
+      clearTimeout(deadline);
+      controller?.abort();
     };
   }, []);
 
@@ -37,7 +76,8 @@ export function LiveMatches({ initial }: { initial: ApiResponse<LiveMatch> }) {
     <MatchSection
       title="Live"
       count={matches.length}
-      stale={res.stale}
+      stale={res.stale || Boolean(res.error)}
+      staleLabel={matches.length ? "Live updates unavailable — showing last successful scores. Retrying automatically." : "Live updates unavailable. Retrying automatically."}
       isEmpty={matches.length === 0}
       emptyLabel="No live matches right now."
     >

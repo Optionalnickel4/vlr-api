@@ -8,7 +8,10 @@
 // sections are countable independently.
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToPipeableStream, renderToStaticMarkup } from "react-dom/server";
+import { PassThrough } from "node:stream";
+import * as twitch from "@/lib/twitch";
+import type { ApiResponse, FeaturedStream } from "@/types/vlr";
 
 import MatchCenter from "@/app/page";
 import SchedulePage from "@/app/schedule/page";
@@ -18,6 +21,45 @@ import RankingsPage from "@/app/rankings/page";
 import { HOME_SNAPSHOT_LIMIT } from "@/lib/vlr";
 
 const FULL = 50;
+
+it("streams match coverage before optional Twitch work settles", async () => {
+  mockFetch();
+  let resolveStreams!: (value: ApiResponse<FeaturedStream>) => void;
+  const pending = new Promise<ApiResponse<FeaturedStream>>(resolve => { resolveStreams = resolve; });
+  vi.spyOn(twitch, "getFeaturedStreamers").mockReturnValue(pending);
+  const page = await MatchCenter(); // must not await optional work
+  const output = new PassThrough();
+  let html = "";
+  let ready!: () => void;
+  const coverage = new Promise<void>(resolve => { ready = resolve; });
+  const finished = new Promise<void>((resolve, reject) => {
+    output.on("data", chunk => {
+      html += chunk.toString();
+      if (html.includes('/match/u0')) ready();
+    });
+    output.on("end", resolve);
+    output.on("error", reject);
+  });
+  const errors: unknown[] = [];
+  const stream = renderToPipeableStream(page, {
+    onShellReady() { stream.pipe(output); },
+    onError(error) { errors.push(error); },
+  });
+  try {
+    await coverage;
+    expect(html).not.toContain("Delayed broadcast");
+    resolveStreams({ data: [{
+      login: "test", displayName: "Delayed broadcast", viewers: 10,
+      title: null, game: "VALORANT", thumbnail: null, url: "https://twitch.tv/test",
+    }], stale: false });
+    await finished;
+    expect(html).toContain("Delayed broadcast");
+    expect(errors).toEqual([]);
+  } finally {
+    resolveStreams({ data: [], stale: false });
+    stream.abort();
+  }
+});
 
 // Upstream match-card shape (teams[]/scores[] indexing) — distinguishable by id.
 const UPCOMING = Array.from({ length: FULL }, (_, i) => ({

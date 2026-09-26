@@ -104,16 +104,28 @@ export function parseNumeric(value: unknown): number | null {
 
 /** Fetch a path off VLR_API_BASE and return parsed JSON. Throws on non-2xx or
  *  network error so loaders can map failures to graceful-empty. */
+export const UPSTREAM_TIMEOUT_MS = 10_000;
+
 export async function fetchUpstream(path: string): Promise<unknown> {
-  const res = await fetch(`${VLR_API_BASE}${path}`, {
-    headers: { accept: "application/json" },
-    // live data is polled by the caller; the data layer itself never caches.
-    cache: "no-store",
-  });
-  if (!res.ok) {
-    throw new Error(`vlr-api ${path} -> ${res.status}`);
+  const controller = new AbortController();
+  const deadline = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${VLR_API_BASE}${path}`, {
+      headers: { accept: "application/json" },
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`vlr-api ${path} -> ${res.status}`);
+    // Await the body too: receiving headers must not cancel the deadline.
+    const data: unknown = await res.json();
+    if (controller.signal.aborted) throw new Error("Request aborted");
+    return data;
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error(`vlr-api ${path} timed out after ${UPSTREAM_TIMEOUT_MS}ms`);
+    throw error;
+  } finally {
+    clearTimeout(deadline);
   }
-  return res.json();
 }
 
 // ---- helpers ----------------------------------------------------------------
@@ -711,7 +723,15 @@ export const getResults = () =>
 export const getUpcoming = () =>
   load<UpcomingMatch>("/matches/upcoming", normalizeUpcoming);
 
-export const getLive = () => load<LiveMatch>("/matches/live", normalizeLive);
+export const getLive = () => load<LiveMatch>("/matches/live", raw => {
+  // A malformed/error upstream object must not become a successful empty list.
+  if (!Array.isArray(raw) || !raw.every(row =>
+    row && typeof row === "object" && Array.isArray(row.teams) && row.teams.length <= 2 &&
+    Array.isArray(row.scores) && row.scores.length <= 2 &&
+    [...row.teams, ...row.scores].every(value => value === null || typeof value === "string" || typeof value === "number"),
+  )) throw new Error("Invalid live matches response");
+  return normalizeLive(raw);
+});
 
 export const getRankings = (region = "all") =>
   load<RankedTeam>(`/rankings?region=${encodeURIComponent(region)}`, normalizeRankings);
