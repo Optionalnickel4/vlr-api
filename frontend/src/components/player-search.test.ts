@@ -108,7 +108,7 @@ describe("PlayerSearch island — SSR ↔ hydrate parity", () => {
     // Empty initial state: just the search input, no dropdown open
     expect(ssrHtml).toContain("Search players");
     expect(hydrationErrors).toEqual([]);
-    root.unmount();
+    await act(async () => root.unmount());
   });
 });
 
@@ -132,7 +132,7 @@ describe(`PlayerSearch island — <${MIN_QUERY_LEN} chars returns empty, no fetc
 
     expect(spy).not.toHaveBeenCalled();
     expect(container.querySelector('[role="listbox"]')).toBeNull();
-    root.unmount();
+    await act(async () => root.unmount());
   });
 });
 
@@ -171,7 +171,7 @@ describe("PlayerSearch island — debounce", () => {
       expect.stringContaining("q=TenZ"),
       expect.anything(),
     );
-    root.unmount();
+    await act(async () => root.unmount());
   });
 });
 
@@ -207,7 +207,7 @@ describe("PlayerSearch island — dropdown renders alias + team", () => {
     expect(html).toContain("NRG");
     // VLR-sourced row gets the source indicator; DB row does not emit one
     expect(html).toContain("vlr");
-    root.unmount();
+    await act(async () => root.unmount());
   });
 });
 
@@ -236,6 +236,137 @@ describe("PlayerSearch island — error state", () => {
     await act(async () => { await Promise.resolve(); });
 
     expect(container.innerHTML).toContain("upstream timeout");
-    root.unmount();
+    await act(async () => root.unmount());
+  });
+});
+
+// These deferred fetches intentionally ignore AbortSignal to exercise the
+// generation guard independently of the browser's cancellation behavior.
+function deferred() {
+  let resolve!: (value: Response) => void;
+  let reject!: (reason: Error) => void;
+  const promise = new Promise<Response>((yes, no) => { resolve = yes; reject = no; });
+  return { promise, resolve, reject };
+}
+const player = (id: string, alias: string) => ({ id, alias, team: null, country: null, source: "db" });
+async function startSearch(input: HTMLInputElement, query: string) {
+  await act(async () => fireInput(input, query));
+  await act(async () => { await vi.advanceTimersByTimeAsync(DEBOUNCE_MS); });
+}
+async function key(input: HTMLInputElement, value: string) {
+  await act(async () => { input.dispatchEvent(new KeyboardEvent("keydown", { key: value, bubbles: true, cancelable: true })); });
+}
+
+describe("PlayerSearch request ownership and keyboard behavior", () => {
+  it.each(["success", "failure"])("ignores an older %s after newer results arrive", async (outcome) => {
+    vi.useFakeTimers();
+    const old = deferred();
+    const next = deferred();
+    const fetcher = vi.spyOn(globalThis, "fetch").mockReturnValueOnce(old.promise).mockReturnValueOnce(next.promise);
+    const { container, root } = mountIslandFake();
+    await act(async () => {});
+    const input = container.querySelector("input")!;
+    await startSearch(input, "old");
+    await startSearch(input, "new");
+    expect((fetcher.mock.calls[0][1]?.signal as AbortSignal).aborted).toBe(true);
+    await act(async () => next.resolve(json({ data: [player("2", "New player")], stale: false })));
+    await act(async () => {
+      if (outcome === "success") old.resolve(json({ data: [player("1", "Old player")], stale: false }));
+      else old.reject(new Error("old request failed"));
+    });
+    expect(container.querySelector('[role="option"]')?.textContent).toContain("New player");
+    expect(container.textContent).not.toContain("Old player");
+    expect(container.textContent).not.toContain("old request failed");
+    expect(container.querySelector('[role="status"]')?.textContent).toContain("1 player found");
+    await act(async () => root.unmount());
+  });
+
+  it.each(["clear", "escape", "blur", "outside"])("does not reopen after %s during a request", async (action) => {
+    vi.useFakeTimers();
+    const pending = deferred();
+    const fetcher = vi.spyOn(globalThis, "fetch").mockReturnValue(pending.promise);
+    const { container, root } = mountIslandFake();
+    await act(async () => {});
+    const input = container.querySelector("input")!;
+    await startSearch(input, "TenZ");
+    if (action === "clear") await act(async () => fireInput(input, ""));
+    if (action === "escape") await key(input, "Escape");
+    if (action === "blur") await act(async () => input.dispatchEvent(new FocusEvent("focusout", { bubbles: true })));
+    if (action === "outside") await act(async () => document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true })));
+    expect((fetcher.mock.calls[0][1]?.signal as AbortSignal).aborted).toBe(true);
+    await act(async () => pending.resolve(json({ data: [player("9", "TenZ")], stale: false })));
+    expect(input.getAttribute("aria-expanded")).toBe("false");
+    expect(container.querySelector('[role="listbox"]')).toBeNull();
+    expect(container.querySelector('[role="status"]')?.textContent).toBe("");
+    await act(async () => root.unmount());
+  });
+
+  it("cleans up a pending debounce on unmount", async () => {
+    vi.useFakeTimers();
+    const fetcher = vi.spyOn(globalThis, "fetch");
+    const { container, root } = mountIslandFake();
+    await act(async () => {});
+    await act(async () => fireInput(container.querySelector("input")!, "TenZ"));
+    await act(async () => root.unmount());
+    await act(async () => { await vi.advanceTimersByTimeAsync(DEBOUNCE_MS); });
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it("aborts an in-flight request on unmount and ignores its delayed completion", async () => {
+    vi.useFakeTimers();
+    const pending = deferred();
+    const fetcher = vi.spyOn(globalThis, "fetch").mockReturnValue(pending.promise);
+    const { container, root } = mountIslandFake();
+    await act(async () => {});
+    await startSearch(container.querySelector("input")!, "TenZ");
+    await act(async () => root.unmount());
+    expect((fetcher.mock.calls[0][1]?.signal as AbortSignal).aborted).toBe(true);
+    await act(async () => pending.resolve(json({ data: [player("9", "TenZ")], stale: false })));
+    expect(container.innerHTML).toBe("");
+  });
+
+  it("moves the active option with arrows and opens that player with Enter", async () => {
+    vi.useFakeTimers();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ data: [player("9", "TenZ"), player("42", "yay")], stale: false }));
+    const { container, root } = mountIslandFake();
+    document.body.append(container);
+    await act(async () => {});
+    const input = container.querySelector("input")!;
+    input.focus();
+    await startSearch(input, "TenZ");
+    const options = container.querySelectorAll('[role="option"]');
+    expect(options).toHaveLength(2);
+    expect(input.getAttribute("aria-controls")).toBe(container.querySelector('[role="listbox"]')?.id);
+    await key(input, "ArrowUp");
+    expect(input.getAttribute("aria-activedescendant")).toBe(options[1].id);
+    await key(input, "ArrowDown");
+    expect(options[0].getAttribute("aria-selected")).toBe("true");
+    await key(input, "ArrowDown");
+    expect(options[1].getAttribute("aria-selected")).toBe("true");
+    expect(options[0].getAttribute("aria-selected")).toBe("false");
+    expect(options[1].className).toContain("ring-accent");
+    expect(document.activeElement).toBe(input);
+    await key(input, "Enter");
+    expect(window.location.pathname).toBe("/player/42");
+    expect(input.getAttribute("aria-expanded")).toBe("false");
+    await act(async () => root.unmount());
+    container.remove();
+  });
+
+  it("Escape clears results and Enter cannot navigate to a dismissed option", async () => {
+    vi.useFakeTimers();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ data: [player("999", "TenZ")], stale: false }));
+    const { container, root } = mountIslandFake();
+    await act(async () => {});
+    const input = container.querySelector("input")!;
+    await startSearch(input, "TenZ");
+    await key(input, "ArrowDown");
+    await key(input, "Escape");
+    expect(input.value).toBe("");
+    expect(input.hasAttribute("aria-activedescendant")).toBe(false);
+    const previous = window.location.href;
+    await key(input, "Enter");
+    expect(window.location.href).toBe(previous);
+    await act(async () => root.unmount());
   });
 });
