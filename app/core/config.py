@@ -4,10 +4,9 @@ Every value has a working default so the app boots with no configuration at all
 (that is what lets tests import the whole app without a .env). Override in
 production by env var: the field `min_request_interval` is `VLR_MIN_REQUEST_INTERVAL`.
 
-The TTLs below are the cache half of the freshness contract; the scheduler in
-app/jobs sets the other half. Read them together — a TTL much shorter than its
-scrape cadence just means the API serves misses (and, for detail routes,
-refreshes inline) rather than fresher data.
+The TTLs below govern freshness; the scheduler in app/jobs sets refresh cadence.
+Rankings/events retain a separate last-successful copy without expiry. Other
+datasets still expire outright and can refresh inline on a cache miss.
 """
 from functools import lru_cache
 
@@ -43,8 +42,8 @@ class Settings(BaseSettings):
     ttl_live: int = 30
     ttl_results: int = 600
     ttl_matches: int = 600
-    ttl_events: int = 1800
-    ttl_rankings: int = 3600
+    ttl_events: int = 1800  # freshness only; separate retained copy has no expiry
+    ttl_rankings: int = 3600  # freshness only; separate retained copy has no expiry
     ttl_players: int = 3600
     ttl_teams: int = 3600
     ttl_news: int = 900

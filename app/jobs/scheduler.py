@@ -7,10 +7,9 @@ across all of them, and both matter more than they look:
     throttle (core/http.py), so a slow run and its successor would not run in
     parallel — they would queue on the same lock and each make the other later.
     Overlap here converts a slow scrape into a growing backlog.
-  - Cadences are chosen against the TTL of what they refresh (core/config.py).
-    A job slower than its TTL means the cache expires between runs and readers
-    see misses; much faster means wasted requests to vlr.gg. Change one, check
-    the other.
+  - Cadences are chosen against freshness TTLs (core/config.py). Rankings/events
+    retain last-successful data past those TTLs and share a Redis refresh lease
+    with request-triggered refreshes. Other datasets expire outright.
 
 Cadence rationale, briefly: `upcoming` (60s) and `live_matches` (30s) track
 things that change during a match; `results` (10m) and `news` (15m) track a feed

@@ -1,4 +1,4 @@
-"""The public JSON API. Reads cache and Postgres; the list endpoints never scrape.
+"""The public JSON API. Reads cache/Postgres, with on-demand refresh on misses.
 
 THREE RESPONSE SHAPES live here, and knowing which is which saves an afternoon:
 
@@ -17,12 +17,9 @@ THREE RESPONSE SHAPES live here, and knowing which is which saves an afternoon:
 New endpoints should match the shape of their neighbours; the mix is historical,
 not a design with a rule behind it.
 
-SCRAPING FROM A ROUTE. The architecture says the API never scrapes, and the list
-endpoints hold to it — a miss means the scheduler hasn't run yet. The detail
-endpoints (player/team/match) DO scrape on a cache miss, because no cadence
-could pre-warm every player and team on vlr.gg. That path is bounded by the
-cache TTL and serialized by the global throttle in core/http.py, so a cold burst
-queues rather than stampeding vlr.
+SCRAPING FROM A ROUTE. Lists and details can refresh through the service layer
+on misses. Rankings/events retain stale payloads and share a Redis refresh lease
+with the scheduler; other endpoints retain their existing cold-cache behavior.
 
 VALUES ARE RAW STRINGS. Scores, ratings and ranks come back as vlr rendered them
 ("13", "1024", "–"), never coerced. Consumers must coerce at read time and must
@@ -30,9 +27,10 @@ never sort or compare them as strings — "998" > "1024" lexicographically, whic
 is how a rating chart silently reorders itself. See app/services/trends.py,
 which does this correctly, and frontend/src/lib/vlr.ts for the mirror contract.
 """
+import logging
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Response
 from sqlalchemy import select
 
 from app import status_meta as meta
@@ -50,6 +48,7 @@ from app.services import search as SR
 from app.services import trends as T
 
 router = APIRouter()
+log = logging.getLogger("vlr.api")
 
 # History tables surfaced on the status page, paired with their timestamp column.
 # All four models happen to use `captured_at` — wired explicitly, not assumed.
@@ -97,6 +96,53 @@ async def _cached_or_refresh(key: str, refresher) -> Any:
     return data if data is not None else []
 
 
+async def _refresh_after_response(key: str, refresher) -> None:
+    """Server-owned background work; Redis lease coordinates all processes."""
+    try:
+        await refresher()
+    except cache_core.RefreshUnavailable:
+        # Expected when another API worker/scheduler owns the lease or a recent
+        # attempt failed. Never turn a completed stale response into an error.
+        log.info("Background refresh unavailable for %s", key)
+    except Exception:
+        log.warning("Background refresh failed for %s", key, exc_info=True)
+
+
+async def _retained_or_refresh(
+    key: str, refresher, response: Response, background_tasks: BackgroundTasks,
+) -> Any:
+    """Send retained data before refreshing; only truly cold requests wait.
+
+    FastAPI/Starlette sends headers AND body before awaiting BackgroundTasks.
+    Work stays owned by the server request lifecycle, rather than an untracked
+    create_task. The service's Redis lease still coalesces API/scheduler scrapes.
+    """
+    response.headers["Cache-Control"] = "no-store"
+    data = await cache_get(key)
+    if data is not None:
+        response.headers["X-VLR-Cache"] = "fresh"
+        return data
+    data = await cache_get(key + ":retained")
+    if data is not None:
+        response.headers["X-VLR-Cache"] = "stale"
+        background_tasks.add_task(_refresh_after_response, key, refresher)
+        return data
+    try:
+        await refresher()
+    except Exception:
+        log.warning("Refresh unavailable for %s", key, exc_info=True)
+    data = await cache_get(key)
+    response.headers["X-VLR-Cache"] = "fresh"
+    if data is None:
+        data = await cache_get(key + ":retained")
+        response.headers["X-VLR-Cache"] = "stale"
+    if data is None:
+        raise HTTPException(
+            503, "Data temporarily unavailable", headers={"Cache-Control": "no-store"},
+        )
+    return data
+
+
 @router.get("/matches/results")
 async def results():
     return await _cached_or_refresh(R.CACHE_RESULTS, R.refresh_results)
@@ -115,7 +161,9 @@ async def live():
 
 
 @router.get("/rankings")
-async def rankings(region: str = Query("all")):
+async def rankings(
+    response: Response, background_tasks: BackgroundTasks, region: str = Query("all"),
+):
     # The allow-list is a real guard, not input hygiene: an unknown slug 404s at
     # vlr, and because a cache miss triggers a refresh, an unvalidated ?region=
     # would send a failed upstream fetch on EVERY request for that slug.
@@ -123,7 +171,9 @@ async def rankings(region: str = Query("all")):
     if region not in R.RANKINGS_REGIONS:
         raise HTTPException(400, f"region must be one of {list(R.RANKINGS_REGIONS)}")
     key = R.CACHE_RANKINGS.format(region=region)
-    return await _cached_or_refresh(key, lambda: R.refresh_rankings(region))
+    return await _retained_or_refresh(
+        key, lambda: R.refresh_rankings(region), response, background_tasks,
+    )
 
 
 @router.get("/stats")
@@ -161,8 +211,10 @@ async def stats(
 
 
 @router.get("/events")
-async def events():
-    return await _cached_or_refresh(R.CACHE_EVENTS, R.refresh_events)
+async def events(response: Response, background_tasks: BackgroundTasks):
+    return await _retained_or_refresh(
+        R.CACHE_EVENTS, R.refresh_events, response, background_tasks,
+    )
 
 
 @router.get("/news")

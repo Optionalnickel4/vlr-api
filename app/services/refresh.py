@@ -47,7 +47,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from app.core.cache import cache_get, cache_set
+from app.core.cache import cache_get, cache_set, refresh_retained
 from app.core.config import get_settings
 from app.core.db import SessionLocal
 from app.models import MatchResult, PlayerSnapshot, RankingSnapshot, TeamSnapshot
@@ -155,7 +155,7 @@ async def refresh_upcoming() -> int:
 async def refresh_rankings(region: str = "all") -> int:
     """Scheduled (6h, "all") + on-demand per region: cache standings, bank a snapshot.
 
-    Every run appends a fresh row per team — no dedup, because the whole point is
+    Every successful scrape appends a row per team — no dedup, because the point is
     the time series. That makes this the one job whose history grows unbounded
     with cadence, so the 6h interval is a storage decision as much as a
     politeness one.
@@ -165,8 +165,12 @@ async def refresh_rankings(region: str = "all") -> int:
     so regional series are as sparse as their traffic.
     """
     s = get_settings()
-    data = await rk.fetch_rankings(region)
-    await cache_set(CACHE_RANKINGS.format(region=region), data, s.ttl_rankings)
+    data, scraped_here = await refresh_retained(
+        CACHE_RANKINGS.format(region=region), s.ttl_rankings,
+        lambda: rk.fetch_rankings(region),
+    )
+    if not scraped_here:
+        return len(data)  # only the lease owner banks a snapshot
     # Unnamed rows are parse debris (a layout row, or a selector that half-broke);
     # banking them would put nameless points in the series forever.
     snaps = [
@@ -185,8 +189,7 @@ async def refresh_rankings(region: str = "all") -> int:
 
 async def refresh_events() -> int:
     s = get_settings()
-    data = await ev.fetch_events()
-    await cache_set(CACHE_EVENTS, data, s.ttl_events)
+    data, _ = await refresh_retained(CACHE_EVENTS, s.ttl_events, ev.fetch_events)
     return len(data)
 
 
