@@ -1,10 +1,12 @@
+import type { Metadata } from "next";
 import { getNews } from "@/lib/vlr";
 import { NewsPanel } from "@/components/NewsPanel";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageContainer } from "@/components/PageContainer";
 
 // force-dynamic so the feed reflects vlr-api's current cache on each load rather
 // than a build-time snapshot. Same loader the home page's news panel uses.
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "News — valstats" };
 
 /**
  * /news — the full headline feed (the home page carries a short panel of the
@@ -15,9 +17,8 @@ export default async function NewsPage() {
   const news = await getNews();
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
-      <SiteHeader label="news" active="news" />
+    <PageContainer width="reading" title="News">
       <NewsPanel news={news} />
-    </main>
+    </PageContainer>
   );
 }

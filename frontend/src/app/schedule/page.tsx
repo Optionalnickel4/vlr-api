@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
 import { getUpcoming } from "@/lib/vlr";
 import { buildSchedule } from "@/lib/schedule";
 import { ScheduleBoard } from "@/components/ScheduleBoard";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageContainer } from "@/components/PageContainer";
 import { SectionHeading } from "@/components/Panel";
 
 // Same data layer as the match center — no new API; the endpoint already serves
@@ -9,6 +10,7 @@ import { SectionHeading } from "@/components/Panel";
 // on each load AND so the DERIVED match day (eta + now, see lib/schedule) is
 // computed against a fresh "now" every request.
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Schedule — valstats" };
 
 /**
  * /schedule — a broadcast-styled schedule: a "NEXT UP" hero for the soonest
@@ -22,8 +24,7 @@ export default async function SchedulePage() {
   const board = buildSchedule(upcoming.data, new Date());
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
-      <SiteHeader label="schedule" active="schedule" />
+    <PageContainer width="schedule" title="Schedule">
 
       <SectionHeading className="mb-5">
         Schedule
@@ -42,6 +43,6 @@ export default async function SchedulePage() {
         count={upcoming.data.length}
         stale={upcoming.stale}
       />
-    </main>
+    </PageContainer>
   );
 }

@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import { PageContainer } from "@/components/PageContainer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import Link from "next/link";
 import { getPlayer, getPlayerDimensions, getPlayerTrend } from "@/lib/vlr";
 import { Panel } from "@/components/Panel";
@@ -13,26 +16,9 @@ import { RatingBreakdown } from "@/components/RatingBreakdown";
 // which already return the { data, stale, error } envelope and never throw.
 export const dynamic = "force-dynamic";
 
-function PageFrame({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-10">
-      <header className="mb-8 flex items-baseline gap-3">
-        <Link
-          href="/"
-          className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink"
-        >
-          valstats<span className="text-accent">.</span>
-        </Link>
-        <span className="font-display text-[13px] font-semibold uppercase tracking-broadcast text-mut">
-          player
-        </span>
-        <Link href="/" className="ml-auto font-mono text-xs text-dim hover:text-mut">
-          ← match center
-        </Link>
-      </header>
-      {children}
-    </main>
-  );
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  return { title: `Player ${id} — valstats` };
 }
 
 export default async function PlayerPage({
@@ -58,7 +44,8 @@ export default async function PlayerPage({
   // a crash, NOT a Next.js error boundary.
   if (!detail) {
     return (
-      <PageFrame>
+      <PageContainer>
+        <Breadcrumbs kind="player" label={`Player ${id}`} />
         <Panel className="flex flex-col items-center gap-3 px-6 py-16 text-center">
           <Badge tone="down">unavailable</Badge>
           <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink">
@@ -76,12 +63,13 @@ export default async function PlayerPage({
             ← back to match center
           </Link>
         </Panel>
-      </PageFrame>
+      </PageContainer>
     );
   }
 
   return (
-    <PageFrame>
+    <PageContainer>
+      <Breadcrumbs kind="player" label={detail.alias ?? `Player ${id}`} />
       <div className="flex flex-col gap-10">
         {/* the always-populated headline: identity, weighted overall stat line,
             signature agent, recent form, compact trend */}
@@ -96,6 +84,6 @@ export default async function PlayerPage({
         {/* recent matches */}
         <PlayerMatchesPanel matches={detail.matches} />
       </div>
-    </PageFrame>
+    </PageContainer>
   );
 }

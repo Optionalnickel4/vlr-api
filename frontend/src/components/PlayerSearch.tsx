@@ -61,6 +61,12 @@ export function PlayerSearch() {
     };
   }, [cancelPending, dismiss]);
 
+  useEffect(() => {
+    if (open && active >= 0) {
+      document.getElementById(`${listId}-${active}`)?.scrollIntoView?.({ block: "nearest" });
+    }
+  }, [active, open, listId]);
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const q = e.target.value;
     cancelPending();
@@ -149,10 +155,9 @@ export function PlayerSearch() {
         aria-activedescendant={open && active >= 0 ? `${listId}-${active}` : undefined}
         aria-autocomplete="list"
         className={cn(
-          "w-36 rounded border border-line bg-panel px-2.5 py-1",
-          "font-body text-[12px] text-ink placeholder:text-dim",
+          "min-h-11 w-full min-w-0 rounded border border-line bg-panel px-3 py-2",
+          "font-body text-base text-ink placeholder:text-mut",
           "focus:border-accent focus:ring-2 focus:ring-accent/60 focus:outline-none transition-colors",
-          "sm:w-44",
         )}
       />
 
@@ -161,8 +166,8 @@ export function PlayerSearch() {
       {showDropdown && (
         <div
           className={cn(
-            "absolute right-0 top-full z-50 mt-1 min-w-[200px] rounded border border-line bg-panel shadow-lg",
-            "overflow-hidden",
+            "absolute right-0 top-full z-50 mt-1 w-full rounded border border-line bg-panel shadow-lg",
+            "max-h-72 overflow-y-auto",
           )}
         >
           {loading && (

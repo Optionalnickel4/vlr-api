@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import {
   getLive,
@@ -13,10 +14,11 @@ import { LiveMatches } from "@/components/LiveMatches";
 import { RankingsPanel } from "@/components/RankingsPanel";
 import { NewsPanel } from "@/components/NewsPanel";
 import { StreamersSection } from "@/components/StreamersSection";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageContainer } from "@/components/PageContainer";
 
 // Always fresh: the match center reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Match center — valstats" };
 
 /**
  * Home (match center) — a compact, curated SNAPSHOT, not an endless dual-column
@@ -41,8 +43,7 @@ export default async function MatchCenter() {
   const resultsSnapshot = results.data.slice(0, HOME_SNAPSHOT_LIMIT);
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
-      <SiteHeader label="match center" />
+    <PageContainer width="analysis" title="Match center">
 
       <div className="flex flex-col gap-8 sm:gap-10">
         {/* watch-live band: Twitch channels live now (event broadcasts ∪ featured
@@ -112,6 +113,6 @@ export default async function MatchCenter() {
           <NewsPanel news={news} viewAllHref="/news" viewAllLabel="All news" />
         </div>
       </div>
-    </main>
+    </PageContainer>
   );
 }

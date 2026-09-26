@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import { getRankings } from "@/lib/vlr";
 import { RankingsPanel } from "@/components/RankingsPanel";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageContainer } from "@/components/PageContainer";
 
 // force-dynamic so the ladder reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Rankings — valstats" };
 
 /**
  * /rankings — the full team ladder (the home page shows a short panel of it).
@@ -18,9 +20,8 @@ export default async function RankingsPage() {
   const rankings = await getRankings();
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
-      <SiteHeader label="rankings" active="rankings" />
+    <PageContainer width="reading" title="Rankings">
       <RankingsPanel rankings={rankings} />
-    </main>
+    </PageContainer>
   );
 }

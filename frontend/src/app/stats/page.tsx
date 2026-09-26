@@ -1,5 +1,6 @@
+import type { Metadata } from "next";
 import { getStats } from "@/lib/vlr";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageContainer } from "@/components/PageContainer";
 import { StatsLeaderboard } from "@/components/StatsLeaderboard";
 
 // The region-wide player leaderboard (Phase 12). The page server-fetches the
@@ -7,6 +8,7 @@ import { StatsLeaderboard } from "@/components/StatsLeaderboard";
 // region/timespan toggles + client-side sorting from there. force-dynamic so it
 // reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Stats — valstats" };
 
 const DEFAULT_REGION = "na";
 const DEFAULT_TIMESPAN = "all";
@@ -20,13 +22,12 @@ export default async function StatsPage() {
   const initial = await getStats(DEFAULT_REGION, DEFAULT_TIMESPAN);
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
-      <SiteHeader label="stats" active="stats" />
+    <PageContainer width="analysis" title="Stats">
       <StatsLeaderboard
         initial={initial}
         initialRegion={DEFAULT_REGION}
         initialTimespan={DEFAULT_TIMESPAN}
       />
-    </main>
+    </PageContainer>
   );
 }

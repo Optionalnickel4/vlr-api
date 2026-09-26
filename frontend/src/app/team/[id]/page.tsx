@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import { PageContainer } from "@/components/PageContainer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import Link from "next/link";
 import { getTeam, getTeamTrend } from "@/lib/vlr";
 import { Panel } from "@/components/Panel";
@@ -12,26 +15,9 @@ import { TeamResultsPanel } from "@/components/TeamResultsPanel";
 // which already return the { data, stale, error } envelope and never throw.
 export const dynamic = "force-dynamic";
 
-function PageFrame({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-10">
-      <header className="mb-8 flex items-baseline gap-3">
-        <Link
-          href="/"
-          className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink"
-        >
-          valstats<span className="text-accent">.</span>
-        </Link>
-        <span className="font-display text-[13px] font-semibold uppercase tracking-broadcast text-mut">
-          team
-        </span>
-        <Link href="/" className="ml-auto font-mono text-xs text-dim hover:text-mut">
-          ← match center
-        </Link>
-      </header>
-      {children}
-    </main>
-  );
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  return { title: `Team ${id} — valstats` };
 }
 
 export default async function TeamPage({
@@ -52,7 +38,8 @@ export default async function TeamPage({
   // everywhere else. NOT a crash, NOT a Next.js error boundary.
   if (!detail) {
     return (
-      <PageFrame>
+      <PageContainer>
+        <Breadcrumbs kind="team" label={`Team ${id}`} />
         <Panel className="flex flex-col items-center gap-3 px-6 py-16 text-center">
           <Badge tone="down">unavailable</Badge>
           <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink">
@@ -70,14 +57,15 @@ export default async function TeamPage({
             ← back to match center
           </Link>
         </Panel>
-      </PageFrame>
+      </PageContainer>
     );
   }
 
   const trendData = trend.data[0] ?? null;
 
   return (
-    <PageFrame>
+    <PageContainer>
+      <Breadcrumbs kind="team" label={detail.name ?? `Team ${id}`} />
       {/* team identity — accent stripe is the team's brand-spark, same teal the
           match scorebug spends on its source/brand marks (header accent). */}
       <div className="mb-10 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-l-[3px] border-accent pl-4">
@@ -104,6 +92,6 @@ export default async function TeamPage({
           <TeamResultsPanel results={trendData?.resultsInWindow ?? []} />
         </div>
       </div>
-    </PageFrame>
+    </PageContainer>
   );
 }

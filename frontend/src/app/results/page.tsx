@@ -1,12 +1,14 @@
+import type { Metadata } from "next";
 import { getResults } from "@/lib/vlr";
 import { MatchCard } from "@/components/MatchCard";
 import { MatchSection } from "@/components/MatchSection";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageContainer } from "@/components/PageContainer";
 
 // The full results list (the home page shows only a 5-row snapshot). Same data
 // layer as the match center — no new API; the endpoint already serves the full
 // list. force-dynamic so it reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Results — valstats" };
 
 /**
  * /results — the complete recent-results list, one readable column (same
@@ -17,8 +19,7 @@ export default async function ResultsPage() {
   const results = await getResults();
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
-      <SiteHeader label="results" active="results" />
+    <PageContainer width="reading" title="Results">
       <MatchSection
         title="Results"
         count={results.data.length}
@@ -41,6 +42,6 @@ export default async function ResultsPage() {
           />
         ))}
       </MatchSection>
-    </main>
+    </PageContainer>
   );
 }

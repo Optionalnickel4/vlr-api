@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import { PageContainer } from "@/components/PageContainer";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import Link from "next/link";
 import { getMatch } from "@/lib/vlr";
 import { Panel } from "@/components/Panel";
@@ -10,26 +13,9 @@ import { LiveMatchDetail } from "@/components/LiveMatchDetail";
 // (id with no vlr page) arrives as graceful-empty.
 export const dynamic = "force-dynamic";
 
-function PageFrame({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-10">
-      <header className="mb-8 flex items-baseline gap-3">
-        <Link
-          href="/"
-          className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink"
-        >
-          valstats<span className="text-accent">.</span>
-        </Link>
-        <span className="font-display text-[13px] font-semibold uppercase tracking-broadcast text-mut">
-          match
-        </span>
-        <Link href="/" className="ml-auto font-mono text-xs text-dim hover:text-mut">
-          ← match center
-        </Link>
-      </header>
-      {children}
-    </main>
-  );
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  return { title: `Match ${id} — valstats` };
 }
 
 export default async function MatchPage({
@@ -45,7 +31,8 @@ export default async function MatchPage({
   // (HTTP 200, not a crash, not a Next error boundary).
   if (!match) {
     return (
-      <PageFrame>
+      <PageContainer>
+        <Breadcrumbs kind="match" label={`Match ${id}`} />
         <Panel className="flex flex-col items-center gap-3 px-6 py-16 text-center">
           <Badge tone="down">unavailable</Badge>
           <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink">
@@ -63,7 +50,7 @@ export default async function MatchPage({
             ← back to match center
           </Link>
         </Panel>
-      </PageFrame>
+      </PageContainer>
     );
   }
 
@@ -71,8 +58,10 @@ export default async function MatchPage({
   // match is live, polls /api/match/[id] every 30s to refresh the scorebug /
   // scoreboard / round timeline without a reload (stops when the match finals).
   return (
-    <PageFrame>
+    <PageContainer>
+      <Breadcrumbs kind="match" label={`Match ${id}`} />
+      <h1 className="sr-only">Match {id}</h1>
       <LiveMatchDetail initial={match} />
-    </PageFrame>
+    </PageContainer>
   );
 }

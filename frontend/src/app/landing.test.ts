@@ -202,11 +202,12 @@ describe("landing snapshot vs dedicated full-list pages", () => {
 });
 
 describe("news + rankings full pages and see-all links", () => {
-  it("home nav always includes News and Rankings links", async () => {
+  it("home owns one main landmark and heading; navigation belongs to the layout", async () => {
     mockFetch();
     const html = renderToStaticMarkup(await MatchCenter());
-    expect(html).toContain('href="/news"');
-    expect(html).toContain('href="/rankings"');
+    expect(count(html, 'id="main-content"')).toBe(1);
+    expect(count(html, "<h1")).toBe(1);
+    expect(html).not.toContain('aria-label="Primary"');
   });
 
   it("home shows All news and Full rankings see-all links when panels have data", async () => {
