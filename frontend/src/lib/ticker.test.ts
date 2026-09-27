@@ -351,3 +351,17 @@ describe("getTicker (graceful-empty, never throws to the page)", () => {
     expect(res.stale).toBe(true);
   });
 });
+
+it("withholds cross-region upset claims from the public ticker while retaining match statistics", async () => {
+  vi.spyOn(globalThis, "fetch").mockImplementation(async input => {
+    const url = String(input);
+    if (url.includes("/matches/results")) return Response.json([{ id: "1", teams: ["Low", "High"], scores: ["2", "0"] }]);
+    if (url.includes("/rankings?")) return Response.json([{ rank: "1", team: "High", team_id: "1" }, { rank: "8", team: "Low", team_id: "2" }]);
+    if (url.includes("/match/")) return Response.json(match);
+    return new Response("{}", { status: 503 });
+  });
+  const tape = await getTicker();
+  expect(tape.stale).toBe(false);
+  expect(tape.data.some(item => item.kind === "upset")).toBe(false);
+  expect(tape.data.some(item => item.kind === "acs")).toBe(true);
+});

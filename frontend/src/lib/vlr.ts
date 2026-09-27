@@ -988,7 +988,9 @@ function matchup(m: MatchDetail): string {
 /** Curate the notable-stats tape from already-normalized inputs. Pure: no
  *  network, no clock, no randomness — deterministic for a given snapshot, so the
  *  server render and any later poll agree (hydration-safe). Order is fixed
- *  (upsets → top ACS → movers/trends) and the tape is capped at TICKER_MAX. */
+ *  (upsets → top ACS → movers/trends) and the tape is capped at TICKER_MAX.
+ *  Rank comparisons require a caller-verified common ladder; the public
+ *  aggregator withholds rankings because its combined feed cannot supply one. */
 export function buildTicker(src: TickerSources): TickerItem[] {
   const upsets: TickerItem[] = [];
   const acs: TickerItem[] = [];
@@ -1122,7 +1124,10 @@ export async function getTicker(): Promise<ApiResponse<TickerItem>> {
 
     const data = buildTicker({
       results: results.data,
-      rankings: rankings.data,
+      // The all-regions feed has no ladder identifiers. Comparing its rank
+      // numbers would invent cross-region "upsets". Withhold those claims;
+      // keep rankings above only for selecting the existing trend sample.
+      rankings: [],
       matches,
       trends,
     });
