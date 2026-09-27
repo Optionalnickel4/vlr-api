@@ -1,0 +1,48 @@
+{
+  "tests": {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T10:54:02.655593+00:00",
+    "ended": "2026-09-27T10:54:27.168113+00:00",
+    "exitCode": 0
+  },
+  "lint": {
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T10:54:02.655887+00:00",
+    "ended": "2026-09-27T10:54:20.775782+00:00",
+    "exitCode": 0
+  },
+  "typescript": {
+    "command": [
+      "./node_modules/.bin/tsc",
+      "--noEmit",
+      "--incremental",
+      "false"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T10:54:02.656091+00:00",
+    "ended": "2026-09-27T10:54:17.017855+00:00",
+    "exitCode": 0
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "directory": "/tmp/vlr-broadcast-delivery-20260927/build",
+    "started": "2026-09-27T10:54:02.656859+00:00",
+    "ended": "2026-09-27T10:54:34.225325+00:00",
+    "exitCode": 0
+  }
+}

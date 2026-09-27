@@ -1,0 +1,71 @@
+{
+  "capturedAt": "2026-09-27T10:54:59.839Z",
+  "url": "http://10.0.0.21:3100/",
+  "dataMode": "real cached preview data; no response interception",
+  "results": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "tickerCount": 1,
+      "ticker": {
+        "position": "fixed",
+        "bottom": 1000,
+        "height": 64
+      },
+      "clearance": 84,
+      "hero": "LIVE COVERAGE\nValorant Champions 2026\n1T\n100 THIEVES\n1\n:\n0\nMatch in progress\nT1\nT1\nGroup Stage–Opening (A)\nOpen match\n↗",
+      "overflow": [],
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "documentWidth": 768,
+      "tickerCount": 1,
+      "ticker": {
+        "position": "fixed",
+        "bottom": 1024,
+        "height": 64
+      },
+      "clearance": 84,
+      "hero": "LIVE COVERAGE\nValorant Champions 2026\n1T\n100 THIEVES\n1\n:\n0\nMatch in progress\nT1\nT1\nGroup Stage–Opening (A)\nOpen match\n↗",
+      "overflow": [],
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "tickerCount": 1,
+      "ticker": {
+        "position": "fixed",
+        "bottom": 844,
+        "height": 92
+      },
+      "clearance": 112,
+      "hero": "LIVE COVERAGE\nValorant Champions 2026\n1T\n100 THIEVES\n1\n:\n0\nMatch in progress\nT1\nT1\nGroup Stage–Opening (A)\nOpen match\n↗",
+      "overflow": [],
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "width": 320,
+      "height": 844,
+      "documentWidth": 320,
+      "tickerCount": 1,
+      "ticker": {
+        "position": "fixed",
+        "bottom": 844,
+        "height": 92
+      },
+      "clearance": 112,
+      "hero": "LIVE COVERAGE\nValorant Champions 2026\n1T\n100 THIEVES\n1\n:\n0\nMatch in progress\nT1\nT1\nGroup Stage–Opening (A)\nOpen match\n↗",
+      "overflow": [],
+      "bottomClear": true,
+      "errors": []
+    }
+  ]
+}

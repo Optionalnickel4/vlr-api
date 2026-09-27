@@ -1,0 +1,8 @@
+{
+  "matchVisibleMs": 359,
+  "secondaryDelayMs": 6500,
+  "twitchDelayMs": 9000,
+  "newsAndRankingsLoadingWhileMatchVisible": true,
+  "matchRemainsVisibleAfterSettlement": true,
+  "externalTwitchRequests": 0
+}

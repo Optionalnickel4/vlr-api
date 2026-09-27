@@ -1,0 +1,51 @@
+[
+  {
+    "width": 1440,
+    "keyboard": "skip, search focus, arrows, Escape, clear, Enter pass",
+    "dropdown": {
+      "x": 358.65625,
+      "y": 65,
+      "width": 206,
+      "height": 70.6875
+    },
+    "focus": {
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.817332 -0.143348 0.00676769 / 0.6) 0px 0px 0px 2px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "outline": "none"
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "keyboard": "skip, search focus, arrows, Escape, clear, Enter pass",
+    "dropdown": {
+      "x": 17,
+      "y": 117,
+      "width": 356,
+      "height": 70.6875
+    },
+    "focus": {
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.817332 -0.143348 0.00676769 / 0.6) 0px 0px 0px 2px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "outline": "none"
+    },
+    "errors": []
+  },
+  {
+    "width": 320,
+    "keyboard": "skip, search focus, arrows, Escape, clear, Enter pass",
+    "dropdown": {
+      "x": 17,
+      "y": 117,
+      "width": 286,
+      "height": 70.6875
+    },
+    "focus": {
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.817332 -0.143348 0.00676769 / 0.6) 0px 0px 0px 2px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "outline": "none"
+    },
+    "errors": []
+  },
+  {
+    "controlledLive": "live → failure retains 3:2 + stale notice → empty upcoming fallback with no visible duplicate → live",
+    "ticker": "fixed, keyboard pause, reduced motion pass"
+  }
+]

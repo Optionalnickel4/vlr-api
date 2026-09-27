@@ -37,27 +37,15 @@
   --tracking-broadcast: 0.14em;
 }
 
-/* fixed broadcast lower-third height — shared by the ticker footer and the page's
-   reserved bottom padding so the tape can never cover the last row of content. */
-:root {
-  --ticker-h: 2.75rem;
-}
-
-/* The stat ticker is a self-fetching client island that renders nothing until it
-   has a tape (and nothing again when empty). Reserve the fixed footer's bottom
-   space ONLY while its element is actually present — pure CSS, so the layout
-   never has to know the island's empty state. */
-body:has(.vlr-ticker) {
-  padding-bottom: var(--ticker-h);
-}
-
 /* atmosphere: a faint cool glow off the top-right + a vertical sink, not a flat
    fill — depth without distracting from the data. */
+html { background-color: #080a0e; }
+
 body {
   background:
     radial-gradient(1200px 500px at 80% -10%, #13202b 0, transparent 60%),
     linear-gradient(#0a0d12, #080a0e);
-  background-attachment: fixed;
+  background-attachment: scroll;
   color: var(--color-ink);
   font-family: var(--font-body);
   font-size: 15px;
@@ -93,7 +81,7 @@ body {
 /* the broadcast stat ticker — a seamless horizontal marquee. The track holds the
    tape TWICE side by side; translating it by exactly -50% lands copy #2 where
    copy #1 began, so the loop has no visible seam. Pure CSS (no JS clock / no
-   Math.random) keeps the ticker a server component and hydration-safe. */
+   Math.random) keeps its initial markup hydration-safe. */
 @keyframes vlr-marquee {
   from {
     transform: translateX(0);
@@ -109,3 +97,158 @@ body {
     animation: none !important;
   }
 }
+
+/* Homepage broadcast edition. Deliberately scoped so analysis pages retain
+   their existing presentation and data hierarchy. */
+.home-broadcast { --bc-red: #ff5261; --bc-paper: #eeeae2; color: #f5f2ec; }
+.home-broadcast a { color: inherit; }
+.bc-kicker { display:block; font: 600 11px/1.5 var(--font-body); text-transform:uppercase; letter-spacing:.15em; }
+.bc-masthead { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:28px; }
+.bc-masthead .bc-kicker { color:var(--bc-red); margin-bottom:8px; }
+.bc-masthead h1 { font:700 clamp(48px,6.8vw,94px)/.9 var(--font-display); letter-spacing:-.045em; }
+.bc-masthead h1 span { color:var(--bc-paper); }
+.bc-deck { color:#aeb8c6; font-size:13px; line-height:1.7; max-width:290px; border-left:1px solid #46505b; padding-left:18px; }
+.bc-lead { margin-bottom:40px; }
+.bc-feature { position:relative; isolation:isolate; border:1px solid #3c4653; border-top:4px solid var(--bc-red); background:#151c25; overflow:hidden; }
+.bc-feature::before { content:""; position:absolute; z-index:-1; width:55%; height:160%; right:-15%; top:-30%; transform:skew(-24deg); background:linear-gradient(180deg,#ff52611a,#ff526104); border-left:1px solid #ff526133; }
+.bc-feature-top { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 24px; border-bottom:1px solid #ffffff18; }
+.bc-tag { background:var(--bc-red); color:#100d10; padding:5px 10px; font:700 12px var(--font-body); text-transform:uppercase; letter-spacing:.08em; flex-shrink:0; }
+.bc-event { color:#c2cad5; font-size:13px; text-align:right; overflow-wrap:anywhere; }
+.bc-versus { display:grid; grid-template-columns:minmax(0,1fr) minmax(120px,.6fr) minmax(0,1fr); align-items:center; padding:40px 32px; gap:24px; min-height:290px; }
+.bc-team { min-width:0; display:flex; flex-direction:column; align-items:center; gap:18px; text-align:center; }
+.bc-team h3 { font:700 clamp(24px,3.6vw,52px)/1 var(--font-display); text-transform:uppercase; letter-spacing:-.015em; overflow-wrap:anywhere; }
+.bc-team > span { border-radius:18px 0; background:#ffffff07 !important; border-color:#ffffff33 !important; color:#eeeae2 !important; }
+.bc-match-center { text-align:center; display:flex; align-items:center; flex-direction:column; gap:8px; }
+.bc-vs { font:600 42px/1 var(--font-display); font-style:italic; color:#738195; }
+.bc-start { font:600 clamp(22px,3vw,40px)/1.15 var(--font-display); }
+.bc-micro { font:400 11px/1.4 var(--font-body); color:#aeb8c6; }
+.bc-score { display:flex; gap:12px; align-items:center; font:700 clamp(42px,6vw,88px)/1 var(--font-display); font-variant-numeric:tabular-nums; }
+.bc-score-divider { color:#566576; font-size:.65em; }
+.bc-feature-footer { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 24px; background:#00000025; border-top:1px solid #ffffff18; font-size:13px; color:#aeb8c6; }
+.bc-action { display:inline-flex; min-height:44px; justify-content:space-between; align-items:center; gap:32px; background:var(--bc-paper); color:#111820 !important; padding:12px 20px; font:600 13px var(--font-body); text-decoration:none; }
+.bc-action:hover { background:var(--bc-red); }
+.bc-action span { font-size:22px; line-height:1; }
+.bc-live-stack { display:grid; gap:20px; }
+.bc-warning { color:#ffc775; padding:14px 20px; background:#3b2b1833; font-size:13px; }
+.bc-coverage-grid { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:32px; align-items:start; }
+.bc-match-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; }
+.bc-section-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; margin-bottom:20px; }
+.bc-section-heading .bc-kicker { color:#aeb8c6; margin-bottom:5px; }
+.bc-section-heading h2 { font:700 32px/1 var(--font-display); letter-spacing:-.02em; }
+.bc-total { color:#9daabb; font:400 11px var(--font-body); text-align:right; }
+.bc-upcoming-list { border-top:2px solid var(--bc-red); }
+.bc-fixture { position:relative; display:grid; gap:8px; padding:20px 28px 20px 0; border-bottom:1px solid #303c4a; }
+.bc-fixture:hover { background:#ffffff05; }
+.bc-fixture-time { font:600 13px var(--font-mono); color:var(--bc-red); }
+.bc-fixture-teams { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; font:600 20px/1.2 var(--font-display); }
+.bc-fixture-event { color:#aeb8c6; font:400 11px/1.5 var(--font-body); overflow-wrap:anywhere; }
+.bc-row-arrow { position:absolute; right:2px; top:24px; color:#8995a6; }
+/* Both views use the SAME upcoming payload: hide only its first row while
+   that exact first item is the featured next match. Updates need no new poller. */
+.home-broadcast:has([data-next-feature="true"]) .bc-upcoming-list > :first-child { display:none; }
+.bc-section-link { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:48px; padding:14px 0; font:600 12px var(--font-body); }
+.bc-section-link:hover { text-decoration:underline; }
+.bc-results-list { display:grid; gap:10px; }
+.bc-result { display:block; padding:14px; background:#18212b; border:1px solid #293441; }
+.bc-result:hover { border-color:#738195; }
+.bc-result-teams { display:grid; gap:9px; margin-bottom:10px; }
+.bc-result-teams > div { display:flex; align-items:center; gap:10px; font:600 16px/1.1 var(--font-display); min-width:0; }
+.bc-result-teams > div > span:not([aria-hidden]) { overflow-wrap:anywhere; min-width:0; }
+.bc-result-teams strong { margin-left:auto; font:600 23px var(--font-display); padding-left:8px; }
+.bc-winner strong { color:#76e5b2; }
+.bc-news { background:var(--bc-paper); color:#19212a; padding:26px; }
+.bc-news-heading { padding-bottom:20px; border-bottom:3px solid #18212b; }
+.bc-news-heading h2 { font:700 44px/.95 var(--font-display); letter-spacing:-.03em; margin-top:9px; }
+.bc-story { padding:20px 0; border-bottom:1px solid #babbb9; }
+.bc-story h3 { font:600 20px/1.15 var(--font-display); }
+.bc-story h3 a:hover { text-decoration:underline; }
+.bc-story-lead h3 { font-size:32px; letter-spacing:-.02em; }
+.bc-story-lead .bc-kicker { color:#a82739; margin-bottom:10px; }
+.bc-story-lead > p { font-size:13px; line-height:1.6; margin-top:12px; color:#3b4752; }
+.bc-story-meta { font-size:10px; color:#52606a; margin-top:12px; }
+.bc-news-warning { color:#842d20; padding:16px 0; font-size:13px; }
+.bc-empty { font-size:14px; padding:24px 0; color:inherit; }
+.bc-analysis-grid { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:32px; margin-top:44px; }
+.bc-rankings { border-top:3px solid #73d9c6; background:#131c23; padding:24px; }
+.bc-rankings h2 { font-size:30px; }
+.bc-leaders { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.bc-leader { display:flex; align-items:center; gap:12px; padding:15px 0; border-top:1px solid #34404b; min-width:0; }
+.bc-rank { font:700 32px var(--font-display); color:#73d9c6; }
+.bc-leader h3 { font:600 18px/1.1 var(--font-display); overflow-wrap:anywhere; }
+.bc-rating { margin-left:auto; display:grid; text-align:right; }
+.bc-rating strong { font:500 18px var(--font-mono); }
+.bc-stats { background:#ff5261; color:#17161b; padding:28px; display:flex; flex-direction:column; align-items:flex-start; }
+.bc-stats h2 { font:700 48px/.95 var(--font-display); letter-spacing:-.02em; margin:20px 0; }
+.bc-stats p { font-size:13px; margin-bottom:24px; }
+.bc-stats .bc-action { background:#17161b; color:#fff !important; margin-top:auto; }
+.bc-stats .bc-action:hover { background:#303340; }
+.bc-watch { margin-top:32px; }
+.bc-source { display:flex; justify-content:space-between; gap:20px; color:#96a4b6; font-size:10px; letter-spacing:.08em; padding:24px 0 8px; border-top:1px solid #303c4a; margin-top:32px; }
+@media(max-width:1023px) {
+ .bc-coverage-grid,.bc-analysis-grid { grid-template-columns:1fr; }
+ .bc-news { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+ .bc-news-heading,.bc-news > .bc-section-link,.bc-news > .bc-empty,.bc-news-warning { grid-column:1/-1; }
+ .bc-story-lead { grid-row:span 3; }
+ .bc-masthead { align-items:start; }
+ .bc-deck { max-width:220px; }
+}
+@media(max-width:599px) {
+ .bc-masthead { display:block; margin-bottom:22px; }
+ .bc-deck { margin-top:16px; max-width:none; border-left:0; padding:0; font-size:12px; }
+ .bc-feature-top { padding:12px; gap:10px; }
+ .bc-event { font-size:10px; }
+ .bc-tag { font-size:10px; padding:5px 7px; }
+ .bc-versus { gap:8px; padding:28px 10px; grid-template-columns:minmax(0,1fr) 72px minmax(0,1fr); min-height:240px; }
+ .bc-team { gap:16px; }
+ .bc-team > span { width:56px !important; height:56px !important; font-size:21px; }
+ .bc-team h3 { font-size:24px; }
+ .bc-score { font-size:42px; gap:5px; }
+ .bc-vs { font-size:30px; }
+ .bc-start { font-size:20px; }
+ .bc-match-center .bc-micro { font-size:9px; }
+ .bc-feature-footer { flex-direction:column; align-items:stretch; padding:14px; gap:14px; }
+ .bc-action { justify-content:space-between; }
+ .bc-match-grid { grid-template-columns:1fr; gap:32px; }
+ .bc-section-heading h2 { font-size:34px; }
+ .bc-news { display:block; padding:24px; }
+ .bc-news-heading h2 { font-size:48px; }
+ .bc-story-lead h3 { font-size:34px; }
+ .bc-leaders { grid-template-columns:1fr; }
+ .bc-rankings { padding:20px; }
+ .bc-rankings .bc-section-heading { display:block; }
+ .bc-rankings .bc-section-link { padding-bottom:0; }
+ .bc-source { flex-direction:column; gap:8px; }
+}
+
+/* One fixed ticker on every viewport. Clearance includes safe-area insets. */
+:root { --ticker-h:64px; scroll-padding-bottom:calc(var(--ticker-h) + env(safe-area-inset-bottom) + 20px); }
+body:has(.vlr-ticker) { padding-bottom:calc(var(--ticker-h) + env(safe-area-inset-bottom) + 20px); }
+.broadcast-ticker { position:fixed; inset:auto 0 0; z-index:60; height:calc(var(--ticker-h) + env(safe-area-inset-bottom)); padding-bottom:env(safe-area-inset-bottom); display:flex; align-items:stretch; background:#10171f; border-top:2px solid #ff5261; box-shadow:0 -8px 30px #0005; }
+.ticker-label { display:flex; align-items:center; gap:10px; padding:0 20px; background:#ff5261; color:#111820; font:700 13px var(--font-display); letter-spacing:.12em; flex-shrink:0; }
+.ticker-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+.ticker-dot.is-live { animation:vlr-pulse 2s infinite; }
+.ticker-viewport { min-width:0; flex:1; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; }
+.ticker-viewport::-webkit-scrollbar { display:none; }
+.broadcast-ticker .vlr-ticker-track { display:flex; width:max-content; height:100%; align-items:center; animation:vlr-marquee linear infinite; }
+.ticker-copy { display:flex; flex-shrink:0; align-items:center; }
+.broadcast-ticker:hover .vlr-ticker-track,.broadcast-ticker:focus-within .vlr-ticker-track { animation-play-state:paused; }
+.broadcast-ticker:focus-within .vlr-ticker-track { animation-name:none; }
+.ticker-pause { flex-shrink:0; min-width:68px; padding:0 12px; color:#f0f0ed; background:#202c38; font:500 12px var(--font-body); cursor:pointer; }
+.ticker-empty { display:flex; flex:1; align-items:center; justify-content:space-between; gap:12px; padding:0 20px; font-size:12px; color:#aeb8c6; min-width:0; }
+.ticker-empty a { color:#eeeae2; white-space:nowrap; }
+@media(max-width:599px) {
+ :root { --ticker-h:92px; }
+ .broadcast-ticker { display:grid; grid-template-columns:minmax(0,1fr) 68px; grid-template-rows:30px 60px; }
+ .ticker-label { grid-column:1/-1; padding:0 14px; font-size:11px; }
+ .ticker-empty { grid-column:1/-1; padding:0 14px; font-size:11px; }
+ .ticker-viewport { width:100%; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .broadcast-ticker .vlr-ticker-track,.ticker-dot.is-live,[class*="vlr-pulse"] { animation:none !important; }
+ .ticker-duplicate { display:none; }
+}
+
+.bc-unavailable-body { padding:32px 24px; min-height:220px; display:flex; flex-direction:column; justify-content:center; gap:16px; }
+.bc-unavailable-body h2 { font:700 clamp(34px,4.5vw,60px)/1 var(--font-display); }
+.bc-unavailable-body p { max-width:540px; font-size:13px; color:#aeb8c6; }
+.bc-unavailable-body [role="status"] { color:#ffc775; }

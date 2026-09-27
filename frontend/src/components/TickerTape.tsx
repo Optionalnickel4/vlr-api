@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { Badge } from "@/components/Badge";
 import type { TickerItem } from "@/types/vlr";
@@ -5,7 +9,7 @@ import type { TickerItem } from "@/types/vlr";
 /**
  * TickerTape — the presentational broadcast lower-third marquee, driven by the
  * self-fetching StatTicker island in both its static and live modes.
- * Pure: it styles by `tone` and prints the strings verbatim (numbers are already
+ * It styles by `tone` and prints the strings verbatim (numbers are already
  * coerced + formatted upstream → dash, never NaN). The scroll is CSS-only
  * (`vlr-marquee` keyframes) — NO Date.now / Math.random in render, so it can't
  * reintroduce a hydration mismatch.
@@ -14,7 +18,7 @@ import type { TickerItem } from "@/types/vlr";
  * LIVE language — same red/pulse as LiveBadge), so the bar visibly shifts to
  * "now playing" when a match is on, and reverts to the calm accent cap otherwise.
  *
- * Empty tape → render nothing (the honest neutral state, never an error strip).
+ * The shared shell opts into an honest empty tape; other callers can hide it.
  */
 const VALUE_TONE: Record<TickerItem["tone"], string> = {
   up: "text-up",
@@ -41,7 +45,7 @@ function TickerEntry({ item }: { item: TickerItem }) {
           {item.value}
         </span>
       )}
-      <span className="font-body text-[12px] text-dim">{item.detail}</span>
+      <span className="font-body text-[12px] text-mut">{item.detail}</span>
       {/* a hairline divider before the next entry */}
       <span className="pl-2.5 text-line" aria-hidden>
         /
@@ -50,72 +54,26 @@ function TickerEntry({ item }: { item: TickerItem }) {
   );
 }
 
-export function TickerTape({
-  items,
-  live = false,
-}: {
+export function TickerTape({ items, live = false, showEmpty = false }: {
   items: TickerItem[];
   live?: boolean;
+  showEmpty?: boolean;
 }) {
-  if (items.length === 0) return null;
-
-  // One full pass is rendered TWICE in the track; -50% translate (keyframes)
-  // lands copy #2 where #1 began for a seamless loop. Duration scales with the
-  // tape length so the scroll speed stays roughly constant — a deterministic
-  // function of the data (identical on server + client → hydration-safe).
+  const [paused, setPaused] = useState(false);
+  if (!items.length && !showEmpty) return null;
   const durationSeconds = Math.max(24, items.length * 6);
-
   return (
-    // Broadcast lower-third: pinned to the bottom of the viewport, full width,
-    // always visible. Live mode swaps the top rule to LIVE red.
-    <section
-      aria-label={live ? "Live match stats" : "Notable stats"}
-      className={cn(
-        "vlr-ticker fixed inset-x-0 bottom-0 z-40 h-[var(--ticker-h)] overflow-hidden border-t bg-gradient-to-b from-panel to-panel-2",
-        live ? "border-down/60" : "border-line",
-      )}
-    >
-      {/* label cap — sits above the tape, masks the left edge of the scroll */}
-      <span
-        className={cn(
-          "absolute left-0 top-0 z-10 flex h-full items-center gap-2 bg-panel-2/95 pl-4 pr-5 font-display text-[11px] font-bold uppercase tracking-broadcast shadow-[8px_0_12px_-4px_rgba(8,10,14,0.9)]",
-          live ? "text-down" : "text-mut",
-        )}
-      >
-        {live ? (
-          <>
-            <span
-              className="h-1.5 w-1.5 rounded-full bg-down [animation:vlr-pulse_2s_infinite]"
-              aria-hidden
-            />
-            Live&nbsp;·&nbsp;Now&nbsp;Playing
-          </>
-        ) : (
-          <>
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-            Stat&nbsp;Ticker
-          </>
-        )}
-      </span>
-
-      {/* the scrolling tape: hover pauses it for readability */}
-      <div
-        className="vlr-ticker-track flex h-full w-max items-center [animation:vlr-marquee_linear_infinite] hover:[animation-play-state:paused]"
-        style={{ animationDuration: `${durationSeconds}s` }}
-      >
-        {/* copy #1 — the real, screen-reader-visible content */}
-        <div className="flex shrink-0 items-center">
-          {items.map((item) => (
-            <TickerEntry key={item.id} item={item} />
-          ))}
+    <section aria-label={live ? "Live match stats" : "Notable stats"} className="vlr-ticker broadcast-ticker">
+      <div className="ticker-label"><span className={live ? "ticker-dot is-live" : "ticker-dot"} aria-hidden />{live ? "LIVE WIRE" : "MATCH WIRE"}</div>
+      {items.length ? <>
+        <div className="ticker-viewport" tabIndex={0} role="region" aria-label="Ticker items, scroll horizontally when paused">
+          <div className="vlr-ticker-track" style={{ animationDuration: `${durationSeconds}s`, animationPlayState: paused ? "paused" : undefined, animationName: paused ? "none" : undefined }}>
+            <div className="ticker-copy">{items.map(item => <TickerEntry key={item.id} item={item} />)}</div>
+            <div className="ticker-copy ticker-duplicate" aria-hidden>{items.map(item => <TickerEntry key={item.id} item={item} />)}</div>
+          </div>
         </div>
-        {/* copy #2 — purely visual, hidden from assistive tech */}
-        <div className="flex shrink-0 items-center" aria-hidden>
-          {items.map((item) => (
-            <TickerEntry key={`dup:${item.id}`} item={item} />
-          ))}
-        </div>
-      </div>
+        <button type="button" className="ticker-pause" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? "Resume" : "Pause"}<span className="sr-only"> ticker motion</span></button>
+      </> : <div className="ticker-empty"><span>No ticker data available.</span><Link href="/results">View results ↗</Link></div>}
     </section>
   );
 }

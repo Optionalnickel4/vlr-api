@@ -50,15 +50,25 @@ export function RankingsPanel({
   rankings,
   viewAllHref,
   viewAllLabel,
+  broadcast = false,
 }: {
   rankings: ApiResponse<RankedTeam>;
   viewAllHref?: string;
   viewAllLabel?: string;
+  broadcast?: boolean;
 }) {
   const allRows = rankings.data;
   // viewAllHref present ↔ landing teaser ("regional kings" — #1 per region only).
   const rows = viewAllHref ? topPerRegion(allRows, RANKINGS_TEASER_PER_REGION) : allRows;
 
+  if (broadcast) return <section className="bc-rankings" aria-labelledby="rankings-heading">
+    <div className="bc-section-heading"><div><span className="bc-kicker">The bigger picture</span><h2 id="rankings-heading">REGIONAL LEADERS</h2></div><a href="/rankings" className="bc-section-link">Full rankings ↗</a></div>
+    {(rankings.stale || rankings.error) && <p role="status" className="bc-warning">Updates unavailable.</p>}
+    {!rows.length && !rankings.stale && !rankings.error && <p className="bc-empty">No rankings available.</p>}
+    <div className="bc-leaders">{rows.map((t, i) => <div className="bc-leader" key={t.id ?? i}>
+      <span className="bc-rank">{t.rank !== null ? `#${t.rank}` : "—"}</span><div><h3>{t.id ? <a href={`/team/${t.id}`}>{t.team ?? "—"}</a> : t.team ?? "—"}</h3><span className="bc-micro">{t.country ?? "Region unavailable"}</span></div><div className="bc-rating"><strong>{t.rating ?? "—"}</strong><span className="bc-micro">Rating</span></div>
+    </div>)}</div>
+  </section>;
   return (
     <MatchSection
       title="Rankings"

@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-09-27T10:55:53.775691+00:00",
+  "previewDirectory": "/tmp/vlr-preview/pass4",
+  "previewPid": "121609",
+  "previewProcessDirectory": "/tmp/vlr-preview/pass4",
+  "adapterPid": "117463",
+  "identicalBuildInputFiles": 112,
+  "sourcePreviewAndFreshBuildMatch": true,
+  "gitignorePreserved": true,
+  "serviceState": "MainPID=61821\nNRestarts=0\nExecMainStartTimestamp=Thu 2026-09-17 11:10:09 UTC\nId=vlr-api.service\nActiveState=active\nActiveEnterTimestamp=Thu 2026-09-17 11:10:09 UTC\n\nMainPID=308\nNRestarts=0\nExecMainStartTimestamp=Thu 2026-09-03 04:02:56 UTC\nId=vlr-frontend.service\nActiveState=active\nActiveEnterTimestamp=Thu 2026-09-03 04:02:56 UTC\n",
+  "http": [
+    {
+      "url": "http://10.0.0.21:3100/",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "url": "http://127.0.0.1:3000/favicon.ico",
+      "status": 200
+    }
+  ]
+}

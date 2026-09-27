@@ -64,6 +64,18 @@ export function NewsPanel({
   // viewAllHref present ↔ landing teaser — cap rows so the panel stays scannable.
   const rows = viewAllHref ? allRows.slice(0, NEWS_TEASER_LIMIT) : allRows;
 
+  if (leadStory) return <section className="bc-news" aria-labelledby="news-heading">
+    <div className="bc-news-heading"><span className="bc-kicker">Beyond the score</span><h2 id="news-heading">THE LATEST.</h2><span className="sr-only">News</span></div>
+    {(news.stale || news.error) && <p role="status" className="bc-news-warning">Updates unavailable.</p>}
+    {!rows.length && !news.stale && !news.error && <p className="bc-empty">No news right now.</p>}
+    {rows.map((article, i) => <article className={i === 0 ? "bc-story bc-story-lead" : "bc-story"} key={article.url ?? i}>
+      {i === 0 && <span className="bc-kicker">Latest headline</span>}
+      <h3>{article.url ? <a href={article.url} target="_blank" rel="noopener noreferrer">{article.title ?? "Untitled article"}<span className="sr-only"> (opens in a new tab)</span></a> : article.title ?? "Untitled article"}</h3>
+      {i === 0 && article.description && <p>{article.description}</p>}
+      {(article.date || article.author) && <div className="bc-story-meta">{[article.date, article.author].filter(Boolean).join(" · ")}</div>}
+    </article>)}
+    <a className="bc-section-link" href={viewAllHref ?? "/news"}>{viewAllLabel ?? "All news"} <span aria-hidden>↗</span></a>
+  </section>;
   return (
     <MatchSection
       title="News"

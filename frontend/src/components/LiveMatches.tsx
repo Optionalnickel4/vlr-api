@@ -3,6 +3,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { ApiResponse, LiveMatch } from "@/types/vlr";
 import { MatchSection } from "@/components/MatchSection";
+import Link from "next/link";
+import { BroadcastMatch } from "./BroadcastMatch";
 import { MatchCard } from "@/components/MatchCard";
 
 const POLL_INTERVAL_MS = 30_000;
@@ -29,7 +31,7 @@ function isLiveResponse(value: unknown): value is ApiResponse<LiveMatch> {
  * data, then polls 30s after each completed attempt. Failed/invalid updates keep
  * the last successful scores; only a valid empty response clears them.
  */
-export function LiveMatches({ initial, confirmedEmptyFallback }: { initial: ApiResponse<LiveMatch>; confirmedEmptyFallback?: ReactNode }) {
+export function LiveMatches({ initial, confirmedEmptyFallback, broadcast = false }: { initial: ApiResponse<LiveMatch>; confirmedEmptyFallback?: ReactNode; broadcast?: boolean }) {
   const [res, setRes] = useState(initial);
 
   useEffect(() => {
@@ -79,6 +81,25 @@ export function LiveMatches({ initial, confirmedEmptyFallback }: { initial: ApiR
       <p className="text-sm text-mut">No live matches right now.</p>
       {confirmedEmptyFallback}
     </div>;
+  }
+  if (broadcast && matches.length > 0) {
+    return <div className="bc-live-stack">
+      <BroadcastMatch match={matches[0]} stale={res.stale || Boolean(res.error)} />
+      {matches.length > 1 && <MatchSection title="Also live" count={matches.length - 1}>
+        {matches.slice(1).map((m, i) => <MatchCard key={m.id ?? i} state="live" {...m} />)}
+      </MatchSection>}
+    </div>;
+  }
+  if (broadcast && !isLiveResponse(res)) {
+    return <section className="bc-feature bc-feature-unavailable" aria-labelledby="coverage-unavailable">
+      <div className="bc-feature-top"><span className="bc-tag">Coverage status</span><span className="bc-event">Live match feed</span></div>
+      <div className="bc-unavailable-body">
+        <h2 id="coverage-unavailable">WAITING FOR<br />LIVE DATA.</h2>
+        <p role="status">Live updates unavailable. Retrying automatically.</p>
+        <p>We could not confirm the live match list. Check the schedule or recent results while updates recover.</p>
+      </div>
+      <div className="bc-feature-footer"><span>Live polling remains active</span><Link className="bc-action" href="/schedule">View schedule <span aria-hidden>↗</span></Link></div>
+    </section>;
   }
   return (
     <MatchSection

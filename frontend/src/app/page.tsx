@@ -19,31 +19,33 @@ export default async function MatchCenter() {
   const rankings = getRankings();
 
   return (
-    <PageContainer width="home" title="Match center">
-      <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-10">
-        <section className="flex min-w-0 flex-col gap-8" aria-label="Match coverage">
-          <Suspense fallback={<SectionLoading label="live matches" />}>
-            <HomeLive live={live} upcoming={upcoming} />
-          </Suspense>
-          <div id="upcoming-snapshot">
-            <Suspense fallback={<SectionLoading label="upcoming matches" />}><UpcomingSnapshot data={upcoming} /></Suspense>
-          </div>
-          <div id="results-snapshot">
-            <Suspense fallback={<SectionLoading label="results" />}><ResultsSnapshot data={results} /></Suspense>
-          </div>
+    <PageContainer width="home">
+      <div className="home-broadcast">
+        <div className="bc-masthead">
+          <div><p className="bc-kicker">Valorant / Match coverage</p><h1>MATCH <span>CENTER.</span></h1></div>
+          <p className="bc-deck">Every match. Every moment.<br />Live scores, fixtures & the stories that matter.</p>
+        </div>
+        <section className="bc-lead" aria-label="Featured match">
+          <Suspense fallback={<SectionLoading label="live matches" />}><HomeLive live={live} upcoming={upcoming} /></Suspense>
         </section>
-        <aside aria-label="News and rankings" className="flex min-w-0 flex-col gap-8">
-          <Suspense fallback={<SectionLoading label="news" />}><HomeNews data={news} /></Suspense>
+        <div className="bc-coverage-grid">
+          <div className="bc-match-grid" aria-label="Match coverage">
+            <div id="upcoming-snapshot"><Suspense fallback={<SectionLoading label="upcoming matches" />}><UpcomingSnapshot data={upcoming} /></Suspense></div>
+            <div id="results-snapshot"><Suspense fallback={<SectionLoading label="results" />}><ResultsSnapshot data={results} /></Suspense></div>
+          </div>
+          <aside aria-label="Latest news"><Suspense fallback={<SectionLoading label="news" />}><HomeNews data={news} /></Suspense></aside>
+        </div>
+        <div className="bc-analysis-grid">
           <Suspense fallback={<SectionLoading label="rankings" />}><HomeRankings data={rankings} /></Suspense>
-          <section aria-labelledby="stats-discovery" className="border-t border-line pt-5">
-            <h2 id="stats-discovery" className="font-display text-xl font-semibold text-ink">Explore player stats</h2>
-            <p className="mt-2 text-sm text-mut">Compare player ratings and performance on the stats leaderboard.</p>
-            <Link href="/stats" className="mt-2 inline-flex min-h-11 items-center rounded text-sm text-accent">View player stats →</Link>
+          <section className="bc-stats" aria-labelledby="stats-discovery">
+            <span className="bc-kicker">Go beyond the scoreboard</span>
+            <h2 id="stats-discovery">KNOW<br />THE NUMBERS.</h2>
+            <p>Player ratings. Performance. Perspective.</p>
+            <Link href="/stats" className="bc-action">View player stats <span aria-hidden>↗</span></Link>
           </section>
-        </aside>
-      </div>
-      <div className="mt-8 sm:mt-10">
-        <Suspense fallback={null}><StreamersSection /></Suspense>
+        </div>
+        <div className="bc-watch"><Suspense fallback={null}><StreamersSection /></Suspense></div>
+        <div className="bc-source"><span>VALSTATS / VALORANT COVERAGE</span><span>Match data & reporting via VLR.gg</span></div>
       </div>
     </PageContainer>
   );
