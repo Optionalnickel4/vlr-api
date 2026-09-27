@@ -1,0 +1,119 @@
+[
+  {
+    "path": "/api/v1/trends/player/3799?days=90",
+    "started": "2026-09-27T14:04:16.873426+00:00",
+    "status": 200,
+    "state": "populated",
+    "headers": {
+      "date": "Sun, 27 Sep 2026 14:04:16 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 2024,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "player_id": {
+          "type": "str"
+        },
+        "player": {
+          "type": "str"
+        },
+        "team": {
+          "type": "NoneType"
+        },
+        "window_days": {
+          "type": "int"
+        },
+        "rating_trend": {
+          "type": "array",
+          "count": 20,
+          "item": {
+            "type": "object",
+            "fields": {
+              "captured_at": "str",
+              "rating": "float",
+              "acs": "float",
+              "rounds": "int"
+            }
+          }
+        },
+        "rating_change": {
+          "type": "float"
+        },
+        "acs_change": {
+          "type": "float"
+        },
+        "summary": {
+          "type": "object",
+          "fields": {
+            "points": {
+              "type": "int"
+            },
+            "current_rating": {
+              "type": "float"
+            },
+            "peak_rating": {
+              "type": "float"
+            },
+            "current_acs": {
+              "type": "float"
+            },
+            "peak_acs": {
+              "type": "float"
+            }
+          }
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "elapsed_ms": 156.1,
+    "rated_points": 20
+  },
+  {
+    "path": "/api/v1/players/3799/dimensions?region=na&timespan=all",
+    "started": "2026-09-27T14:04:19.031501+00:00",
+    "status": 200,
+    "state": "populated",
+    "headers": {
+      "date": "Sun, 27 Sep 2026 14:04:18 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 134,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "player_id": {
+          "type": "str"
+        },
+        "region": {
+          "type": "str"
+        },
+        "timespan": {
+          "type": "str"
+        },
+        "firepower": {
+          "type": "float"
+        },
+        "entry": {
+          "type": "float"
+        },
+        "consistency": {
+          "type": "float"
+        },
+        "clutch": {
+          "type": "float"
+        },
+        "low_confidence": {
+          "type": "array",
+          "count": 0,
+          "item": null
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "elapsed_ms": 9.8,
+    "rated_points": 0
+  }
+]

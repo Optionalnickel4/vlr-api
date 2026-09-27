@@ -1,0 +1,387 @@
+UTC start: 2026-09-27T14:04:15.343696+00:00
+Command: ['npm', 'test']
+Directory: /opt/vlr-api/frontend
+
+> frontend@0.1.0 test
+> vitest run
+
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+ RUN  v2.1.9 /opt/vlr-api/frontend
+
+ ✓ src/lib/vlr.test.ts (57 tests) 114ms
+ ✓ src/app/landing.test.ts (15 tests) 629ms
+ ✓ src/lib/ticker.test.ts (19 tests) 31ms
+ ✓ src/lib/twitch.test.ts (15 tests) 51ms
+ ✓ src/app/player.test.ts (9 tests) 461ms
+ ✓ src/lib/liveTicker.test.ts (17 tests) 28ms
+ ✓ src/lib/schedule.test.ts (29 tests) 38ms
+ ✓ src/lib/upstream-deadline.test.ts (20 tests) 91ms
+ ✓ src/components/match-header.test.ts (3 tests) 49ms
+ ✓ src/components/player-search.test.ts (18 tests) 528ms
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — SSR ↔ hydrate parity > renders identically on server and client with zero hydration errors
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — region/timespan toggle refetch > refetches /api/stats with the new region when EU is clicked
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — region/timespan toggle refetch > refetches with the new timespan when 90D is clicked
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — empty + error states > renders the empty state with no rows
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — empty + error states > renders the error from the seeded envelope
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > renders the first player in the sort preview with R2.0 headline
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > renders the second and third players in the sort preview
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > podium re-ranks when sort changes to ACS (Charlie rises to #1)
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > podium updates after region toggle changes the data
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > degrades gracefully with 1 player — only rank-1 block renders, no crash
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > degrades gracefully with 2 players — no crash on undefined data[2]
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > first preview card identifies its position in the current view
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > podium is absent when the leaderboard is empty (no crash)
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — team tag display > renders team tag in the table player column
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — team tag display > renders team tag in the podium block
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — team tag display > null team is silent — no 'null' or 'undefined' text, no crash
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/components/stats-leaderboard.test.ts (23 tests) 774ms
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — SSR ↔ hydrate parity > renders nothing on the server and hydrates with zero hydration errors
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — static mode (fetch on mount) > fetches /api/ticker on mount and renders the curated tape
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — static mode (fetch on mount) > refreshes the static tape on its interval (no full reload needed)
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — live mode discovery + switch > discovers a live match on mount and renders the LIVE tape
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — live mode discovery + switch > reverts to the static tape when a poll reports the match FINAL
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/components/live-ticker-hydration.test.ts (6 tests) 334ms
+ ✓ src/components/player-broadcast.test.ts (11 tests) 203ms
+stderr | src/components/live-match-detail.test.ts > LiveMatchDetail — poll while live, stop on final, hydration-safe > polls every 30s while live and updates the scorebug
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-match-detail.test.ts > LiveMatchDetail — poll while live, stop on final, hydration-safe > stops polling once the match finals, showing the series score
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-match-detail.test.ts > LiveMatchDetail — poll while live, stop on final, hydration-safe > never polls a match that's already completed
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/components/live-match-detail.test.ts (8 tests) 321ms
+ ✓ src/components/match-broadcast.test.ts (12 tests) 698ms
+   ✓ selects maps and aggregates using arrows/Home/End with linked tab semantics 303ms
+ ✓ src/components/live-matches.test.ts (15 tests) 109ms
+stderr | src/components/ladders-broadcast.test.ts > sort buttons reverse direction, retain stable ties and keep preview cards tied to view order
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > sort buttons reverse direction, retain stable ties and keep preview cards tied to view order
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > sort buttons reverse direction, retain stable ties and keep preview cards tied to view order
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > hides previous-filter data during loading and ignores late requests
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > hides previous-filter data during loading and ignores late requests
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > hides previous-filter data during loading and ignores late requests
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > hides previous-filter data during loading and ignores late requests
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > hides previous-filter data during loading and ignores late requests
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > rejects a failed or malformed client response instead of crashing
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > rejects a failed or malformed client response instead of crashing
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+stderr | src/components/ladders-broadcast.test.ts > rejects a failed or malformed client response instead of crashing
+The current testing environment is not configured to support act(...)
+
+ ✓ src/components/ladders-broadcast.test.ts (9 tests) 181ms
+ ✓ src/components/team-broadcast.test.ts (8 tests) 127ms
+ ✓ src/components/match-listings.test.ts (10 tests) 73ms
+ ✓ src/components/site-shell.test.ts (16 tests) 134ms
+ ✓ src/components/match-hydration.test.ts (2 tests) 258ms
+ ✓ src/components/broadcast.test.ts (6 tests) 111ms
+ ✓ src/components/news-broadcast.test.ts (7 tests) 134ms
+ ✓ src/app/shell-pages.test.ts (11 tests) 230ms
+ ✓ src/components/streamers-hydration.test.ts (2 tests) 48ms
+
+ Test Files  25 passed (25)
+      Tests  348 passed (348)
+   Start at  14:04:16
+   Duration  30.86s (transform 2.21s, setup 0ms, collect 7.24s, tests 5.76s, environment 7.54s, prepare 3.12s)
+
+
+UTC end: 2026-09-27T14:04:47.365917+00:00
+Exit code: 0

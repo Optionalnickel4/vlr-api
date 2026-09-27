@@ -1,0 +1,470 @@
+{
+  "player_id": "3799",
+  "observations": [
+    {
+      "path": "/api/v1/player/3799",
+      "started": "2026-09-27T14:00:34.702936+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:33 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 1803,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "alias": {
+            "type": "str"
+          },
+          "real_name": {
+            "type": "NoneType"
+          },
+          "country": {
+            "type": "str"
+          },
+          "team": {
+            "type": "NoneType"
+          },
+          "team_id": {
+            "type": "NoneType"
+          },
+          "team_url": {
+            "type": "NoneType"
+          },
+          "agent_stats": {
+            "type": "array",
+            "count": 3,
+            "item": {
+              "type": "object",
+              "fields": {
+                "agent": "str",
+                "stats": "dict"
+              }
+            }
+          },
+          "matches": {
+            "type": "array",
+            "count": 5,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "result": "str",
+                "score": "str",
+                "event": "str"
+              }
+            }
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 9.0,
+      "layer": "backend",
+      "features": {
+        "agent_rows": 3,
+        "match_rows": 5,
+        "rated_points": 0,
+        "dimension_fields": [],
+        "agent_stat_keys": [
+          "Use",
+          "Rnd",
+          "R",
+          "ACS",
+          "K:D",
+          "KAST",
+          "ADR",
+          "KPR",
+          "APR",
+          "FK:FD",
+          "K",
+          "D",
+          "A",
+          "FK",
+          "FD"
+        ]
+      }
+    },
+    {
+      "path": "/api/v1/trends/player/3799?days=90",
+      "started": "2026-09-27T14:00:36.714195+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:35 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 332,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "player_id": {
+            "type": "str"
+          },
+          "player": {
+            "type": "str"
+          },
+          "team": {
+            "type": "NoneType"
+          },
+          "window_days": {
+            "type": "int"
+          },
+          "rating_trend": {
+            "type": "array",
+            "count": 0,
+            "item": null
+          },
+          "rating_change": {
+            "type": "NoneType"
+          },
+          "acs_change": {
+            "type": "NoneType"
+          },
+          "summary": {
+            "type": "object",
+            "fields": {
+              "points": {
+                "type": "int"
+              },
+              "current_rating": {
+                "type": "NoneType"
+              },
+              "peak_rating": {
+                "type": "NoneType"
+              },
+              "current_acs": {
+                "type": "NoneType"
+              },
+              "peak_acs": {
+                "type": "NoneType"
+              }
+            }
+          },
+          "note": {
+            "type": "str"
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 9.5,
+      "layer": "backend",
+      "features": {
+        "agent_rows": 0,
+        "match_rows": 0,
+        "rated_points": 0,
+        "dimension_fields": [],
+        "agent_stat_keys": []
+      }
+    },
+    {
+      "path": "/api/v1/players/3799/dimensions?region=na&timespan=all",
+      "started": "2026-09-27T14:00:38.725846+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:37 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 134,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "player_id": {
+            "type": "str"
+          },
+          "region": {
+            "type": "str"
+          },
+          "timespan": {
+            "type": "str"
+          },
+          "firepower": {
+            "type": "float"
+          },
+          "entry": {
+            "type": "float"
+          },
+          "consistency": {
+            "type": "float"
+          },
+          "clutch": {
+            "type": "float"
+          },
+          "low_confidence": {
+            "type": "array",
+            "count": 0,
+            "item": null
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 3.9,
+      "layer": "backend",
+      "features": {
+        "agent_rows": 0,
+        "match_rows": 0,
+        "rated_points": 0,
+        "dimension_fields": [
+          "firepower",
+          "entry",
+          "consistency",
+          "clutch"
+        ],
+        "agent_stat_keys": []
+      }
+    },
+    {
+      "path": "/api/v1/player/3799",
+      "started": "2026-09-27T14:00:40.732126+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:40 GMT",
+        "cache-control": "no-store",
+        "x-vlr-cache": "fresh",
+        "content-type": "application/json"
+      },
+      "bytes": 1803,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "alias": {
+            "type": "str"
+          },
+          "real_name": {
+            "type": "NoneType"
+          },
+          "country": {
+            "type": "str"
+          },
+          "team": {
+            "type": "NoneType"
+          },
+          "team_id": {
+            "type": "NoneType"
+          },
+          "team_url": {
+            "type": "NoneType"
+          },
+          "agent_stats": {
+            "type": "array",
+            "count": 3,
+            "item": {
+              "type": "object",
+              "fields": {
+                "agent": "str",
+                "stats": "dict"
+              }
+            }
+          },
+          "matches": {
+            "type": "array",
+            "count": 5,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "result": "str",
+                "score": "str",
+                "event": "str"
+              }
+            }
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 2.6,
+      "layer": "adapter",
+      "features": {
+        "agent_rows": 3,
+        "match_rows": 5,
+        "rated_points": 0,
+        "dimension_fields": [],
+        "agent_stat_keys": [
+          "Use",
+          "Rnd",
+          "R",
+          "ACS",
+          "K:D",
+          "KAST",
+          "ADR",
+          "KPR",
+          "APR",
+          "FK:FD",
+          "K",
+          "D",
+          "A",
+          "FK",
+          "FD"
+        ]
+      }
+    },
+    {
+      "path": "/api/v1/trends/player/3799?days=90",
+      "started": "2026-09-27T14:00:42.736830+00:00",
+      "status": 503,
+      "state": "unavailable",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:42 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 47,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "error": {
+            "type": "str"
+          }
+        }
+      },
+      "stale": null,
+      "error_present": true,
+      "failure": "http_status",
+      "elapsed_ms": 1.7,
+      "layer": "adapter",
+      "features": {}
+    },
+    {
+      "path": "/api/v1/players/3799/dimensions?region=na&timespan=all",
+      "started": "2026-09-27T14:00:44.740800+00:00",
+      "status": 503,
+      "state": "unavailable",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:44 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 47,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "error": {
+            "type": "str"
+          }
+        }
+      },
+      "stale": null,
+      "error_present": true,
+      "failure": "http_status",
+      "elapsed_ms": 2.0,
+      "layer": "adapter",
+      "features": {}
+    },
+    {
+      "path": "/api/player/3799",
+      "started": "2026-09-27T14:00:46.745106+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:46 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 1824,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "data": {
+            "type": "array",
+            "count": 1,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "alias": "str",
+                "realName": "NoneType",
+                "country": "str",
+                "team": "NoneType",
+                "teamId": "NoneType",
+                "teamUrl": "NoneType",
+                "agentStats": "list",
+                "matches": "list"
+              }
+            }
+          },
+          "stale": {
+            "type": "bool"
+          }
+        }
+      },
+      "stale": false,
+      "error_present": false,
+      "elapsed_ms": 8.0,
+      "layer": "proxy",
+      "features": {
+        "agent_rows": 3,
+        "match_rows": 5,
+        "rated_points": 0,
+        "dimension_fields": [],
+        "agent_stat_keys": [
+          "Use",
+          "Rnd",
+          "R",
+          "ACS",
+          "K:D",
+          "KAST",
+          "ADR",
+          "KPR",
+          "APR",
+          "FK:FD",
+          "K",
+          "D",
+          "A",
+          "FK",
+          "FD"
+        ]
+      }
+    },
+    {
+      "path": "/api/trends/player/3799?days=90",
+      "started": "2026-09-27T14:00:48.755404+00:00",
+      "status": 200,
+      "state": "unavailable",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:00:48 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 84,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "data": {
+            "type": "array",
+            "count": 0,
+            "item": null
+          },
+          "stale": {
+            "type": "bool"
+          },
+          "error": {
+            "type": "str"
+          }
+        }
+      },
+      "stale": true,
+      "error_present": true,
+      "elapsed_ms": 5.5,
+      "layer": "proxy",
+      "features": {
+        "agent_rows": 0,
+        "match_rows": 0,
+        "rated_points": 0,
+        "dimension_fields": [],
+        "agent_stat_keys": []
+      }
+    }
+  ]
+}

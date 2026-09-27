@@ -1,0 +1,58 @@
+{
+  "backend": {
+    "command": [
+      "/opt/vlr-api/.venv/bin/pytest",
+      "-q"
+    ],
+    "directory": "/opt/vlr-api",
+    "started": "2026-09-27T14:04:15.343343+00:00",
+    "ended": "2026-09-27T14:04:25.159074+00:00",
+    "exit_code": 0
+  },
+  "frontend": {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T14:04:15.343696+00:00",
+    "ended": "2026-09-27T14:04:47.365917+00:00",
+    "exit_code": 0
+  },
+  "lint": {
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T14:04:15.346076+00:00",
+    "ended": "2026-09-27T14:04:34.727737+00:00",
+    "exit_code": 0
+  },
+  "typescript": {
+    "command": [
+      "./node_modules/.bin/tsc",
+      "--noEmit",
+      "--incremental",
+      "false"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T14:04:15.346268+00:00",
+    "ended": "2026-09-27T14:04:31.002767+00:00",
+    "exit_code": 0
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "directory": "/tmp/vlr-analytics-build-64598m15",
+    "started": "2026-09-27T14:04:25.159166+00:00",
+    "ended": "2026-09-27T14:04:54.361643+00:00",
+    "exit_code": 0
+  }
+}

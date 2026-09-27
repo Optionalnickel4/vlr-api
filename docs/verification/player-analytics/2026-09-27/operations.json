@@ -1,0 +1,41 @@
+{
+  "production_unchanged": true,
+  "old_preview_pids": [
+    140919,
+    153938
+  ],
+  "new_preview_pids": [
+    158317,
+    158318
+  ],
+  "build": "/tmp/vlr-analytics-build-64598m15",
+  "adapter_module": "scripts.preview_api:app",
+  "adapter_port": 8101,
+  "frontend_port": 3100,
+  "cache_flushes": false,
+  "migrations": false,
+  "load_test": false,
+  "production_start_ticks": {
+    "308": "42460",
+    "61821": "123565764"
+  },
+  "processes_after": [
+    "    PID                  STARTED COMMAND",
+    "    308 Thu Sep  3 04:02:56 2026 next-server (v1",
+    "  61821 Thu Sep 17 11:10:09 2026 uvicorn",
+    " 158317 Sun Sep 27 14:06:20 2026 python",
+    " 158318 Sun Sep 27 14:06:20 2026 next-server (v1"
+  ],
+  "production_start_times_before": {
+    "308": "2026-09-03 04:02:56 UTC",
+    "61821": "2026-09-17 11:10:09 UTC"
+  },
+  "unrelated_files_sha256": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "isolated_ports_3101_8103_stopped": true,
+  "preview_base": "http://127.0.0.1:8101/api/v1",
+  "frontend_source_parity_files": 124,
+  "frontend_source_matches_build": true
+}

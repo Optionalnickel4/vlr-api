@@ -1,0 +1,62 @@
+[
+  {
+    "base": "http://10.0.0.21:3100",
+    "width": 1440,
+    "playerId": "3799",
+    "status": 200,
+    "elapsedMs": 210,
+    "headline": "Rating\n—\nK/D\n1.11\nACS\n225\nMain agent · by rounds\nUNAVAILABLE",
+    "agentRows": 3,
+    "matchRows": 5,
+    "historyRows": 0,
+    "radar": 0,
+    "notices": [
+      "Rating history unavailable — couldn't load this player's history.",
+      "Rating breakdown unavailable — the leaderboard lookup failed."
+    ],
+    "horizontalOverflow": false,
+    "pageErrors": 0,
+    "scrollRegions": [
+      {
+        "label": "Agent statistics, scroll horizontally",
+        "scrollable": true,
+        "keyboard": true
+      },
+      {
+        "label": "Player match history, scroll horizontally",
+        "scrollable": false,
+        "keyboard": true
+      }
+    ]
+  },
+  {
+    "base": "http://10.0.0.21:3100",
+    "width": 390,
+    "playerId": "3799",
+    "status": 200,
+    "elapsedMs": 204,
+    "headline": "Rating\n—\nK/D\n1.11\nACS\n225\nMain agent · by rounds\nUNAVAILABLE",
+    "agentRows": 3,
+    "matchRows": 5,
+    "historyRows": 0,
+    "radar": 0,
+    "notices": [
+      "Rating history unavailable — couldn't load this player's history.",
+      "Rating breakdown unavailable — the leaderboard lookup failed."
+    ],
+    "horizontalOverflow": false,
+    "pageErrors": 0,
+    "scrollRegions": [
+      {
+        "label": "Agent statistics, scroll horizontally",
+        "scrollable": true,
+        "keyboard": true
+      },
+      {
+        "label": "Player match history, scroll horizontally",
+        "scrollable": true,
+        "keyboard": true
+      }
+    ]
+  }
+]

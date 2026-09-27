@@ -2,10 +2,46 @@
 
 **Current recommendation: not ready for public deployment or promotion; ready for further staging validation.** The detail deadline and post-cache database-error defects below are fixed and tested in isolation. Real cold-source coverage, deployment proxy/load behavior, and written VLR collection/display/redistribution permission remain launch dependencies. The original audit/reliability passes did not deploy, restart production, flush caches, scrape upstream or send external messages. The authorized API probe follow-up below permits normal GET-triggered refreshes.
 
-Reviewed `v2` from `5131fd1d10552824d4b788df87f01d8b2b05852c`, including `frontend/AGENTS.md`, the route/component implementations, tests, `PROJECT_REVIEW.md`, and `NEWS_BROADCAST_PREVIEW.md`. Earlier delivery reports are historical evidence; the logs linked below are fresh runs. The five audit commits were subsequently reviewed and pushed normally to `origin/v2`; local and remote HEAD both matched `519bec90e55ee6b6a63803b45d13b835aff11e5b` before the separate reliability slice. The original audit and reliability checks below are historical; the real API probe results immediately below are current.
+Reviewed `v2` from `5131fd1d10552824d4b788df87f01d8b2b05852c`, including `frontend/AGENTS.md`, the route/component implementations, tests, `PROJECT_REVIEW.md`, and `NEWS_BROADCAST_PREVIEW.md`. Earlier delivery reports are historical evidence; the logs linked below are fresh runs. The five audit commits were subsequently reviewed and pushed normally to `origin/v2`; local and remote HEAD both matched `519bec90e55ee6b6a63803b45d13b835aff11e5b` before the separate reliability slice. The original audit and reliability checks below are historical; the player analytics results immediately below are current.
 
 
-## Real API probe follow-up — current results
+## Player analytics preview follow-up — current results
+
+[Player analytics evidence](verification/player-analytics/2026-09-27/) traces real
+player **3799** across the authorized API, preview adapter, Next loaders/proxies
+and desktop/mobile page. Three sequential backend GETs found four numeric
+dimensions, three agent rows and five recent matches. The old adapter returned
+503 for dimensions and trends; the Next trend proxy correctly carried that failure
+inside its HTTP 200 envelope. Agent stats and recent matches were preserved.
+
+The adapter is now versioned as `scripts/preview_api.py` (fix `2881275`). Dimensions
+use only the cached cohort and the shared pure computation; trends use an explicitly
+read-only Postgres transaction and shared history aggregation. Missing cohort or
+storage failure stays unavailable; missing membership/history stays 404; unrated
+history stays a successful empty series. An eight-second handler deadline cancels
+storage work. Sixteen isolated regressions cover these cases without live failure
+injection or refresh calls.
+
+The deployed API still returns zero rated points because its old worker has not
+loaded the prior `R`/`Rnd` fix. Existing storage contains **20** usable captures:
+the corrected adapter and current frontend render all twenty. Ratings are flat,
+so the page honestly suppresses a movement chart. The final port 3100 preview shows
+four percentile bars/radar, three agent rows, five match rows, rating **1.98**,
+**504 rounds**, **Sova**, and weighted ACS **228** at 1440px and 390px. Both widths
+have zero page errors/overflow; the capture disclosure and keyboard table scrolling
+work. Page completion was 203ms desktop and 475ms mobile in the final checks.
+
+Only staging preview 8101/3100 was replaced after isolated 8103/3101 verification.
+Production 8000/3000 retain their PID/start times; no migrations, cache flushes or
+load test occurred. Temporary verification processes are stopped. Unrelated
+`.gitignore` and the untracked plan are byte-preserved. **284 backend tests**,
+**348 frontend tests**, lint, TypeScript and isolated production build pass.
+Production deployment of the prior aggregation fix, source-missing identity fields,
+cache-expiry availability and broader player/region coverage remain separate gaps.
+
+<a id="real-api-probe-follow-up--current-results"></a>
+
+## Real API probe follow-up — previous results
 
 The owner authorized `http://10.0.0.21:8000` for this pass and future VLR-API builds.
 [The documented reusable probe](../scripts/README.md) now bounds GET requests by
