@@ -1,11 +1,50 @@
 # Broadcast predeployment audit — September 27, 2026
 
-**Current recommendation: not ready for public deployment or promotion; ready for further staging validation.** The detail deadline and post-cache database-error defects below are fixed and tested in isolation. Real cold-source coverage, deployment proxy/load behavior, and written VLR collection/display/redistribution permission remain launch dependencies. No deployment, production restart, cache flush, upstream scrape, or external message was performed by this audit.
+**Current recommendation: not ready for public deployment or promotion; ready for further staging validation.** The detail deadline and post-cache database-error defects below are fixed and tested in isolation. Real cold-source coverage, deployment proxy/load behavior, and written VLR collection/display/redistribution permission remain launch dependencies. The original audit/reliability passes did not deploy, restart production, flush caches, scrape upstream or send external messages. The authorized API probe follow-up below permits normal GET-triggered refreshes.
 
-Reviewed `v2` from `5131fd1d10552824d4b788df87f01d8b2b05852c`, including `frontend/AGENTS.md`, the route/component implementations, tests, `PROJECT_REVIEW.md`, and `NEWS_BROADCAST_PREVIEW.md`. Earlier delivery reports are historical evidence; the logs linked below are fresh runs. The five audit commits were subsequently reviewed and pushed normally to `origin/v2`; local and remote HEAD both matched `519bec90e55ee6b6a63803b45d13b835aff11e5b` before the separate reliability slice. The original audit checks below are historical; the follow-up results immediately below are current.
+Reviewed `v2` from `5131fd1d10552824d4b788df87f01d8b2b05852c`, including `frontend/AGENTS.md`, the route/component implementations, tests, `PROJECT_REVIEW.md`, and `NEWS_BROADCAST_PREVIEW.md`. Earlier delivery reports are historical evidence; the logs linked below are fresh runs. The five audit commits were subsequently reviewed and pushed normally to `origin/v2`; local and remote HEAD both matched `519bec90e55ee6b6a63803b45d13b835aff11e5b` before the separate reliability slice. The original audit and reliability checks below are historical; the real API probe results immediately below are current.
 
 
-## Detail reliability follow-up — current results
+## Real API probe follow-up — current results
+
+The owner authorized `http://10.0.0.21:8000` for this pass and future VLR-API builds.
+[The documented reusable probe](../scripts/README.md) now bounds GET requests by
+count, bytes and whole-request/run deadlines, spaces them sequentially, avoids
+retries/redirects, and stops on timeout/backoff. Cache misses may use the API's
+existing throttled scrapes. It records shapes/counts rather than payloads.
+
+[Full endpoint coverage, IDs, timing and browser evidence](verification/probe/2026-09-27/)
+records 14 primary requests plus three analytics follow-ups, all HTTP 200,
+**2.1–178.7 ms**. Results/rankings/stats yielded match **753445**, team **8877** and
+player **3799**. All three actual listing links loaded on unchanged port 3100
+(384–479 ms from click to detail), with zero page errors/overflow. Live matches
+and blank searches were empty. Cache freshness headers were absent, so timing
+does not establish cache state. These observations supersede the earlier failed
+real-cache attempts; they do not establish a forced-cold or exhaustive journey.
+
+Real player rows exposed a separate defect: upstream `Rnd` / `R` labels were
+ignored by headline calculations and backend history aggregation expecting
+`RND` / `Rating`. The focused fix reads both spellings without mutating raw rows,
+API contracts or stored history. In the isolated fixed build, the real player
+renders **504 rounds**, **Sova**, **1.98 rating**, and **228 weighted ACS** instead
+of unavailable rounds/rating and an unweighted ACS headline. Historical labels
+retain precedence when both exist. Match detail still has missing series scores;
+source provenance needs further investigation before changing its parser.
+
+Player history/cohort panels on 3100 remain unavailable because its cache-only
+8101 adapter does not implement those routes; direct API requests succeeded.
+Neither production nor 3100 was reconfigured/restarted. The temporary fixed
+preview used loopback 3101 and was stopped. No migrations, cache flushes or load
+test occurred, and unrelated `.gitignore`/plan bytes were preserved.
+
+Final checks: **268 backend tests**, **348 frontend tests**, frontend lint,
+TypeScript and isolated production build pass. Probe commit: `fbe5517`; application
+fix: `a251c99`. The running services have not loaded this fix. Optional analytics
+adapter coverage and the broader launch dependencies below remain open.
+
+<a id="detail-reliability-follow-up--current-results"></a>
+
+## Detail reliability follow-up — previous results
 
 The five audit commits contain only the four intended fixes, their tests, documentation and selected evidence: 60 files, no `.gitignore`, saved plan, deployment files or credentials. A credential-pattern scan and full source diff review preceded the non-force push. [Review and push evidence](verification/reliability/2026-09-27/) records that boundary. The reliability change is a separate commit; no production service was restarted and no VLR message or page scrape was sent by this investigation.
 

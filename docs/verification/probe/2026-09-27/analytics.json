@@ -1,0 +1,190 @@
+[
+  {
+    "path": "/api/v1/trends/player/3799",
+    "started": "2026-09-27T13:49:51.478025+00:00",
+    "status": 200,
+    "state": "populated",
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:49:50 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 332,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "player_id": {
+          "type": "str"
+        },
+        "player": {
+          "type": "str"
+        },
+        "team": {
+          "type": "NoneType"
+        },
+        "window_days": {
+          "type": "int"
+        },
+        "rating_trend": {
+          "type": "array",
+          "count": 0,
+          "item": null
+        },
+        "rating_change": {
+          "type": "NoneType"
+        },
+        "acs_change": {
+          "type": "NoneType"
+        },
+        "summary": {
+          "type": "object",
+          "fields": {
+            "points": {
+              "type": "int"
+            },
+            "current_rating": {
+              "type": "NoneType"
+            },
+            "peak_rating": {
+              "type": "NoneType"
+            },
+            "current_acs": {
+              "type": "NoneType"
+            },
+            "peak_acs": {
+              "type": "NoneType"
+            }
+          }
+        },
+        "note": {
+          "type": "str"
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "elapsed_ms": 14.1
+  },
+  {
+    "path": "/api/v1/players/3799/dimensions?region=na&timespan=all",
+    "started": "2026-09-27T13:49:53.494431+00:00",
+    "status": 200,
+    "state": "populated",
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:49:52 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 134,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "player_id": {
+          "type": "str"
+        },
+        "region": {
+          "type": "str"
+        },
+        "timespan": {
+          "type": "str"
+        },
+        "firepower": {
+          "type": "float"
+        },
+        "entry": {
+          "type": "float"
+        },
+        "consistency": {
+          "type": "float"
+        },
+        "clutch": {
+          "type": "float"
+        },
+        "low_confidence": {
+          "type": "array",
+          "count": 0,
+          "item": null
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "elapsed_ms": 3.5
+  },
+  {
+    "path": "/api/v1/trends/team/8877",
+    "started": "2026-09-27T13:49:55.500067+00:00",
+    "status": 200,
+    "state": "populated",
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:49:54 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 55841,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "team_id": {
+          "type": "str"
+        },
+        "team": {
+          "type": "str"
+        },
+        "window_days": {
+          "type": "int"
+        },
+        "rating_trend": {
+          "type": "array",
+          "count": 713,
+          "item": {
+            "type": "object",
+            "fields": {
+              "captured_at": "str",
+              "rating": "float",
+              "rank": "int"
+            }
+          }
+        },
+        "rating_change": {
+          "type": "float"
+        },
+        "results_in_window": {
+          "type": "array",
+          "count": 9,
+          "item": {
+            "type": "object",
+            "fields": {
+              "vlr_id": "str",
+              "opponent": "str",
+              "result": "str",
+              "score": "str",
+              "event": "str",
+              "captured_at": "str"
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "fields": {
+            "points": {
+              "type": "int"
+            },
+            "wins": {
+              "type": "int"
+            },
+            "losses": {
+              "type": "int"
+            },
+            "current_rating": {
+              "type": "float"
+            },
+            "peak_rating": {
+              "type": "float"
+            }
+          }
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "elapsed_ms": 16.7
+  }
+]

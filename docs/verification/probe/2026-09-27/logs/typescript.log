@@ -1,0 +1,6 @@
+UTC start: 2026-09-27T13:52:06.310851+00:00
+Command: ['./node_modules/.bin/tsc', '--noEmit', '--incremental', 'false']
+Directory: /opt/vlr-api/frontend
+
+UTC end: 2026-09-27T13:52:21.389942+00:00
+Exit code: 0

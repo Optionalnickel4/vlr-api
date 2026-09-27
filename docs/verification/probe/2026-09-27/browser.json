@@ -1,0 +1,66 @@
+[
+  {
+    "listing": "results",
+    "kind": "match",
+    "id": "753445",
+    "listingStatus": 200,
+    "linkPresent": true,
+    "listingMs": 234,
+    "detailMs": 479,
+    "loaded": true,
+    "heading": "MATCH REPORT.",
+    "notices": [
+      "W = win · L = loss · – = unavailable",
+      "Round 15 · Result unavailable",
+      "Round 16 · Result unavailable",
+      "Round 17 · Result unavailable",
+      "Round 18 · Result unavailable",
+      "Round 19 · Result unavailable",
+      "Round 20 · Result unavailable",
+      "Round 21 · Result unavailable",
+      "Round 22 · Result unavailable",
+      "Round 23 · Result unavailable",
+      "Round 24 · Result unavailable"
+    ],
+    "horizontalOverflow": false,
+    "pageErrors": 0
+  },
+  {
+    "listing": "rankings",
+    "kind": "team",
+    "id": "8877",
+    "listingStatus": 200,
+    "linkPresent": true,
+    "listingMs": 153,
+    "detailMs": 384,
+    "loaded": true,
+    "heading": "Karmine Corp",
+    "notices": [],
+    "horizontalOverflow": false,
+    "pageErrors": 0
+  },
+  {
+    "listing": "stats",
+    "kind": "player",
+    "id": "3799",
+    "listingStatus": 200,
+    "linkPresent": true,
+    "listingMs": 134,
+    "detailMs": 427,
+    "loaded": true,
+    "heading": "Notuud",
+    "notices": [
+      "Name unavailable / eu",
+      "Team unavailable",
+      "Role unavailable",
+      "UNAVAILABLE",
+      "3 agent rows · Round sample unavailable · All-time source stats; capture date unavailable.",
+      "Window unavailable",
+      "Rating history unavailable — couldn't load this player's history.",
+      "Cohort unavailable",
+      "Rating breakdown unavailable — the leaderboard lookup failed."
+    ],
+    "horizontalOverflow": false,
+    "pageErrors": 0
+  }
+]

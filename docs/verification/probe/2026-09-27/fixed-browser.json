@@ -1,0 +1,13 @@
+{
+  "route": "/player/3799",
+  "preview": 3101,
+  "status": 200,
+  "elapsedMs": 209,
+  "hasKnownRounds": true,
+  "hasRating": true,
+  "hasWeightedACS": true,
+  "signature": "SOVA",
+  "noRoundSampleUnavailable": true,
+  "pageErrors": 0,
+  "horizontalOverflow": false
+}
