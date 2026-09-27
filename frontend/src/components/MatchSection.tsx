@@ -57,18 +57,16 @@ export function MatchSection({
             {emptyLabel}
           </p>
         )) : (
-          <>
-            {children}
-            {viewAllHref && (
-              <Link
-                href={viewAllHref}
-                className="flex items-center justify-center gap-1.5 border-t border-line/60 px-4 py-2.5 font-display text-[12px] font-semibold uppercase tracking-broadcast text-accent transition-colors hover:bg-ink/[0.03]"
-              >
-                {viewAllLabel}
-                <span aria-hidden>→</span>
-              </Link>
-            )}
-          </>
+          children
+        )}
+        {viewAllHref && (
+          <Link
+            href={viewAllHref}
+            className="flex items-center justify-center gap-1.5 border-t border-line/60 px-4 py-2.5 font-display text-[12px] font-semibold uppercase tracking-broadcast text-accent transition-colors hover:bg-ink/[0.03]"
+          >
+            {viewAllLabel}
+            <span aria-hidden>→</span>
+          </Link>
         )}
       </Panel>
     </section>

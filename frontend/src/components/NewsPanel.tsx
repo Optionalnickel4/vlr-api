@@ -1,3 +1,4 @@
+import { cn } from "@/lib/cn";
 import type { ApiResponse, NewsArticle } from "@/types/vlr";
 import { MatchSection } from "@/components/MatchSection";
 
@@ -9,16 +10,17 @@ import { MatchSection } from "@/components/MatchSection";
  * Keeping them apart is the label-bleed guard — the timestamp/author must never
  * ride along inside the headline text (the test asserts this invariant).
  */
-function NewsRow({ article }: { article: NewsArticle }) {
+function NewsRow({ article, lead = false }: { article: NewsArticle; lead?: boolean }) {
   const { title, description, date, author, url } = article;
 
   const inner = (
-    <div className="flex flex-col gap-1.5 px-4 py-3">
-      <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.02em] leading-snug text-ink">
+    <div className={cn("flex flex-col px-4", lead ? "gap-3 border-l-2 border-accent py-6" : "gap-1.5 py-3")}>
+      {lead && <p className="text-sm font-medium text-accent">Latest headline</p>}
+      <h3 className={cn("font-display font-semibold tracking-[0.02em] leading-snug text-ink", lead ? "text-2xl normal-case" : "text-[15px] uppercase")}>
         {title ?? "—"}
       </h3>
       {description && (
-        <p className="line-clamp-2 font-body text-[13px] leading-snug text-mut">
+        <p className={cn("line-clamp-2 font-body text-mut", lead ? "text-sm leading-relaxed" : "text-[13px] leading-snug")}>
           {description}
         </p>
       )}
@@ -51,10 +53,12 @@ export function NewsPanel({
   news,
   viewAllHref,
   viewAllLabel,
+  leadStory = false,
 }: {
   news: ApiResponse<NewsArticle>;
   viewAllHref?: string;
   viewAllLabel?: string;
+  leadStory?: boolean;
 }) {
   const allRows = news.data;
   // viewAllHref present ↔ landing teaser — cap rows so the panel stays scannable.
@@ -64,14 +68,14 @@ export function NewsPanel({
     <MatchSection
       title="News"
       count={allRows.length}
-      stale={news.stale}
+      stale={news.stale || Boolean(news.error)}
       isEmpty={allRows.length === 0}
       emptyLabel="No news right now."
       viewAllHref={viewAllHref}
       viewAllLabel={viewAllLabel}
     >
       {rows.map((a, i) => (
-        <NewsRow key={a.url ?? `${a.title}-${i}`} article={a} />
+        <NewsRow key={a.url ?? `${a.title}-${i}`} article={a} lead={leadStory && i === 0} />
       ))}
     </MatchSection>
   );

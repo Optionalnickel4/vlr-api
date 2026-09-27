@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-const WIDTHS = { reading: "max-w-3xl", schedule: "max-w-4xl", analysis: "max-w-5xl" };
+const WIDTHS = { home: "max-w-7xl", reading: "max-w-3xl", schedule: "max-w-4xl", analysis: "max-w-5xl" };
 
 /** Pages own the main landmark; the persistent shell supplies navigation. */
 export function PageContainer({ children, width = "analysis", title }: {

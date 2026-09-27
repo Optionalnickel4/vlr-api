@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { ApiResponse, LiveMatch } from "@/types/vlr";
 import { MatchSection } from "@/components/MatchSection";
 import { MatchCard } from "@/components/MatchCard";
@@ -29,7 +29,7 @@ function isLiveResponse(value: unknown): value is ApiResponse<LiveMatch> {
  * data, then polls 30s after each completed attempt. Failed/invalid updates keep
  * the last successful scores; only a valid empty response clears them.
  */
-export function LiveMatches({ initial }: { initial: ApiResponse<LiveMatch> }) {
+export function LiveMatches({ initial, confirmedEmptyFallback }: { initial: ApiResponse<LiveMatch>; confirmedEmptyFallback?: ReactNode }) {
   const [res, setRes] = useState(initial);
 
   useEffect(() => {
@@ -72,6 +72,14 @@ export function LiveMatches({ initial }: { initial: ApiResponse<LiveMatch> }) {
   }, []);
 
   const matches = res.data;
+  // An outage is not confirmation that live coverage has ended. Returning a
+  // different view here leaves this component (and its single poller) mounted.
+  if (matches.length === 0 && isLiveResponse(res) && confirmedEmptyFallback) {
+    return <div className="flex flex-col gap-3">
+      <p className="text-sm text-mut">No live matches right now.</p>
+      {confirmedEmptyFallback}
+    </div>;
+  }
   return (
     <MatchSection
       title="Live"

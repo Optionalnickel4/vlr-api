@@ -123,3 +123,43 @@ it("aborts and clears timers on unmount without rescheduling a delayed response"
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(vi.getTimerCount()).toBe(0);
 });
+
+it("switches live → confirmed empty → live without replacing the poller", async () => {
+  const fetcher = vi.spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce(json({ data: [], stale: false }))
+    .mockResolvedValueOnce(json(good(7)));
+  await act(async () => root.render(h(LiveMatches, {
+    initial: good(), confirmedEmptyFallback: h("div", null, "Next scheduled match"),
+  })));
+  expect(container.textContent).toContain("Alpha");
+  expect(container.textContent).not.toContain("Next scheduled match");
+  await advance(30_000);
+  expect(container.textContent).toContain("No live matches right now.");
+  expect(container.textContent).toContain("Next scheduled match");
+  expect(container.textContent).not.toContain("Alpha");
+  await advance(30_000);
+  expect(container.innerHTML).toContain('aria-label="Score 7 to 2"');
+  expect(container.textContent).not.toContain("Next scheduled match");
+  expect(fetcher).toHaveBeenCalledTimes(2);
+});
+
+it("does not feature an upcoming match until an unavailable live source confirms empty", async () => {
+  vi.spyOn(globalThis, "fetch")
+    .mockResolvedValueOnce(json({ data: [], stale: true, error: "offline" }))
+    .mockResolvedValueOnce(json({ data: [], stale: false }))
+    .mockResolvedValueOnce(json({}, 503));
+  await act(async () => root.render(h(LiveMatches, {
+    initial: { data: [], stale: true, error: "offline" },
+    confirmedEmptyFallback: h("div", null, "Next scheduled match"),
+  })));
+  expect(container.textContent).not.toContain("Next scheduled match");
+  await advance(30_000);
+  expect(container.textContent).toContain("unavailable");
+  expect(container.textContent).not.toContain("Next scheduled match");
+  await advance(30_000);
+  expect(container.textContent).toContain("Next scheduled match");
+  await advance(30_000);
+  expect(container.textContent).not.toContain("Next scheduled match");
+  expect(container.textContent).not.toContain("No live matches right now.");
+  expect(container.textContent).toContain("unavailable");
+});
