@@ -1,0 +1,41 @@
+{
+  "reviewed_at_utc": "2026-09-27T19:57:06.653879+00:00",
+  "recommendation": "NO-GO",
+  "gate1": {
+    "pid": 61821,
+    "startup_timestamp": "Thu 2026-09-17 11:10:09 UTC",
+    "invocation_id": "7b182addf99f4053bc8d665711feafe2",
+    "searched_roots": [
+      "/home/builder/vlr-recovery-check",
+      "/home/builder/vlr-gates-private",
+      "/var/backups"
+    ],
+    "findings": "Known fallback archives and frontend backup only; no original startup-linked backend artifact identified in scoped inventory",
+    "journal": "No entries; restricted visibility warning",
+    "provenance_passed": false
+  },
+  "gate2": {
+    "implemented": true,
+    "executed": false,
+    "passed": false,
+    "blockers": [
+      "bwrap executable absent",
+      "/home/builder/vlr-recovery-check/gate2-input.json absent: requires reviewed original startup-linked backend archive/receipt and all four complete artifact inventories"
+    ],
+    "fixture": "tests/fixtures/results.html available",
+    "namespace_runtime_tested": false
+  },
+  "validation": {
+    "safety_unit_tests": 6,
+    "application_tests_rerun": false,
+    "python_ast": "pass",
+    "documentation_links_and_fences": "pass",
+    "local_links_checked": 26,
+    "protected_files": "unchanged",
+    "preflight_exit_code": 2,
+    "git_diff_check": "pass"
+  },
+  "production_changes": false,
+  "isolated_services_started": false,
+  "migrations_executed": false
+}

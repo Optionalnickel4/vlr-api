@@ -6,6 +6,10 @@
 
 Evidence: [release verification directory](verification/release/2026-09-27/), particularly `runtime-before.json`, `configuration.json`, `parity.json`, `checks-final.json`, `api-smoke.json`, and `preview-analytics-smoke.json`. Existing [broadcast audit](BROADCAST_PREDEPLOYMENT_AUDIT.md) and [analytics trace](verification/player-analytics/2026-09-27/README.md) provide broader controlled/browser coverage; they are not fresh production tests.
 
+## Integrated recovery harness follow-up
+
+**NO-GO remains.** The [integrated Gate 2 harness](../scripts/recovery/README.md) is implemented with normal schema startup and isolated frontend/backend recovery checks, but has not executed: Bubblewrap and the reviewed artifact input manifest are missing. The original startup-linked backend archive/receipt remains unattested; the historical fallback is explicitly rejected. Read-only systemd still identifies PID 61821 and the September 17 startup; scoped archive/journal inspection yielded no new provenance proof. See [the gate assessment](RELEASE_GATE_VERIFICATION.md#integrated-recovery-harness-implementation--not-yet-executed). Safety tests/preflight do not close Gate 2. No production changes occurred.
+
 ## Latest active Caddy assessment
 
 **NO-GO unchanged; `val.jushosting.dev` is the VLR frontend route.** Continuing from `366acc0e797116a3e4d39643c167debbf1b72687`, the operator's **2026-09-27T15:39:41+00:00** observation reports active Caddy PID **87**, version **v2.11.4**, a successful local admin API active-config read, listener **`:80`**, and **`val.jushosting.dev` → `10.0.0.21:3000`**, with no explicit reverse-proxy timeout settings. The destination matches the recorded `vlr-frontend` Next service; the prior matching public/direct/disk asset corroborates that identity. No matcher named “VLR” is necessary and no different ingress is established by repository/deployment evidence.
