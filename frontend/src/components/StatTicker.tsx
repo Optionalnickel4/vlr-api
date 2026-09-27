@@ -55,6 +55,7 @@ async function discoverLive(signal: AbortSignal): Promise<LiveState> {
 export function StatTicker() {
   const [staticItems, setStaticItems] = useState<TickerItem[]>([]);
   const [live, setLive] = useState<LiveState>(null);
+  const [stale, setStale] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -67,7 +68,7 @@ export function StatTicker() {
     const tick = async () => {
       const request = new AbortController();
       controller = request;
-      deadline = setTimeout(() => request.abort(), 15_000);
+      deadline = setTimeout(() => { request.abort(); if (alive && current) setStale(true); }, 15_000);
       try {
         if (Date.now() - lastStatic >= STATIC_REFRESH_MS) {
           const items = await fetchStatic(request.signal);
@@ -77,12 +78,14 @@ export function StatTicker() {
         if (!alive || request.signal.aborted) return;
         if (!current) {
           const found = await discoverLive(request.signal);
-          if (found && alive && !request.signal.aborted) { current = found; setLive(found); }
+          if (found && alive && !request.signal.aborted) { current = found; setLive(found); setStale(false); }
         } else {
           const r = await fetch(`/api/match/${current.matchId}`, { cache: "no-store", signal: request.signal });
           if (!r.ok) throw new Error("Ticker update unavailable");
           const md = await r.json() as ApiResponse<MatchDetail>;
-          if (md.error || md.stale || !alive || request.signal.aborted) return;
+          if (!alive || request.signal.aborted) return;
+          if (md.error || md.stale || !md.data?.[0]) throw new Error("Ticker update unavailable");
+          setStale(false);
           const match = md.data[0];
           if (match?.status === "final") { current = null; setLive(null); }
           else if (match) {
@@ -90,7 +93,7 @@ export function StatTicker() {
             if (items.length) { current = { ...current, items: seededOrder(items, current.seed) }; setLive(current); }
           }
         }
-      } catch { /* Retain the last successful tape. */ }
+      } catch { if (alive && current) setStale(true); }
       finally {
         clearTimeout(deadline);
         if (alive) { setReady(true); timer = setTimeout(tick, LIVE_POLL_MS); }
@@ -101,5 +104,5 @@ export function StatTicker() {
   }, []);
 
   if (!ready) return null;
-  return <TickerTape items={live ? live.items : staticItems} live={Boolean(live)} showEmpty />;
+  return <TickerTape items={live ? live.items : staticItems} live={Boolean(live)} stale={Boolean(live) && stale} showEmpty />;
 }

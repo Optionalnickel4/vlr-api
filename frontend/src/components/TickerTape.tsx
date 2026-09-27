@@ -54,17 +54,18 @@ function TickerEntry({ item }: { item: TickerItem }) {
   );
 }
 
-export function TickerTape({ items, live = false, showEmpty = false }: {
+export function TickerTape({ items, live = false, stale = false, showEmpty = false }: {
   items: TickerItem[];
   live?: boolean;
+  stale?: boolean;
   showEmpty?: boolean;
 }) {
   const [paused, setPaused] = useState(false);
   if (!items.length && !showEmpty) return null;
   const durationSeconds = Math.max(24, items.length * 6);
   return (
-    <section aria-label={live ? "Live match stats" : "Notable stats"} className="vlr-ticker broadcast-ticker">
-      <div className="ticker-label"><span className={live ? "ticker-dot is-live" : "ticker-dot"} aria-hidden />{live ? "LIVE WIRE" : "MATCH WIRE"}</div>
+    <section aria-label={stale ? "Last available match stats, updates unavailable" : live ? "Live match stats" : "Notable stats"} className="vlr-ticker broadcast-ticker">
+      <div className="ticker-label"><span className={live && !stale ? "ticker-dot is-live" : "ticker-dot"} aria-hidden />{stale ? "STALE WIRE" : live ? "LIVE WIRE" : "MATCH WIRE"}</div>
       {items.length ? <>
         <div className="ticker-viewport" tabIndex={0} role="region" aria-label="Ticker items, scroll horizontally when paused">
           <div className="vlr-ticker-track" style={{ animationDuration: `${durationSeconds}s`, animationPlayState: paused ? "paused" : undefined, animationName: paused ? "none" : undefined }}>

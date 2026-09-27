@@ -196,3 +196,24 @@ describe("StatTicker island — live mode discovery + switch", () => {
     root.unmount();
   });
 });
+
+it("labels retained live statistics stale after a failed poll", async () => {
+  vi.useFakeTimers();
+  mockFetch({ ticker: STATIC, live: true });
+  const element = h(StatTicker);
+  const container = document.createElement("div");
+  container.innerHTML = renderToString(element);
+  const root = hydrateRoot(container, element);
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  expect(container.innerHTML).toContain("Live match stats");
+  vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ data: [], stale: true }));
+  await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+  expect(container.textContent).toContain("STALE WIRE");
+  expect(container.innerHTML).toContain(LIVE_STAT);
+  expect(container.innerHTML).toContain("updates unavailable");
+  mockFetch({ ticker: STATIC, live: true });
+  await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+  expect(container.innerHTML).toContain("Live match stats");
+  expect(container.textContent).not.toContain("STALE WIRE");
+  await act(async () => root.unmount());
+});
