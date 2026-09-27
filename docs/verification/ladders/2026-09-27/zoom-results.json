@@ -1,0 +1,69 @@
+{
+  "method": "Native Chromium page zoom via chrome.settingsPrivate.setDefaultZoom(2)",
+  "results": [
+    {
+      "overflow": {
+        "left": 0,
+        "client": 670,
+        "scroll": 670
+      },
+      "route": "rankings",
+      "browserZoom": 2,
+      "outerWidth": 1440,
+      "innerWidth": 720,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 720,
+      "focusedClear": true,
+      "bottomClear": true
+    },
+    {
+      "overflow": {
+        "left": 20,
+        "client": 670,
+        "scroll": 1120
+      },
+      "route": "stats",
+      "browserZoom": 2,
+      "outerWidth": 1440,
+      "innerWidth": 720,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 720,
+      "focusedClear": true,
+      "bottomClear": true
+    },
+    {
+      "overflow": {
+        "left": 0,
+        "client": 350,
+        "scroll": 350
+      },
+      "route": "rankings",
+      "browserZoom": 2,
+      "outerWidth": 768,
+      "innerWidth": 384,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 384,
+      "focusedClear": true,
+      "bottomClear": true
+    },
+    {
+      "overflow": {
+        "left": 20,
+        "client": 350,
+        "scroll": 1120
+      },
+      "route": "stats",
+      "browserZoom": 2,
+      "outerWidth": 768,
+      "innerWidth": 384,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 384,
+      "focusedClear": true,
+      "bottomClear": true
+    }
+  ]
+}

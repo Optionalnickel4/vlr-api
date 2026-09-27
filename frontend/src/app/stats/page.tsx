@@ -1,3 +1,4 @@
+import "../ladders.css";
 import type { Metadata } from "next";
 import { getStats } from "@/lib/vlr";
 import { PageContainer } from "@/components/PageContainer";
@@ -22,7 +23,8 @@ export default async function StatsPage() {
   const initial = await getStats(DEFAULT_REGION, DEFAULT_TIMESPAN);
 
   return (
-    <PageContainer width="analysis" title="Stats">
+    <PageContainer width="home">
+      <header className="ld-masthead"><p className="ld-kicker">Valorant / Player statistics</p><h1>Stats<span>.</span></h1><p>The numbers behind the performance.</p></header>
       <StatsLeaderboard
         initial={initial}
         initialRegion={DEFAULT_REGION}

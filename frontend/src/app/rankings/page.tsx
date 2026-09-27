@@ -1,27 +1,13 @@
+import "../ladders.css";
 import type { Metadata } from "next";
 import { getRankings } from "@/lib/vlr";
-import { RankingsPanel } from "@/components/RankingsPanel";
+import { RankingsBoard, RANKING_REGIONS } from "@/components/RankingsBoard";
 import { PageContainer } from "@/components/PageContainer";
-
-// force-dynamic so the ladder reflects vlr-api's current cache on each load.
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Rankings — valstats" };
-
-/**
- * /rankings — the full team ladder (the home page shows a short panel of it).
- *
- * Deliberately the WORLD view (getRankings() defaults to region "all"): there is
- * no region picker here because the world layout is the only one that ranks every
- * team against each other. Note the trade — vlr's world table carries no W/L
- * record or earnings columns at all, so RankingsPanel renders only rank / team /
- * region / rating. See the RANK_* notes in app/scrapers/selectors.py.
- */
-export default async function RankingsPage() {
-  const rankings = await getRankings();
-
-  return (
-    <PageContainer width="reading" title="Rankings">
-      <RankingsPanel rankings={rankings} />
-    </PageContainer>
-  );
+export default async function RankingsPage({ searchParams }: { searchParams?: Promise<{ region?: string }> }) {
+  const requested = (await searchParams)?.region ?? "all";
+  const region = Object.hasOwn(RANKING_REGIONS, requested) ? requested : "all";
+  const rankings = await getRankings(region);
+  return <PageContainer width="home"><RankingsBoard rankings={rankings} region={region}/></PageContainer>;
 }

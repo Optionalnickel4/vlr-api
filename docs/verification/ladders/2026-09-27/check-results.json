@@ -1,0 +1,48 @@
+{
+  "tests": {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T12:30:56.363260+00:00",
+    "ended": "2026-09-27T12:31:27.491754+00:00",
+    "exitCode": 0
+  },
+  "lint": {
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T12:30:56.363548+00:00",
+    "ended": "2026-09-27T12:31:15.064074+00:00",
+    "exitCode": 0
+  },
+  "typescript": {
+    "command": [
+      "./node_modules/.bin/tsc",
+      "--noEmit",
+      "--incremental",
+      "false"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T12:30:56.363722+00:00",
+    "ended": "2026-09-27T12:31:12.990882+00:00",
+    "exitCode": 0
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "directory": "/tmp/vlr-preview/ladders-final",
+    "started": "2026-09-27T12:30:56.364167+00:00",
+    "ended": "2026-09-27T12:31:27.533841+00:00",
+    "exitCode": 0
+  }
+}

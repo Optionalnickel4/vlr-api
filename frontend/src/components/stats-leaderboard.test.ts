@@ -238,7 +238,7 @@ describe("StatsLeaderboard island — empty + error states", () => {
 // Default sort: R2.0 desc → rank1=Bravo, rank2=Alpha, rank3=Charlie.
 
 describe("StatsLeaderboard island — podium", () => {
-  it("renders rank-1 player in the gold slot with R2.0 headline", async () => {
+  it("renders the first player in the sort preview with R2.0 headline", async () => {
     const initial = envelope(normalizeStats(statsFixture));
     const { container, root } = await mountIsland(initial);
     const r1 = container.querySelector("[data-podium-rank='1']");
@@ -248,7 +248,7 @@ describe("StatsLeaderboard island — podium", () => {
     root.unmount();
   });
 
-  it("renders rank-2 and rank-3 players in the flanking slots", async () => {
+  it("renders the second and third players in the sort preview", async () => {
     const initial = envelope(normalizeStats(statsFixture));
     const { container, root } = await mountIsland(initial);
     const r2 = container.querySelector("[data-podium-rank='2']");
@@ -269,7 +269,7 @@ describe("StatsLeaderboard island — podium", () => {
     )!;
     expect(acsHeader).toBeTruthy();
     await act(async () => {
-      acsHeader.dispatchEvent(new Event("click", { bubbles: true }));
+      acsHeader.querySelector("button")!.dispatchEvent(new Event("click", { bubbles: true }));
     });
     const r1 = container.querySelector("[data-podium-rank='1']");
     expect(r1!.textContent).toContain("Charlie");
@@ -315,11 +315,11 @@ describe("StatsLeaderboard island — podium", () => {
     root.unmount();
   });
 
-  it("gold (#1) block carries the warn border class", async () => {
+  it("first preview card identifies its position in the current view", async () => {
     const initial = envelope(normalizeStats(statsFixture));
     const { container, root } = await mountIsland(initial);
     const r1 = container.querySelector("[data-podium-rank='1']");
-    expect(r1?.className).toContain("warn");
+    expect(r1?.textContent).toContain("View position 1");
     root.unmount();
   });
 

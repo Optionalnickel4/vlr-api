@@ -269,7 +269,7 @@ describe("news + rankings full pages and see-all links", () => {
 
   it("/rankings full page renders the table without a see-all footer", async () => {
     mockFetchFull();
-    const html = renderToStaticMarkup(await RankingsPage());
+    const html = renderToStaticMarkup(await RankingsPage({}));
     expect(html).toContain("Sentinels");
     expect(html).not.toContain("Full rankings");
   });
@@ -300,7 +300,7 @@ describe("teaser caps: news capped at 5, rankings capped per region", () => {
 
   it("/rankings full page is uncapped — shows all 14 rows across both regions", async () => {
     mockFetchMulti();
-    const html = renderToStaticMarkup(await RankingsPage());
+    const html = renderToStaticMarkup(await RankingsPage({}));
     expect(html).toContain("EU Team 7");
     expect(html).toContain("NA Team 7");
     expect(html).not.toContain("Full rankings");

@@ -1,0 +1,381 @@
+[
+  {
+    "source": "cached",
+    "route": "rankings",
+    "width": 1440,
+    "documentWidth": 1440,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 128,
+    "scroll": {
+      "client": 602,
+      "scroll": 602
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "route": "rankings",
+    "width": 768,
+    "documentWidth": 768,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 128,
+    "scroll": {
+      "client": 718,
+      "scroll": 718
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "route": "rankings",
+    "width": 390,
+    "documentWidth": 390,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 128,
+    "scroll": {
+      "client": 356,
+      "scroll": 356
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "route": "rankings",
+    "width": 320,
+    "documentWidth": 320,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 128,
+    "scroll": {
+      "client": 286,
+      "scroll": 350
+    },
+    "keyboardLeft": 40,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "route": "stats",
+    "width": 1440,
+    "documentWidth": 1440,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 100,
+    "scroll": {
+      "client": 1230,
+      "scroll": 1230
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "route": "stats",
+    "width": 768,
+    "documentWidth": 768,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 100,
+    "scroll": {
+      "client": 718,
+      "scroll": 1120
+    },
+    "keyboardLeft": 40,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "route": "stats",
+    "width": 390,
+    "documentWidth": 390,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 100,
+    "scroll": {
+      "client": 356,
+      "scroll": 1120
+    },
+    "keyboardLeft": 130,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "route": "stats",
+    "width": 320,
+    "documentWidth": 320,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 100,
+    "scroll": {
+      "client": 286,
+      "scroll": 1120
+    },
+    "keyboardLeft": 40,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "rankings",
+    "width": 1440,
+    "documentWidth": 1440,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 602,
+      "scroll": 602
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "rankings",
+    "width": 768,
+    "documentWidth": 768,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 718,
+      "scroll": 718
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "rankings",
+    "width": 390,
+    "documentWidth": 390,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 356,
+      "scroll": 356
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "rankings",
+    "width": 320,
+    "documentWidth": 320,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 286,
+      "scroll": 350
+    },
+    "keyboardLeft": 40,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "stats",
+    "width": 1440,
+    "documentWidth": 1440,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 1230,
+      "scroll": 1230
+    },
+    "keyboardLeft": 0,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "stats",
+    "width": 768,
+    "documentWidth": 768,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 718,
+      "scroll": 1120
+    },
+    "keyboardLeft": 40,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "stats",
+    "width": 390,
+    "documentWidth": 390,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 356,
+      "scroll": 1120
+    },
+    "keyboardLeft": 40,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "controlled",
+    "route": "stats",
+    "width": 320,
+    "documentWidth": 320,
+    "dpr": 1,
+    "ticker": "fixed",
+    "tickers": 1,
+    "count": 3,
+    "scroll": {
+      "client": 286,
+      "scroll": 1120
+    },
+    "keyboardLeft": 130,
+    "focusClear": true,
+    "bottomClear": true,
+    "errors": []
+  },
+  {
+    "source": "cached",
+    "region": "EU",
+    "time": "30D",
+    "rows": 99,
+    "state": "EU / 30 days · 99 listed players · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "region": "EU",
+    "time": "60D",
+    "rows": 0,
+    "state": "EU / 60 days · Loading selected filters · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "region": "EU",
+    "time": "90D",
+    "rows": 0,
+    "state": "EU / 90 days · 100 listed players · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "region": "EU",
+    "time": "ALL",
+    "rows": 0,
+    "state": "EU / All time · Loading selected filters · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "region": "NA",
+    "time": "30D",
+    "rows": 100,
+    "state": "NA / 30 days · 100 listed players · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "region": "NA",
+    "time": "60D",
+    "rows": 100,
+    "state": "NA / 60 days · 100 listed players · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "region": "NA",
+    "time": "90D",
+    "rows": 0,
+    "state": "NA / 90 days · Loading selected filters · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "region": "NA",
+    "time": "ALL",
+    "rows": 0,
+    "state": "NA / All time · 100 listed players · Sorted by R2.0 descending"
+  },
+  {
+    "source": "cached",
+    "rankingRegion": "europe",
+    "state": "cache miss; honest unavailable"
+  },
+  {
+    "source": "controlled",
+    "scenario": "empty",
+    "route": "rankings",
+    "passed": true
+  },
+  {
+    "source": "controlled",
+    "scenario": "empty",
+    "route": "stats",
+    "passed": true
+  },
+  {
+    "source": "controlled",
+    "scenario": "error",
+    "route": "rankings",
+    "passed": true
+  },
+  {
+    "source": "controlled",
+    "scenario": "error",
+    "route": "stats",
+    "passed": true
+  },
+  {
+    "source": "controlled",
+    "scenario": "stale",
+    "route": "stats",
+    "passed": true
+  }
+]

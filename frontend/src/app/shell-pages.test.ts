@@ -39,7 +39,7 @@ function assertShell(page: React.ReactNode) {
 
 it.each([
   ["home", Home], ["schedule", Schedule], ["results", Results],
-  ["stats", Stats], ["rankings", Rankings], ["news", News],
+  ["stats", Stats], ["rankings", () => Rankings({})], ["news", News],
 ] as const)("shares landmarks on the %s route even when its source fails", async (_, Page) => {
   vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("unavailable", { status: 503 }));
   assertShell(await Page());

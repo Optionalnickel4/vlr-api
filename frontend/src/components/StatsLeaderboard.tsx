@@ -15,27 +15,10 @@ import {
 } from "@/lib/vlr";
 import type { ApiResponse, StatLeader } from "@/types/vlr";
 
-/**
- * StatsLeaderboard — the HLTV-style region-wide player leaderboard (Phase 12)
- * + a broadcast-style Olympic podium for the current top 3.
- *
- * VLR's OWN R2.0 rating is the headline column (emphasized, accent) — we never
- * compute a composite. Region (NA/EU) + timespan (30d/60d/90d/all) toggles
- * refetch /api/stats client-side; columns are click-to-sort.
- *
- * SORT SAFETY: every numeric column sorts on the COERCED number (sortLeaders in
- * the data layer), never the raw string — so 1024 sorts above 998 (the lexical
- * "998" < "1024" trap can't happen). Default R2.0 descending.
- *
- * HYDRATION: state seeds from `initial` (server-fetched for the initial region/
- * timespan) and the sort is deterministic given (rows, key, dir) — so the SSR
- * render and the first client render are byte-identical. Refetches happen only
- * after a toggle change (post-mount effect, guarded against the initial mount).
- *
- * PODIUM: the top-3 island derives from `sorted` (the same memo), so it updates
- * automatically on any sort/filter change. Renders null for missing slots when
- * fewer than 3 players are present — no crash on undefined data[2].
- */
+/** Region/window controls retain the existing API and stable numeric sorting.
+ * Preview cards follow the current sort. They are not global rank claims.
+ * Filter changes clear old rows until the selected request settles; cancelled
+ * requests cannot replace a newer selection. */
 
 const REGION_LABELS: Record<string, string> = { na: "NA", eu: "EU" };
 const TIMESPAN_LABELS: Record<string, string> = {
@@ -52,6 +35,7 @@ type Col = {
   render: (r: StatLeader) => ReactNode;
   emphasize?: boolean; // the R2.0 headline column
   className?: string;
+  sample?: boolean;
 };
 
 function num(n: number | null, digits = 0): string {
@@ -61,70 +45,16 @@ function pct(n: number | null): string {
   return n === null ? "—" : `${Math.round(n)}%`;
 }
 
-// ── Podium ────────────────────────────────────────────────────────────────────
-// Visual slot order: silver (left) · gold (center, raised) · bronze (right).
-// Border colors reuse existing design-system tokens — no new colors introduced:
-// warn (#ffb02e, amber) = gold, mut = silver, dim = bronze.
-// Top padding drives the "stepped stand" height when blocks are bottom-aligned.
-const PODIUM_SLOTS = [
-  // visual slot 0 = left  → sorted[1] (rank 2, silver)
-  { rank: 2, borderCls: "border-t-[2px] border-t-mut",  padTop: "pt-6",  r2Cls: "text-ink" },
-  // visual slot 1 = center → sorted[0] (rank 1, gold)
-  { rank: 1, borderCls: "border-t-[3px] border-t-warn", padTop: "pt-10", r2Cls: "text-accent" },
-  // visual slot 2 = right  → sorted[2] (rank 3, bronze)
-  { rank: 3, borderCls: "border-t-[2px] border-t-dim",  padTop: "pt-4",  r2Cls: "text-mut" },
-] as const;
-
-function PodiumBlock({
-  player,
-  slot,
-}: {
-  player: StatLeader | undefined;
-  slot: (typeof PODIUM_SLOTS)[number];
-}) {
-  if (!player) return null;
-  return (
-    <div
-      data-podium-rank={slot.rank}
-      className={cn(
-        "relative flex flex-1 flex-col items-center gap-1 rounded border border-line bg-panel-2 px-3 pb-5",
-        slot.borderCls,
-        slot.padTop,
-      )}
-    >
-      {slot.rank === 1 && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-warn/30 bg-warn/10 px-2.5 py-0.5 font-display text-[9px] font-semibold uppercase tracking-broadcast text-warn">
-          Top Rated
-        </span>
-      )}
-      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.16em] text-dim">
-        #{slot.rank}
-      </span>
-      {player.playerId ? (
-        <Link
-          href={`/player/${player.playerId}`}
-          className="text-center font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink hover:text-accent"
-        >
-          {player.player ?? "—"}
-        </Link>
-      ) : (
-        <span className="text-center font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink">
-          {player.player ?? "—"}
-        </span>
-      )}
-      {player.team && (
-        <span className="font-display text-[10px] font-semibold uppercase tracking-broadcast text-dim">
-          {player.team}
-        </span>
-      )}
-      <span className={cn("font-mono text-2xl font-bold tabular-nums", slot.r2Cls)}>
-        {num(player.r2, 2)}
-      </span>
-      <span className="font-display text-[9px] font-semibold uppercase tracking-broadcast text-dim">
-        R2.0
-      </span>
-    </div>
-  );
+// First rows of the current sort, not an independent ranking or performance claim.
+const PODIUM_SLOTS = [{rank:1},{rank:2},{rank:3}] as const;
+function PodiumBlock({player,slot}: {player:StatLeader|undefined;slot:(typeof PODIUM_SLOTS)[number]}) {
+ if(!player)return null;
+ return <div className="ld-sort-card" data-podium-rank={slot.rank}>
+  <span className="ld-kicker">View position {slot.rank}</span>
+  {player.playerId?<Link href={`/player/${player.playerId}`}>{player.player??'Player unavailable'}</Link>:<strong>{player.player??'Player unavailable'}</strong>}
+  <span>{player.team??'Team unavailable'}</span>
+  <div><strong>{num(player.r2,2)}</strong> R2.0 <span> / {player.rnd??'—'} rounds</span></div>
+ </div>;
 }
 
 const COLUMNS: Col[] = [
@@ -157,6 +87,7 @@ const COLUMNS: Col[] = [
       </>
     ),
   },
+  { key: null, label: "Rounds", align: "right", sample: true, render: r => r.rnd === null ? "—" : String(r.rnd) },
   { key: "r2", label: "R2.0", align: "right", emphasize: true, render: (r) => num(r.r2, 2) },
   { key: "acs", label: "ACS", align: "right", render: (r) => num(r.acs, 0) },
   { key: "kd", label: "K:D", align: "right", render: (r) => num(r.kd, 2) },
@@ -189,7 +120,7 @@ function Toggle<T extends string>({
     <div
       role="group"
       aria-label={ariaLabel}
-      className="flex items-center gap-1 rounded border border-line bg-panel-2 p-0.5"
+      className="ld-toggle"
     >
       {options.map((opt) => (
         <button
@@ -237,11 +168,18 @@ export function StatsLeaderboard({
     }
     let cancelled = false;
     setLoading(true);
+    setRows([]);
+    setStale(false);
     setError(null);
     fetch(`/api/stats?region=${encodeURIComponent(region)}&timespan=${encodeURIComponent(timespan)}`, {
       cache: "no-store",
     })
-      .then((r) => r.json() as Promise<ApiResponse<StatLeader>>)
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const body = await r.json() as ApiResponse<StatLeader>;
+        if (!Array.isArray(body.data)) throw new Error("Invalid leaderboard response");
+        return body;
+      })
       .then((res) => {
         if (cancelled) return;
         setRows(res.data);
@@ -278,9 +216,9 @@ export function StatsLeaderboard({
   const isEmpty = !loading && sorted.length === 0;
 
   return (
-    <section>
+    <section className="ladder-page ld-stats" aria-busy={loading}>
       {/* header: title + count + controls */}
-      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <div className="ld-controls">
         <h2 className="font-display text-lg font-bold uppercase tracking-broadcast text-ink">
           Leaderboard
         </h2>
@@ -289,7 +227,7 @@ export function StatsLeaderboard({
         </span>
         {stale && (
           <span className="font-display text-[10px] uppercase tracking-broadcast text-warn">
-            stale
+            Updates unavailable — last available data
           </span>
         )}
         {loading && (
@@ -297,7 +235,7 @@ export function StatsLeaderboard({
             loading…
           </span>
         )}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ld-filter-groups">
           <Toggle
             options={STAT_REGIONS}
             labels={REGION_LABELS}
@@ -315,17 +253,20 @@ export function StatsLeaderboard({
         </div>
       </div>
 
+      <p className="ld-context" role="status">{REGION_LABELS[region] ?? region} / {timespan === "all" ? "All time" : `${timespan.slice(0,-1)} days`} · {loading ? "Loading selected filters" : `${sorted.length} listed players`} · Sorted by {COLUMNS.find(c=>c.key===sortKey)?.label} {sortDir === "desc" ? "descending" : "ascending"}</p>
+      <p className="ld-note">Positions reflect this sort within the selected region and time window, not a global rank. Rounds are the supplied per-player sample; — means unavailable. Capture time and exact window boundaries are not supplied. Scroll the table horizontally for all columns.</p>
+      <details className="ld-glossary"><summary>Column guide and sorting</summary><p>R2.0: source rating. ACS: average combat score. K:D: kill/death ratio. KAST: rounds with a kill, assist, survival or trade (%). ADR: average damage per round. KPR: kills per round. FK/FD: first kills / first deaths, sorted by first kills. HS%: headshot percentage. Click a column to sort; click again to reverse. Missing values stay last. Equal values retain source order.</p></details>
       {error && (
         <p role="alert" className="mb-3 font-body text-[13px] text-down">
           Couldn’t load the leaderboard: {error}
         </p>
       )}
 
-      {/* Podium — top 3 of the current sorted view (2-1-3 Olympic stand) */}
-      {!isEmpty && (
+      {/* Preview cards follow the current table order. */}
+      {!isEmpty && !loading && (
         <div
-          className="mb-5 flex items-end gap-3"
-          aria-label="Top 3 players"
+          className="ld-sort-cards"
+          aria-label="First three rows in the current sort"
           role="region"
         >
           {PODIUM_SLOTS.map((slot) => {
@@ -338,15 +279,15 @@ export function StatsLeaderboard({
         </div>
       )}
 
-      {isEmpty ? (
+      {loading ? <p className="ld-notice" role="status">Loading leaderboard…</p> : isEmpty ? (
         <p className="rounded border border-line bg-panel px-4 py-8 text-center font-body text-[13px] text-mut">
-          No leaderboard data.
+          {error || stale ? "Leaderboard unavailable for these filters." : "No leaderboard data."}
         </p>
       ) : (
-        <div className="overflow-x-auto rounded border border-line bg-panel">
+        <div className="ld-scroll ld-stat-scroll" role="region" aria-label="Player statistics table; scroll horizontally for all columns" tabIndex={0}>
           <table
             className={cn(
-              "w-full border-collapse text-left",
+              "ld-table ld-stat-table w-full border-collapse text-left",
               "[&_tbody_td]:border-t [&_tbody_td]:border-line/60 [&_tbody_td]:px-3 [&_tbody_td]:py-2",
               "[&_tbody_tr:hover]:bg-ink/[0.03]",
             )}
@@ -369,10 +310,8 @@ export function StatsLeaderboard({
                         active ? "text-accent" : "text-dim hover:text-mut",
                         col.className,
                       )}
-                      onClick={() => onSort(col.key)}
                     >
-                      {col.label}
-                      {active && <span aria-hidden>{sortDir === "desc" ? " ▾" : " ▴"}</span>}
+                      {col.key ? <button type="button" onClick={() => onSort(col.key)} aria-label={`Sort by ${col.label}`}>{col.label}{active && <span aria-hidden>{sortDir === "desc" ? " ▾" : " ▴"}</span>}</button> : col.label}
                     </th>
                   );
                 })}
@@ -382,7 +321,7 @@ export function StatsLeaderboard({
               {sorted.map((r, i) => (
                 <tr key={r.playerId ?? `${r.player}-${i}`}>
                   {COLUMNS.map((col, ci) => {
-                    if (col.key === null) {
+                    if (col.key === null && !col.sample) {
                       // derived rank = position in the current sort order
                       return (
                         <td
