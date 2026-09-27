@@ -107,6 +107,10 @@ export function parseNumeric(value: unknown): number | null {
 export const UPSTREAM_TIMEOUT_MS = 10_000;
 
 export async function fetchUpstream(path: string): Promise<unknown> {
+  return (await fetchUpstreamResponse(path)).data;
+}
+
+async function fetchUpstreamResponse(path: string): Promise<{ data: unknown; stale: boolean }> {
   const controller = new AbortController();
   const deadline = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
   try {
@@ -119,7 +123,7 @@ export async function fetchUpstream(path: string): Promise<unknown> {
     // Await the body too: receiving headers must not cancel the deadline.
     const data: unknown = await res.json();
     if (controller.signal.aborted) throw new Error("Request aborted");
-    return data;
+    return { data, stale: res.headers.get("X-VLR-Cache") === "stale" };
   } catch (error) {
     if (controller.signal.aborted) throw new Error(`vlr-api ${path} timed out after ${UPSTREAM_TIMEOUT_MS}ms`);
     throw error;
@@ -711,8 +715,8 @@ async function load<T>(
   transform: (raw: unknown) => T[],
 ): Promise<ApiResponse<T>> {
   try {
-    const raw = await fetchUpstream(path);
-    return { data: transform(raw), stale: false };
+    const response = await fetchUpstreamResponse(path);
+    return { data: transform(response.data), stale: response.stale };
   } catch (err) {
     // Never throw to the page; surface a stale-empty envelope instead.
     return { data: [], stale: true, error: String(err) };

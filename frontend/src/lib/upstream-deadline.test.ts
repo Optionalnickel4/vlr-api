@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from "vitest";
-import { fetchUpstream, getLive } from "./vlr";
+import { fetchUpstream, getLive, getRankings } from "./vlr";
 
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 
@@ -45,4 +45,10 @@ it("accepts a genuine empty upstream live list", async () => {
 it("preserves partial live cards whose team/score arrays are not filled yet", async () => {
   vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify([{ id: "1", teams: [], scores: [] }])));
   expect(await getLive()).toMatchObject({ data: [{ id: "1", team1: null, score1: null }], stale: false });
+});
+
+it.each(["fresh", "stale"])("propagates the %s cache header without changing the raw payload contract", async state => {
+  vi.spyOn(globalThis, "fetch").mockImplementation(async () => new Response("[]", { headers: { "X-VLR-Cache": state } }));
+  expect(await getRankings("europe")).toEqual({ data: [], stale: state === "stale" });
+  expect(await fetchUpstream("/events")).toEqual([]);
 });
