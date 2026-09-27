@@ -1,0 +1,11 @@
+TimeoutStopUSec=1min 30s
+MainPID=308
+ExecStart={ path=/opt/vlr-api/frontend/node_modules/.bin/next ; argv[]=/opt/vlr-api/frontend/node_modules/.bin/next start -H 0.0.0.0 -p 3000 ; ignore_errors=no ; start_time=[Thu 2026-09-03 04:02:56 UTC] ; stop_time=[n/a] ; pid=308 ; code=(null) ; status=0/0 }
+WorkingDirectory=/opt/vlr-api/frontend
+Requires=system.slice sysinit.target
+Wants=network-online.target
+BindsTo=
+PartOf=
+PropagatesStopTo=
+DropInPaths=
+InvocationID=369af89eaab1403284dc9d5cf38cab01

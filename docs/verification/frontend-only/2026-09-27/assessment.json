@@ -1,0 +1,60 @@
+{
+  "created_at_utc": "2026-09-27T20:51:50.170534+00:00",
+  "scope": "frontend .next only",
+  "baseline_proposal": "STOPPED by user; not a release prerequisite",
+  "recommendation": "READY FOR FRONTEND-ONLY CUTOVER AUTHORIZATION; NOT EXECUTED",
+  "specific_blockers": [],
+  "source_parity": "PASS; retained source, reviewed commit and current frontend Git tree identical",
+  "candidate_archive_members_verified": 244,
+  "rollback_restore": "PASS; 25776 archive regular entries plus one hard-linked esbuild file verified",
+  "isolated_candidate_and_rollback_smoke": "PASS; backend unreachable, private frontend processes stopped",
+  "reused_evidence": {
+    "checks": "docs/verification/release-gates/2026-09-27/checks.json",
+    "frontend_tests": 348,
+    "lint": "PASS",
+    "typescript": "PASS",
+    "build": "PASS webpack, 2026-09-27T14:57:08Z run",
+    "visuals": "Existing route-specific broadcast/browser evidence; source unchanged; no redesign or browser rerun"
+  },
+  "no_production_mutations": true,
+  "no_vlr_requests": true,
+  "cutover_write_allowlist": [
+    "/opt/vlr-api/frontend/.next",
+    "private staging/evidence directories"
+  ],
+  "service_mutation_allowlist": [
+    "vlr-frontend.service stop/start"
+  ],
+  "excluded": [
+    "backend service/config/code",
+    "PostgreSQL",
+    "Redis",
+    "Caddy/Cloudflare configuration",
+    "migrations",
+    "systemd unit edits",
+    "dependency installs",
+    "build in serving directory"
+  ],
+  "unit_relationship": "After=vlr-api.service is ordering only; no Requires/Wants/PartOf/BindsTo/PropagatesStopTo involving backend and no start/stop hooks",
+  "capacity_free_bytes": 5025804288,
+  "required_free_reserve_bytes": 1073741824,
+  "next_swap_same_filesystem": true,
+  "expected_interruption": "Typically 5\u201315s; reserve 2min, existing frontend stop timeout 90s plus bounded readiness 30s",
+  "css_smoke": {
+    "url": "/_next/static/css/a37ff8ef06dfd0a0.css",
+    "sha256": "47d463f3cb0f198544bdc033eba88d2756224c1130161f1e262a7322a2888c91",
+    "bytes": 3780
+  },
+  "normal_backend_activity": "Unchanged scheduler/user traffic continues independently; release performs no database/cache operations and required smoke requests static assets only",
+  "protected_file_hashes": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "offline_validation": {
+    "python_ast": "PASS",
+    "document_shell_syntax": "PASS; not executed",
+    "service_mutation_allowlist": "PASS: frontend only",
+    "documentation_links": "PASS",
+    "archive_member_hashes": "PASS"
+  }
+}

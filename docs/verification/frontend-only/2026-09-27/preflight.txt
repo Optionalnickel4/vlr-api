@@ -1,0 +1,1 @@
+PASS: candidate and restored rollback, unchanged runtime/unit and swap prerequisites

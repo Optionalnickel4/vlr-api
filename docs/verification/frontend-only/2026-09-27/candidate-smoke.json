@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "external_network": false,
+  "backend_or_storage_started": false,
+  "build_id": "86jVlbyKpPMhJnvsgczQ5",
+  "homepage_http_status": 200,
+  "homepage_bytes": 19939,
+  "asset": "/_next/static/86jVlbyKpPMhJnvsgczQ5/_ssgManifest.js",
+  "asset_sha256": "678f6ce2cb80b1fe72fc67e7412be6e2ab6ada083111b64f7c40d35e3cba5e00",
+  "asset_bytes": 80,
+  "private_frontend_stopped": true,
+  "exit_code": 143
+}

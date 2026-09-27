@@ -1,5 +1,14 @@
 # Production release review — 2026-09-27
 
+## Current scope: frontend-only release; baseline proposal stopped
+
+The user stopped the baseline deployment proposal. The governing document is now [FRONTEND_ONLY_RELEASE.md](FRONTEND_ONLY_RELEASE.md): deploy only the retained, verified `.next` build from `9301682c4165d7507e49d6ad7678d14ca9df377e`, BUILD_ID `86jVlbyKpPMhJnvsgczQ5`. The existing frontend rollback archive was freshly restored and both builds passed isolated frontend smoke. Unchanged source reuses the existing frontend test/visual evidence.
+
+**Ready for frontend-only cutover authorization; no production cutover executed.** [Current assessment](verification/frontend-only/2026-09-27/assessment.json) identifies no frontend-specific blocker. Only `.next` and `vlr-frontend.service` stop/start are in scope; no backend, database/cache, migration, dependency, unit or Caddy changes. Historical backend/baseline gates below do not apply to this restricted release and have not been turned into passes. Recheck the frontend-only preflight for drift before executing the exact commands.
+
+All sections below are retained historical full-release/baseline assessments, not instructions to resume that work.
+
+
 ## Superseding proposal: establish a new known baseline
 
 **Current recommendation: NO-GO pending the new baseline gates.** The September 17 backend provenance is **unrecoverable from the available evidence**; no further provenance pursuit is required. Historical Gate 1 is **failed/superseded**, not passed. The retained historical fallback is not an exact copy of that process and is not an attested application-only rollback.

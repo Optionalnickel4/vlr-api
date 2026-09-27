@@ -1,0 +1,21 @@
+{
+  "release_commit": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+  "last_frontend_commit": "a251c99ade3e8d426e2782ab5d140815db1f33d4",
+  "frontend_tree": "2a5c474942a81a58ceda8cf49ad2398a65e763ae",
+  "candidate_build_id": "86jVlbyKpPMhJnvsgczQ5",
+  "rollback_build_id": "5RXlwj7jwc2eDLWI_-439",
+  "candidate_archive": "/home/builder/vlr-frontend-only-9301682/frontend-next-9301682.tar.gz",
+  "candidate_archive_sha256": "67816ae50c7ce9b05e50d40957cea82d69542e08449f7a6f1e641c2c7e4030b2",
+  "candidate_archive_bytes": 17527940,
+  "rollback_archive": "/home/builder/vlr-gates-private/frontend-rollback.tar.gz",
+  "rollback_archive_sha256": "cfabf6b2d94faf3d253bcdbb5191c10b0fe725d00ba3a992891de53ad992a5b6",
+  "rollback_archive_bytes": 215041425,
+  "node_path": "/usr/bin/node",
+  "node_sha256": "fde6a4bf8d0562f7751d1a2d6cb9b417c4cfe107bbcb0aa3e9a24e125e348f48",
+  "frontend_unit_sha256": "a228d2be3938cae32056250bbcfeb9d83bb1c51f1413a9e56ff220755ecb024d",
+  "rollback_regular_files_verified": 25777,
+  "manifest_path": "/home/builder/vlr-frontend-only-9301682/manifest.json",
+  "manifest_sha256": "a04eba4df875cabeac017de0da4251aa81caec3aa4affb3493c35c008451a502",
+  "source_build_directory": "/home/builder/vlr-release-review-9301682/frontend/.next",
+  "rollback_restored_directory": "/home/builder/vlr-frontend-only-9301682/rollback/frontend"
+}

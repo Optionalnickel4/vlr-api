@@ -1,5 +1,7 @@
 # Known VLR baseline proposal — 2026-09-27
 
+> **STOPPED by user. Do not execute this proposal.** The active scope is the [frontend-only release](FRONTEND_ONLY_RELEASE.md). The content below is retained historical work, not a current plan or prerequisite.
+
 **NO-GO for production now.** This package proposes a first controlled transition to a known release, followed by a separately approved second application release. Nothing here authorizes execution. September 17 backend provenance is **unrecoverable from the available evidence**. Stop searching for it. The old process and the historical fallback are not attested application-only rollback targets. Earlier evidence remains historical; its failed provenance gate is superseded by this strategy, not passed.
 
 The source is the on-disk tracked application at `3cf2373` (full SHA in the private `inputs.json`), with a complete per-file inventory and an explicit application patch. There were no uncommitted application changes at packaging. The pre-existing `.gitignore` edit and untracked redesign plan are excluded and untouched. This says nothing about dirty changes that the September 17 worker may have loaded: those are unrecoverable too. The application files match the previously reviewed `9301682` application; new deployment tooling is pinned by this proposal's commit and the retained launcher hash. A future source change requires a new package, never in-place repair of a sealed release.
