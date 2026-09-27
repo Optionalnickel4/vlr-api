@@ -1,0 +1,161 @@
+[
+  {
+    "state": "empty",
+    "route": "/schedule",
+    "text": "VALORANT / UPCOMING COVERAGE\n\nSCHEDULE.\n\nKnow who plays next.\n\n0\nupcoming fixtures\nView results\n↗\n\nDate headings are estimates from relative source timings at page load (2026-09-27 13:11 UTC), not confirmed match dates. Source age and clock timezone are unavailable. Feed order is preserved.\n\nNo upcoming matches scheduled.",
+    "overflow": false
+  },
+  {
+    "state": "empty",
+    "route": "/results",
+    "text": "VALORANT / COMPLETED MATCHES\n\nRESULTS.\n\nThe final word, match by match.\n\n0\ncompleted results\nView schedule\n↗\n\nDate headings are estimates from relative source timings at page load (2026-09-27 13:11 UTC), not confirmed match dates. Source age and clock timezone are unavailable. Feed order is preserved.\n\nNo recent results.",
+    "overflow": false
+  },
+  {
+    "state": "empty",
+    "route": "/rankings",
+    "text": "VALORANT / TEAM STANDINGS\n\nRANKINGS.\n\nRegional competition. Team by team.\n\nAll regional ladders · 0 listed teams · Capture time unavailable\nAll regional ladders\nNorth America\nEurope\nBrazil\nAsia-Pacific\nKorea\nChina\nJapan\nLatin America South\nLatin America North\nOceania\nGame Changers\nMENA\nCollegiate\n\nRanks and ratings are shown in source order within each ladder, not a global ranking. Country / region is the source team label. No movement or match sample is supplied. Ladder boundaries follow rank resets; their region names are not supplied. Choose a named region for a specific regional view.\n\nNo rankings available.",
+    "overflow": false
+  },
+  {
+    "state": "empty",
+    "route": "/stats",
+    "text": "VALORANT / PLAYER STATISTICS\n\nSTATS.\n\nThe numbers behind the performance.\n\nLEADERBOARD\n0\nNA\nEU\n30D\n60D\n90D\nALL\n\nNA / All time · 0 listed players · Sorted by R2.0 descending\n\nPositions reflect this sort within the selected region and time window, not a global rank. Rounds are the supplied per-player sample; — means unavailable. Capture time and exact window boundaries are not supplied. Scroll the table horizontally for all columns.\n\nColumn guide and sorting\n\nNo leaderboard data.",
+    "overflow": false
+  },
+  {
+    "state": "empty",
+    "route": "/news",
+    "text": "VALORANT / NEWS DESK\n\nBEYOND THE SCORE.\n\nHeadlines from VLR.gg\n\n0\nsupplied stories\n\nRead the original reporting at the source.\n\nNo news right now.\n\nReporting, dates and bylines supplied by VLR.gg. Feed capture time unavailable.\nVisit VLR news\n↗\n(opens in a new tab)",
+    "overflow": false
+  },
+  {
+    "state": "error",
+    "route": "/schedule",
+    "text": "VALORANT / UPCOMING COVERAGE\n\nSCHEDULE.\n\nKnow who plays next.\n\n—\nlast available matches\nView results\n↗\n\nDate headings are estimates from relative source timings at page load (2026-09-27 13:11 UTC), not confirmed match dates. Source age and clock timezone are unavailable. Feed order is preserved.\n\nSchedule unavailable — couldn't load the match feed.",
+    "overflow": false
+  },
+  {
+    "state": "error",
+    "route": "/results",
+    "text": "VALORANT / COMPLETED MATCHES\n\nRESULTS.\n\nThe final word, match by match.\n\n—\nlast available matches\nView schedule\n↗\n\nDate headings are estimates from relative source timings at page load (2026-09-27 13:11 UTC), not confirmed match dates. Source age and clock timezone are unavailable. Feed order is preserved.\n\nResults unavailable — couldn't load the match feed.",
+    "overflow": false
+  },
+  {
+    "state": "error",
+    "route": "/rankings",
+    "text": "VALORANT / TEAM STANDINGS\n\nRANKINGS.\n\nRegional competition. Team by team.\n\nAll regional ladders · 0 listed teams · Capture time unavailable\nAll regional ladders\nNorth America\nEurope\nBrazil\nAsia-Pacific\nKorea\nChina\nJapan\nLatin America South\nLatin America North\nOceania\nGame Changers\nMENA\nCollegiate\n\nRanks and ratings are shown in source order within each ladder, not a global ranking. Country / region is the source team label. No movement or match sample is supplied. Ladder boundaries follow rank resets; their region names are not supplied. Choose a named region for a specific regional view.\n\nRankings unavailable — could not load this region.",
+    "overflow": false
+  },
+  {
+    "state": "error",
+    "route": "/stats",
+    "text": "VALORANT / PLAYER STATISTICS\n\nSTATS.\n\nThe numbers behind the performance.\n\nLEADERBOARD\n0\nUPDATES UNAVAILABLE — LAST AVAILABLE DATA\nNA\nEU\n30D\n60D\n90D\nALL\n\nNA / All time · 0 listed players · Sorted by R2.0 descending\n\nPositions reflect this sort within the selected region and time window, not a global rank. Rounds are the supplied per-player sample; — means unavailable. Capture time and exact window boundaries are not supplied. Scroll the table horizontally for all columns.\n\nColumn guide and sorting\n\nCouldn’t load the leaderboard: Error: vlr-api /stats?region=na&timespan=all -> 503\n\nLeaderboard unavailable for these filters.",
+    "overflow": false
+  },
+  {
+    "state": "error",
+    "route": "/news",
+    "text": "VALORANT / NEWS DESK\n\nBEYOND THE SCORE.\n\nHeadlines from VLR.gg\n\n—\nsupplied stories\n\nRead the original reporting at the source.\n\nNews unavailable — could not load the story feed.\n\nReporting, dates and bylines supplied by VLR.gg. Feed capture time unavailable.\nVisit VLR news\n↗\n(opens in a new tab)",
+    "overflow": false
+  },
+  {
+    "state": "stale",
+    "route": "/schedule",
+    "text": "VALORANT / UPCOMING COVERAGE\n\nSCHEDULE.\n\nKnow who plays next.\n\n3\nupcoming fixtures\nView results\n↗\n\nDate headings are estimates from relative source timings at page load (2026-09-27 13:11 UTC), not confirmed match dates. Source age and clock timezone are unavailable. Feed order is preserved.\n\nToday · Sep 27, 2026\nEstimated date · UTC\n\nCONTROLLED · LongEventNameLongEventNameLongEventNameLongEventNameLongEventNameLongEventName\nUPCOMING\n5:00 AM\nSource countdown: 2h\nCIC\nCONTROLLED · International Championship Academy\nvs\nCL\nCONTROLLED · LongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamName\n\nGrand Final · Championship qualification\n\nOpen match\n↗\n\nDate unavailable\nStart date not confirmed\n\nEvent unavailable\nUPCOMING\nTime TBA\nCountdown unavailable\n?\nTeam TBD\nvs\nCC\nCONTROLLED · Challenger\n\nStage unavailable\n\nOpen match\n↗\n\nDate unavailable\nStart date not confirmed\n\nCONTROLLED · Partial data\nSOURCE SAYS LIVE\nTime TBA\nSource countdown: LIVE\n?\nTeam TBD\nvs\n?\nTeam TBD\n\nStage unavailable\n\nMatch link unavailable",
+    "overflow": false
+  },
+  {
+    "state": "stale",
+    "route": "/results",
+    "text": "VALORANT / COMPLETED MATCHES\n\nRESULTS.\n\nThe final word, match by match.\n\n3\ncompleted results\nView schedule\n↗\n\nDate headings are estimates from relative source timings at page load (2026-09-27 13:11 UTC), not confirmed match dates. Source age and clock timezone are unavailable. Feed order is preserved.\n\nToday · Sep 27, 2026\nEstimated date · UTC\n\nCONTROLLED · LongEventNameLongEventNameLongEventNameLongEventNameLongEventNameLongEventName\nFINAL\nSource timing: 2h\nCIC\nCONTROLLED · International Championship Academy\nWinner\n2\nCL\nCONTROLLED · LongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamName\n0\n\nGrand Final · Championship qualification\n\nCompleted result\nOpen match\n↗\n\nDate unavailable\nMatch date not supplied\n\nEvent unavailable\nFINAL\nSource timing: Unavailable\n?\nTeam TBD\n—\nCC\nCONTROLLED · Challenger\n0\n\nStage unavailable\n\nScore incomplete\nOpen match\n↗\n\nDate unavailable\nMatch date not supplied\n\nCONTROLLED · Partial data\nFINAL\nSource timing: LIVE\n?\nTeam TBD\n0\n?\nTeam TBD\n0\n\nStage unavailable\n\nLevel score reported\nMatch link unavailable",
+    "overflow": false
+  },
+  {
+    "state": "stale",
+    "route": "/rankings",
+    "text": "VALORANT / TEAM STANDINGS\n\nRANKINGS.\n\nRegional competition. Team by team.\n\nAll regional ladders · 3 listed teams · Capture time unavailable\nAll regional ladders\nNorth America\nEurope\nBrazil\nAsia-Pacific\nKorea\nChina\nJapan\nLatin America South\nLatin America North\nOceania\nGame Changers\nMENA\nCollegiate\n\nRanks and ratings are shown in source order within each ladder, not a global ranking. Country / region is the source team label. No movement or match sample is supplied. Ladder boundaries follow rank resets; their region names are not supplied. Choose a named region for a specific regional view.\n\nUpdates unavailable — showing last available rankings.\n\nRegional ladder 1\n2 listed teams\nRank\tTeam / source country or region\tRating\n1\t\nCL\nCONTROLLED · LongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamNameLongTeamName\nSource label\n\t2000\n2\t\n?\nTeam unavailable\nCountry / region unavailable\n\t—\nRegional ladder 2\n1 listed teams\nRank\tTeam / source country or region\tRating\n1\t\nCAL\nCONTROLLED · Another ladder\nOther source label\n\t0",
+    "overflow": false
+  },
+  {
+    "state": "stale",
+    "route": "/stats",
+    "text": "VALORANT / PLAYER STATISTICS\n\nSTATS.\n\nThe numbers behind the performance.\n\nLEADERBOARD\n3\nUPDATES UNAVAILABLE — LAST AVAILABLE DATA\nNA\nEU\n30D\n60D\n90D\nALL\n\nNA / All time · 3 listed players · Sorted by R2.0 descending\n\nPositions reflect this sort within the selected region and time window, not a global rank. Rounds are the supplied per-player sample; — means unavailable. Capture time and exact window boundaries are not supplied. Scroll the table horizontally for all columns.\n\nColumn guide and sorting\n\nCouldn’t load the leaderboard: Controlled stale cache\n\nVIEW POSITION 1\nCONTROLLED · Bravo\nLEV\n1.24 R2.0 / 512 rounds\nVIEW POSITION 2\nCONTROLLED · LongPlayerNameLongPlayerNameLongPlayerNameLongPlayerNameLongPlayerName\nCONTROLLEDLONGTEAM\n1.05 R2.0 / 480 rounds\nVIEW POSITION 3\nCONTROLLED · Partial\nTeam unavailable\n— R2.0 / — rounds\n#\tPlayer\tROUNDS\tR2.0 ▾\tACS\tK:D\tKAST\tADR\tKPR\tFK/FD\tHS%\n1\tCONTROLLED · BRAVO\nLEV\n\t512\t1.24\t1024\t1.62\t78%\t168\t0.82\t2 / 1\t27%\n2\tCONTROLLED · LONGPLAYERNAMELONGPLAYERNAMELONGPLAYERNAMELONGPLAYERNAMELONGPLAYERNAME\nCONTROLLEDLONGTEAM\n\t480\t1.05\t998\t1.10\t71%\t150\t0.75\t3 / 2\t24%\n3\tCONTROLLED · PARTIAL\t—\t—\t1100\t0.95\t65%\t130\t0.60\t1 / 1\t—",
+    "overflow": false
+  },
+  {
+    "state": "stale",
+    "route": "/news",
+    "text": "VALORANT / NEWS DESK\n\nBEYOND THE SCORE.\n\nHeadlines from VLR.gg\n\n3\nsupplied stories\n\nRead the original reporting at the source.\n\nLEAD STORY\nFirst in the supplied feed\nSupplied date text\nBy Controlled author\nCONTROLLED · LongHeadlineLongHeadlineLongHeadlineLongHeadlineLongHeadlineLongHeadlineLongHeadlineLongHeadlineLongHeadlineLongHeadline\nRead original story ↗\n(opens in a new tab)\nMore headlines\n\nSource order · 2 stories\n\n02\nDate unavailable\nAuthor unavailable\nUntitled article\n\nSource link unavailable\n\n03\nJanuary 1, 2000\nBy Controlled reporter\nCONTROLLED · Final supplied story\nRead original story ↗\n(opens in a new tab)\nReporting, dates and bylines supplied by VLR.gg. Feed capture time unavailable.\nVisit VLR news\n↗\n(opens in a new tab)",
+    "overflow": false
+  },
+  {
+    "route": "/team/controlled-partial",
+    "text": "Home\n/\nRankings\n/\nCONTROLLED · Partial\nVALORANT / TEAM DOSSIER\nCP\n\nTeam profile / Country unavailable\n\nCONTROLLED · PARTIAL\n1 listed players\n0 staff\nRoster and results via VLR.gg\n\n01 / LATEST LISTED MATCHES\n\nRecent form\n\nUp to five results · source order\n\nUnknown\nUnknown opponent\n—\nEvent unavailable\nMatch date unavailable\n\nScores and verdicts are supplied by the source; score order is unchanged. This list is separate from the history window below.\n\n02 / BANKED HISTORY\n\nRating movement\n\n90-day lookback\n\nLatest captured rating\n—\nChange in window\n—\nPeak in window\n—\nWindow W / L\n—\n\n1 rated snapshots / 1 total captures. Capture dates unavailable.\n\nOne rated snapshot — not enough history to show movement.\n\nSource note: CONTROLLED ACCEPTANCE — fixture data, not live performance\n\nView 1 rating captures\n\n03 / TEAM SHEET\n\nRoster\n\n1 listed players · 0 staff\n\nScroll horizontally to see all columns on smaller screens.\n\nCONTROLLED · PARTIAL\tNAME\tROLE\tCOUNTRY\n\nJOHNQT\nCAPTAIN\n\tMohamed Amine Ouarid\t—\tMA\n\n04 / RESULTS ARCHIVE\n\nResults in window\n\n90-day lookback · 1 matched results\n\nBanked results in source order. Capture times are not match dates. Scores and verdicts are shown as supplied. Scroll horizontally to see all columns on smaller screens.\n\nTeam results in the history window\nOpponent / Event\tResult\tScore\tCaptured at (UTC)\tSource\nOpponent unavailable\nEvent unavailable\n\tUnknown\t—\tDate unavailable\t—",
+    "overflow": false
+  },
+  {
+    "route": "/team/controlled-empty",
+    "text": "Home\n/\nRankings\n/\nCONTROLLED · Sentinels\nVALORANT / TEAM DOSSIER\nCS\n\nSEN / United States\n\nCONTROLLED · SENTINELS\n0 listed players\n0 staff\nRoster and results via VLR.gg\n\n01 / LATEST LISTED MATCHES\n\nRecent form\n\nUp to five results · source order\n\nNo recent results listed by the source.\n\n02 / BANKED HISTORY\n\nRating movement\n\n90-day lookback\n\nLatest captured rating\n—\nChange in window\n—\nPeak in window\n—\nWindow W / L\n—\n\n0 rated snapshots / 0 total captures. Capture dates unavailable.\n\nNo rated snapshots in this window.\n\nSource note: CONTROLLED ACCEPTANCE — fixture data, not live performance\n\n03 / TEAM SHEET\n\nRoster\n\n0 listed players · 0 staff\n\nNo roster listed by the source.\n\n04 / RESULTS ARCHIVE\n\nResults in window\n\n90-day lookback · 0 matched results\n\nNo results matched for this window.",
+    "overflow": false
+  },
+  {
+    "route": "/team/controlled-error",
+    "text": "Home\n/\nRankings\n/\nTeam controlled-error\nUNAVAILABLE\nCOULDN'T LOAD THIS TEAM\n\nThe data source didn't return a page for team controlled-error. It may not exist, or vlr-api couldn't reach it right now.\n\n← BACK TO MATCH CENTER",
+    "overflow": false
+  },
+  {
+    "route": "/team/controlled-history-error",
+    "text": "Home\n/\nRankings\n/\nCONTROLLED · Sentinels\nVALORANT / TEAM DOSSIER\nCS\n\nSEN / United States\n\nCONTROLLED · SENTINELS\n6 listed players\n3 staff\nRoster and results via VLR.gg\n\n01 / LATEST LISTED MATCHES\n\nRecent form\n\nUp to five results · source order\n\nLoss\nLOUD\n1:2 ↗\nEWC 2026: AMER Qualifier\n2026/05/307:00 pm\nWin\nKRÜ Esports\n2:1 ↗\nEWC 2026: AMER Qualifier\n2026/05/287:00 pm\nLoss\nLEVIATÁN\n1:2 ↗\nEWC 2026: AMER Qualifier\n2026/05/277:00 pm\nWin\nEvil Geniuses\n2:1 ↗\nEWC 2026: AMER Qualifier\n2026/05/207:00 pm\nWin\nENVY\n2:0 ↗\nEWC 2026: AMER Qualifier\n2026/05/197:00 pm\n\nScores and verdicts are supplied by the source; score order is unchanged. This list is separate from the history window below.\n\n02 / BANKED HISTORY\n\nRating movement\n\nWindow unavailable\n\nRating history unavailable — couldn't load this team's history.\n\n03 / TEAM SHEET\n\nRoster\n\n6 listed players · 3 staff\n\nScroll horizontally to see all columns on smaller screens.\n\nCONTROLLED · SENTINELS\tNAME\tROLE\tCOUNTRY\n\nJOHNQT\nCAPTAIN\n\tMohamed Amine Ouarid\t—\tMA\n\nREDUXX\n\tYassin Aboulalazm\t—\tUS\n\nJERRWIN\n\tGurjiwan Gill\t—\tIN\n\nCORTEZIA\n\tGabriel Cortez\t—\tBR\n\nJONAHP\n\tJonah Pulice\t—\tCA\n\nVICTOR\n\tVictor Wong\tstand-in\tUS\nSTAFF\n\nZYTO\n\tBryan Ybanez\tmanager\tUS\n\nEWOK\n\tMarthinus Jacobus Van Der Walt\thead coach\tZA\n\nGUNTER\n\tLuke Clives\tassistant coach\tGB\n\n04 / RESULTS ARCHIVE\n\nResults in window\n\nHistory unavailable\n\nResults unavailable — couldn't load this team's history.",
+    "overflow": false
+  },
+  {
+    "route": "/player/controlled-partial",
+    "text": "Home\n/\nStats\n/\nCONTROLLED · Partial\n\nVALORANT / PLAYER DOSSIER\n\nCO\n\nControlled acceptance data / Country unavailable\n\nCONTROLLED · PARTIAL\nTeam unavailable\nRole unavailable\nRating\n—\nK/D\n—\nACS\n—\nMain agent · by rounds\nUNAVAILABLE\n\n1 agent rows · Round sample unavailable · All-time source stats; capture date unavailable.\n\nHow headline statistics are calculated\nForm · 1 listed matches · newest first\n?\nagainst unknown opponent\n\n01 / BANKED HISTORY\n\nRating movement\n\n90-day lookback\n\nLatest captured rating\n—\nChange in window\n—\nPeak in window\n—\nLatest captured ACS\n—\nACS change\n—\nPeak ACS\n—\n\n1 rated snapshots / 1 total captures. Capture dates unavailable.\n\nHistory is still young — one rated snapshot is not enough to show movement.\n\nSnapshots may cover overlapping rounds; they are not independent match samples. Capture dates are not performance-period boundaries.\n\nSource note: CONTROLLED ACCEPTANCE — fixture data, not live performance\n\nView 1 rating captures\n\n02 / COHORT PERCENTILES\n\nRating Breakdown\n\nregion unavailable · All-time leaderboard\n\nPercentile within the source cohort, not a match rating. Cohort size and player round sample are not supplied for these dimensions.\n\nFirepower\nUnavailable\nEntry\n0th in region unavailable\nConsistency\nUnavailable\nClutch *\nUnavailable\n\nLimited sample — low confidence\n\n03 / PER-AGENT DETAIL\n\nAgent Stats\n\n1 agent rows · all-time source stats\n\nExact date boundaries and capture date are not supplied. Source columns and row order are preserved. RND is the round sample for each agent. Scroll horizontally to see all statistics.\n\nAGENT\tR\tACS\tK:D\tRND\nOMEN\t1.05\t—\t—\t—\n\n04 / MATCH HISTORY\n\nRecent Matches\n\n1 listed matches · newest first\n\nMatch dates and coverage period are not supplied. Scores and verdicts retain source order and meaning. Scroll horizontally to see all columns.\n\nRecent player matches\nOpponent / Event\tResult\tScore\tSource\nOpponent unavailable\nEvent unavailable\n\tUnknown\t—\t—",
+    "overflow": false
+  },
+  {
+    "route": "/player/controlled-empty",
+    "text": "Home\n/\nStats\n/\nCONTROLLED · TenZ\n\nVALORANT / PLAYER DOSSIER\n\nCO\n\nControlled acceptance data / ca\n\nCONTROLLED · TENZ\nCubert Academy\nRole unavailable\nRating\n—\nK/D\n—\nACS\n—\nMain agent · by rounds\nUNAVAILABLE\n\n0 agent rows · Round sample unavailable · All-time source stats; capture date unavailable.\n\nHow headline statistics are calculated\n\n01 / BANKED HISTORY\n\nRating movement\n\n90-day lookback\n\nLatest captured rating\n—\nChange in window\n—\nPeak in window\n—\nLatest captured ACS\n—\nACS change\n—\nPeak ACS\n—\n\n0 rated snapshots / 0 total captures. Capture dates unavailable.\n\nNo rated snapshots in this window.\n\nSnapshots may cover overlapping rounds; they are not independent match samples. Capture dates are not performance-period boundaries.\n\nSource note: CONTROLLED ACCEPTANCE — fixture data, not live performance\n\n02 / COHORT PERCENTILES\n\nRating Breakdown\n\nCohort unavailable\n\nRating breakdown unavailable — this player isn't in the NA or EU leaderboard.\n\n03 / PER-AGENT DETAIL\n\nAgent Stats\n\n0 agent rows · all-time source stats\n\nExact date boundaries and capture date are not supplied. Source columns and row order are preserved. RND is the round sample for each agent. Scroll horizontally to see all statistics.\n\nNo agent stats available.\n\n04 / MATCH HISTORY\n\nRecent Matches\n\n0 listed matches · newest first\n\nMatch dates and coverage period are not supplied. Scores and verdicts retain source order and meaning. Scroll horizontally to see all columns.\n\nNo recent matches listed.",
+    "overflow": false
+  },
+  {
+    "route": "/player/controlled-error",
+    "text": "Home\n/\nStats\n/\nPlayer controlled-error\nUNAVAILABLE\nCOULDN'T LOAD THIS PLAYER\n\nThe data source didn't return a page for player controlled-error. It may not exist, or vlr-api couldn't reach it right now.\n\n← BACK TO MATCH CENTER",
+    "overflow": false
+  },
+  {
+    "route": "/player/controlled-history-error",
+    "text": "Home\n/\nStats\n/\nCONTROLLED · TenZ\n\nVALORANT / PLAYER DOSSIER\n\nCO\n\nControlled acceptance data / ca\n\nCONTROLLED · TENZ\nCubert Academy\nRole unavailable\nRating\n1.15\nK/D\n1.25\nACS\n252\nMain agent · by rounds\nJETT\n46% source usage\n\n15 agent rows · 9,364 known rounds across 15 rows · All-time source stats; capture date unavailable.\n\nHow headline statistics are calculated\nForm · 5 listed matches · newest first\nW\nagainst Team Ludwig\nW\nagainst Glory Once Again\nL\nagainst T1 Academy\nL\nagainst Team Korea\nW\nagainst Team tarik\n\n01 / BANKED HISTORY\n\nRating movement\n\nWindow unavailable\n\nRating history unavailable — couldn't load this player's history.\n\n02 / COHORT PERCENTILES\n\nRating Breakdown\n\nCohort unavailable\n\nRating breakdown unavailable — the leaderboard lookup failed.\n\n03 / PER-AGENT DETAIL\n\nAgent Stats\n\n15 agent rows · all-time source stats\n\nExact date boundaries and capture date are not supplied. Source columns and row order are preserved. RND is the round sample for each agent. Scroll horizontally to see all statistics.\n\nAGENT\tUSE\tRND\tRATING\tACS\tK:D\tADR\tKAST\tKPR\tAPR\tFKPR\tFDPR\tK\tD\tA\tFK\tFD\nJETT\t(206) 46%\t4306\t1.17\t263.8\t1.32\t156.4\t72%\t0.92\t0.20\t0.21\t0.15\t3972\t3009\t866\t893\t539\nOMEN\t(68) 15%\t1440\t1.12\t214.4\t1.14\t139.1\t76%\t0.76\t0.44\t0.10\t0.09\t1101\t966\t632\t146\t126\nREYNA\t(64) 14%\t1286\t1.28\t284.1\t1.47\t171.9\t77%\t0.99\t0.29\t0.19\t0.12\t1271\t864\t371\t244\t154\nRAZE\t(32) 7%\t694\t1.03\t273.4\t1.15\t168.9\t69%\t0.89\t0.26\t0.18\t0.16\t617\t537\t181\t123\t85\nKAYO\t(27) 6%\t575\t1.08\t218.3\t0.98\t139.6\t75%\t0.73\t0.63\t0.09\t0.09\t421\t429\t361\t49\t51\nYORU\t(14) 3%\t289\t0.94\t211.6\t0.94\t139.1\t68%\t0.73\t0.27\t0.17\t0.15\t210\t224\t77\t48\t42\nCHAMBER\t(8) 2%\t208\t1.10\t229.6\t1.20\t147.7\t70%\t0.84\t0.11\t0.14\t0.11\t174\t145\t22\t30\t23\nGEKKO\t(7) 2%\t156\t0.97\t179.0\t0.92\t115.9\t71%\t0.63\t0.35\t0.12\t0.08\t99\t108\t55\t19\t13\nBREACH\t(6) 1%\t144\t1.21\t213.2\t1.19\t142.7\t74%\t0.78\t0.42\t0.03\t0.02\t113\t95\t61\t4\t3\nSAGE\t(4) 1%\t90\t0.95\t261.3\t1.25\t128.7\t63%\t0.93\t0.22\t0.17\t0.09\t84\t67\t20\t15\t4\nNEON\t(3) 1%\t68\t0.87\t208.0\t0.84\t131.6\t71%\t0.68\t0.28\t0.15\t0.15\t46\t55\t19\t10\t10\nVIPER\t(2) 0%\t42\t\t226.5\t0.91\t\t\t0.76\t0.14\t0.05\t\t32\t35\t6\t2\t0\nPHOENIX\t(1) 0%\t24\t\t255.0\t1.71\t149.8\t\t1.00\t0.08\t0.13\t0.13\t24\t14\t2\t3\t3\nISO\t(1) 0%\t24\t1.21\t281.0\t1.16\t178.5\t67%\t0.92\t0.21\t0.13\t0.21\t22\t19\t5\t3\t5\nHARBOR\t(1) 0%\t18\t1.07\t227.0\t1.07\t171.9\t72%\t0.83\t0.33\t0.00\t0.00\t15\t14\t6\t0\t0\n\n04 / MATCH HISTORY\n\nRecent Matches\n\n5 listed matches · newest first\n\nMatch dates and coverage period are not supplied. Scores and verdicts retain source order and meaning. Scroll horizontally to see all columns.\n\nRecent player matches\nOpponent / Event\tResult\tScore\tSource\nTeam Ludwig\nRBHG 2025\n\tWin\t1:0\tVLR.gg ↗\nGlory Once Again\nVCT 25: PAC Stage 2\n\tWin\t1:0\tVLR.gg ↗\nT1 Academy\nT1 Home Ground 25\n\tLoss\t0:1\tVLR.gg ↗\nTeam Korea\nT1 Home Ground 25\n\tLoss\t0:1\tVLR.gg ↗\nTeam tarik\nMasters Toronto 2025\n\tWin\t1:0\tVLR.gg ↗",
+    "overflow": false
+  },
+  {
+    "route": "/match/controlled-upcoming",
+    "text": "Home\n/\nMatch controlled-upcoming\n\nVALORANT / MATCH COVERAGE\n\nMATCH REPORT.\nUPCOMING MATCH\n\nCONTROLLED ACCEPTANCE · Valorant Masters London 2026\n\nSwiss Stage: Round 1\n\nBO3\nLEV\nLEVIATÁN\nSERIES SCORE\n–\n:\n–\n\nMaps won\n\nGE\nGLOBAL ESPORTS\nMAP VETO & PICKS\n\nVeto information unavailable.\n\nOpen on VLR.gg\n↗\n(opens in a new tab)\nNo map data available for this match.",
+    "overflow": false
+  },
+  {
+    "route": "/match/controlled-missing",
+    "text": "Home\n/\nMatch controlled-missing\nUNAVAILABLE\nCOULDN'T LOAD THIS MATCH\n\nThe data source didn't return a page for match controlled-missing. It may not exist, or vlr-api couldn't reach it right now.\n\n← BACK TO MATCH CENTER",
+    "overflow": false
+  },
+  {
+    "route": "/match/controlled-imagery",
+    "text": "Home\n/\nMatch controlled-imagery\n\nVALORANT / MATCH COVERAGE\n\nMATCH REPORT.\nFINAL RESULT\n\nCONTROLLED ACCEPTANCE · Valorant Masters London 2026\n\nSwiss Stage: Round 1\n\nBO3\nLEV\nLEVIATÁN\nSeries winner\nSERIES SCORE\n2\n:\n1\n\nMaps won\n\nGE\nGLOBAL ESPORTS\nMAP VETO & PICKS\n\nGE ban Ascent; LEV ban Breeze; GE pick Pearl; LEV pick Fracture; GE ban Haven; LEV ban Lotus; Split remains\n\nOpen on VLR.gg\n↗\n(opens in a new tab)\n\nTHE SERIES / MAP BY MAP\n\nMAP BREAKDOWN.\n\nScores follow the team order above.\n\nMAP 1\nPearl\n4 : 13\nPick\nMAP 2\nFracture\n13 : 11\nPick\nMAP 3\nSplit\n13 : 9\nDecider\nSERIES TOTALS\nAll Maps\nCombined stats\nPEARL\n\nLEVIATÁN 4 : 13 Global Esports\n\nROUND HISTORY\n\nW = win · L = loss · – = unavailable\n\nRound\nLEVIATÁN\nGlobal Esports\nRound 1 · Global Esports won · Attack · elim · 0-1\n1\nL\nW\nRound 2 · Global Esports won · Attack · elim · 0-2\n2\nL\nW\nRound 3 · Global Esports won · Attack · boom · 0-3\n3\nL\nW\nRound 4 · Global Esports won · Attack · elim · 0-4\n4\nL\nW\nRound 5 · Global Esports won · Attack · boom · 0-5\n5\nL\nW\nRound 6 · Global Esports won · Attack · elim · 0-6\n6\nL\nW\nRound 7 · Global Esports won · Attack · boom · 0-7\n7\nL\nW\nRound 8 · LEVIATÁN won · Defense · defuse · 1-7\n8\nW\nL\nRound 9 · LEVIATÁN won · Defense · defuse · 2-7\n9\nW\nL\nRound 10 · Global Esports won · Attack · elim · 2-8\n10\nL\nW\nRound 11 · Global Esports won · Attack · boom · 2-9\n11\nL\nW\nRound 12 · LEVIATÁN won · Defense · defuse · 3-9\n12\nW\nL\nRound 13 · Global Esports won · Defense · defuse · 3-10\n13\nL\nW\nRound 14 · Global Esports won · Defense · elim · 3-11\n14\nL\nW\nRound 15 · LEVIATÁN won · Attack · boom · 4-11\n15\nW\nL\nRound 16 · Global Esports won · Defense · defuse · 4-12\n16\nL\nW\nRound 17 · Global Esports won · Defense · defuse · 4-13\n17\nL\nW\nRound 18 · Result unavailable\n18\n–\n–\nRound 19 · Result unavailable\n19\n–\n–\nRound 20 · Result unavailable\n20\n–\n–\nRound 21 · Result unavailable\n21\n–\n–\nRound 22 · Result unavailable\n22\n–\n–\nRound 23 · Result unavailable\n23\n–\n–\nRound 24 · Result unavailable\n24\n–\n–\nRound-by-round details\nPLAYER SCOREBOARDS\n\nSource order · Scroll tables for all statistics\n\nLEVIATÁN\n4 ROUNDS\nLEVIATÁN player statistics in source order\nPlayer / Agent\tR\tACS\tK\tD\tA\t+/−\tKAST\tADR\tHS%\tFK\tFD\n\nNeon\nCHAMBER\n\t1.35\t263\t15\t11\t1\t4\t59%\t202\t45%\t3\t3\n\nkiNgg\nASTRA\n\t1.04\t196\t12\t11\t1\t1\t65%\t114\t23%\t1\t0\n\nblowz\nSOVA\n\t0.78\t107\t6\t11\t5\t-5\t47%\t75\t31%\t1\t0\n\nspike\nNEON\n\t0.55\t176\t9\t16\t2\t-7\t65%\t120\t41%\t4\t2\n\nSato\nPHOENIX\n\t0.53\t157\t8\t16\t6\t-8\t65%\t99\t33%\t1\t2\nGlobal Esports\n13 ROUNDS\nGlobal Esports player statistics in source order\nPlayer / Agent\tR\tACS\tK\tD\tA\t+/−\tKAST\tADR\tHS%\tFK\tFD\n\nKr1stal\nKILLJOY\n\t1.79\t350\t21\t10\t4\t11\t88%\t224\t33%\t3\t3\n\nAutumn\nPHOENIX\n\t1.26\t232\t15\t9\t3\t6\t82%\t136\t44%\t2\t1\n\nUdoTan\nNEON\n\t1.20\t225\t13\t9\t3\t4\t76%\t146\t27%\t2\t2\n\nxavi8k\nASTRA\n\t0.79\t134\t7\t10\t10\t-3\t88%\t90\t12%\t0\t1\n\nPatMen\nFADE\n\t0.61\t131\t9\t12\t2\t-3\t82%\t77\t23%\t0\t3",
+    "overflow": false
+  },
+  {
+    "scenario": "12-second upstream / 10-second frontend deadline",
+    "elapsedMs": 20648,
+    "text": "VALORANT / TEAM STANDINGS\n\nRANKINGS.\n\nRegional competition. Team by team.\n\nAll regional ladders · 0 listed teams · Capture time unavailable\nAll regional ladders\nNorth America\nEurope\nBrazil\nAsia-Pacific\nKorea\nChina\nJapan\nLatin America South\nLatin America North\nOceania\nGame Changers\nMENA\nCollegiate\n\nRanks and ratings are shown in source order within each ladder, not a global ranking. Country / region is the source team label. No movement or match sample is supplied. Ladder boundaries follow rank resets; their region names are not supplied. Choose a named region for a specific regional view.\n\nRankings unavailable — could not load this region."
+  },
+  {
+    "scenario": "recovery after slow upstream",
+    "passed": true
+  },
+  {
+    "scenario": "live match failed browser poll retains scores",
+    "passed": true,
+    "ticker": "STALE WIRE\nFIRST BLOODS\nFLEX1N\n1\nDRG · most first kills\n/\nVETO\nMAP VETO\nSplit\nDRG ban Lotus; XLG ban Ascent; DRG pick Haven; XLG pick Fracture; DRG ban Breeze; XLG ban Pearl; Split remains\n/\nLIVE\nDRAGON RANGER GAMING VS XI LAI GAMING\n1–0\nHaven · Round 2\n/\nTOP FRAGGER\nWSLEO\n2–1–0\nXLG\n/\nFIRST BLOODS\nFLEX1N\n1\nDRG · most first kills\n/\nVETO\nMAP VETO\nSplit\nDRG ban Lotus; XLG ban Ascent; DRG pick Haven; XLG pick Fracture; DRG ban Breeze; XLG ban Pearl; Split remains\n/\nLIVE\nDRAGON RANGER GAMING VS XI LAI GAMING\n1–0\nHaven · Round 2\n/\nTOP FRAGGER\nWSLEO\n2–1–0\nXLG\n/\nPause\nticker motion"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "filter": "EU",
+    "pressed": true
+  },
+  {
+    "filter": "30D",
+    "pressed": true
+  },
+  {
+    "regionNavigation": true,
+    "current": "Europe"
+  }
+]

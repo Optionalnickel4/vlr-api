@@ -1,5 +1,7 @@
 # News broadcast delivery and content inventory
 
+> Historical news-slice evidence. The September 27 [site-wide predeployment audit](BROADCAST_PREDEPLOYMENT_AUDIT.md) supersedes the preview directory and check counts below, expands the rights inventory, and records remaining launch dependencies. The news implementation described here is unchanged.
+
 This `v2` slice follows `d9e6c2da9ef8ba9bf2cdea4df9e47294494f0627`. It changes `/news`, adds focused regression tests, and records verification and the requested VLR-derived content inventory. No scraping, refresh, cache, API or homepage behavior was changed. No deployment or production restart was performed.
 
 ## News presentation

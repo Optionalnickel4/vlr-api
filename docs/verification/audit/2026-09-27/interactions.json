@@ -1,0 +1,28 @@
+[
+  {
+    "mapArrowKeyboard": true,
+    "selected": "MAP 2\nFracture\n13 : 11\nPick"
+  },
+  {
+    "mapEndKeyboard": true
+  },
+  {
+    "scroll": "LEVIATÁN statistics, scroll horizontally",
+    "scrollLeft": 38
+  },
+  {
+    "scroll": "Global Esports statistics, scroll horizontally",
+    "scrollLeft": 39
+  },
+  {
+    "scroll": "Ticker items, scroll horizontally when paused",
+    "scrollLeft": 40
+  },
+  {
+    "tickerKeyboardPause": true
+  },
+  {
+    "controlledSearchJourney": true,
+    "heading": "CONTROLLED · TenZ"
+  }
+]

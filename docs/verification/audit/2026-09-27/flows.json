@@ -1,0 +1,50 @@
+[
+  {
+    "flow": "Home → /schedule → /match/753456",
+    "backForward": true,
+    "detailUnavailable": true,
+    "heading": "Couldn't load this match"
+  },
+  {
+    "flow": "Home → /results → /match/753444",
+    "backForward": true,
+    "detailUnavailable": true,
+    "heading": "Couldn't load this match"
+  },
+  {
+    "flow": "Home → /rankings → /team/8877",
+    "backForward": true,
+    "detailUnavailable": true,
+    "heading": "Couldn't load this team"
+  },
+  {
+    "flow": "Home → /stats → /player/3799",
+    "backForward": true,
+    "detailUnavailable": true,
+    "heading": "Couldn't load this player"
+  },
+  {
+    "flow": "Cached DB search → Player",
+    "count": 9,
+    "keyboard": true,
+    "href": "/player/26809"
+  },
+  {
+    "tableKeyboardScroll": {
+      "scrollLeft": 40,
+      "label": "Player statistics table; scroll horizontally for all columns"
+    }
+  },
+  {
+    "sortKeyboard": true,
+    "ariaSort": [
+      {
+        "text": "Player ▴",
+        "sort": "ascending"
+      }
+    ]
+  },
+  {
+    "accessibleStructure": "- link \"Skip to main content\":\n  - /url: \"#main-content\"\n- banner:\n  - link \"valstats home\":\n    - /url: /\n    - text: valstats.\n  - combobox \"Search players\"\n  - status\n  - navigation \"Primary\":\n    - link \"Home\":\n      - /url: /\n    - link \"Schedule\":\n      - /url: /schedule\n    - link \"Results\":\n      - /url: /results\n    - link \"Stats\":\n      - /url: /stats\n    - link \"Rankings\":\n      - /url: /rankings\n    - link \"News\":\n      - /url: /news\n- main:\n  - paragraph: Valorant / Player statistics\n  - heading \"Stats.\" [level=1]\n  - paragraph: The numbers behind the performance.\n  - heading \"Leaderboard\" [level=2]\n  - text: \"100\"\n  - group \"Region\":\n    - button \"NA\" [pressed]\n    - button \"EU\"\n  - group \"Timespan\":\n    - button \"30D\"\n    - button \"60D\"\n    - button \"90D\"\n    - button \"ALL\" [pressed]\n  - status: NA / All time · 100 listed players · Sorted by Player ascending\n  - paragraph: Positions reflect this sort within the selected region and time window, not a global rank. Rounds are the supplied per-player sample; — means unavailable. Capture time and exact window boundaries are not supplied. Scroll the table horizontally for all columns.\n  - group: Column guide and sorting\n  - region \"First three rows in the current sort\":\n    - text: View position 1\n    - link \"A77\":\n      - /url: /player/3006\n    - text: WVU\n    - strong: \"1.27\"\n    - text: R2.0 / 167 rounds View position 2\n    - link \"Aisberg\":\n      - /url: /player/22750\n    - text: Team unavailable\n    - strong: \"1.33\"\n    - text: R2.0 / 150 rounds View position 3\n    - link \"Aonaro\":\n      - /url: /player/13851\n    - text: Bank\n    - strong: \"1.36\"\n    - text: R2.0 / 106 rounds\n  - region \"Player statistics table; scroll horizontally for all columns\":\n    - table:\n      - rowgroup:\n        - row \"# Sort by Player Rounds Sort by R2.0 Sort by ACS Sort by K:D Sort by KAST Sort by ADR Sort by KPR Sort by FK/FD Sort by HS%\":\n          - columnheader \"#\"\n          - columnheader \"Sort by Player\":\n            - button \"Sort by Player\": Player\n          - columnheader \"Rounds\"\n          - columnheader \"Sort by R2.0\":\n            - button \"Sort by R2.0\": R2.0\n          - columnheader \"Sort by ACS\":\n            - button \"Sort by ACS\": ACS\n          - columnheader \"Sort by K:D\":\n            - button \"Sort by K:D\": K:D\n          - columnheader \"Sort by KAST\":\n            - button \"Sort by KAST\": KAST\n          - columnheader \"Sort by ADR\":\n            - button \"Sort by ADR\": ADR\n          - columnheader \"Sort by KPR\":\n            - button \"Sort by KPR\": KPR\n          - columnheader \"Sort by FK/FD\":\n            - button \"Sort by FK/FD\": FK/FD\n          - columnheader \"Sort by HS%\":\n            - button \"Sort by HS%\": HS%\n      - rowgroup:\n        - row \"1 A77 WVU 167 1.27 229 1.32 74% 150 0.81 11 / 11 26%\":\n          - cell \"1\"\n          - cell \"A77 WVU\":\n            - link \"A77\":\n              - /url: /player/3006\n            - text: WVU\n          - cell \"167\"\n          - cell \"1.27\"\n          - cell \"229\"\n          - cell \"1.32\"\n          - cell \"74%\"\n          - cell \"150\"\n          - cell \"0.81\"\n          - cell \"11 / 11\"\n          - cell \"26%\"\n        - row \"2 Aisberg 150 1.33 223 1.38 77% 153 0.79 5 / 3 33%\":\n          - cell \"2\"\n          - cell \"Aisberg\":\n            - link \"Aisberg\":\n              - /url: /player/22750\n          - cell \"150\"\n          - cell \"1.33\"\n          - cell \"223\"\n          - cell \"1.38\"\n          - cell \"77%\"\n          - cell \"153\"\n          - cell \"0.79\"\n          - cell \"5 / 3\"\n          - cell \"33%\"\n        - row \"3 Aonaro Bank 106 1.36 274 1.62 73% 174 0.98 15 / 12 30%\":\n          - cell \"3\"\n          - cell \"Aonaro Bank\":\n            - link \"Aonaro\":\n              - /url: /player/13851\n            - text: Bank\n          - cell \"106\"\n          - cell \"1.36\"\n          - cell \"274\"\n          - cell \"1.62\"\n          - cell \"73%\"\n          - cell \"174\"\n          - cell \"0.98\"\n          - cell \"15 / 12\"\n          - cell \"30%\"\n        - row \"4 axon 229 1.40 249 1.15 74% 154 0.86 33 / 34 24%\":\n          - cell \"4\"\n          - cell \"axon\":\n            - link \"axon\":\n              - /url: /player/8617\n          - cell \"229\"\n          - cell \"1.40\"\n          - cell \"249\"\n          - cell \"1.15\"\n          - cell \"74%\"\n          - cell \"154\"\n          - cell \"0.86\"\n          - cell \"33 / 34\"\n          - cell \"24%\"\n        - row \"5 Azza 159 1.26 242 1.28 70% 158 0.87 6 / 10 26%\":\n          - cell \"5\"\n          - cell \"Azza\":\n            - link \"Azza\":\n              - /url: /player/20601\n          - cell \"159\"\n          - cell \"1.26\"\n          - cell \"242\"\n          - cell \"1.28\"\n          - cell \"70%\"\n          - cell \"158\"\n          - cell \"0.87\"\n          - cell \"6 / 10\"\n          - cell \"26%\"\n        - row \"6 b1st1 214 1.29 173 0.78 73% 118 0.57 12 / 13 23%\":\n          - cell \"6\"\n          - cell \"b1st1\":\n            - link \"b1st1\":\n              - /url: /player/9309\n          - cell \"214\"\n          - cell \"1.29\"\n          - cell "
+  }
+]

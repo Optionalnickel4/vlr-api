@@ -1,0 +1,100 @@
+{
+  "match": [
+    {
+      "id": "753459",
+      "name": "Valorant Champions 2026",
+      "ttl": 33
+    },
+    {
+      "id": "753445",
+      "name": "Valorant Champions 2026",
+      "ttl": 21
+    },
+    {
+      "id": "753444",
+      "name": "Valorant Champions 2026",
+      "ttl": 31
+    },
+    {
+      "id": "753450",
+      "name": "Valorant Champions 2026",
+      "ttl": 30
+    },
+    {
+      "id": "753449",
+      "name": "Valorant Champions 2026",
+      "ttl": 28
+    }
+  ],
+  "team": [],
+  "player": [],
+  "matches/results": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:00:48 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "x-vlr-cache": "fresh",
+      "content-length": "15315",
+      "content-type": "application/json",
+      "connection": "close"
+    },
+    "count": 50
+  },
+  "matches/upcoming": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:00:48 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "x-vlr-cache": "fresh",
+      "content-length": "8028",
+      "content-type": "application/json",
+      "connection": "close"
+    },
+    "count": 30
+  },
+  "matches/live": {
+    "error": "HTTP Error 503: Service Unavailable"
+  },
+  "rankings": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:00:48 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "x-vlr-cache": "fresh",
+      "content-length": "18606",
+      "content-type": "application/json",
+      "connection": "close"
+    },
+    "count": 128
+  },
+  "news": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:00:48 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "x-vlr-cache": "fresh",
+      "content-length": "8466",
+      "content-type": "application/json",
+      "connection": "close"
+    },
+    "count": 30
+  },
+  "stats": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 27 Sep 2026 13:00:48 GMT",
+      "server": "uvicorn",
+      "content-length": "29744",
+      "content-type": "application/json",
+      "connection": "close"
+    },
+    "count": 100
+  },
+  "events": {
+    "error": "HTTP Error 503: Service Unavailable"
+  }
+}

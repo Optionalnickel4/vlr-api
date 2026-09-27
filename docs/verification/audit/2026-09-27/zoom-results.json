@@ -1,0 +1,164 @@
+[
+  {
+    "route": "/",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/schedule",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/results",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/rankings",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/stats",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/news",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/match/controlled-live",
+    "source": "controlled",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/team/controlled-populated",
+    "source": "controlled",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/player/controlled-populated",
+    "source": "controlled",
+    "zoom": 2,
+    "outerWidth": 1440,
+    "innerWidth": 720,
+    "documentWidth": 720,
+    "bottomClear": true
+  },
+  {
+    "route": "/",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/schedule",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/results",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/rankings",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/stats",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/news",
+    "source": "cached",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/match/controlled-live",
+    "source": "controlled",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/team/controlled-populated",
+    "source": "controlled",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  },
+  {
+    "route": "/player/controlled-populated",
+    "source": "controlled",
+    "zoom": 2,
+    "outerWidth": 768,
+    "innerWidth": 384,
+    "documentWidth": 384,
+    "bottomClear": true
+  }
+]

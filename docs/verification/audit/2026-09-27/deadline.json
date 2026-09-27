@@ -1,0 +1,9 @@
+{
+  "elapsedMs": 10050,
+  "status": 200,
+  "data": {
+    "data": [],
+    "stale": true,
+    "error": "Error: vlr-api /rankings?region=all timed out after 10000ms"
+  }
+}

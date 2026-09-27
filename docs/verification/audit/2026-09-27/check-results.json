@@ -1,0 +1,58 @@
+{
+  "backend": {
+    "command": [
+      "/opt/vlr-api/.venv/bin/pytest",
+      "-q"
+    ],
+    "directory": "/opt/vlr-api",
+    "started": "2026-09-27T13:07:33.939042+00:00",
+    "ended": "2026-09-27T13:07:43.726283+00:00",
+    "exitCode": 0
+  },
+  "tests": {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T13:07:33.939513+00:00",
+    "ended": "2026-09-27T13:08:07.378659+00:00",
+    "exitCode": 0
+  },
+  "lint": {
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T13:07:33.942379+00:00",
+    "ended": "2026-09-27T13:07:54.308133+00:00",
+    "exitCode": 0
+  },
+  "typescript": {
+    "command": [
+      "./node_modules/.bin/tsc",
+      "--noEmit",
+      "--incremental",
+      "false"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T13:07:33.943207+00:00",
+    "ended": "2026-09-27T13:07:50.540905+00:00",
+    "exitCode": 0
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "directory": "/tmp/vlr-preview/audit-delivery",
+    "started": "2026-09-27T13:07:43.726850+00:00",
+    "ended": "2026-09-27T13:08:13.900715+00:00",
+    "exitCode": 0
+  }
+}

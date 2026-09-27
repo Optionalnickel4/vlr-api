@@ -1,0 +1,100 @@
+[
+  {
+    "path": "matches/live",
+    "status": 200,
+    "stale": true,
+    "count": 0,
+    "error": "Error: vlr-api /matches/live -> 503"
+  },
+  {
+    "path": "matches/results",
+    "status": 200,
+    "stale": false,
+    "count": 50,
+    "error": null
+  },
+  {
+    "path": "matches/upcoming",
+    "status": 200,
+    "stale": false,
+    "count": 30,
+    "error": null
+  },
+  {
+    "path": "rankings",
+    "status": 200,
+    "stale": false,
+    "count": 128,
+    "error": null
+  },
+  {
+    "path": "stats",
+    "status": 200,
+    "stale": false,
+    "count": 100,
+    "error": null
+  },
+  {
+    "path": "news",
+    "status": 200,
+    "stale": false,
+    "count": 30,
+    "error": null
+  },
+  {
+    "path": "match/753459",
+    "status": 200,
+    "stale": true,
+    "count": 0,
+    "error": "Error: vlr-api /match/753459 -> 503"
+  },
+  {
+    "path": "team/2",
+    "status": 200,
+    "stale": true,
+    "count": 0,
+    "error": "Error: vlr-api /team/2 -> 503"
+  },
+  {
+    "path": "player/9",
+    "status": 200,
+    "stale": true,
+    "count": 0,
+    "error": "Error: vlr-api /player/9 -> 503"
+  },
+  {
+    "path": "players?q=Ten",
+    "status": 200,
+    "stale": false,
+    "count": 9,
+    "error": null
+  },
+  {
+    "path": "trends/team/2",
+    "status": 200,
+    "stale": false,
+    "count": 1,
+    "error": null
+  },
+  {
+    "path": "trends/player/9",
+    "status": 200,
+    "stale": true,
+    "count": 0,
+    "error": "Error: vlr-api /trends/player/9?days=90 -> 503"
+  },
+  {
+    "path": "ticker",
+    "status": 200,
+    "stale": false,
+    "count": 9,
+    "error": null
+  },
+  {
+    "path": "streamers",
+    "status": 200,
+    "stale": true,
+    "count": 0,
+    "error": null
+  }
+]

@@ -1,0 +1,2363 @@
+{
+  "checkedAt": "2026-09-27T13:11:23.615Z",
+  "results": [
+    {
+      "source": "cached",
+      "route": "/",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 1331,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH CENTER.",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 722.078125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/schedule",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 934,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 785.140625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/results",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 922,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 811.234375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/rankings",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 1002,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 796.796875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/stats",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 1090,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 821.75
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/news",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 837,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 804.015625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/match/753459",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 796,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this match",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 386
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/team/2",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 791,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this team",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 383
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/player/9",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 798,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this player",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 383
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/nonexistent-audit",
+      "status": 404,
+      "width": 1440,
+      "elapsed": 860,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Page not found",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1253,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 208.75
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/",
+      "status": 200,
+      "width": 768,
+      "elapsed": 914,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH CENTER.",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 722.8125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/schedule",
+      "status": 200,
+      "width": 768,
+      "elapsed": 832,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 806.859375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/results",
+      "status": 200,
+      "width": 768,
+      "elapsed": 907,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 811.078125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/rankings",
+      "status": 200,
+      "width": 768,
+      "elapsed": 901,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 796.96875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/stats",
+      "status": 200,
+      "width": 768,
+      "elapsed": 906,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Player statistics table; scroll horizontally for all columns",
+          "role": "region",
+          "width": 718,
+          "scroll": 1120
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 822.140625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/news",
+      "status": 200,
+      "width": 768,
+      "elapsed": 874,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 804
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/match/753459",
+      "status": 200,
+      "width": 768,
+      "elapsed": 782,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this match",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 542
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/team/2",
+      "status": 200,
+      "width": 768,
+      "elapsed": 780,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this team",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 539
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/player/9",
+      "status": 200,
+      "width": 768,
+      "elapsed": 756,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this player",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 539
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/nonexistent-audit",
+      "status": 404,
+      "width": 768,
+      "elapsed": 837,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Page not found",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 581,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 364.75
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1714,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH CENTER.",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 680.21875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/schedule",
+      "status": 200,
+      "width": 390,
+      "elapsed": 2175,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 2691
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 792.96875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/results",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1517,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 2686
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 792.5625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/rankings",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1680,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 2686
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 778.84375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/stats",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1167,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Player statistics table; scroll horizontally for all columns",
+          "role": "region",
+          "width": 356,
+          "scroll": 1120
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 2686
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 804.46875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/news",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1154,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 783.765625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/match/753459",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1146,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this match",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 554
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/team/2",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1216,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this team",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 551
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/player/9",
+      "status": 200,
+      "width": 390,
+      "elapsed": 1160,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this player",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 551
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/nonexistent-audit",
+      "status": 404,
+      "width": 390,
+      "elapsed": 825,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Page not found",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 356.75
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/",
+      "status": 200,
+      "width": 320,
+      "elapsed": 1157,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH CENTER.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 679.96875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/schedule",
+      "status": 200,
+      "width": 320,
+      "elapsed": 835,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 792.96875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/results",
+      "status": 200,
+      "width": 320,
+      "elapsed": 880,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 792.546875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/rankings",
+      "status": 200,
+      "width": 320,
+      "elapsed": 901,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Regional ladder 1 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 2 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 3 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 4 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 5 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 6 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 7 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 8 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 9 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 10 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 11 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 12 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 13 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 778.59375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/stats",
+      "status": 200,
+      "width": 320,
+      "elapsed": 1019,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Player statistics table; scroll horizontally for all columns",
+          "role": "region",
+          "width": 286,
+          "scroll": 1120
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 803.953125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/news",
+      "status": 200,
+      "width": 320,
+      "elapsed": 968,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 784.3125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/match/753459",
+      "status": 200,
+      "width": 320,
+      "elapsed": 883,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this match",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 586
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/team/2",
+      "status": 200,
+      "width": 320,
+      "elapsed": 797,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this team",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 583
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/player/9",
+      "status": 200,
+      "width": 320,
+      "elapsed": 938,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Couldn't load this player",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 583
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "route": "/nonexistent-audit",
+      "status": 404,
+      "width": 320,
+      "elapsed": 809,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Page not found",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1377
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 356.75
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/match/controlled-live",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 966,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH REPORT.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 809.375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/team/controlled-populated",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 780,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · Sentinels",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 814.703125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/player/controlled-populated",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 806,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · TenZ",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Agent statistics, scroll horizontally",
+          "role": "region",
+          "width": 1230,
+          "scroll": 1624
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 814.828125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/schedule",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 739,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 772.171875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/results",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 727,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 459.546875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/rankings",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 702,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 744.015625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/stats",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 697,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 587.5625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/news",
+      "status": 200,
+      "width": 1440,
+      "elapsed": 710,
+      "documentWidth": 1440,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 1236,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 804.109375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/match/controlled-live",
+      "status": 200,
+      "width": 768,
+      "elapsed": 856,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH REPORT.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Round results, scroll horizontally",
+          "role": "region",
+          "width": 678,
+          "scroll": 919
+        },
+        {
+          "label": "Dragon Ranger Gaming statistics, scroll horizontally",
+          "role": "region",
+          "width": 718,
+          "scroll": 940
+        },
+        {
+          "label": "Xi Lai Gaming statistics, scroll horizontally",
+          "role": "region",
+          "width": 718,
+          "scroll": 940
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 809.875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/team/controlled-populated",
+      "status": 200,
+      "width": 768,
+      "elapsed": 795,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · Sentinels",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Results in window, scroll horizontally",
+          "role": "region",
+          "width": 718,
+          "scroll": 820
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 814.96875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/player/controlled-populated",
+      "status": 200,
+      "width": 768,
+      "elapsed": 799,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · TenZ",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Agent statistics, scroll horizontally",
+          "role": "region",
+          "width": 718,
+          "scroll": 1624
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 815.28125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/schedule",
+      "status": 200,
+      "width": 768,
+      "elapsed": 706,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 495.078125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/results",
+      "status": 200,
+      "width": 768,
+      "elapsed": 710,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 459.484375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/rankings",
+      "status": 200,
+      "width": 768,
+      "elapsed": 712,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 797.203125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/stats",
+      "status": 200,
+      "width": 768,
+      "elapsed": 727,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Player statistics table; scroll horizontally for all columns",
+          "role": "region",
+          "width": 718,
+          "scroll": 1120
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 588.328125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/news",
+      "status": 200,
+      "width": 768,
+      "elapsed": 673,
+      "documentWidth": 768,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 564,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 803.609375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/match/controlled-live",
+      "status": 200,
+      "width": 390,
+      "elapsed": 854,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH REPORT.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Round results, scroll horizontally",
+          "role": "region",
+          "width": 328,
+          "scroll": 887
+        },
+        {
+          "label": "Dragon Ranger Gaming statistics, scroll horizontally",
+          "role": "region",
+          "width": 356,
+          "scroll": 860
+        },
+        {
+          "label": "Xi Lai Gaming statistics, scroll horizontally",
+          "role": "region",
+          "width": 356,
+          "scroll": 860
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 791.734375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/team/controlled-populated",
+      "status": 200,
+      "width": 390,
+      "elapsed": 814,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · Sentinels",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Rating capture history, scroll horizontally",
+          "role": "region",
+          "width": 322,
+          "scroll": 620
+        },
+        {
+          "label": "Team roster, scroll horizontally",
+          "role": "region",
+          "width": 356,
+          "scroll": 620
+        },
+        {
+          "label": "Results in window, scroll horizontally",
+          "role": "region",
+          "width": 356,
+          "scroll": 820
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 790.625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/player/controlled-populated",
+      "status": 200,
+      "width": 390,
+      "elapsed": 760,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · TenZ",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Rating capture history, scroll horizontally",
+          "role": "region",
+          "width": 322,
+          "scroll": 620
+        },
+        {
+          "label": "Agent statistics, scroll horizontally",
+          "role": "region",
+          "width": 356,
+          "scroll": 1586
+        },
+        {
+          "label": "Player match history, scroll horizontally",
+          "role": "region",
+          "width": 356,
+          "scroll": 650
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 798.703125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/schedule",
+      "status": 200,
+      "width": 390,
+      "elapsed": 691,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 369.890625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/results",
+      "status": 200,
+      "width": 390,
+      "elapsed": 687,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 405.265625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/rankings",
+      "status": 200,
+      "width": 390,
+      "elapsed": 707,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 752.078125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/stats",
+      "status": 200,
+      "width": 390,
+      "elapsed": 700,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Player statistics table; scroll horizontally for all columns",
+          "role": "region",
+          "width": 356,
+          "scroll": 1120
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 550.46875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/news",
+      "status": 200,
+      "width": 390,
+      "elapsed": 669,
+      "documentWidth": 390,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 322,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 784.1875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/match/controlled-live",
+      "status": 200,
+      "width": 320,
+      "elapsed": 826,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "MATCH REPORT.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Round results, scroll horizontally",
+          "role": "region",
+          "width": 258,
+          "scroll": 887
+        },
+        {
+          "label": "Dragon Ranger Gaming statistics, scroll horizontally",
+          "role": "region",
+          "width": 286,
+          "scroll": 860
+        },
+        {
+          "label": "Xi Lai Gaming statistics, scroll horizontally",
+          "role": "region",
+          "width": 286,
+          "scroll": 860
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 791.921875
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/team/controlled-populated",
+      "status": 200,
+      "width": 320,
+      "elapsed": 805,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · Sentinels",
+      "unavailable": false,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Rating capture history, scroll horizontally",
+          "role": "region",
+          "width": 252,
+          "scroll": 620
+        },
+        {
+          "label": "Team roster, scroll horizontally",
+          "role": "region",
+          "width": 286,
+          "scroll": 620
+        },
+        {
+          "label": "Results in window, scroll horizontally",
+          "role": "region",
+          "width": 286,
+          "scroll": 820
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 790.640625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/player/controlled-populated",
+      "status": 200,
+      "width": 320,
+      "elapsed": 819,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "CONTROLLED · TenZ",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Rating capture history, scroll horizontally",
+          "role": "region",
+          "width": 252,
+          "scroll": 620
+        },
+        {
+          "label": "Agent statistics, scroll horizontally",
+          "role": "region",
+          "width": 286,
+          "scroll": 1586
+        },
+        {
+          "label": "Player match history, scroll horizontally",
+          "role": "region",
+          "width": 286,
+          "scroll": 650
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 798.984375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/schedule",
+      "status": 200,
+      "width": 320,
+      "elapsed": 684,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Schedule.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 369.65625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/results",
+      "status": 200,
+      "width": 320,
+      "elapsed": 677,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Results.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 405.34375
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/rankings",
+      "status": 200,
+      "width": 320,
+      "elapsed": 692,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Rankings.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Regional ladder 1 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Regional ladder 2 table; scroll horizontally if needed",
+          "role": "region",
+          "width": 286,
+          "scroll": 350
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 752.765625
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/stats",
+      "status": 200,
+      "width": 320,
+      "elapsed": 699,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Stats.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Player statistics table; scroll horizontally for all columns",
+          "role": "region",
+          "width": 286,
+          "scroll": 1120
+        },
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 550.203125
+      },
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "route": "/news",
+      "status": 200,
+      "width": 320,
+      "elapsed": 651,
+      "documentWidth": 320,
+      "tickerFixed": true,
+      "tickerCount": 1,
+      "heading": "Beyond the score.",
+      "unavailable": true,
+      "reducedMotion": true,
+      "animated": [],
+      "tables": [
+        {
+          "label": "Ticker items, scroll horizontally when paused",
+          "role": "region",
+          "width": 252,
+          "scroll": 1819
+        }
+      ],
+      "focus": {
+        "outline": "solid",
+        "aboveTicker": true,
+        "top": 784.265625
+      },
+      "bottomClear": true,
+      "errors": []
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0 -- /opt/vlr-api/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /opt/vlr-api
+configfile: pyproject.toml
+plugins: anyio-4.14.2, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 34 items
+
+tests/test_cache_freshness.py::test_fresh_data_never_scrapes[events] PASSED [  2%]
+tests/test_cache_freshness.py::test_fresh_data_never_scrapes[rankings] PASSED [  5%]
+tests/test_cache_freshness.py::test_success_publishes_fresh_and_retained_payload[events] PASSED [  8%]
+tests/test_cache_freshness.py::test_success_publishes_fresh_and_retained_payload[rankings] PASSED [ 11%]
+tests/test_cache_freshness.py::test_stale_refresh_failure_keeps_last_payload_and_backs_off[events] PASSED [ 14%]
+tests/test_cache_freshness.py::test_stale_refresh_failure_keeps_last_payload_and_backs_off[rankings] PASSED [ 17%]
+tests/test_cache_freshness.py::test_stale_success_replaces_both_copies[events] PASSED [ 20%]
+tests/test_cache_freshness.py::test_stale_success_replaces_both_copies[rankings] PASSED [ 23%]
+tests/test_cache_freshness.py::test_cold_failure_is_503_not_fabricated_empty_list[events] PASSED [ 26%]
+tests/test_cache_freshness.py::test_cold_failure_is_503_not_fabricated_empty_list[rankings] PASSED [ 29%]
+tests/test_cache_freshness.py::test_successful_empty_list_is_valid_and_retained[events] PASSED [ 32%]
+tests/test_cache_freshness.py::test_successful_empty_list_is_valid_and_retained[rankings] PASSED [ 35%]
+tests/test_cache_freshness.py::test_concurrent_cold_requests_share_one_scrape[events] PASSED [ 38%]
+tests/test_cache_freshness.py::test_concurrent_cold_requests_share_one_scrape[rankings] PASSED [ 41%]
+tests/test_cache_freshness.py::test_stale_followers_do_not_wait_for_inflight_scrape[events] PASSED [ 44%]
+tests/test_cache_freshness.py::test_stale_followers_do_not_wait_for_inflight_scrape[rankings] PASSED [ 47%]
+tests/test_cache_freshness.py::test_scheduler_and_request_share_refresh PASSED [ 50%]
+tests/test_cache_freshness.py::test_regions_have_independent_retention PASSED [ 52%]
+tests/test_cache_freshness.py::test_failed_attempt_can_retry_after_backoff PASSED [ 55%]
+tests/test_cache_freshness.py::test_expired_owner_cannot_overwrite_newer_payload PASSED [ 58%]
+tests/test_cache_freshness.py::test_cancelled_owner_leaves_retained_data_and_expiring_backoff PASSED [ 61%]
+tests/test_cache_freshness.py::test_timeout_preserves_retained_data PASSED [ 64%]
+tests/test_cache_freshness.py::test_cold_follower_timeout_does_not_start_scrape PASSED [ 67%]
+tests/test_cache_freshness.py::test_invalid_result_does_not_replace_retained_payload PASSED [ 70%]
+tests/test_cache_freshness.py::test_refresh_without_payload_is_explicitly_unavailable PASSED [ 73%]
+tests/test_cache_freshness.py::test_rankings_history_is_written_only_by_scraping_owner PASSED [ 76%]
+tests/test_cache_freshness.py::test_rankings_db_failure_does_not_erase_published_data PASSED [ 79%]
+tests/test_cache_freshness.py::test_redis_failure_is_not_treated_as_empty_success PASSED [ 82%]
+tests/test_cache_freshness.py::test_stale_owner_sends_body_before_refresh_finishes[events-False] PASSED [ 85%]
+tests/test_cache_freshness.py::test_stale_owner_sends_body_before_refresh_finishes[events-True] PASSED [ 88%]
+tests/test_cache_freshness.py::test_stale_owner_sends_body_before_refresh_finishes[rankings-False] PASSED [ 91%]
+tests/test_cache_freshness.py::test_stale_owner_sends_body_before_refresh_finishes[rankings-True] PASSED [ 94%]
+tests/test_cache_freshness.py::test_scheduler_process_and_stale_api_requests_share_lease PASSED [ 97%]
+tests/test_cache_freshness.py::test_background_unexpected_error_does_not_break_stale_response PASSED [100%]
+
+============================== 34 passed in 6.29s ==============================
