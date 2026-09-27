@@ -1,0 +1,71 @@
+{
+  "starting_review_commit": "366acc0e797116a3e4d39643c167debbf1b72687",
+  "application_sha": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+  "source": "operator-supplied read-only command/result summary; raw active JSON not supplied",
+  "observed_at": "2026-09-27T15:39:41+00:00",
+  "observation": {
+    "caddy_active": true,
+    "main_pid": 87,
+    "exec_start": "/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile",
+    "caddy_version": "v2.11.4",
+    "active_config_get": "http://127.0.0.1:2019/config/",
+    "active_config_get_succeeded": true,
+    "listen": ":80",
+    "host_matches_as_reported": [
+      "vault",
+      "media",
+      "request",
+      "mcp",
+      "jamz",
+      "assets",
+      "val",
+      "openclaw",
+      "jarvis",
+      "jushosting.dev"
+    ],
+    "vlr_host": "val.jushosting.dev",
+    "vlr_upstream": "10.0.0.21:3000",
+    "explicit_reverse_proxy_timeouts_reported": false,
+    "vlr_label_reported": false
+  },
+  "raw_export_hash": null,
+  "route_conclusion": "val.jushosting.dev is the VLR frontend ingress in available evidence; no alternate ingress established; additional routes not excluded",
+  "route_evidence": [
+    "docs/verification/release/2026-09-27/configuration.json",
+    "docs/verification/release-gates/2026-09-27/provenance-ingress.json",
+    "docs/verification/release-closure/2026-09-27/public-smoke.json"
+  ],
+  "closed_evidence_gaps": [
+    "operator-observed active Caddy route to VLR frontend",
+    "reported running service identity and installed Caddy version",
+    "absence of explicit reverse-proxy timeout settings in reported active config"
+  ],
+  "remaining_ingress_evidence": [
+    "running meowth connector version/process and applied config receipt for hostname/service and merged originRequest overrides",
+    "dated effective hostname-specific edge response/streaming policy and override IDs or no-overrides attestation",
+    "assessment of server write_timeout, enclosing response-duration middleware and buffering/flush behavior from already obtained Caddy JSON; not another configuration request"
+  ],
+  "effective_80_90_second_ingress_deadlines_proven": false,
+  "repeat_caddy_configuration_requested": false,
+  "recommendation": "NO-GO",
+  "other_open_gates": [
+    "exact loaded backend source/runtime provenance",
+    "integrated full-service recovery with normal schema startup and newer data preserved"
+  ],
+  "production_access_or_changes_this_pass": false,
+  "application_tests_rerun": false,
+  "protected_file_hashes": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "validation": {
+    "markdown_files_checked": 3,
+    "local_links_and_anchors_checked": 24,
+    "tracked_evidence_json_parsed_before_commit": 109,
+    "new_receipt_json": "pass",
+    "markdown_fences": "pass",
+    "protected_file_hashes": "unchanged",
+    "git_diff_check": "pass",
+    "application_tests_rerun": false
+  }
+}

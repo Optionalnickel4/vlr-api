@@ -5,11 +5,42 @@ Application under test: **`9301682c4165d7507e49d6ad7678d14ca9df377e`**. No appli
 | Gate | Result | Pass criteria | Outstanding requirement |
 | --- | --- | --- | --- |
 | Rollback provenance | **Unresolved; frontend restore and limited historical backend read checks pass** | Verified data-preserving full-service rollback with identified artifacts/runtime | Recover an attested old backend; isolated application switching preserves newer test data, but normal schema startup and integrated full-service recovery remain unverified |
-| Ingress deadlines | **Supplied configuration compatible; effective configuration unresolved** | Compatible effective settings and finite application deadlines | Owner-supplied effective-setting attestation; no access request or live mutation. Public static curl passed; isolated deadline tests remain valid |
+| Ingress deadlines | **Active Caddy VLR route identified; end-to-end deadline gate open** | Compatible effective settings and finite application deadlines | Applied `meowth` connector/version and hostname-specific edge-policy receipts; confirmation of remaining server/middleware/streaming semantics from the already obtained Caddy export. No repeat configuration request or live mutation |
 | Cold-cache staging | **Pass for three selected core details** | Empty isolated caches, sequential bounded real-source reads, populated cold/warm API responses, successful browser outcomes, no production writes | Broader sampling/load testing is not claimed; browser outcomes were measured after API warming |
 | Build/backup capacity | **Pass for measured durable layout** | Measured build requirements, restored backups and sufficient headroom | 11.374 GB free after restores; 4.617 GB additional budget including 2 GiB reserve leaves 6.757 GB. Recheck recovered artifact size; off-host disaster recovery remains unverified |
 
+## Active Caddy observation — VLR route identified
+
+Starting review commit: **`366acc0e797116a3e4d39643c167debbf1b72687`**. Operator observation: **2026-09-27T15:39:41+00:00**, from read-only commands inside the Caddy LXC. This supersedes the earlier “no outputs supplied” assessment **for Caddy only**, and the earlier claims that the installed Caddy version and active route were unknown. The [structured receipt](verification/release-recovery/2026-09-27/caddy-ingress-assessment.json) preserves the supplied summary separately from our conclusions. No raw JSON export/hash or service start timestamp was supplied; none is fabricated. We accept the operator's active-config observation without asking for this LXC's configuration again.
+
+Reported results: Caddy is active, **MainPID 87**, launched with `/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile`; `caddy version` reports **v2.11.4**. `GET http://127.0.0.1:2019/config/` successfully returned active JSON. The server listens on **`:80`**, with host matches reported as vault, media, request, mcp, jamz, assets, val, openclaw, jarvis and jushosting.dev. Specifically, **`val.jushosting.dev` → `10.0.0.21:3000`**. No explicit reverse-proxy timeout settings or host match labelled VLR were reported.
+
+**`val.jushosting.dev` is the VLR frontend ingress in the available deployment evidence.** This conclusion follows from the route destination and service identity, not the spelling of a matcher:
+
+| Evidence | What it establishes |
+| --- | --- |
+| [Installed unit capture](verification/release/2026-09-27/configuration.json), `units.vlr-frontend` | VLR Next service uses `/opt/vlr-api/frontend` and `next start -H 0.0.0.0 -p 3000` |
+| [Earlier provenance](verification/release-gates/2026-09-27/provenance-ingress.json), owner-supplied topology below | Public hostname is `val.jushosting.dev`; supplied tunnel `meowth` sends it to Caddy `localhost:80` on the separate LXC |
+| New operator active-config observation | That hostname currently selects upstream `10.0.0.21:3000`, the recorded application host and production frontend port |
+| [Prior static smoke](verification/release-closure/2026-09-27/public-smoke.json) | Public hostname, direct frontend and disk asset share SHA-256 `aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0`; public curl returned 200 with Cloudflare/Caddy headers |
+
+The supported chain remains **public `val.jushosting.dev` → Cloudflare / supplied Tunnel `meowth` → Caddy `:80` → VLR Next `10.0.0.21:3000` → server-side FastAPI `:8000`**. The frontend's server-side API wiring is recorded in [the release review](PRODUCTION_RELEASE_REVIEW.md#what-is-actually-running); port 3100 is the isolated preview. There is no repository/deployment evidence requiring another VLR ingress, although these observations cannot exclude additional unpublished routes. A host need not contain “vlr” to serve this application. The static match corroborates identity only; it does not attest tunnel identity or deadlines.
+
+**What this closes:** the Caddy version/active-config availability and matching VLR route are now operator-observed, rather than inferred solely from a Caddyfile. No explicit reverse-proxy timeout override is reported in that active configuration. **What it does not close:** absence of explicit proxy timeouts is not a measured or configured 80/90-second deadline, nor proof of every server/middleware/edge limit or streamed delivery. The earlier Caddyfile and static curl cannot establish those properties. The isolated 12/80/90-second application tests retain their original scope.
+
+Precise remaining ingress evidence:
+
+1. **Applied tunnel receipt:** running `meowth` connector version/process and applied configuration version (or loaded local configuration identity), matching `val.jushosting.dev` → `http://localhost:80` including merged `originRequest` overrides. Earlier supplied YAML describes intent; the new Caddy observation does not attest what the connector loaded.
+2. **Effective edge policy for this hostname:** dated applicable response/streaming limits and override/rule IDs, or an owner attestation that no overrides apply identifying the applicable Tunnel limits. General Cloudflare defaults and a fast asset response do not substitute for this.
+3. **Narrow Caddy interpretation gap:** the supplied summary explicitly covers reverse-proxy timeouts, but does not state HTTP-server `write_timeout`, enclosing response-duration middleware, or buffering/flush behavior. A conclusion from the **already obtained** active JSON covering those fields and the matching handler chain would resolve this gap; do not request another Caddyfile, config export, version command or broad LXC collection. No contrary short timeout is evidenced. If the retained export has no such overrides, record that scope explicitly and assess the relevant version's defaults; do not invent values from their omission in the summary.
+
+For applicable active-response limits across the chain, the existing acceptance criterion remains disabled limits or limits **greater than 90 seconds with delivery margin** (for example ≥100 seconds), with compatible streaming. Connect/request-read/idle keep-alive limits are distinct and are not automatically active-response deadlines. No long production request or live configuration change is needed or authorized by this review. The remaining tunnel/edge receipts are described below; the former Caddy collection instructions are superseded.
+
+**NO-GO remains:** exact loaded backend provenance and integrated full-service recovery with normal schema startup and newer data preserved are still open, independently of ingress. Cold-cache and capacity passes are retained, not remeasured. This pass only reads repository evidence and updates documentation; no production access/change, application test rerun, migration, scrape or new public curl occurred.
+
 ## Operator-output assessment — no outputs supplied
+
+Historical assessment; the active Caddy section above supersedes its missing-Caddy-output claims.
 
 Review timestamp: **2026-09-27T15:36:43.210292+00:00** (review time, not an operator observation). Starting review commit: **`bea34d5df9cdb2fa635222d2092c129d2ed99cc3`**. The submitted operator-output block contains only the literal placeholder `[PASTE OUTPUTS HERE]`. **Zero command outputs, observation timestamps, process identities or artifact/configuration hashes were supplied.** There is no new operator evidence to compare or authenticate; do not treat the placeholder as a successful observation. The structured [assessment receipt](verification/release-recovery/2026-09-27/operator-output-assessment.json) records this absence explicitly.
 
@@ -83,39 +114,9 @@ Remaining isolated full-service acceptance: use the attested slot and normal sta
 
 ### Effective ingress attestation: exact missing observations
 
-The supplied `meowth` → localhost:80 Caddy → `10.0.0.21:3000` configuration remains **compatible**, with no evidenced short deadline. Caddy's documented response-header/read/write timeout defaults are unlimited; unknown-length streaming is immediately flushed. These support compatibility, not runtime attestation. [Caddy reverse-proxy reference](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy).
+The [latest active Caddy assessment](#active-caddy-observation--vlr-route-identified) is authoritative for current scope. Caddy's active route/version and absence of explicit reverse-proxy timeouts have been supplied. The earlier broad Caddy collection commands are removed because that configuration has already been obtained; no repeated LXC configuration request is required. Only the narrower server/middleware/streaming interpretation of that retained export remains unreported, alongside the tunnel/edge receipts below. The 80/90-second values are application deadlines, not deadlines demonstrated by Caddy configuration or the static curl.
 
-On the already identified Caddy/tunnel LXC, its authorized operator can collect the following without changing configuration. These commands are **not executed here**, and no access or repeated source configuration is requested:
-
-```sh
-# Default local admin address only: use the already configured address if different.
-# If disabled/unavailable, leave this observation missing; do not enable it.
-set -eu
-umask 077
-INGRESS_EVIDENCE=$(mktemp -d /tmp/vlr-ingress-evidence.XXXXXX)
-date -u +%FT%TZ > "$INGRESS_EVIDENCE/observed-at"
-systemctl show caddy cloudflared -p MainPID -p ExecMainStartTimestamp -p InvocationID \
-  > "$INGRESS_EVIDENCE/processes"
-CADDY_PID=$(systemctl show caddy -p MainPID --value)
-TUNNEL_PID=$(systemctl show cloudflared -p MainPID --value)
-sudo /proc/"$CADDY_PID"/exe version > "$INGRESS_EVIDENCE/caddy-version"
-sudo /proc/"$TUNNEL_PID"/exe --version > "$INGRESS_EVIDENCE/cloudflared-version"
-curl --fail --silent --show-error --max-time 5 --max-filesize 2000000 \
-  -D "$INGRESS_EVIDENCE/caddy-headers" \
-  http://127.0.0.1:2019/config/apps/http/servers/ \
-  -o "$INGRESS_EVIDENCE/caddy-active-servers.json"
-sha256sum "$INGRESS_EVIDENCE/caddy-active-servers.json"
-# Local private receipt of the active connector's latest configuration messages.
-sudo journalctl _PID="$TUNNEL_PID" -b --no-pager -o cat \
-  --grep='Updated to new configuration|Settings:|Starting tunnel' -n 10 \
-  > "$INGRESS_EVIDENCE/tunnel-config-receipt"
-```
-
-The [Caddy GET config API](https://caddyserver.com/docs/api) exports active configuration; `caddy adapt` exports only a source interpretation. Keep raw output private; provide only the applicable listener/server timeouts, complete matching route chain, proxy transport/flush/buffer settings and version/process receipt. Preserve routing order and relevant preceding handlers when redacting other hosts. Confirm that the queried admin endpoint belongs to the Caddy process accepting tunnel traffic; a different local Caddy instance would not attest this route.
-
-Review effective server `write_timeout`, reverse-proxy `transport.response_header_timeout`, `read_timeout` and any response-duration policy, plus `flush_interval`, `response_buffers` and enclosing middleware. Active response limits must be disabled or exceed **90 seconds with delivery margin** (for example ≥100 seconds), so the application's 80-second backend and 90-second frontend limits fire first. A 90-second proxy limit races the frontend and is insufficient. Connect, incoming-request read and idle keep-alive limits are different phases and need not all be raised to 90 seconds. See [Caddy server configuration](https://caddyserver.com/docs/json/apps/http/servers/) and [Tunnel origin parameter semantics](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/origin-parameters/).
-
-For `meowth`, the missing observation is the **active connector's applied configuration/version receipt**, including matching hostname/service and merged originRequest overrides, tied to the running connector version/process. A disk YAML or a desired remote configuration alone is insufficient. The bounded journal command may provide the applied version; if it does not, leave that evidence absent. Cloudflare edge policy additionally needs the hostname's effective response/streaming limits and applicable override/rule IDs from the authorized account owner; general published defaults are not tunnel-specific proof. A narrowly scoped read-only account collection, when account/tunnel IDs and a read token already exist, is:
+For `meowth`, the missing observation is the **active connector's applied configuration/version receipt**, including matching hostname/service and merged originRequest overrides, tied to the running connector version/process. A disk YAML or a desired remote configuration alone is insufficient. A retained connector startup/configuration log may provide the applied version; if it does not, leave that evidence absent. Cloudflare edge policy additionally needs the hostname's effective response/streaming limits and applicable override/rule IDs from the authorized account owner; general published defaults are not tunnel-specific proof. A narrowly scoped read-only account collection, when account/tunnel IDs and a read token already exist, is:
 
 ```sh
 # Credential remains in the environment, never a curl argument or printed header.
@@ -184,7 +185,7 @@ The supplied route establishes **Browser → Cloudflare edge/Tunnel `meowth` →
 
 `public-smoke.json` records only static-asset requests, bounded to 15 seconds/request and 2 MB/body (initial Python pair additionally wrapped by a 40-second process bound). Direct Next: **200**, **3,377 bytes**, **97.7 ms**. Python public request: **403**, **87.2 ms**, cause unknown. One diagnostic `curl --max-time 15 --max-filesize 2000000` to the same asset returned **200**, `server: cloudflare`, `via: 1.1 Caddy`, `CF-Cache-Status: MISS`, and exactly the same SHA-256 **`aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0`** as disk/direct Next. This observes working static delivery through Cloudflare/Caddy for that client. It does not independently prove the tunnel identity, every upstream address, browser behavior, streaming or long-response survival. No dynamic detail request, scrape, production cache flush or load test occurred.
 
-The existing isolated **12-second healthy**, **80-second backend 504**, and **90-second Next unavailable-state** tests below remain the deadline evidence. No code/configuration correction is justified by the supplied excerpts. **Configuration review passes for the supplied route; the stricter effective-ingress gate stays unresolved.** Installed Caddy/cloudflared versions, omitted global/imported configuration, runtime overrides and effective edge policies are unknown. No LXC access is requested. To close that evidence gap, the owner of the **separate LXC running `meowth` and Caddy** can supply a redacted effective-configuration/version attestation and compatible deadline/streaming settings; if it requires changing live infrastructure to verify, leave it unresolved until a separately authorized window. This task proposes no live proxy mutation, so there is no proxy rollback or added space requirement. Optional browser/content polish is unrelated to these blockers.
+The existing isolated **12-second healthy**, **80-second backend 504**, and **90-second Next unavailable-state** tests below remain the deadline evidence. No code/configuration correction is justified by the supplied excerpts. **Configuration review passes for the supplied route; the stricter effective-ingress gate stays unresolved.** At that earlier review, Caddy/cloudflared versions and effective settings were unknown. The latest active Caddy section supersedes the Caddy-version/route gap and lists only the remaining evidence; do not repeat the Caddy configuration collection. If verifying remaining settings would require live infrastructure changes, leave that work unresolved until separately authorized. This task proposes no live proxy mutation, so there is no proxy rollback or added space requirement. Optional browser/content polish is unrelated to these blockers.
 
 ### Capacity: passed on the enlarged durable filesystem
 
