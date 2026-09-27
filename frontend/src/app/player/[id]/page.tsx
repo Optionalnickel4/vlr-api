@@ -1,3 +1,5 @@
+import "./player.css";
+import { PlayerTrendPanel } from "@/components/PlayerTrendPanel";
 import type { Metadata } from "next";
 import { PageContainer } from "@/components/PageContainer";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -44,7 +46,7 @@ export default async function PlayerPage({
   // a crash, NOT a Next.js error boundary.
   if (!detail) {
     return (
-      <PageContainer>
+      <PageContainer width="home">
         <Breadcrumbs kind="player" label={`Player ${id}`} />
         <Panel className="flex flex-col items-center gap-3 px-6 py-16 text-center">
           <Badge tone="down">unavailable</Badge>
@@ -68,20 +70,17 @@ export default async function PlayerPage({
   }
 
   return (
-    <PageContainer>
+    <PageContainer width="home">
       <Breadcrumbs kind="player" label={detail.alias ?? `Player ${id}`} />
-      <div className="flex flex-col gap-10">
-        {/* the always-populated headline: identity, weighted overall stat line,
-            signature agent, recent form, compact trend */}
-        <PlayerCard player={detail} trend={trend} />
+      <div className="player-detail">
+        <PlayerCard player={detail} />
+        {player.stale && <p className="pd-notice" role="status">Player updates unavailable — showing last available data.</p>}
+        <PlayerTrendPanel trend={trend} />
 
-        {/* Phase 13: four-dimension rating breakdown (below the player card) */}
         <RatingBreakdown dims={dims} />
 
-        {/* the deep stats: the full per-agent table carries the detail */}
         <PlayerStatsPanel agentStats={detail.agentStats} />
 
-        {/* recent matches */}
         <PlayerMatchesPanel matches={detail.matches} />
       </div>
     </PageContainer>

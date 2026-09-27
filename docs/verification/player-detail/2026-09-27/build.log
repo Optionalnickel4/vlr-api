@@ -1,0 +1,53 @@
+UTC start: 2026-09-27T12:03:26.906798+00:00
+Command: npm run build -- --webpack
+Directory: /tmp/vlr-preview/player-final
+
+
+> frontend@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.2.7 (webpack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 8.1s
+  Running TypeScript ...
+  Finished TypeScript in 8.7s ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/3) ...
+✓ Generating static pages using 1 worker (3/3) in 187ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/match/[id]
+├ ƒ /api/matches/live
+├ ƒ /api/matches/results
+├ ƒ /api/matches/upcoming
+├ ƒ /api/news
+├ ƒ /api/player/[id]
+├ ƒ /api/players
+├ ƒ /api/rankings
+├ ƒ /api/stats
+├ ƒ /api/streamers
+├ ƒ /api/team/[id]
+├ ƒ /api/ticker
+├ ƒ /api/trends/player/[id]
+├ ƒ /api/trends/team/[id]
+├ ƒ /match/[id]
+├ ƒ /news
+├ ƒ /player/[id]
+├ ƒ /rankings
+├ ƒ /results
+├ ƒ /schedule
+├ ƒ /stats
+└ ƒ /team/[id]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+UTC end: 2026-09-27T12:03:55.802292+00:00
+Exit code: 0

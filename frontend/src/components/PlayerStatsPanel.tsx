@@ -1,12 +1,8 @@
 import type { AgentStat } from "@/types/vlr";
-import { MatchSection } from "@/components/MatchSection";
 import { TableShell } from "@/components/TableShell";
 
 /**
- * PlayerStatsPanel — the headline of the player page: the per-agent stat table.
- * This is the RICH part (player history is thin; agent stats are not), so it
- * leads the page.
- *
+ * PlayerStatsPanel — the detailed per-agent table below the player analysis.
  * The agent_stats keys are upstream's display-cased labels ("Rating", "ACS",
  * "K:D", "KAST", ...). We read them VERBATIM — the column order is taken from the
  * data itself (first row, then any keys later rows add), and each cell is indexed
@@ -35,15 +31,11 @@ export function PlayerStatsPanel({ agentStats }: { agentStats: AgentStat[] }) {
   const cols = statColumns(agentStats);
 
   return (
-    <MatchSection
-      title="Agent Stats"
-      count={agentStats.length}
-      isEmpty={agentStats.length === 0}
-      emptyLabel="No agent stats available."
-    >
-      {/* wide stat table — scroll horizontally rather than drop columns */}
-      <div className="overflow-x-auto">
-        <TableShell
+    <section aria-labelledby="player-agents">
+      <div className="pd-section-heading"><div><p className="pd-kicker">03 / Per-agent detail</p><h2 id="player-agents">Agent Stats</h2></div><p>{agentStats.length} agent rows · all-time source stats</p></div>
+      <p className="pd-caption">Exact date boundaries and capture date are not supplied. Source columns and row order are preserved. RND is the round sample for each agent. Scroll horizontally to see all statistics.</p>
+      {agentStats.length === 0 ? <p className="pd-empty">No agent stats available.</p> : <div className="pd-table-scroll pd-agent-scroll" tabIndex={0} role="region" aria-label="Agent statistics, scroll horizontally">
+        <TableShell className="pd-table pd-agents"
           columns={[
             { label: "Agent", className: "min-w-[6.5rem]" },
             ...cols.map((c) => ({ label: c, align: "right" as const })),
@@ -67,7 +59,7 @@ export function PlayerStatsPanel({ agentStats }: { agentStats: AgentStat[] }) {
             </tr>
           ))}
         </TableShell>
-      </div>
-    </MatchSection>
+      </div>}
+    </section>
   );
 }

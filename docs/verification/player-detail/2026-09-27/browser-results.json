@@ -1,0 +1,181 @@
+{
+  "checkedAt": "2026-09-27T12:04:30.715Z",
+  "results": [
+    {
+      "width": 1440,
+      "devicePixelRatio": 1,
+      "browserZoom": 1,
+      "documentWidth": 1440,
+      "tickers": 1,
+      "tickerPosition": "fixed",
+      "focus": {
+        "outline": "solid",
+        "width": "2px"
+      },
+      "overflows": [
+        {
+          "width": 1180,
+          "scroll": 1180,
+          "left": 0,
+          "keyboardLeft": 0,
+          "sticky": null
+        },
+        {
+          "width": 1230,
+          "scroll": 1624,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": true
+        },
+        {
+          "width": 1230,
+          "scroll": 1230,
+          "left": 0,
+          "keyboardLeft": 0,
+          "sticky": true
+        }
+      ],
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "devicePixelRatio": 1,
+      "browserZoom": 1,
+      "documentWidth": 768,
+      "tickers": 1,
+      "tickerPosition": "fixed",
+      "focus": {
+        "outline": "solid",
+        "width": "2px"
+      },
+      "overflows": [
+        {
+          "width": 668,
+          "scroll": 668,
+          "left": 0,
+          "keyboardLeft": 0,
+          "sticky": null
+        },
+        {
+          "width": 718,
+          "scroll": 1624,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": true
+        },
+        {
+          "width": 718,
+          "scroll": 718,
+          "left": 0,
+          "keyboardLeft": 0,
+          "sticky": true
+        }
+      ],
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "devicePixelRatio": 1,
+      "browserZoom": 1,
+      "documentWidth": 390,
+      "tickers": 1,
+      "tickerPosition": "fixed",
+      "focus": {
+        "outline": "solid",
+        "width": "2px"
+      },
+      "overflows": [
+        {
+          "width": 322,
+          "scroll": 620,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": null
+        },
+        {
+          "width": 356,
+          "scroll": 1586,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": true
+        },
+        {
+          "width": 356,
+          "scroll": 650,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": true
+        }
+      ],
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "width": 320,
+      "devicePixelRatio": 1,
+      "browserZoom": 1,
+      "documentWidth": 320,
+      "tickers": 1,
+      "tickerPosition": "fixed",
+      "focus": {
+        "outline": "solid",
+        "width": "2px"
+      },
+      "overflows": [
+        {
+          "width": 252,
+          "scroll": 620,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": null
+        },
+        {
+          "width": 286,
+          "scroll": 1586,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": true
+        },
+        {
+          "width": 286,
+          "scroll": 650,
+          "left": 0,
+          "keyboardLeft": 40,
+          "sticky": true
+        }
+      ],
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "controlledState": "partial",
+      "result": "passed"
+    },
+    {
+      "controlledState": "empty",
+      "result": "passed"
+    },
+    {
+      "controlledState": "history-error",
+      "result": "passed"
+    },
+    {
+      "controlledState": "error",
+      "result": "passed"
+    },
+    {
+      "controlledState": "flat",
+      "result": "passed"
+    },
+    {
+      "realPlayer": "9",
+      "state": "unavailable: no cached detail; no scrape attempted"
+    }
+  ]
+}

@@ -1,71 +1,10 @@
+import Link from "next/link";
 import type { PlayerMatch } from "@/types/vlr";
-import { MatchSection } from "@/components/MatchSection";
-import { Badge } from "@/components/Badge";
-
-/**
- * PlayerMatchesPanel — the player's recent matches, mirroring TeamResultsPanel's
- * idiom: a W/L badge with the broadcast color signal (green win / red loss), the
- * opponent + event, and the score lit per verdict. win/loss arrives resolved from
- * upstream — we don't re-derive a verdict from the raw score. Each row links out
- * to the match on vlr.gg (no internal match detail for these yet). Empty is a
- * valid graceful state, not an error.
- */
-function MatchRow({ m, idx }: { m: PlayerMatch; idx: number }) {
-  const tone = m.result === "win" ? "up" : m.result === "loss" ? "down" : "neutral";
-  const scoreTone =
-    m.result === "win" ? "text-up" : m.result === "loss" ? "text-down" : "text-dim";
-
-  const inner = (
-    <div className="flex items-center gap-3 px-4 py-3">
-      <Badge tone={tone} className="w-12 justify-center">
-        {m.result === "win" ? "W" : m.result === "loss" ? "L" : "—"}
-      </Badge>
-      <div className="min-w-0 flex-1">
-        <div className="truncate font-display text-base font-semibold uppercase tracking-[0.03em] text-ink">
-          {m.opponent ?? "—"}
-        </div>
-        {m.event && (
-          <div className="truncate font-body text-[12px] text-mut">{m.event}</div>
-        )}
-      </div>
-      <span
-        className={`shrink-0 font-display text-xl font-bold tabular-nums ${scoreTone}`}
-      >
-        {m.score ?? "–"}
-      </span>
-    </div>
-  );
-
-  const shell =
-    "block border-b border-line/60 last:border-b-0 transition-colors hover:bg-ink/[0.03]";
-  return m.url ? (
-    <a
-      key={m.id ?? idx}
-      href={m.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={shell}
-    >
-      {inner}
-    </a>
-  ) : (
-    <div key={m.id ?? idx} className={shell}>
-      {inner}
-    </div>
-  );
-}
 
 export function PlayerMatchesPanel({ matches }: { matches: PlayerMatch[] }) {
-  return (
-    <MatchSection
-      title="Recent Matches"
-      count={matches.length}
-      isEmpty={matches.length === 0}
-      emptyLabel="No recent matches listed."
-    >
-      {matches.map((m, i) => (
-        <MatchRow key={m.id ?? i} m={m} idx={i} />
-      ))}
-    </MatchSection>
-  );
+  return <section aria-labelledby="player-matches">
+    <div className="pd-section-heading"><div><p className="pd-kicker">04 / Match history</p><h2 id="player-matches">Recent Matches</h2></div><p>{matches.length} listed matches · newest first</p></div>
+    <p className="pd-caption">Match dates and coverage period are not supplied. Scores and verdicts retain source order and meaning. Scroll horizontally to see all columns.</p>
+    {matches.length === 0 ? <p className="pd-empty">No recent matches listed.</p> : <div className="pd-table-scroll" tabIndex={0} role="region" aria-label="Player match history, scroll horizontally"><table className="pd-table pd-matches"><caption className="sr-only">Recent player matches</caption><thead><tr><th scope="col">Opponent / Event</th><th scope="col">Result</th><th scope="col">Score</th><th scope="col">Source</th></tr></thead><tbody>{matches.map((m,i)=><tr key={m.id ?? i}><th scope="row">{m.id ? <Link href={`/match/${m.id}`}>{m.opponent ?? "Opponent unavailable"}</Link> : m.opponent ?? "Opponent unavailable"}<span className="pd-match-event">{m.event ?? "Event unavailable"}</span></th><td><span className="pd-verdict" data-result={m.result ?? "unknown"}>{m.result === "win" ? "Win" : m.result === "loss" ? "Loss" : "Unknown"}</span></td><td>{m.score ?? "—"}</td><td>{m.url ? <a href={m.url} target="_blank" rel="noopener noreferrer" aria-label={`View match against ${m.opponent ?? "unknown opponent"} on VLR.gg (new tab)`}>VLR.gg ↗</a> : "—"}</td></tr>)}</tbody></table></div>}
+  </section>;
 }

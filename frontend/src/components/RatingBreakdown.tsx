@@ -1,17 +1,7 @@
-import { cn } from "@/lib/cn";
 import type { ApiResponse, PlayerDimensions } from "@/types/vlr";
-import { Panel } from "@/components/Panel";
 
-/**
- * RatingBreakdown — Phase 13 dimension-split player rating card.
- *
- * Renders a four-axis radar chart (Firepower/Entry/Consistency/Clutch) plus
- * one labeled bar per dimension, shown as cohort percentiles. Supplements R2.0
- * — never replaces it. Hidden when dimensions aren't available (player not on
- * any regional leaderboard). Low-confidence dimensions are faded with an
- * asterisk tooltip "Limited sample — low confidence".
- */
-
+/** Source cohort percentiles with visible sample limitations. Partial data
+ * keeps individual bars but suppresses the radar rather than inventing zeroes. */
 function ordinal(n: number): string {
   const r = Math.round(n);
   const mod100 = r % 100;
@@ -68,12 +58,12 @@ function RadarChart({
 
   return (
     <svg
-      viewBox="0 0 240 240"
-      width={200}
-      height={200}
+      viewBox="-40 -10 320 260"
+      width={300}
+      height={244}
       aria-hidden="true"
-      className="shrink-0"
-      overflow="visible"
+      className="pd-radar"
+      overflow="hidden"
     >
       {/* axis lines */}
       <line x1={CX} y1={CY} x2={CX} y2={CY - MAX_R} stroke="currentColor" strokeOpacity={0.15} strokeWidth={1} />
@@ -107,7 +97,7 @@ function RadarChart({
         x={CX}
         y={CY - MAX_R - 14}
         textAnchor="middle"
-        fontSize={9}
+        fontSize={11}
         fontFamily="'Saira Condensed', sans-serif"
         fontWeight={700}
         letterSpacing="0.12em"
@@ -121,12 +111,12 @@ function RadarChart({
         x={CX + MAX_R + 14}
         y={CY + 4}
         textAnchor="start"
-        fontSize={9}
+        fontSize={11}
         fontFamily="'Saira Condensed', sans-serif"
         fontWeight={700}
         letterSpacing="0.12em"
         fill="currentColor"
-        fillOpacity={0.6}
+        fillOpacity={0.9}
       >
         ENTRY
       </text>
@@ -134,12 +124,12 @@ function RadarChart({
         x={CX}
         y={CY + MAX_R + 18}
         textAnchor="middle"
-        fontSize={9}
+        fontSize={11}
         fontFamily="'Saira Condensed', sans-serif"
         fontWeight={700}
         letterSpacing="0.12em"
         fill="currentColor"
-        fillOpacity={0.6}
+        fillOpacity={0.9}
       >
         CONSISTENCY
       </text>
@@ -147,7 +137,7 @@ function RadarChart({
         x={CX - MAX_R - 14}
         y={CY + 4}
         textAnchor="end"
-        fontSize={9}
+        fontSize={11}
         fontFamily="'Saira Condensed', sans-serif"
         fontWeight={700}
         letterSpacing="0.12em"
@@ -161,139 +151,32 @@ function RadarChart({
   );
 }
 
-// ---- Dimension bar ----------------------------------------------------------
-
-function DimensionBar({
-  label,
-  score,
-  region,
-  isLowConfidence,
-}: {
-  label: string;
-  score: number;
-  region: string;
-  isLowConfidence: boolean;
-}) {
-  const regionLabel = region.toUpperCase();
-  const pctLabel = ordinal(score);
-
-  return (
-    <div
-      className={cn("flex flex-col gap-1", isLowConfidence && "opacity-50")}
-      title={isLowConfidence ? "Limited sample — low confidence" : undefined}
-      aria-label={`${label}: ${pctLabel} in ${regionLabel}${isLowConfidence ? " (limited sample)" : ""}`}
-    >
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
-          {label}
-          {isLowConfidence && (
-            <span
-              className="ml-1 text-warn"
-              title="Limited sample — low confidence"
-              aria-hidden="true"
-            >
-              *
-            </span>
-          )}
-        </span>
-        <span className="font-mono text-[11px] tabular-nums text-mut">
-          {pctLabel} in {regionLabel}
-        </span>
-      </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-line/40">
-        <div
-          className={cn(
-            "h-full rounded-full transition-none",
-            isLowConfidence ? "bg-mut/50" : "bg-accent",
-          )}
-          style={{ width: `${Math.max(score, 2)}%` }}
-          role="presentation"
-        />
-      </div>
-    </div>
-  );
-}
-
-// ---- Main component ---------------------------------------------------------
-
-export function RatingBreakdown({
-  dims,
-}: {
-  dims: ApiResponse<PlayerDimensions>;
-}) {
-  const d = dims.data[0] ?? null;
-
-  // Both NA and EU answered 404 (player not in either cohort) → getPlayerDimensions
-  // returns {data:[], stale:false}. Show an explanatory card instead of silently
-  // vanishing. Actual lookup failures arrive as stale:true and fall through to null.
-  if (!d && !dims.stale) {
-    return (
-      <Panel className="p-5 sm:p-6">
-        <h2 className="mb-3 font-display text-[11px] font-semibold uppercase tracking-[0.18em] text-dim">
-          Rating Breakdown
-        </h2>
-        <p className="font-body text-sm text-dim">
-          Rating breakdown unavailable — this player isn&apos;t in the NA or EU leaderboard.
-        </p>
-      </Panel>
-    );
-  }
-
-  // Network error or upstream failure — don't surface a broken card.
-  if (!d) return null;
-
-  const region = d.region ?? "na";
-  const lc = d.lowConfidence;
-
-  const fp = d.firepower ?? 0;
-  const en = d.entry ?? 0;
-  const co = d.consistency ?? 0;
-  const cl = d.clutch ?? 0;
-
-  return (
-    <Panel className="p-5 sm:p-6">
-      <h2 className="mb-5 font-display text-[11px] font-semibold uppercase tracking-[0.18em] text-dim">
-        Rating Breakdown
-      </h2>
-
-      <div className="flex flex-wrap items-start gap-8">
-        {/* radar */}
-        <RadarChart
-          firepower={fp}
-          entry={en}
-          consistency={co}
-          clutch={cl}
-          lowConfidence={lc}
-        />
-
-        {/* dimension bars */}
-        <div className="flex min-w-[200px] flex-1 flex-col gap-4">
-          <DimensionBar
-            label="Firepower"
-            score={fp}
-            region={region}
-            isLowConfidence={lc.includes("all")}
-          />
-          <DimensionBar
-            label="Entry"
-            score={en}
-            region={region}
-            isLowConfidence={lc.includes("all")}
-          />
-          <DimensionBar
-            label="Consistency"
-            score={co}
-            region={region}
-            isLowConfidence={lc.includes("all")}
-          />
-          <DimensionBar
-            label="Clutch"
-            score={cl}
-            region={region}
-            isLowConfidence={lc.includes("all") || lc.includes("clutch")}
-          />
+// Percentiles remain source values; absent dimensions never become zero.
+export function RatingBreakdown({ dims }: { dims: ApiResponse<PlayerDimensions> }) {
+  const d = dims.data[0];
+  const region = d?.region?.toUpperCase() ?? "region unavailable";
+  const labels = ["Firepower", "Entry", "Consistency", "Clutch"] as const;
+  const scores = d ? [d.firepower, d.entry, d.consistency, d.clutch] : [];
+  const period = d?.timespan === "all" ? "All-time leaderboard" : d?.timespan ? `${d.timespan}-day leaderboard` : "Period unavailable";
+  return <section aria-labelledby="player-dimensions">
+    <div className="pd-section-heading"><div><p className="pd-kicker">02 / Cohort percentiles</p><h2 id="player-dimensions">Rating Breakdown</h2></div><p>{d ? `${region} · ${period}` : "Cohort unavailable"}</p></div>
+    <div className="pd-dimensions">
+      {!d ? <p className="pd-empty">{dims.stale ? "Rating breakdown unavailable — the leaderboard lookup failed." : "Rating breakdown unavailable — this player isn't in the NA or EU leaderboard."}</p> : <>
+        {dims.stale && <p className="pd-notice" role="status">Dimension updates unavailable — showing last available data.</p>}
+        <p className="pd-caption">Percentile within the source cohort, not a match rating. Cohort size and player round sample are not supplied for these dimensions.</p>
+        <div className="pd-dimension-grid">
+          {scores.every(score => score !== null) && <RadarChart firepower={d.firepower!} entry={d.entry!} consistency={d.consistency!} clutch={d.clutch!} lowConfidence={d.lowConfidence} />}
+          <div className="pd-bars">{labels.map((label,i) => {
+            const score = scores[i];
+            const limited = d.lowConfidence.includes("all") || d.lowConfidence.includes(label.toLowerCase());
+            return <div className="pd-dimension" key={label} aria-label={`${label}: ${score == null ? "unavailable" : `${ordinal(score)} in ${region}`}${limited ? " (limited sample)" : ""}`}>
+              <div><span>{label}{limited ? " *" : ""}</span><strong>{score == null ? "Unavailable" : `${ordinal(score)} in ${region}`}</strong></div>
+              {score !== null && <div className="pd-bar" aria-hidden><span style={{width:`${Math.max(0,Math.min(100,score))}%`}} /></div>}
+              {limited && <p className="pd-caption">Limited sample — low confidence</p>}
+            </div>;
+          })}</div>
         </div>
-      </div>
-    </Panel>
-  );
+      </>}
+    </div>
+  </section>;
 }
