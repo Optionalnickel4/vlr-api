@@ -1,0 +1,155 @@
+[
+  {
+    "name": "annotated-doc",
+    "version": "0.0.5"
+  },
+  {
+    "name": "annotated-types",
+    "version": "0.8.0"
+  },
+  {
+    "name": "anyio",
+    "version": "4.14.2"
+  },
+  {
+    "name": "APScheduler",
+    "version": "3.11.3"
+  },
+  {
+    "name": "asyncpg",
+    "version": "0.31.0"
+  },
+  {
+    "name": "certifi",
+    "version": "2026.7.22"
+  },
+  {
+    "name": "click",
+    "version": "8.4.2"
+  },
+  {
+    "name": "fastapi",
+    "version": "0.141.1"
+  },
+  {
+    "name": "greenlet",
+    "version": "3.5.5"
+  },
+  {
+    "name": "h11",
+    "version": "0.16.0"
+  },
+  {
+    "name": "httpcore",
+    "version": "1.0.9"
+  },
+  {
+    "name": "httptools",
+    "version": "0.8.0"
+  },
+  {
+    "name": "httpx",
+    "version": "0.28.1"
+  },
+  {
+    "name": "idna",
+    "version": "3.19"
+  },
+  {
+    "name": "iniconfig",
+    "version": "2.3.0"
+  },
+  {
+    "name": "packaging",
+    "version": "26.3"
+  },
+  {
+    "name": "pip",
+    "version": "26.2.1"
+  },
+  {
+    "name": "pluggy",
+    "version": "1.6.0"
+  },
+  {
+    "name": "pydantic",
+    "version": "2.13.4"
+  },
+  {
+    "name": "pydantic_core",
+    "version": "2.46.4"
+  },
+  {
+    "name": "pydantic-settings",
+    "version": "2.15.0"
+  },
+  {
+    "name": "Pygments",
+    "version": "2.21.0"
+  },
+  {
+    "name": "pytest",
+    "version": "9.1.1"
+  },
+  {
+    "name": "pytest-asyncio",
+    "version": "1.4.0"
+  },
+  {
+    "name": "python-dotenv",
+    "version": "1.2.3"
+  },
+  {
+    "name": "PyYAML",
+    "version": "6.0.3"
+  },
+  {
+    "name": "redis",
+    "version": "8.1.0"
+  },
+  {
+    "name": "selectolax",
+    "version": "0.4.11"
+  },
+  {
+    "name": "SQLAlchemy",
+    "version": "2.0.52"
+  },
+  {
+    "name": "starlette",
+    "version": "1.6.0"
+  },
+  {
+    "name": "typing_extensions",
+    "version": "4.16.0"
+  },
+  {
+    "name": "typing-inspection",
+    "version": "0.4.4"
+  },
+  {
+    "name": "tzlocal",
+    "version": "5.4.4"
+  },
+  {
+    "name": "uvicorn",
+    "version": "0.52.4"
+  },
+  {
+    "name": "uvloop",
+    "version": "0.22.1"
+  },
+  {
+    "name": "vlr-api",
+    "version": "0.1.0",
+    "editable_project_location": "/opt/vlr-api"
+  },
+  {
+    "name": "watchfiles",
+    "version": "1.2.0"
+  },
+  {
+    "name": "websockets",
+    "version": "17.0.1"
+  }
+]

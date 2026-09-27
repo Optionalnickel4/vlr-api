@@ -1,0 +1,211 @@
+Commit: 9301682c4165d7507e49d6ad7678d14ca9df377e
+Command: ['/opt/vlr-api/.venv/bin/python', '-m', 'pytest', '-q']
+Started: 2026-09-27T14:17:25.108735+00:00
+........................................................F............... [ 25%]
+........................................................................ [ 50%]
+........................................................................ [ 76%]
+....................................................................     [100%]
+=================================== FAILURES ===================================
+__________ test_scheduler_process_and_stale_api_requests_share_lease ___________
+
+fut = <coroutine object Process.communicate at 0x77ab78bc0e50>, timeout = 5
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+
+        Coroutine will be wrapped in Task.
+
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+
+        If the wait is cancelled, the task is also cancelled.
+
+        If the task suppresses the cancellation and returns a value instead,
+        that value is returned.
+
+        This function is a coroutine.
+        """
+        # The special case for timeout <= 0 is for the following case:
+        #
+        # async def test_waitfor():
+        #     func_started = False
+        #
+        #     async def func():
+        #         nonlocal func_started
+        #         func_started = True
+        #
+        #     try:
+        #         await asyncio.wait_for(func(), 0)
+        #     except asyncio.TimeoutError:
+        #         assert not func_started
+        #     else:
+        #         assert False
+        #
+        # asyncio.run(test_waitfor())
+
+
+        if timeout is not None and timeout <= 0:
+            fut = ensure_future(fut)
+
+            if fut.done():
+                return fut.result()
+
+            await _cancel_and_wait(fut)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise TimeoutError from exc
+
+        async with timeouts.timeout(timeout):
+>           return await fut
+                   ^^^^^^^^^
+
+/usr/lib/python3.13/asyncio/tasks.py:507:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.13/asyncio/subprocess.py:201: in communicate
+    stdin, stdout, stderr = await tasks.gather(stdin, stdout, stderr)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/subprocess.py:181: in _read_stream
+    output = await stream.read()
+             ^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/streams.py:723: in read
+    block = await self.read(self._limit)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/streams.py:730: in read
+    await self._wait_for_data('read')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <StreamReader eof transport=<_UnixReadPipeTransport closed fd=16 closed>>
+func_name = 'read'
+
+    async def _wait_for_data(self, func_name):
+        """Wait until feed_data() or feed_eof() is called.
+
+        If stream was paused, automatically resume it.
+        """
+        # StreamReader uses a future to link the protocol feed_data() method
+        # to a read coroutine. Running two read coroutines at the same time
+        # would have an unexpected behaviour. It would not possible to know
+        # which coroutine would get the next data.
+        if self._waiter is not None:
+            raise RuntimeError(
+                f'{func_name}() called while another coroutine is '
+                f'already waiting for incoming data')
+
+        assert not self._eof, '_wait_for_data after EOF'
+
+        # Waiting for data while paused will make deadlock, so prevent it.
+        # This is essential for readexactly(n) for case when n > self._limit.
+        if self._paused:
+            self._paused = False
+            self._transport.resume_reading()
+
+        self._waiter = self._loop.create_future()
+        try:
+>           await self._waiter
+E           asyncio.exceptions.CancelledError
+
+/usr/lib/python3.13/asyncio/streams.py:539: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+store = <redis.asyncio.client.Redis(<redis.asyncio.connection.ConnectionPool(<redis.asyncio.connection.UnixDomainSocketConnect...nnect_func=None,protocol=None,legacy_responses=True,path=/tmp/pytest-of-builder/pytest-21/cache-redis0/redis.sock)>)>)>
+redis_socket = '/tmp/pytest-of-builder/pytest-21/cache-redis0/redis.sock'
+api = <httpx.AsyncClient object at 0x77ab7878b950>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77ab788db9a0>
+
+    async def test_scheduler_process_and_stale_api_requests_share_lease(
+        store, redis_socket, api, monkeypatch,
+    ):
+        """A separate scheduler process owns the real Redis lease, not a local lock."""
+        rows = [{"id": "old"}]
+        await seed_stale(store, R.CACHE_EVENTS, rows)
+        local_fetch = AsyncMock(side_effect=AssertionError("API must not scrape"))
+        monkeypatch.setattr(R.ev, "fetch_events", local_fetch)
+        script = """
+    import asyncio, sys
+    import redis.asyncio as redis
+    from app.core import cache as C
+    from app.services import refresh as R
+
+    async def main():
+        client = redis.Redis(unix_socket_path=sys.argv[1], decode_responses=True)
+        C.get_redis = lambda: client
+        async def fetch():
+            await client.incr('test:scrapes')
+            while not await client.get('test:finish'):
+                await asyncio.sleep(0.01)
+            return [{'id': 'new'}]
+        R.ev.fetch_events = fetch
+        try:
+            await R.refresh_events()
+        finally:
+            await client.aclose()
+    asyncio.run(main())
+    """
+        process = await asyncio.create_subprocess_exec(
+            sys.executable, "-c", script, redis_socket,
+            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+        )
+        try:
+            async with asyncio.timeout(5):
+                while not await store.get("test:scrapes"):
+                    await asyncio.sleep(0.01)
+            responses = await asyncio.wait_for(
+                asyncio.gather(*(api.get("/api/v1/events") for _ in range(8))), 1,
+            )
+            assert all(r.json() == rows and r.headers["X-VLR-Cache"] == "stale" for r in responses)
+            local_fetch.assert_not_awaited()
+            assert await store.get("test:scrapes") == "1"
+        finally:
+            await store.set("test:finish", "1")
+            try:
+>               stdout, stderr = await asyncio.wait_for(process.communicate(), 5)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_cache_freshness.py:454:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/usr/lib/python3.13/asyncio/tasks.py:506: in wait_for
+    async with timeouts.timeout(timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <Timeout [expired]>
+exc_type = <class 'asyncio.exceptions.CancelledError'>
+exc_val = CancelledError(), exc_tb = <traceback object at 0x77ab78712d00>
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Optional[bool]:
+        assert self._state in (_State.ENTERED, _State.EXPIRING)
+
+        if self._timeout_handler is not None:
+            self._timeout_handler.cancel()
+            self._timeout_handler = None
+
+        if self._state is _State.EXPIRING:
+            self._state = _State.EXPIRED
+
+            if self._task.uncancel() <= self._cancelling and exc_type is not None:
+                # Since there are no new cancel requests, we're
+                # handling this.
+                if issubclass(exc_type, exceptions.CancelledError):
+>                   raise TimeoutError from exc_val
+E                   TimeoutError
+
+/usr/lib/python3.13/asyncio/timeouts.py:116: TimeoutError
+=============================== warnings summary ===============================
+../../opt/vlr-api/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /opt/vlr-api/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_cache_freshness.py::test_scheduler_process_and_stale_api_requests_share_lease
+1 failed, 283 passed, 1 warning in 27.47s
+
+Exit code: 1

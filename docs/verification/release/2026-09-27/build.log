@@ -1,0 +1,14 @@
+Commit: 9301682c4165d7507e49d6ad7678d14ca9df377e
+Command: ['npm', 'run', 'build', '--', '--webpack']
+Started: 2026-09-27T14:21:57.839387+00:00
+
+> frontend@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.2.7 (webpack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.5min
+  Running TypeScript ...
+
+Exit code: 124

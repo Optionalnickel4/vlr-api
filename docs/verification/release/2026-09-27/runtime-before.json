@@ -1,0 +1,143 @@
+{
+  "at": "2026-09-27T14:17:18.670222+00:00",
+  "/health": {
+    "http_status": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "/api/v1/status": {
+    "http_status": 200,
+    "body": {
+      "service": "vlr-api",
+      "commit": "unknown",
+      "checks": {
+        "postgres": true,
+        "redis": true
+      },
+      "history": [
+        {
+          "table": "match_results",
+          "rows": 1572,
+          "newest": "2026-09-27T13:20:11.972490+00:00"
+        },
+        {
+          "table": "ranking_snapshots",
+          "rows": 106077,
+          "newest": "2026-09-27T13:47:45.778119+00:00"
+        },
+        {
+          "table": "player_snapshots",
+          "rows": 14792,
+          "newest": "2026-09-27T13:48:02.336614+00:00"
+        },
+        {
+          "table": "team_snapshots",
+          "rows": 1009,
+          "newest": "2026-09-27T13:48:00.288056+00:00"
+        }
+      ],
+      "cache_keys": [
+        {
+          "key": "vlr:results",
+          "ttl": 173
+        },
+        {
+          "key": "vlr:upcoming",
+          "ttl": 593
+        },
+        {
+          "key": "vlr:live",
+          "ttl": 23
+        },
+        {
+          "key": "vlr:rankings:all",
+          "ttl": 1827
+        },
+        {
+          "key": "vlr:events",
+          "ttl": 33
+        },
+        {
+          "key": "vlr:news",
+          "ttl": 475
+        }
+      ],
+      "scheduler": [
+        {
+          "job": "upcoming",
+          "last_run": "2026-09-27T14:17:10.542310+00:00",
+          "next_run": "2026-09-27T14:18:10.427219+00:00"
+        },
+        {
+          "job": "live_matches",
+          "last_run": "2026-09-27T14:17:11.965674+00:00",
+          "next_run": "2026-09-27T14:17:40.427354+00:00"
+        },
+        {
+          "job": "results",
+          "last_run": "2026-09-27T14:10:11.989480+00:00",
+          "next_run": "2026-09-27T14:20:10.427433+00:00"
+        },
+        {
+          "job": "news",
+          "last_run": "2026-09-27T14:10:13.481250+00:00",
+          "next_run": "2026-09-27T14:25:10.427494+00:00"
+        },
+        {
+          "job": "events",
+          "last_run": "2026-09-27T11:10:15.017085+00:00",
+          "next_run": "2026-09-27T17:10:10.427549+00:00"
+        },
+        {
+          "job": "rankings",
+          "last_run": "2026-09-27T11:10:16.594394+00:00",
+          "next_run": "2026-09-27T17:10:10.427601+00:00"
+        },
+        {
+          "job": "player_prefetch",
+          "last_run": "2026-09-27T05:00:40.552075+00:00",
+          "next_run": "2026-09-27T17:00:00+00:00"
+        },
+        {
+          "job": "stats",
+          "last_run": "2026-09-27T11:10:28.500095+00:00",
+          "next_run": "2026-09-27T17:10:10.430573+00:00"
+        }
+      ]
+    }
+  },
+  "database_encodings": [
+    {
+      "datname": "template1",
+      "encoding": "UTF8"
+    },
+    {
+      "datname": "template0",
+      "encoding": "UTF8"
+    },
+    {
+      "datname": "vlr",
+      "encoding": "UTF8"
+    }
+  ],
+  "redis_ping": true,
+  "redis_persistence": {
+    "loading": 0,
+    "rdb_last_bgsave_status": "ok",
+    "rdb_last_save_time": 1790518213,
+    "aof_enabled": 0,
+    "aof_last_write_status": "ok",
+    "rdb_changes_since_last_save": 52
+  },
+  "redis_persistence_config": {
+    "maxmemory-policy": "noeviction",
+    "save": "3600 1 300 100 60 10000",
+    "appendonly": "no"
+  },
+  "services": "MainPID=61821\nExecMainStartTimestamp=Thu 2026-09-17 11:10:09 UTC\nEnvironmentFiles=/opt/vlr-api/.env (ignore_errors=no)\nWorkingDirectory=/opt/vlr-api\nUser=root\n\nMainPID=308\nExecMainStartTimestamp=Thu 2026-09-03 04:02:56 UTC\nEnvironmentFiles=/opt/vlr-api/frontend/.env (ignore_errors=no)\nWorkingDirectory=/opt/vlr-api/frontend\nUser=root\n",
+  "protected_files": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  }
+}

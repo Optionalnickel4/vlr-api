@@ -1,0 +1,24 @@
+{
+  "production_processes_unchanged": true,
+  "protected_files_unchanged": true,
+  "protected_files": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "health": {
+    "/health": {
+      "status": 200,
+      "healthy": true
+    },
+    "/api/v1/status": {
+      "status": 200,
+      "healthy": {
+        "postgres": true,
+        "redis": true
+      }
+    }
+  },
+  "release_files_verified": 511,
+  "archive_source_changes": [],
+  "production_build_id": "5RXlwj7jwc2eDLWI_-439"
+}

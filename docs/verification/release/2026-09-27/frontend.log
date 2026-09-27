@@ -1,0 +1,36 @@
+Commit: 9301682c4165d7507e49d6ad7678d14ca9df377e
+Command: ['npm', 'test']
+Started: 2026-09-27T14:17:25.109270+00:00
+
+> frontend@0.1.0 test
+> vitest run
+
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+ RUN  v2.1.9 /tmp/vlr-release-review/frontend
+
+ ✓ src/lib/vlr.test.ts (57 tests) 60ms
+ ✓ src/app/landing.test.ts (15 tests) 22534ms
+   ✓ landing snapshot vs dedicated full-list pages > /schedule renders the FULL upcoming list (all 50) 1931ms
+   ✓ landing snapshot vs dedicated full-list pages > /results renders the FULL results list (all 50) 619ms
+   ✓ news + rankings full pages and see-all links > home owns one main landmark and heading; navigation belongs to the layout 753ms
+   ✓ news + rankings full pages and see-all links > home shows All news and Full rankings see-all links when panels have data 9764ms
+   ✓ news + rankings full pages and see-all links > /rankings full page renders the table without a see-all footer 1145ms
+   ✓ teaser caps: news capped at 5, rankings capped per region > landing news shows ≤5 items; /news full page shows all 10 1320ms
+   ✓ teaser caps: news capped at 5, rankings capped per region > landing rankings teaser is #1-per-region only: EU #1 and NA #1 appear, rank-2+ do not 1186ms
+   ✓ teaser caps: news capped at 5, rankings capped per region > /rankings full page is uncapped — shows all 14 rows across both regions 3036ms
+   ✓ keeps discovery links and coverage when secondary content is unavailable 2028ms
+ ✓ src/lib/ticker.test.ts (19 tests) 37ms
+ ✓ src/lib/twitch.test.ts (15 tests) 47ms
+ ✓ src/app/player.test.ts (9 tests) 153171ms
+   ✓ player detail page > LEADS with identity + per-agent stats, VERBATIM display-cased keys 4613ms
+   ✓ player detail page > renders the player CARD header: weighted headline, signature chip, form 506ms
+   ✓ player detail page > thin trend → honest young-history NOTE, not a fake sparkline line 1576ms
+   ✓ player detail page > upstream detail failure → page-level graceful error (200, not a crash) 1764ms
+   ✓ player page — Phase 13 Rating Breakdown card > renders the breakdown card below the player card when dims are available 86246ms
+   ✓ player page — Phase 13 Rating Breakdown card > bars show the correct ordinal label with region (e.g. '75th in NA') 2413ms
+   ✓ player page — Phase 13 Rating Breakdown card > low_confidence dimension is marked with an asterisk 3074ms
+   ✓ player page — Phase 13 Rating Breakdown card > out-of-cohort player sees explanatory empty state, not silence 1557ms
+   ✓ player page — Phase 13 Rating Breakdown card > normalizePlayerDimensions maps API response to typed shape 47530ms
+
+Exit code: 0

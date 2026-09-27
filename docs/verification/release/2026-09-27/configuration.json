@@ -1,0 +1,59 @@
+{
+  ".env": [
+    "VLR_DATABASE_URL",
+    "VLR_REDIS_URL",
+    "VLR_USER_AGENT",
+    "VLR_MIN_REQUEST_INTERVAL",
+    "VLR_ENABLE_SCHEDULER"
+  ],
+  "frontend/.env": [
+    "VLR_API_BASE",
+    "TWITCH_CLIENT_ID",
+    "TWITCH_CLIENT_SECRET",
+    "TWITCH_FEATURED"
+  ],
+  "units": {
+    "vlr-api": [
+      "[Unit]",
+      "Description=vlr-api FastAPI server",
+      "After=network-online.target postgresql.service redis-server.service",
+      "Wants=network-online.target",
+      "",
+      "[Service]",
+      "Type=simple",
+      "User=root",
+      "WorkingDirectory=/opt/vlr-api",
+      "EnvironmentFile=/opt/vlr-api/.env",
+      "ExecStart=/opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1",
+      "Restart=always",
+      "RestartSec=5",
+      "",
+      "[Install]",
+      "WantedBy=multi-user.target"
+    ],
+    "vlr-frontend": [
+      "[Unit]",
+      "Description=vlr-api Next.js frontend",
+      "After=network-online.target vlr-api.service",
+      "Wants=network-online.target",
+      "",
+      "[Service]",
+      "Type=simple",
+      "User=root",
+      "WorkingDirectory=/opt/vlr-api/frontend",
+      "EnvironmentFile=/opt/vlr-api/frontend/.env",
+      "Environment variable names: PATH",
+      "ExecStart=/opt/vlr-api/frontend/node_modules/.bin/next start -H 0.0.0.0 -p 3000",
+      "Restart=always",
+      "RestartSec=5",
+      "",
+      "[Install]",
+      "WantedBy=multi-user.target"
+    ]
+  },
+  "local_proxy": {
+    "listeners_80_443": false,
+    "nginx_caddy_haproxy_apache_service_units": false,
+    "external_proxy": "not established"
+  }
+}

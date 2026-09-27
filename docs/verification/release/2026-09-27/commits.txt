@@ -1,0 +1,25 @@
+9f4b8cbf22a38bed15163dc353634ad241dbd9ea docs: add VLR-API project handoff
+93ea25ed105b2349a96e262a176241a44cc36906 fix(cache): retain rankings and events with coordinated background refresh
+0ad5ca0610be823f9d78c56a1884b1dea6382333 docs: record Phase 1 cache implementation commit
+ff1af82822f844fcd0b507aa1ffcda7b722bafe6 fix(frontend): retain live scores and bound upstream requests
+ca2ceb9625d395f81a5f52493b3df38033b8275c fix(frontend): guard player search races and keyboard selection
+80425dbd3390e401c08269c2ab083f394b891c7b feat(frontend): share accessible site shell across routes
+071c627a898721aa39380c91e946366685bce333 feat(frontend): lead homepage with independently streamed match coverage
+d71f3891adc656c75d81309651026bbc1c18c4a4 feat(frontend): deliver broadcast homepage with fixed responsive ticker
+0fa35c488a12d8742ef02eb749c1842781f068d3 feat(frontend): extend broadcast design to match details
+85999edae76f11b8957c1b49863781f12ccab069 feat(frontend): extend broadcast design to team details
+20237af01053fd8a497b05ea09c0df14cb3d441a feat(frontend): extend broadcast design to player details
+18a128dfb9e5dce985fec6692274e2662767f61e Redesign schedule and results in broadcast visual system
+d9e6c2da9ef8ba9bf2cdea4df9e47294494f0627 Redesign regional rankings and player stats in broadcast system
+5131fd1d10552824d4b788df87f01d8b2b05852c Redesign news feed and document VLR content reuse inventory
+734396091544959fcb732d330a2c6f402f00c85e fix(frontend): propagate retained-cache freshness headers
+5b5355b6a0a1cbb524554bde443f9117f92fd061 fix(match): retain scores and disclose failed live refreshes
+c48b91f3942bd419b58060cfcbb2c9bdec59faa3 fix(ticker): mark retained live statistics as stale
+cac586af15db04c0edd61fc7f120f832706bcda1 fix(ticker): withhold unsupported cross-region upset claims
+519bec90e55ee6b6a63803b45d13b835aff11e5b docs: record broadcast predeployment audit and launch dependencies
+1eb3dc6218a4b134982b90704ef5fc801657335e fix: bound cold detail loading and isolate history failures
+fbe551700b3898c9cee6fe9c19a6674bd2fbf1b0 feat: add bounded read-only API probe
+a251c99ade3e8d426e2782ab5d140815db1f33d4 fix: recognize current player rating and round labels
+804e3c31f3312b6a4caa31200405c3138b7a8d1f docs: record real API probe and detail validation
+2881275832168dd33f34ca0e7f6e5c14c50bff9d fix: serve player analytics in the read-only preview adapter
+9301682c4165d7507e49d6ad7678d14ca9df377e docs: record player analytics layer trace and preview verification

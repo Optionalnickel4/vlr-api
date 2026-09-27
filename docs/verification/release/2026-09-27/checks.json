@@ -1,0 +1,55 @@
+{
+  "backend": {
+    "command": [
+      "/opt/vlr-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    "started": "2026-09-27T14:17:25.108735+00:00",
+    "ended": "2026-09-27T14:17:53.931160+00:00",
+    "exit_code": 1
+  },
+  "frontend": {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "started": "2026-09-27T14:17:25.109270+00:00",
+    "ended": "2026-09-27T14:21:45.268314+00:00",
+    "exit_code": 0
+  },
+  "lint": {
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "started": "2026-09-27T14:17:25.112082+00:00",
+    "ended": "2026-09-27T14:21:57.835375+00:00",
+    "exit_code": 0
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "started": "2026-09-27T14:21:57.839387+00:00",
+    "ended": "2026-09-27T14:28:00.543094+00:00",
+    "exit_code": 124
+  },
+  "typescript": {
+    "command": [
+      "./node_modules/.bin/tsc",
+      "--noEmit",
+      "--incremental",
+      "false"
+    ],
+    "started": "2026-09-27T14:28:00.687807+00:00",
+    "ended": "2026-09-27T14:34:10.596556+00:00",
+    "exit_code": 124
+  }
+}
