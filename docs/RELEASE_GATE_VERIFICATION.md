@@ -4,12 +4,123 @@ Application under test: **`9301682c4165d7507e49d6ad7678d14ca9df377e`**. No appli
 
 | Gate | Result | Pass criteria | Outstanding requirement |
 | --- | --- | --- | --- |
-| Rollback provenance | **Unresolved; frontend restore and limited historical backend read checks pass** | Verified data-preserving full-service rollback with identified artifacts/runtime | Recover an attested old backend; the preserved historical substitute does not verify normal lifespan, Redis or scheduler recovery |
+| Rollback provenance | **Unresolved; frontend restore and limited historical backend read checks pass** | Verified data-preserving full-service rollback with identified artifacts/runtime | Recover an attested old backend; isolated application switching preserves newer test data, but normal schema startup and integrated full-service recovery remain unverified |
 | Ingress deadlines | **Supplied configuration compatible; effective configuration unresolved** | Compatible effective settings and finite application deadlines | Owner-supplied effective-setting attestation; no access request or live mutation. Public static curl passed; isolated deadline tests remain valid |
 | Cold-cache staging | **Pass for three selected core details** | Empty isolated caches, sequential bounded real-source reads, populated cold/warm API responses, successful browser outcomes, no production writes | Broader sampling/load testing is not claimed; browser outcomes were measured after API warming |
 | Build/backup capacity | **Pass for measured durable layout** | Measured build requirements, restored backups and sufficient headroom | 11.374 GB free after restores; 4.617 GB additional budget including 2 GiB reserve leaves 6.757 GB. Recheck recovered artifact size; off-host disaster recovery remains unverified |
 
-## Latest closure review — supplied tunnel topology and enlarged disk
+## Application-only recovery follow-up — 2026-09-27
+
+This section supersedes earlier statements that Redis and scheduler startup were never exercised for the historical bundle. **NO-GO remains.** Evidence: [release-recovery](verification/release-recovery/2026-09-27/). No application changes, deployment, production restart, production storage changes, migrations or VLR requests were made. Prior cold-cache/deadline/final checks remain valid and were not repeated.
+
+### Provenance: observations and confidence
+
+| Claim | Source | Confidence / limit |
+| --- | --- | --- |
+| API PID 61821, September 17 11:10:09 UTC, one worker using mutable `/opt/vlr-api` and `.venv`; frontend PID 308 unchanged | Fresh `systemctl show` in `provenance.json` | High for systemd identity/launch metadata; no loaded-code attestation |
+| Running API reports `commit: unknown` | Previously captured status; `app/status_meta.py` resolves Git once at import | High for that observation; even a Git value would need an immutable clean artifact link |
+| `139378c` was committed 34 seconds after startup; prior commit `32e7e23` | Fresh Git history and earlier reflog | High for timestamps, insufficient to choose a loaded revision; dirty source could have been imported |
+| Historical restored bundle is `139378cb7505c6257c7b69da3491e382c4ebf0bc`, with copied current Python/dependencies | Existing archive/source manifest, 5,752 hashes rechecked by new harness | High for bundle identity; **no evidence it equals the running process** |
+| Current disk Python 3.13.5 / Uvicorn 0.52.4 | Previous inventory and isolated imported runtime | High for disk/test runtime; production's already imported versions remain unknown |
+| No additional startup identity evidence available to this account | `/proc/61821/{exe,cwd,maps}` permission denied; narrow journal read reports no entries and restricted visibility | Access limitation, not proof the journal contains no evidence |
+
+Inspected `deploy/vlr-api.service`, optional scheduler unit, `start-services.sh`, installed-unit evidence and history. They contain no immutable release slot, artifact digest or startup manifest tying PID to source/runtime. `start-services.sh restart` rebuilds in the serving frontend directory and restarts services; it is unsuitable as an artifact-preserving release/rollback mechanism. It was not executed. An executable path, healthy endpoint, Git timestamp, or current package list cannot recover overwritten Python module contents.
+
+Exact evidence needed: a contemporaneous deployment/startup record tying this service start (and ideally boot ID/invocation ID) to a clean source tree digest, runtime/dependency manifest and retained archive hash, plus the matching bytes. A source commit alone omits then-uncommitted files and runtime. A present-day directory hash is not retroactive attestation. The following **operator-only, read-only** collection is narrowly scoped to the known API startup; it is not an access request:
+
+```sh
+sudo journalctl -u vlr-api.service --since '2026-09-17 11:09:00 UTC' \
+  --until '2026-09-17 11:12:00 UTC' --no-pager -o short-iso
+systemctl show vlr-api.service -p MainPID -p ExecMainStartTimestamp -p InvocationID
+sudo readlink /proc/61821/exe /proc/61821/cwd
+sudo sha256sum /proc/61821/exe
+```
+
+Review locally and share only release/runtime identity fields, with secrets removed. The executable hash identifies the interpreter inode, **not** imported Python code/dependencies. If the journal lacks a deployment manifest, the smallest missing artifact is the original immutable September 17 application bundle and its contemporaneous start/deployment receipt. For an already identified owner-held archive, collect its checksum without extracting over production:
+
+```sh
+# Replace the path with the actual retained deployment archive; no archive is assumed to exist.
+BACKEND_ARCHIVE=/absolute/path/to/retained-backend-deployment.tar.gz
+sha256sum -- "$BACKEND_ARCHIVE"
+tar -tzf "$BACKEND_ARCHIVE" | rg '(^|/)(MANIFEST.json|SHA256SUMS.json|requirements.lock|vlr-api.service)$'
+```
+
+Read the listed manifest member with `tar -xOzf "$BACKEND_ARCHIVE" exact/member/path` once its name is known. A newly generated receipt for the fallback cannot satisfy the historical claim. If no original bundle/receipt exists, exact rollback to the running worker remains unprovable; an explicitly selected, separately qualified historical fallback would be a different release decision.
+
+### Executed application switch and data preservation
+
+Command: `python3 docs/verification/release-recovery/2026-09-27/recovery.py`. The harness reuses only the stopped private restored PostgreSQL cluster and creates a new Redis Unix socket with TCP/persistence disabled. It starts real single-worker Uvicorn twice over a private Unix socket: candidate source, then historical bundle source with the restored interpreter/dependencies. Only these API processes switch; database and Redis stay running throughout. Python audit hooks reject TCP and Unix connections outside the private recovery directory. No production environment file is copied into either source directory; storage environment overrides are explicit. The previous database dump is **not restored during the switch**.
+
+**Startup substitution:** normal lifespan calls `init_db`, which executes migrations. To respect this pass's no-migrations boundary, the harness replaces that call with a successful database `SELECT` check. Scheduler construction/start/shutdown and job functions remain real; the existing `live_matches` job is advanced once against a seeded empty live list. This verifies a successful no-source-work scheduler tick and fresh Redis heartbeat, not scraping recovery or all eight job bodies. It does not qualify unmodified normal startup.
+
+Before switching, the harness adds a new history row to the isolated database and a new persistent cache sentinel, plus retained/refresh keys. It compares ordered full-row fingerprints and counts of all four history tables across both API versions; it checks cache values and that the lease TTL remains positive. These additions are newer than the retained dump. Earlier failed attempts left two other sentinel rows only in the private database; they are retained and included in the final fingerprints.
+
+See `recovery.json` for the final results and exact module/runtime paths. Both versions pass health, PostgreSQL/Redis checks, two-row history reads, eight jobs with next-run times, and a newly completed scheduler heartbeat. All four table fingerprints match before/after switching, and the new cache sentinel, retained copy and expiring lease survive. Both lifespans exit before process completion. The initial harness attempt used a nonexistent FastAPI helper; the second incorrectly required exit 0 although Uvicorn re-raises SIGTERM after graceful shutdown. Their partial results remain in `recovery-initial.json` and `recovery-second.json`; the final harness checks the completed-lifespan marker and exit 0 or SIGTERM. No application assertion was weakened.
+
+**Proven:** switching only application processes to this identified historical bundle preserves newer **isolated** data for the exercised paths. This does not prove retention of future production writes, equality to current production code, normal migration startup, full scheduler refresh behavior, systemd switch/readiness, or integrated restored frontend→backend recovery. Previous frontend artifact/startup checks stand independently. **Full-service recovery gate stays open.** All private test processes are stopped; production service identities and protected environment/unit/ignore/plan bytes match before/after. `checks.json` also revalidates all **511 candidate source blobs** and measures **11,368,103,936 bytes free**, leaving **6,751,125,504 bytes** after the unchanged **4,616,978,432-byte** additional release budget/reserve; capacity still passes.
+
+### Smallest concrete deployment change and remaining recovery test
+
+An attested backend artifact must contain immutable source (including any deployed dirty patch), relocatable Python/dependencies with hashes, the required OS-library inventory, original unit/configuration-name manifest, archive checksum and startup receipt. Do not include PostgreSQL/Redis data in the application rollback artifact. The existing fallback already supplies much of the packaging; its missing original identity cannot be repaired by relabeling it.
+
+For a future authorized deployment, retain two immutable backend directories and point `WorkingDirectory`, `PYTHONHOME`, `PYTHONPATH` and an **absolute** `runtime/bin/python3.13 -m uvicorn app.main:app --workers 1 ...` command to one selected slot. The copied interpreter requires its runtime home/site-packages; copying a virtualenv's script shebang alone is insufficient. Preserve the protected production environment file separately. Retain the old frontend artifact and point its unit to that completed artifact. A reviewed systemd override switching only these application paths is sufficient; no container image restore or database/cache replacement is needed. No such override was installed here.
+
+Remaining isolated full-service acceptance: use the attested slot and normal startup in a separately authorized migration-capable sandbox (or first implement/test an explicit schema-preserving startup mode); use private database/Redis, fixtures and blocked external egress. Start candidate, append newer history and cache values, stop frontend then API, switch application slots only, start old API and verify dependency readiness/one scheduler, then old frontend and verify its BUILD_ID plus a populated backend-backed route. Exercise scheduler refresh with fixtures, compare complete history fingerprints and sentinel values, and verify graceful shutdown. Capture selected slot, imported module paths/runtime hashes and process identities at each stage. Keep storage running without restore/flush. The present test establishes the storage-preserving mechanism but leaves these acceptance observations open; whole-container rollback remains unacceptable.
+
+### Effective ingress attestation: exact missing observations
+
+The supplied `meowth` → localhost:80 Caddy → `10.0.0.21:3000` configuration remains **compatible**, with no evidenced short deadline. Caddy's documented response-header/read/write timeout defaults are unlimited; unknown-length streaming is immediately flushed. These support compatibility, not runtime attestation. [Caddy reverse-proxy reference](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy).
+
+On the already identified Caddy/tunnel LXC, its authorized operator can collect the following without changing configuration. These commands are **not executed here**, and no access or repeated source configuration is requested:
+
+```sh
+# Default local admin address only: use the already configured address if different.
+# If disabled/unavailable, leave this observation missing; do not enable it.
+set -eu
+umask 077
+INGRESS_EVIDENCE=$(mktemp -d /tmp/vlr-ingress-evidence.XXXXXX)
+date -u +%FT%TZ > "$INGRESS_EVIDENCE/observed-at"
+systemctl show caddy cloudflared -p MainPID -p ExecMainStartTimestamp -p InvocationID \
+  > "$INGRESS_EVIDENCE/processes"
+CADDY_PID=$(systemctl show caddy -p MainPID --value)
+TUNNEL_PID=$(systemctl show cloudflared -p MainPID --value)
+sudo /proc/"$CADDY_PID"/exe version > "$INGRESS_EVIDENCE/caddy-version"
+sudo /proc/"$TUNNEL_PID"/exe --version > "$INGRESS_EVIDENCE/cloudflared-version"
+curl --fail --silent --show-error --max-time 5 --max-filesize 2000000 \
+  -D "$INGRESS_EVIDENCE/caddy-headers" \
+  http://127.0.0.1:2019/config/apps/http/servers/ \
+  -o "$INGRESS_EVIDENCE/caddy-active-servers.json"
+sha256sum "$INGRESS_EVIDENCE/caddy-active-servers.json"
+# Local private receipt of the active connector's latest configuration messages.
+sudo journalctl _PID="$TUNNEL_PID" -b --no-pager -o cat \
+  --grep='Updated to new configuration|Settings:|Starting tunnel' -n 10 \
+  > "$INGRESS_EVIDENCE/tunnel-config-receipt"
+```
+
+The [Caddy GET config API](https://caddyserver.com/docs/api) exports active configuration; `caddy adapt` exports only a source interpretation. Keep raw output private; provide only the applicable listener/server timeouts, complete matching route chain, proxy transport/flush/buffer settings and version/process receipt. Preserve routing order and relevant preceding handlers when redacting other hosts. Confirm that the queried admin endpoint belongs to the Caddy process accepting tunnel traffic; a different local Caddy instance would not attest this route.
+
+Review effective server `write_timeout`, reverse-proxy `transport.response_header_timeout`, `read_timeout` and any response-duration policy, plus `flush_interval`, `response_buffers` and enclosing middleware. Active response limits must be disabled or exceed **90 seconds with delivery margin** (for example ≥100 seconds), so the application's 80-second backend and 90-second frontend limits fire first. A 90-second proxy limit races the frontend and is insufficient. Connect, incoming-request read and idle keep-alive limits are different phases and need not all be raised to 90 seconds. See [Caddy server configuration](https://caddyserver.com/docs/json/apps/http/servers/) and [Tunnel origin parameter semantics](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/origin-parameters/).
+
+For `meowth`, the missing observation is the **active connector's applied configuration/version receipt**, including matching hostname/service and merged originRequest overrides, tied to the running connector version/process. A disk YAML or a desired remote configuration alone is insufficient. The bounded journal command may provide the applied version; if it does not, leave that evidence absent. Cloudflare edge policy additionally needs the hostname's effective response/streaming limits and applicable override/rule IDs from the authorized account owner; general published defaults are not tunnel-specific proof. A narrowly scoped read-only account collection, when account/tunnel IDs and a read token already exist, is:
+
+```sh
+# Credential remains in the environment, never a curl argument or printed header.
+python3 - <<'PY'
+import json, os, urllib.request
+account = os.environ['CF_ACCOUNT_ID']
+tunnel = os.environ['CF_TUNNEL_ID']  # UUID for meowth, not its display name
+url = f'https://api.cloudflare.com/client/v4/accounts/{account}/cfd_tunnel/{tunnel}/configurations'
+req = urllib.request.Request(url, headers={'Authorization': 'Bearer '+os.environ['CF_READ_TOKEN']})
+with urllib.request.urlopen(req, timeout=10) as response:
+    body = json.load(response)
+assert body.get('success'), 'Configuration read did not succeed'
+print(json.dumps(body['result'], indent=2))
+PY
+```
+
+The endpoint is documented in the [Cloudflare Tunnel API](https://developers.cloudflare.com/api/resources/zero_trust/subresources/tunnels/subresources/cloudflared/). For a locally managed tunnel this remote configuration may not represent its loaded YAML; retain that distinction. Run into a private file and redact credentials/unrelated hostnames before sharing. Match its remote version with the running connector's applied-version receipt; this API result alone remains desired configuration. For edge overrides, the exact missing artifact is a dated effective-policy export for **only `val.jushosting.dev`**, including timeout values and matching rule IDs (or an owner statement that no overrides apply, identifying the applicable Tunnel limits). No account IDs, policy IDs or credential are present here, so inventing an executable rule-specific API URL would misstate available evidence. Do not generate a long production detail request to infer settings. The previous static curl and isolated 12/80/90-second tests remain valid within their original scopes.
+
+## Previous closure review — supplied tunnel topology and enlarged disk
 
 This section supersedes earlier unresolved-capacity and unknown-topology statements. New evidence is in [release-closure/2026-09-27](verification/release-closure/2026-09-27/). **NO-GO remains:** full backend rollback has not been verified, and effective public-ingress deadline settings remain unattested. Capacity now passes. No application code changed and completed cold-cache/final application tests were not repeated.
 

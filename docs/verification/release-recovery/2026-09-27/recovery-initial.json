@@ -1,0 +1,21 @@
+{
+  "stages": [],
+  "full_service_gate_passed": false,
+  "normal_schema_startup_executed": false,
+  "artifact_files_verified": 5752,
+  "before_new_data": {
+    "match_results": "1572:d231aee15a86793ceb97555fefc51e16",
+    "player_snapshots": "14792:151d7acd8bba49f00909ab5342d95781",
+    "ranking_snapshots": "106077:495fe3f999d4589adbb6090413d14c1a",
+    "team_snapshots": "1009:c809d5f7adaec591cba9521cccc152e1"
+  },
+  "after_new_data": {
+    "match_results": "1573:e2ddf28d8f536adf272726fc77ae87af",
+    "player_snapshots": "14792:151d7acd8bba49f00909ab5342d95781",
+    "ranking_snapshots": "106077:495fe3f999d4589adbb6090413d14c1a",
+    "team_snapshots": "1009:c809d5f7adaec591cba9521cccc152e1"
+  },
+  "production_services_unchanged": true,
+  "protected_files_unchanged": true,
+  "private_processes_stopped": true
+}

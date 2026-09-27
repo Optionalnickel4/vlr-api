@@ -1,0 +1,26 @@
+{
+  "at": "2026-09-27T15:29:17.916436+00:00",
+  "services": {
+    "exit": 0,
+    "stdout": "MainPID=61821\nExecMainStartTimestamp=Thu 2026-09-17 11:10:09 UTC\nExecStart={ path=/opt/vlr-api/.venv/bin/uvicorn ; argv[]=/opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1 ; ignore_errors=no ; start_time=[Thu 2026-09-17 11:10:09 UTC] ; stop_time=[n/a] ; pid=61821 ; code=(null) ; status=0/0 }\nWorkingDirectory=/opt/vlr-api\nFragmentPath=/etc/systemd/system/vlr-api.service\nDropInPaths=\n\nMainPID=308\nExecMainStartTimestamp=Thu 2026-09-03 04:02:56 UTC\nExecStart={ path=/opt/vlr-api/frontend/node_modules/.bin/next ; argv[]=/opt/vlr-api/frontend/node_modules/.bin/next start -H 0.0.0.0 -p 3000 ; ignore_errors=no ; start_time=[Thu 2026-09-03 04:02:56 UTC] ; stop_time=[n/a] ; pid=308 ; code=(null) ; status=0/0 }\nWorkingDirectory=/opt/vlr-api/frontend\nFragmentPath=/etc/systemd/system/vlr-frontend.service\nDropInPaths=\n",
+    "stderr": ""
+  },
+  "journal": {
+    "exit": 0,
+    "stdout": "-- No entries --\n",
+    "stderr": "Hint: You are currently not seeing messages from other users and the system.\n      Users in groups 'adm', 'systemd-journal' can see all messages.\n      Pass -q to turn off this notice.\n"
+  },
+  "history": {
+    "exit": 0,
+    "stdout": "139378cb7505c6257c7b69da3491e382c4ebf0bc 2026-09-17T11:10:43Z fix(scraper): stop map-duration bleeding into match-detail map name\n32e7e23bbf1435163f0660ed74196a4704eff51a 2026-09-02T21:06:59Z feat(api): team-name search + assistant team-match endpoint\nd06587815eb51d72621c91c3f0a142481ec1c570 2026-08-01T04:39:50-04:00 docs: document the codebase for public contributors\n",
+    "stderr": ""
+  },
+  "refs": {
+    "exit": 0,
+    "stdout": "c630da3e5398400c7c746d350401b7e44f20ce32\nc630da3e5398400c7c746d350401b7e44f20ce32\n",
+    "stderr": ""
+  },
+  "proc_exe": "[Errno 13] Permission denied: '/proc/61821/exe'",
+  "proc_cwd": "[Errno 13] Permission denied: '/proc/61821/cwd'",
+  "proc_maps": "[Errno 13] Permission denied: '/proc/61821/maps'"
+}

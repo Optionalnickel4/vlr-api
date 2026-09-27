@@ -1,0 +1,50 @@
+{
+  "stages": [
+    {
+      "stage": "candidate",
+      "identity": {
+        "app_file": "/home/builder/vlr-release-review-9301682/app/main.py",
+        "interpreter": "/home/builder/vlr-recovery-check/restored-portable/backend/runtime/bin/python3.13",
+        "prefix": "/home/builder/vlr-recovery-check/restored-portable/backend/runtime",
+        "schema_startup": "replaced with SELECT check",
+        "uvicorn": "0.52.4"
+      },
+      "health": {
+        "status": "ok"
+      },
+      "checks": {
+        "postgres": true,
+        "redis": true
+      },
+      "jobs_with_next_run": 8,
+      "fresh_job_heartbeat": "2026-09-27T15:29:31.524355+00:00",
+      "history_rows": 2,
+      "database_fingerprints": {
+        "match_results": "1574:b6e090f23caa25080b58f2106b535b3d",
+        "player_snapshots": "14792:151d7acd8bba49f00909ab5342d95781",
+        "ranking_snapshots": "106077:495fe3f999d4589adbb6090413d14c1a",
+        "team_snapshots": "1009:c809d5f7adaec591cba9521cccc152e1"
+      },
+      "new_cache_value_preserved": true,
+      "retained_and_lease_preserved": true
+    }
+  ],
+  "full_service_gate_passed": false,
+  "normal_schema_startup_executed": false,
+  "artifact_files_verified": 5752,
+  "before_new_data": {
+    "match_results": "1573:e2ddf28d8f536adf272726fc77ae87af",
+    "player_snapshots": "14792:151d7acd8bba49f00909ab5342d95781",
+    "ranking_snapshots": "106077:495fe3f999d4589adbb6090413d14c1a",
+    "team_snapshots": "1009:c809d5f7adaec591cba9521cccc152e1"
+  },
+  "after_new_data": {
+    "match_results": "1574:b6e090f23caa25080b58f2106b535b3d",
+    "player_snapshots": "14792:151d7acd8bba49f00909ab5342d95781",
+    "ranking_snapshots": "106077:495fe3f999d4589adbb6090413d14c1a",
+    "team_snapshots": "1009:c809d5f7adaec591cba9521cccc152e1"
+  },
+  "production_services_unchanged": true,
+  "protected_files_unchanged": true,
+  "private_processes_stopped": true
+}

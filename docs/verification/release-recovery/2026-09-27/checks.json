@@ -1,0 +1,9 @@
+{
+  "candidate_blobs_verified": 511,
+  "candidate_mismatches": [],
+  "free_bytes": 11368103936,
+  "additional_budget_including_reserve": 4616978432,
+  "remaining_bytes": 6751125504,
+  "json_and_python_syntax": "pass",
+  "application_tests_rerun": false
+}
