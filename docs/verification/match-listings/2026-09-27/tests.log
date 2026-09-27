@@ -1,0 +1,332 @@
+UTC start: 2026-09-27T12:17:35.559684+00:00
+Command: npm test
+Directory: /opt/vlr-api/frontend
+
+
+> frontend@0.1.0 test
+> vitest run
+
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+ RUN  v2.1.9 /opt/vlr-api/frontend
+
+ ✓ src/lib/vlr.test.ts (57 tests) 88ms
+ ✓ src/app/landing.test.ts (15 tests) 939ms
+ ✓ src/lib/twitch.test.ts (15 tests) 80ms
+ ✓ src/lib/ticker.test.ts (18 tests) 19ms
+ ✓ src/app/player.test.ts (9 tests) 440ms
+ ✓ src/lib/liveTicker.test.ts (17 tests) 35ms
+ ✓ src/lib/schedule.test.ts (29 tests) 44ms
+ ✓ src/components/match-header.test.ts (3 tests) 32ms
+ ✓ src/lib/upstream-deadline.test.ts (10 tests) 80ms
+ ✓ src/components/player-search.test.ts (18 tests) 482ms
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — SSR ↔ hydrate parity > renders identically on server and client with zero hydration errors
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — region/timespan toggle refetch > refetches /api/stats with the new region when EU is clicked
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — region/timespan toggle refetch > refetches with the new timespan when 90D is clicked
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — empty + error states > renders the empty state with no rows
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — empty + error states > renders the error from the seeded envelope
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > renders rank-1 player in the gold slot with R2.0 headline
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > renders rank-2 and rank-3 players in the flanking slots
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > podium re-ranks when sort changes to ACS (Charlie rises to #1)
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > podium updates after region toggle changes the data
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > degrades gracefully with 1 player — only rank-1 block renders, no crash
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > degrades gracefully with 2 players — no crash on undefined data[2]
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > gold (#1) block carries the warn border class
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — podium > podium is absent when the leaderboard is empty (no crash)
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — team tag display > renders team tag in the table player column
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — team tag display > renders team tag in the podium block
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/stats-leaderboard.test.ts > StatsLeaderboard island — team tag display > null team is silent — no 'null' or 'undefined' text, no crash
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/components/stats-leaderboard.test.ts (23 tests) 734ms
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — SSR ↔ hydrate parity > renders nothing on the server and hydrates with zero hydration errors
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — static mode (fetch on mount) > fetches /api/ticker on mount and renders the curated tape
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — static mode (fetch on mount) > refreshes the static tape on its interval (no full reload needed)
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — live mode discovery + switch > discovers a live match on mount and renders the LIVE tape
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-ticker-hydration.test.ts > StatTicker island — live mode discovery + switch > reverts to the static tape when a poll reports the match FINAL
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/components/live-ticker-hydration.test.ts (5 tests) 138ms
+ ✓ src/components/match-broadcast.test.ts (12 tests) 499ms
+ ✓ src/components/live-matches.test.ts (15 tests) 172ms
+ ✓ src/components/player-broadcast.test.ts (9 tests) 158ms
+ ✓ src/components/team-broadcast.test.ts (8 tests) 170ms
+ ✓ src/components/match-listings.test.ts (10 tests) 97ms
+stderr | src/components/live-match-detail.test.ts > LiveMatchDetail — poll while live, stop on final, hydration-safe > polls every 30s while live and updates the scorebug
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-match-detail.test.ts > LiveMatchDetail — poll while live, stop on final, hydration-safe > stops polling once the match finals, showing the series score
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/components/live-match-detail.test.ts > LiveMatchDetail — poll while live, stop on final, hydration-safe > never polls a match that's already completed
+An update to Root inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/components/live-match-detail.test.ts (4 tests) 206ms
+ ✓ src/components/site-shell.test.ts (16 tests) 197ms
+ ✓ src/components/match-hydration.test.ts (2 tests) 188ms
+ ✓ src/components/broadcast.test.ts (6 tests) 58ms
+ ✓ src/app/shell-pages.test.ts (11 tests) 368ms
+ ✓ src/components/streamers-hydration.test.ts (2 tests) 69ms
+
+ Test Files  23 passed (23)
+      Tests  314 passed (314)
+   Start at  12:17:36
+   Duration  28.28s (transform 1.86s, setup 0ms, collect 6.00s, tests 5.29s, environment 6.60s, prepare 3.29s)
+
+
+UTC end: 2026-09-27T12:18:04.955032+00:00
+Exit code: 0
