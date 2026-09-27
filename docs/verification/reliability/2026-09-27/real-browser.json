@@ -1,0 +1,17 @@
+[
+  {
+    "journey": "Home → cached Match",
+    "limitation": "No reachable cached match detail during this attempt"
+  },
+  {
+    "journey": "rankings → team",
+    "limitation": "Source listing currently unavailable",
+    "text": "VALORANT / TEAM STANDINGS\n\nRANKINGS.\n\nRegional competition. Team by team.\n\nAll regional ladders · 0 listed teams · Capture time unavailable\nAll regional ladders\nNorth America\nEurope\nBrazil\nAsia-Pacific\nKorea\nChina\nJapan\nLatin America South\nLatin America North\nOceania\nGame Changers\nMENA\nCollegiate\n\nRanks and ratings are shown in source order within each ladder, not a global ranking. Country / region is the source team label. No movement or match sample is supplied. Ladder boundaries follow rank resets; their region names are not supplied. Choose a named region for a specific regional view.\n\nRankings unavailable — could not load this region."
+  },
+  {
+    "journey": "stats → player",
+    "href": "/player/3799",
+    "loaded": false,
+    "heading": "Couldn't load this player"
+  }
+]

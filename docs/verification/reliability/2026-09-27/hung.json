@@ -1,0 +1,7 @@
+{
+  "elapsedMs": 80003,
+  "status": 504,
+  "body": {
+    "detail": "detail refresh timed out"
+  }
+}

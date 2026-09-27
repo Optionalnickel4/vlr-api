@@ -1,0 +1,41 @@
+[
+  {
+    "kind": "match",
+    "phase": "before",
+    "unavailableMs": 10191,
+    "heading": "Couldn't load this match"
+  },
+  {
+    "kind": "match",
+    "phase": "before",
+    "state": "warm",
+    "loadedMs": 822,
+    "heading": "MATCH REPORT."
+  },
+  {
+    "kind": "team",
+    "phase": "before",
+    "unavailableMs": 10167,
+    "heading": "Couldn't load this team"
+  },
+  {
+    "kind": "team",
+    "phase": "before",
+    "state": "warm",
+    "loadedMs": 878,
+    "heading": "Sentinels"
+  },
+  {
+    "kind": "player",
+    "phase": "before",
+    "unavailableMs": 20106,
+    "heading": "Couldn't load this player"
+  },
+  {
+    "kind": "player",
+    "phase": "before",
+    "state": "warm",
+    "loadedMs": 2257,
+    "heading": "TenZ"
+  }
+]

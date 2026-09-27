@@ -39,6 +39,8 @@ HISTORY WRITES AND THEIR DEDUP (all append-only — see app/models):
 Return values are counts/summaries for the scheduler's logs, not data — nothing
 reads them for correctness.
 """
+import asyncio
+from contextlib import asynccontextmanager
 import logging
 import re
 from datetime import datetime, timedelta, timezone
@@ -226,6 +228,21 @@ async def refresh_all_stats() -> int:
     return total
 
 
+# History is secondary to the successfully published serving payload.
+DETAIL_HISTORY_TIMEOUT_SECONDS = 5
+
+
+@asynccontextmanager
+async def _detail_history(kind: str, entity_id: str):
+    try:
+        async with asyncio.timeout(DETAIL_HISTORY_TIMEOUT_SECONDS):
+            yield
+    except Exception:
+        # External cancellation still propagates; only history failures/timeouts
+        # are isolated. Cache and scraper failures remain request failures.
+        log.warning("%s %s: detail cached; history persistence failed", kind, entity_id, exc_info=True)
+
+
 async def refresh_player(player_id: str) -> dict[str, Any]:
     """On-demand: scrape a player detail page, cache it, and persist a snapshot.
 
@@ -240,18 +257,19 @@ async def refresh_player(player_id: str) -> dict[str, Any]:
     s = get_settings()
     data = await pl.fetch_player(player_id)
     await cache_set(CACHE_PLAYER.format(id=player_id), data, s.ttl_players)
-    snap = PlayerSnapshot(
-        player_id=str(player_id),
-        alias=data.get("alias"),
-        real_name=data.get("real_name"),
-        country=data.get("country"),
-        team=data.get("team"),
-        team_id=data.get("team_id"),
-        agent_stats=data.get("agent_stats") or [],
-    )
-    async with SessionLocal() as session:
-        session.add(snap)
-        await session.commit()
+    async with _detail_history("player", player_id):
+        snap = PlayerSnapshot(
+            player_id=str(player_id),
+            alias=data.get("alias"),
+            real_name=data.get("real_name"),
+            country=data.get("country"),
+            team=data.get("team"),
+            team_id=data.get("team_id"),
+            agent_stats=data.get("agent_stats") or [],
+        )
+        async with SessionLocal() as session:
+            session.add(snap)
+            await session.commit()
     return data
 
 
@@ -357,34 +375,35 @@ async def refresh_team(team_id: str) -> dict[str, Any]:
     data = await te.fetch_team(team_id)
     await cache_set(CACHE_TEAM.format(id=team_id), data, s.ttl_teams)
 
-    match_rows = team_results_to_match_rows(
-        data.get("id"), data.get("name"), data.get("results") or []
-    )
-    if match_rows:
-        async with SessionLocal() as session:
-            stmt = pg_insert(MatchResult).values(match_rows)
-            stmt = stmt.on_conflict_do_nothing(index_elements=["vlr_id"])
-            await session.execute(stmt)
-            await session.commit()
-
-    cutoff = datetime.now(timezone.utc) - timedelta(seconds=s.ttl_teams)
-    async with SessionLocal() as session:
-        recent = await session.execute(
-            select(TeamSnapshot.id)
-            .where(TeamSnapshot.team_id == str(team_id))
-            .where(TeamSnapshot.captured_at >= cutoff)
-            .limit(1)
+    async with _detail_history("team", team_id):
+        match_rows = team_results_to_match_rows(
+            data.get("id"), data.get("name"), data.get("results") or []
         )
-        if recent.first() is None:
-            session.add(
-                TeamSnapshot(
-                    team_id=str(team_id),
-                    name=data.get("name"),
-                    region=data.get("country"),
-                    roster=data.get("roster") or [],
-                )
+        if match_rows:
+            async with SessionLocal() as session:
+                stmt = pg_insert(MatchResult).values(match_rows)
+                stmt = stmt.on_conflict_do_nothing(index_elements=["vlr_id"])
+                await session.execute(stmt)
+                await session.commit()
+
+        cutoff = datetime.now(timezone.utc) - timedelta(seconds=s.ttl_teams)
+        async with SessionLocal() as session:
+            recent = await session.execute(
+                select(TeamSnapshot.id)
+                .where(TeamSnapshot.team_id == str(team_id))
+                .where(TeamSnapshot.captured_at >= cutoff)
+                .limit(1)
             )
-            await session.commit()
+            if recent.first() is None:
+                session.add(
+                    TeamSnapshot(
+                        team_id=str(team_id),
+                        name=data.get("name"),
+                        region=data.get("country"),
+                        roster=data.get("roster") or [],
+                    )
+                )
+                await session.commit()
     return data
 
 

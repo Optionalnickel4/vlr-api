@@ -105,14 +105,18 @@ export function parseNumeric(value: unknown): number | null {
 /** Fetch a path off VLR_API_BASE and return parsed JSON. Throws on non-2xx or
  *  network error so loaders can map failures to graceful-empty. */
 export const UPSTREAM_TIMEOUT_MS = 10_000;
+// Initial detail navigation can wait for a bounded cold backend refresh (80s).
+// Background consumers and live polling keep the existing 10s deadline.
+export const DETAIL_PAGE_TIMEOUT_MS = 90_000;
+type DetailLoadMode = "page" | "background";
 
 export async function fetchUpstream(path: string): Promise<unknown> {
   return (await fetchUpstreamResponse(path)).data;
 }
 
-async function fetchUpstreamResponse(path: string): Promise<{ data: unknown; stale: boolean }> {
+async function fetchUpstreamResponse(path: string, timeoutMs = UPSTREAM_TIMEOUT_MS): Promise<{ data: unknown; stale: boolean }> {
   const controller = new AbortController();
-  const deadline = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
+  const deadline = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(`${VLR_API_BASE}${path}`, {
       headers: { accept: "application/json" },
@@ -125,7 +129,7 @@ async function fetchUpstreamResponse(path: string): Promise<{ data: unknown; sta
     if (controller.signal.aborted) throw new Error("Request aborted");
     return { data, stale: res.headers.get("X-VLR-Cache") === "stale" };
   } catch (error) {
-    if (controller.signal.aborted) throw new Error(`vlr-api ${path} timed out after ${UPSTREAM_TIMEOUT_MS}ms`);
+    if (controller.signal.aborted) throw new Error(`vlr-api ${path} timed out after ${timeoutMs}ms`);
     throw error;
   } finally {
     clearTimeout(deadline);
@@ -713,9 +717,10 @@ export function liveMapScore(match: MatchDetail): LiveMapScore | null {
 async function load<T>(
   path: string,
   transform: (raw: unknown) => T[],
+  timeoutMs = UPSTREAM_TIMEOUT_MS,
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await fetchUpstreamResponse(path);
+    const response = await fetchUpstreamResponse(path, timeoutMs);
     return { data: transform(response.data), stale: response.stale };
   } catch (err) {
     // Never throw to the page; surface a stale-empty envelope instead.
@@ -744,8 +749,8 @@ export const getRankings = (region = "all") =>
 
 export const getNews = () => load<NewsArticle>("/news", normalizeNews);
 
-export const getPlayer = (id: string) =>
-  load<PlayerDetail>(`/player/${encodeURIComponent(id)}`, normalizePlayer);
+export const getPlayer = (id: string, mode: DetailLoadMode = "background") =>
+  load<PlayerDetail>(`/player/${encodeURIComponent(id)}`, normalizePlayer, mode === "page" ? DETAIL_PAGE_TIMEOUT_MS : UPSTREAM_TIMEOUT_MS);
 
 /** Player search result row (from /players?q=). The backend wraps this in the
  *  standard {data, stale, error} envelope; this normalizer maps one row. */
@@ -863,8 +868,8 @@ export async function getStats(
 // /team/{id} 500s upstream for ids vlr.gg has no page for — the graceful-empty
 // catch in load() turns that into { data: [], stale: true, error }.
 // See frontend/OPEN-ITEM-team-detail-500.md.
-export const getTeam = (id: string) =>
-  load<TeamDetail>(`/team/${encodeURIComponent(id)}`, normalizeTeam);
+export const getTeam = (id: string, mode: DetailLoadMode = "background") =>
+  load<TeamDetail>(`/team/${encodeURIComponent(id)}`, normalizeTeam, mode === "page" ? DETAIL_PAGE_TIMEOUT_MS : UPSTREAM_TIMEOUT_MS);
 
 export const getTeamTrend = (id: string, days = 90) =>
   load<TeamTrend>(
@@ -930,8 +935,8 @@ export async function getPlayerDimensions(
 
 // /match/{id} 404s upstream for ids vlr.gg has no page for (clean 404 from the
 // Phase 7 endpoint) — load()'s catch turns that into { data: [], stale, error }.
-export const getMatch = (id: string) =>
-  load<MatchDetail>(`/match/${encodeURIComponent(id)}`, normalizeMatch);
+export const getMatch = (id: string, mode: DetailLoadMode = "background") =>
+  load<MatchDetail>(`/match/${encodeURIComponent(id)}`, normalizeMatch, mode === "page" ? DETAIL_PAGE_TIMEOUT_MS : UPSTREAM_TIMEOUT_MS);
 
 // ---- stat ticker (broadcast lower-third) -----------------------------------
 // A PRESENTATION layer over data we already serve — NO new scraping. buildTicker

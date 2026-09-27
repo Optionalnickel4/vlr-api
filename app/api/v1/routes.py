@@ -27,6 +27,7 @@ never sort or compare them as strings — "998" > "1024" lexicographically, whic
 is how a rating chart silently reorders itself. See app/services/trends.py,
 which does this correctly, and frontend/src/lib/vlr.ts for the mirror contract.
 """
+import asyncio
 import logging
 from typing import Any
 
@@ -307,6 +308,20 @@ async def assistant_team_match(name: str = Query("", max_length=64)):
     return await AS.team_match(name)
 
 
+# A cold detail can pay for three 20s HTTP attempts plus backoff/throttling.
+# Bound the whole route below the initial Next.js detail-page budget (90s).
+DETAIL_REQUEST_TIMEOUT_SECONDS = 80
+
+
+async def _detail_or_refresh(key: str, refresher):
+    try:
+        async with asyncio.timeout(DETAIL_REQUEST_TIMEOUT_SECONDS):
+            data = await cache_get(key)
+            return data if data is not None else await refresher()
+    except TimeoutError as exc:
+        raise HTTPException(504, detail="detail refresh timed out") from exc
+
+
 # ---- player detail (on-demand: scrape-on-miss, cache, persist a snapshot) ----
 @router.get("/player/{player_id}")
 async def player(player_id: str):
@@ -316,37 +331,31 @@ async def player(player_id: str):
     #
     # Unlike /team and /match below, a VlrNotFound here is NOT caught, so an
     # unknown player id surfaces as a 500 rather than a 404.
-    data = await cache_get(R.CACHE_PLAYER.format(id=player_id))
-    if data is None:
-        data = await R.refresh_player(player_id)
-    return data
+    return await _detail_or_refresh(
+        R.CACHE_PLAYER.format(id=player_id), lambda: R.refresh_player(player_id),
+    )
 
 
 # ---- team detail (on-demand: scrape-on-miss, cache, persist a snapshot) ----
 @router.get("/team/{team_id}")
 async def team(team_id: str):
-    data = await cache_get(R.CACHE_TEAM.format(id=team_id))
-    if data is None:
-        try:
-            data = await R.refresh_team(team_id)
-        except VlrNotFound:
-            # Bug A: an id vlr.gg has no page for used to 500 (unhandled
-            # raise_for_status). Return a clean 404 so the frontend's graceful
-            # "couldn't load this team" path gets a proper signal.
-            raise HTTPException(status_code=404, detail=f"team {team_id} not found")
-    return data
+    try:
+        return await _detail_or_refresh(
+            R.CACHE_TEAM.format(id=team_id), lambda: R.refresh_team(team_id),
+        )
+    except VlrNotFound:
+        raise HTTPException(status_code=404, detail=f"team {team_id} not found")
 
 
 # ---- match detail (on-demand: scrape-on-miss, cache; no history snapshot) ----
 @router.get("/match/{match_id}")
 async def match(match_id: str):
-    data = await cache_get(R.CACHE_MATCH.format(id=match_id))
-    if data is None:
-        try:
-            data = await R.refresh_match(match_id)
-        except VlrNotFound:
-            raise HTTPException(status_code=404, detail=f"match {match_id} not found")
-    return data
+    try:
+        return await _detail_or_refresh(
+            R.CACHE_MATCH.format(id=match_id), lambda: R.refresh_match(match_id),
+        )
+    except VlrNotFound:
+        raise HTTPException(status_code=404, detail=f"match {match_id} not found")
 
 
 # ---- trends (analytics over banked history; reads ranking_snapshots + match_results) ----

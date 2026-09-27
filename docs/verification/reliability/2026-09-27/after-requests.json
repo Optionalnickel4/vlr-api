@@ -1,0 +1,506 @@
+[
+  {
+    "mode": "fast",
+    "kind": "match",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 43,
+    "bodyKeys": [
+      "id",
+      "event",
+      "series",
+      "status",
+      "format",
+      "teams",
+      "veto",
+      "streams",
+      "maps",
+      "all_maps",
+      "url"
+    ],
+    "name": null
+  },
+  {
+    "mode": "fast",
+    "kind": "match",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 7,
+    "bodyKeys": [
+      "id",
+      "event",
+      "series",
+      "status",
+      "format",
+      "teams",
+      "veto",
+      "streams",
+      "maps",
+      "all_maps",
+      "url"
+    ],
+    "name": null
+  },
+  {
+    "mode": "fast",
+    "kind": "team",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 1474,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "fast",
+    "kind": "team",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "fast",
+    "kind": "player",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 1480,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  },
+  {
+    "mode": "fast",
+    "kind": "player",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  },
+  {
+    "mode": "slow",
+    "kind": "match",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 13523,
+    "bodyKeys": [
+      "id",
+      "event",
+      "series",
+      "status",
+      "format",
+      "teams",
+      "veto",
+      "streams",
+      "maps",
+      "all_maps",
+      "url"
+    ],
+    "name": null
+  },
+  {
+    "mode": "slow",
+    "kind": "match",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 7,
+    "bodyKeys": [
+      "id",
+      "event",
+      "series",
+      "status",
+      "format",
+      "teams",
+      "veto",
+      "streams",
+      "maps",
+      "all_maps",
+      "url"
+    ],
+    "name": null
+  },
+  {
+    "mode": "slow",
+    "kind": "team",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 12021,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "slow",
+    "kind": "team",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "slow",
+    "kind": "player",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 12008,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  },
+  {
+    "mode": "slow",
+    "kind": "player",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  },
+  {
+    "mode": "failed",
+    "kind": "match",
+    "state": "cold",
+    "status": 500,
+    "elapsedMs": 7507,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "failed",
+    "kind": "match",
+    "state": "warm",
+    "status": 500,
+    "elapsedMs": 7515,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "failed",
+    "kind": "team",
+    "state": "cold",
+    "status": 500,
+    "elapsedMs": 7505,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "failed",
+    "kind": "team",
+    "state": "warm",
+    "status": 500,
+    "elapsedMs": 7507,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "failed",
+    "kind": "player",
+    "state": "cold",
+    "status": 500,
+    "elapsedMs": 7506,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "failed",
+    "kind": "player",
+    "state": "warm",
+    "status": 500,
+    "elapsedMs": 7506,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "missing",
+    "kind": "match",
+    "state": "cold",
+    "status": 404,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "detail"
+    ],
+    "name": null
+  },
+  {
+    "mode": "missing",
+    "kind": "match",
+    "state": "warm",
+    "status": 404,
+    "elapsedMs": 1502,
+    "bodyKeys": [
+      "detail"
+    ],
+    "name": null
+  },
+  {
+    "mode": "missing",
+    "kind": "team",
+    "state": "cold",
+    "status": 404,
+    "elapsedMs": 1498,
+    "bodyKeys": [
+      "detail"
+    ],
+    "name": null
+  },
+  {
+    "mode": "missing",
+    "kind": "team",
+    "state": "warm",
+    "status": 404,
+    "elapsedMs": 1501,
+    "bodyKeys": [
+      "detail"
+    ],
+    "name": null
+  },
+  {
+    "mode": "missing",
+    "kind": "player",
+    "state": "cold",
+    "status": 500,
+    "elapsedMs": 1498,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "missing",
+    "kind": "player",
+    "state": "warm",
+    "status": 500,
+    "elapsedMs": 1501,
+    "bodyKeys": null,
+    "name": null
+  },
+  {
+    "mode": "dbfailed",
+    "kind": "team",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 1512,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "dbfailed",
+    "kind": "team",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "dbfailed",
+    "kind": "player",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 1487,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  },
+  {
+    "mode": "dbfailed",
+    "kind": "player",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  },
+  {
+    "mode": "dbslow",
+    "kind": "team",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 6509,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "dbslow",
+    "kind": "team",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "name",
+      "tag",
+      "country",
+      "country_code",
+      "logo",
+      "roster",
+      "results",
+      "upcoming"
+    ],
+    "name": "Sentinels"
+  },
+  {
+    "mode": "dbslow",
+    "kind": "player",
+    "state": "cold",
+    "status": 200,
+    "elapsedMs": 5007,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  },
+  {
+    "mode": "dbslow",
+    "kind": "player",
+    "state": "warm",
+    "status": 200,
+    "elapsedMs": 2,
+    "bodyKeys": [
+      "id",
+      "alias",
+      "real_name",
+      "country",
+      "team",
+      "team_id",
+      "team_url",
+      "agent_stats",
+      "matches"
+    ],
+    "name": "TenZ"
+  }
+]

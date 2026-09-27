@@ -25,7 +25,7 @@ export default async function MatchPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const res = await getMatch(id);
+  const res = await getMatch(id, "page");
   const match = res.data[0] ?? null;
 
   // No match = the endpoint 404'd or errored. Render a page-level graceful state

@@ -34,7 +34,7 @@ export default async function PlayerPage({
   // 404/500 → { data: [], stale: true }. Dimensions are graceful-empty when the
   // player isn't on any regional leaderboard (e.g. a staff member).
   const [player, trend, dims] = await Promise.all([
-    getPlayer(id),
+    getPlayer(id, "page"),
     getPlayerTrend(id),
     getPlayerDimensions(id),
   ]);

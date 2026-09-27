@@ -1,0 +1,47 @@
+[
+  {
+    "kind": "match",
+    "phase": "after",
+    "loadingMs": 214,
+    "loadedMs": 13303,
+    "heading": "MATCH REPORT.",
+    "pageErrors": []
+  },
+  {
+    "kind": "match",
+    "phase": "after",
+    "state": "warm",
+    "loadedMs": 791,
+    "heading": "MATCH REPORT."
+  },
+  {
+    "kind": "team",
+    "phase": "after",
+    "loadingMs": 150,
+    "loadedMs": 12362,
+    "heading": "Sentinels",
+    "pageErrors": []
+  },
+  {
+    "kind": "team",
+    "phase": "after",
+    "state": "warm",
+    "loadedMs": 808,
+    "heading": "Sentinels"
+  },
+  {
+    "kind": "player",
+    "phase": "after",
+    "loadingMs": 107,
+    "loadedMs": 20326,
+    "heading": "TenZ",
+    "pageErrors": []
+  },
+  {
+    "kind": "player",
+    "phase": "after",
+    "state": "warm",
+    "loadedMs": 3574,
+    "heading": "TenZ"
+  }
+]

@@ -1,0 +1,18 @@
+UTC start: 2026-09-27T13:24:26.952780+00:00
+Command: /opt/vlr-api/.venv/bin/pytest -q
+Directory: /opt/vlr-api
+
+........................................................................ [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /opt/vlr-api/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+260 passed, 1 warning in 7.88s
+
+UTC end: 2026-09-27T13:24:36.310558+00:00
+Exit code: 0

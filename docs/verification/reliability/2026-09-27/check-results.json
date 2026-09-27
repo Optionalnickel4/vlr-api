@@ -1,0 +1,58 @@
+{
+  "backend": {
+    "command": [
+      "/opt/vlr-api/.venv/bin/pytest",
+      "-q"
+    ],
+    "directory": "/opt/vlr-api",
+    "started": "2026-09-27T13:24:26.952780+00:00",
+    "ended": "2026-09-27T13:24:36.310558+00:00",
+    "exitCode": 0
+  },
+  "tests": {
+    "command": [
+      "npm",
+      "test"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T13:24:26.953117+00:00",
+    "ended": "2026-09-27T13:24:58.401229+00:00",
+    "exitCode": 0
+  },
+  "lint": {
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T13:24:26.953355+00:00",
+    "ended": "2026-09-27T13:24:46.825198+00:00",
+    "exitCode": 0
+  },
+  "typescript": {
+    "command": [
+      "./node_modules/.bin/tsc",
+      "--noEmit",
+      "--incremental",
+      "false"
+    ],
+    "directory": "/opt/vlr-api/frontend",
+    "started": "2026-09-27T13:24:26.955861+00:00",
+    "ended": "2026-09-27T13:24:42.342756+00:00",
+    "exitCode": 0
+  },
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "directory": "/tmp/vlr-preview/reliability-final",
+    "started": "2026-09-27T13:24:36.311187+00:00",
+    "ended": "2026-09-27T13:25:05.926265+00:00",
+    "exitCode": 0
+  }
+}

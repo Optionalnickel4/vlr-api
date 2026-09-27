@@ -31,7 +31,7 @@ export default async function TeamPage({
 
   // Both endpoints 500 on certain ids (incl. some rank-1 teams reachable from
   // normal nav). The loaders catch that → { data: [], stale: true, error }.
-  const [team, trend] = await Promise.all([getTeam(id), getTeamTrend(id)]);
+  const [team, trend] = await Promise.all([getTeam(id, "page"), getTeamTrend(id)]);
   const detail = team.data[0] ?? null;
 
   // No team detail = the /team/{id} endpoint failed (or genuinely empty). We
