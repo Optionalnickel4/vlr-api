@@ -308,7 +308,8 @@ async def team_trend(team_id: str, days: int = 90) -> dict[str, Any]:
 # shaping below; the one DB function is at the bottom.
 # =============================================================================
 
-# the verbatim agent_stats keys we trend (display-cased, as scraped — see CLAUDE.md)
+# Historical display labels; current VLR pages also use R and Rnd.
+# Read aliases during aggregation only: stored/raw API rows remain verbatim.
 _RATING_KEY = "Rating"
 _ACS_KEY = "ACS"
 _ROUNDS_KEY = "RND"
@@ -332,10 +333,10 @@ def aggregate_player_stats(agent_stats: Any) -> dict[str, Any] | None:
     total_rounds = 0
     for row in agent_stats:
         stats = (row or {}).get("stats") or {}
-        rating = coerce_float(stats.get(_RATING_KEY))
+        rating = coerce_float(stats.get(_RATING_KEY, stats.get("R")))
         if rating is None:
             continue  # the trended stat won't parse → skip this agent row
-        rnd = coerce_int(stats.get(_ROUNDS_KEY))
+        rnd = coerce_int(stats.get(_ROUNDS_KEY, stats.get("Rnd")))
         weight = rnd if (rnd is not None and rnd > 0) else 1
         rating_num += rating * weight
         rating_den += weight

@@ -298,6 +298,12 @@ function roundTo(n: number, d: number): number {
   return Number(n.toFixed(d));
 }
 
+/** VLR has emitted both RND/Rating and Rnd/R. Keep source rows verbatim;
+ *  accept the known labels only at computation time. Legacy keys take precedence. */
+export function agentRounds(stats: AgentStat["stats"]): number | null {
+  return parseNumeric("RND" in stats ? stats.RND : stats.Rnd);
+}
+
 /** The card-header overall: a ROUNDS-WEIGHTED collapse of the per-agent rows
  *  (VLR exposes no totals row — confirmed against real markup — only per-agent
  *  stats). Mirrors the Phase 8 trend service's weighting EXACTLY: weight by RND,
@@ -315,9 +321,9 @@ export function playerOverall(agentStats: AgentStat[]): PlayerOverall {
   let totalD = 0;
   for (const row of agentStats) {
     const s = row.stats;
-    const rnd = parseNumeric(s["RND"]);
+    const rnd = agentRounds(s);
     const weight = rnd !== null && rnd > 0 ? rnd : 1; // fallback so a parseable stat counts
-    const rating = parseNumeric(s["Rating"]);
+    const rating = parseNumeric("Rating" in s ? s.Rating : s.R);
     if (rating !== null) {
       ratingNum += rating * weight;
       ratingDen += weight;
@@ -346,7 +352,7 @@ export function signatureAgent(agentStats: AgentStat[]): SignatureAgent | null {
   let best: { agent: string; rounds: number; use: string | undefined } | null = null;
   for (const row of agentStats) {
     if (!row.agent) continue;
-    const rounds = parseNumeric(row.stats["RND"]) ?? 0;
+    const rounds = agentRounds(row.stats) ?? 0;
     if (best === null || rounds > best.rounds) {
       best = { agent: row.agent, rounds, use: row.stats["Use"] };
     }

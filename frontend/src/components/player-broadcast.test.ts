@@ -57,3 +57,28 @@ it('suppresses unsupported movement for thin, flat and undated history',()=>{
  t.ratingTrend.push({...t.ratingTrend[0],capturedAt:'2026-09-02'});doc=parse(h(PlayerTrendPanel,{trend:{data:[t],stale:false}}));expect(doc.body.textContent).toContain('Rating held flat');
  t.ratingTrend[1].rating=2;t.ratingTrend[1].capturedAt=null;doc=parse(h(PlayerTrendPanel,{trend:{data:[t],stale:false}}));expect(doc.body.textContent).toContain('Capture dates are insufficient');expect(doc.querySelector('svg')).toBeNull();
 });
+
+it('uses current R/Rnd labels for headline weighting, round coverage and main agent while keeping table keys',()=>{
+ const rows = [
+  {agent:'jett',stats:{R:'1.0',Rnd:'10',ACS:'100',Use:'10%'}},
+  {agent:'sova',stats:{R:'2.0',Rnd:'90',ACS:'300',Use:'90%'}},
+ ];
+ const before=JSON.stringify(rows);
+ const player=normalizePlayer({id:'42',alias:'Fixture',agent_stats:rows})[0];
+ expect(playerOverall(player.agentStats)).toEqual({rating:1.9,acs:280,kd:null});
+ const doc=parse(h(PlayerCard,{player}));
+ expect(doc.body.textContent).toContain('100 known rounds across 2 rows');
+ expect(doc.querySelector('.pd-signature')?.textContent).toContain('sova');
+ expect(doc.body.textContent).toContain('1.90');
+ expect(Object.keys(player.agentStats[0].stats)).toEqual(['R','Rnd','ACS','Use']);
+ expect(JSON.stringify(rows)).toBe(before);
+});
+
+it('prefers historical labels when both are present, including explicitly missing ratings',()=>{
+ const rows=[{agent:'sova',stats:{Rating:'1.5',R:'9',RND:'20',Rnd:'999',ACS:'200'}}];
+ expect(playerOverall(rows).rating).toBe(1.5);
+ const player=normalizePlayer({id:'42',agent_stats:rows})[0];
+ expect(parse(h(PlayerCard,{player})).body.textContent).toContain('20 known rounds');
+ rows[0].stats.Rating='–';
+ expect(playerOverall(rows).rating).toBeNull();
+});

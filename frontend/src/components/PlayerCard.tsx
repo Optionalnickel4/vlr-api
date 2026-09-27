@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { parseNumeric, playerOverall, signatureAgent } from "@/lib/vlr";
+import { agentRounds, playerOverall, signatureAgent } from "@/lib/vlr";
 import type { PlayerDetail } from "@/types/vlr";
 
 export function PlayerCard({ player }: { player: PlayerDetail }) {
   const overall = playerOverall(player.agentStats);
   const selected = signatureAgent(player.agentStats);
-  const sig = selected && player.agentStats.some(row => row.agent === selected.agent && (parseNumeric(row.stats.RND) ?? 0) > 0) ? selected : null;
-  const rounds = player.agentStats.map(row => parseNumeric(row.stats.RND)).filter((n): n is number => n !== null && n > 0);
+  const sig = selected && player.agentStats.some(row => row.agent === selected.agent && (agentRounds(row.stats) ?? 0) > 0) ? selected : null;
+  const rounds = player.agentStats.map(row => agentRounds(row.stats)).filter((n): n is number => n !== null && n > 0);
   const recent = player.matches.slice(0, 10);
   const team = player.team ?? "Team unavailable";
   return <header className="pd-identity">

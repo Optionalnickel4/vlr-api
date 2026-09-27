@@ -194,3 +194,23 @@ def test_cutoff_none_means_no_window():
     rows = [psnap("0.90", days=0), psnap("1.20", days=10)]
     resp = build_player_response("9", 90, rows, cutoff=None)
     assert resp["summary"]["points"] == 2
+
+
+def test_current_display_labels_restore_weighted_history_without_changing_rows():
+    from copy import deepcopy
+    rows = [
+        {'agent': 'jett', 'stats': {'R': '1.0', 'Rnd': '10', 'ACS': '100'}},
+        {'agent': 'sova', 'stats': {'R': '2.0', 'Rnd': '90', 'ACS': '300'}},
+    ]
+    before = deepcopy(rows)
+    assert aggregate_player_stats(rows) == {'rating': 1.9, 'acs': 280.0, 'rounds': 100}
+    points = build_player_trend([{'captured_at': T0, 'agent_stats': rows}])
+    assert len(points) == 1 and points[0]['rating'] == 1.9
+    assert rows == before
+
+
+def test_legacy_display_labels_win_when_both_are_present():
+    rows = [{'stats': {'Rating': '1.5', 'R': '9', 'RND': '20', 'Rnd': '999', 'ACS': '200'}}]
+    assert aggregate_player_stats(rows) == {'rating': 1.5, 'acs': 200.0, 'rounds': 20}
+    rows[0]['stats']['Rating'] = '–'
+    assert aggregate_player_stats(rows) is None
