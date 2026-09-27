@@ -1,0 +1,41 @@
+{
+  "reviewed_at_utc": "2026-09-27T15:36:43.210292+00:00",
+  "starting_review_commit": "bea34d5df9cdb2fa635222d2092c129d2ed99cc3",
+  "application_sha": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+  "operator_submission": "[PASTE OUTPUTS HERE]",
+  "operator_outputs_received": 0,
+  "operator_commands": [],
+  "operator_observation_timestamps": [],
+  "operator_identities": [],
+  "operator_hashes": [],
+  "production_observations_collected_this_pass": false,
+  "recommendation": "NO-GO",
+  "open_gates": [
+    "exact loaded backend source/runtime provenance",
+    "integrated full-service recovery with normal schema startup and newer data preserved",
+    "effective Caddy ingress deadlines"
+  ],
+  "retained_passes": [
+    "isolated application-only switch with schema-startup substitution",
+    "selected cold-cache sample",
+    "measured durable capacity"
+  ],
+  "protected_file_hashes_before": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "review_commands": [
+    "git status --short",
+    "git rev-parse HEAD",
+    "read docs/RELEASE_GATE_VERIFICATION.md and docs/PRODUCTION_RELEASE_REVIEW.md",
+    "local documentation link/fence and evidence JSON checks",
+    "git diff --check"
+  ],
+  "validation": {
+    "documentation_links_and_fences": "pass",
+    "evidence_json": "pass",
+    "protected_files_unchanged": true,
+    "git_diff_check": "pass",
+    "application_tests_rerun": false
+  }
+}

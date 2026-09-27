@@ -6,6 +6,12 @@
 
 Evidence: [release verification directory](verification/release/2026-09-27/), particularly `runtime-before.json`, `configuration.json`, `parity.json`, `checks-final.json`, `api-smoke.json`, and `preview-analytics-smoke.json`. Existing [broadcast audit](BROADCAST_PREDEPLOYMENT_AUDIT.md) and [analytics trace](verification/player-analytics/2026-09-27/README.md) provide broader controlled/browser coverage; they are not fresh production tests.
 
+## Latest operator-output assessment
+
+**NO-GO unchanged.** At **2026-09-27T15:36:43.210292+00:00**, the submission following review commit `bea34d5df9cdb2fa635222d2092c129d2ed99cc3` contained only `[PASTE OUTPUTS HERE]`; no operator commands/results, observation timestamps, identities or hashes were provided. Exact loaded backend provenance, integrated recovery with normal schema startup and preserved newer data, and effective Caddy deadline settings all remain **open**. The [gate comparison](RELEASE_GATE_VERIFICATION.md#operator-output-assessment--no-outputs-supplied) lists the precise missing observations against existing acceptance criteria.
+
+Prior isolated application-only rollback, selected cold-cache and measured capacity passes remain valid within their recorded scope. Supplied ingress configuration remains compatible and unattested at runtime. This documentation-only pass performs no production checks or recovery execution; earlier service identities and capacity measurements are not new observations. No production changes, migrations or VLR requests occurred.
+
 ## Current gate follow-up
 
 The [gate verification report](RELEASE_GATE_VERIFICATION.md) supersedes the initial gate assessment below and records commands, pass criteria, results and remaining risks. **Application release remains `9301682c4165d7507e49d6ad7678d14ca9df377e`**; no application or live configuration fix was made. The latest documentation commit is separate from that release.
