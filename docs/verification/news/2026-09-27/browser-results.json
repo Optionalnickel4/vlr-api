@@ -1,0 +1,127 @@
+{
+  "checkedAt": "2026-09-27T12:47:17.857Z",
+  "results": [
+    {
+      "source": "cached",
+      "width": 1440,
+      "documentWidth": 1440,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 30,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "width": 768,
+      "documentWidth": 768,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 30,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "width": 390,
+      "documentWidth": 390,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 30,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "cached",
+      "width": 320,
+      "documentWidth": 320,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 30,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "width": 1440,
+      "documentWidth": 1440,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 3,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "width": 768,
+      "documentWidth": 768,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 3,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "width": 390,
+      "documentWidth": 390,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 3,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "width": 320,
+      "documentWidth": 320,
+      "dpr": 1,
+      "ticker": "fixed",
+      "tickers": 1,
+      "count": 3,
+      "noImages": true,
+      "keyboardTab": true,
+      "focusClear": true,
+      "bottomClear": true,
+      "errors": []
+    },
+    {
+      "source": "controlled",
+      "scenario": "empty",
+      "passed": true
+    },
+    {
+      "source": "controlled",
+      "scenario": "error",
+      "passed": true
+    }
+  ]
+}

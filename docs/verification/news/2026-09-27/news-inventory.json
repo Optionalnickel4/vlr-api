@@ -1,0 +1,172 @@
+{
+  "checkedAt": "2026-09-27T12:42:24.822679+00:00",
+  "sourceListing": "https://www.vlr.gg/news",
+  "cacheEndpoint": "http://127.0.0.1:8101/api/v1/news",
+  "rows": 30,
+  "fields": [
+    "description",
+    "meta",
+    "title",
+    "url"
+  ],
+  "titles": 30,
+  "descriptions": 30,
+  "metadata": 30,
+  "sourceLinks": 30,
+  "descriptionCharacterRange": [
+    28,
+    140
+  ],
+  "sources": [
+    {
+      "url": "https://www.vlr.gg/761365/100-thieves-dismantle-t1-advance-in-group-a",
+      "titleCharacters": 44,
+      "descriptionCharacters": 68
+    },
+    {
+      "url": "https://www.vlr.gg/760697/loud-silences-edward-gaming-with-sweep-in-shanghai",
+      "titleCharacters": 50,
+      "descriptionCharacters": 110
+    },
+    {
+      "url": "https://www.vlr.gg/760384/vitality-outbrawls-global-esports-in-close-2-1-bout",
+      "titleCharacters": 51,
+      "descriptionCharacters": 70
+    },
+    {
+      "url": "https://www.vlr.gg/759716/karmine-corp-makes-melons-out-of-xlg-with-sweep",
+      "titleCharacters": 47,
+      "descriptionCharacters": 140
+    },
+    {
+      "url": "https://www.vlr.gg/759663/nrg-gets-its-revenge-sweeps-nongshim-redforce",
+      "titleCharacters": 46,
+      "descriptionCharacters": 101
+    },
+    {
+      "url": "https://www.vlr.gg/759218/g2-esports-rolls-through-tyloo-to-start-groups",
+      "titleCharacters": 46,
+      "descriptionCharacters": 138
+    },
+    {
+      "url": "https://www.vlr.gg/758987/paper-rex-shuts-down-team-liquid-to-kick-off-champions-shanghai-action",
+      "titleCharacters": 70,
+      "descriptionCharacters": 42
+    },
+    {
+      "url": "https://www.vlr.gg/758479/fire-flux-allows-deadink-batujnax-reazy-and-lev-to-explore-options",
+      "titleCharacters": 69,
+      "descriptionCharacters": 61
+    },
+    {
+      "url": "https://www.vlr.gg/757970/shopify-rebellion-black-allows-nature-to-explore-options",
+      "titleCharacters": 56,
+      "descriptionCharacters": 37
+    },
+    {
+      "url": "https://www.vlr.gg/757962/loud-adds-balax-as-analyst-ahead-of-champions-shanghai",
+      "titleCharacters": 54,
+      "descriptionCharacters": 62
+    },
+    {
+      "url": "https://www.vlr.gg/757961/thinkii-set-to-leave-pcific-esports",
+      "titleCharacters": 35,
+      "descriptionCharacters": 38
+    },
+    {
+      "url": "https://www.vlr.gg/757396/coach-joe-shopify-has-been-the-team-to-beat-in-game-changers",
+      "titleCharacters": 68,
+      "descriptionCharacters": 139
+    },
+    {
+      "url": "https://www.vlr.gg/757200/purp0-searching-for-new-team-following-team-liquid-benching",
+      "titleCharacters": 59,
+      "descriptionCharacters": 96
+    },
+    {
+      "url": "https://www.vlr.gg/757196/natus-vinceres-cyvoph-set-to-enter-free-agency",
+      "titleCharacters": 47,
+      "descriptionCharacters": 72
+    },
+    {
+      "url": "https://www.vlr.gg/757192/warbirds-set-to-leave-the-rex-regum-qeon-flock",
+      "titleCharacters": 46,
+      "descriptionCharacters": 65
+    },
+    {
+      "url": "https://www.vlr.gg/756841/envy-allows-nightz-to-explore-options",
+      "titleCharacters": 37,
+      "descriptionCharacters": 68
+    },
+    {
+      "url": "https://www.vlr.gg/756712/sylvan-the-latest-to-leave-team-secret-in-offseason-exodus",
+      "titleCharacters": 58,
+      "descriptionCharacters": 48
+    },
+    {
+      "url": "https://www.vlr.gg/756705/waddle-set-to-leave-pcific-esports",
+      "titleCharacters": 34,
+      "descriptionCharacters": 28
+    },
+    {
+      "url": "https://www.vlr.gg/756630/onside-gaming-parts-ways-with-2026-roster",
+      "titleCharacters": 41,
+      "descriptionCharacters": 61
+    },
+    {
+      "url": "https://www.vlr.gg/756334/team-secret-allows-kellys-to-explore-options",
+      "titleCharacters": 44,
+      "descriptionCharacters": 97
+    },
+    {
+      "url": "https://www.vlr.gg/756321/srg-to-compete-with-sarahcat-in-place-of-noia",
+      "titleCharacters": 45,
+      "descriptionCharacters": 65
+    },
+    {
+      "url": "https://www.vlr.gg/756318/cauanzin-leaves-loud-after-nearly-four-years",
+      "titleCharacters": 44,
+      "descriptionCharacters": 86
+    },
+    {
+      "url": "https://www.vlr.gg/756255/enterprise-allows-head-coach-itopata-to-explore-options",
+      "titleCharacters": 55,
+      "descriptionCharacters": 75
+    },
+    {
+      "url": "https://www.vlr.gg/756249/kr-set-to-part-ways-with-dantedeu5",
+      "titleCharacters": 35,
+      "descriptionCharacters": 92
+    },
+    {
+      "url": "https://www.vlr.gg/756240/sentinels-allow-jerrwin-to-explore-options",
+      "titleCharacters": 42,
+      "descriptionCharacters": 74
+    },
+    {
+      "url": "https://www.vlr.gg/756142/ninja-announces-departure-from-pcific",
+      "titleCharacters": 37,
+      "descriptionCharacters": 77
+    },
+    {
+      "url": "https://www.vlr.gg/756026/spin-set-to-leave-team-secret-after-stage-2-stint",
+      "titleCharacters": 49,
+      "descriptionCharacters": 70
+    },
+    {
+      "url": "https://www.vlr.gg/755933/bipo-enters-restricted-free-agency",
+      "titleCharacters": 34,
+      "descriptionCharacters": 84
+    },
+    {
+      "url": "https://www.vlr.gg/755930/team-secret-allows-igl-styron-to-explore-options",
+      "titleCharacters": 48,
+      "descriptionCharacters": 81
+    },
+    {
+      "url": "https://www.vlr.gg/755922/pcific-to-part-ways-with-al0rante",
+      "titleCharacters": 33,
+      "descriptionCharacters": 57
+    }
+  ]
+}

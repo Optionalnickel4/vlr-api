@@ -1,0 +1,27 @@
+{
+  "method": "Native Chromium page zoom via chrome.settingsPrivate.setDefaultZoom(2)",
+  "results": [
+    {
+      "route": "news",
+      "browserZoom": 2,
+      "outerWidth": 1440,
+      "innerWidth": 720,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 720,
+      "focusedClear": true,
+      "bottomClear": true
+    },
+    {
+      "route": "news",
+      "browserZoom": 2,
+      "outerWidth": 768,
+      "innerWidth": 384,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 384,
+      "focusedClear": true,
+      "bottomClear": true
+    }
+  ]
+}
