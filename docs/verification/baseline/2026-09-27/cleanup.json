@@ -1,0 +1,11 @@
+{
+  "removed_redundant_failed_run_copies_only": [
+    "/home/builder/vlr-recovery-check/gate2-j7fjkt8b/artifacts",
+    "/home/builder/vlr-recovery-check/gate2-c3808v_n/artifacts",
+    "/home/builder/vlr-recovery-check/gate2-gx9xd8m0/artifacts",
+    "/home/builder/vlr-recovery-check/gate2-hfdauv61/artifacts",
+    "/home/builder/vlr-recovery-check/gate2-hfdauv61/state/candidate-frontend"
+  ],
+  "logs_manifests_results_retained": true,
+  "original_artifacts_and_prior_task_evidence_untouched": true
+}

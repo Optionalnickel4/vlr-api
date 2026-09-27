@@ -1,0 +1,17 @@
+{
+  "observed_at_utc": "2026-09-27T20:26:46.548610+00:00",
+  "disk_total": 21024690176,
+  "disk_used": 14195703808,
+  "disk_free": 5867331584,
+  "harness_copy_logical_bytes": 3490593264,
+  "harness_required_free_before_run": 6711818736,
+  "operating_reserve_bytes": 2147483648,
+  "final_free_exceeds_reserve": true,
+  "sampled_peak_claim": false,
+  "future_cutover_budget_passed": false,
+  "reason": "Future second package, backup growth, restore copies and live load require new measurements",
+  "df_inodes": "Filesystem                        Inodes  IUsed  IFree IUse% Mounted on\n/dev/mapper/pve-vm--221--disk--0 1310720 321080 989640   25% /\n",
+  "free_memory": "               total        used        free      shared  buff/cache   available\nMem:      4324327424   469596160  1036169216   136863744  2955376640  3854731264\nSwap:     4320133120  3455131648   865001472\n",
+  "retained_package_allocation": "1413328896\t/home/builder/vlr-recovery-check/baseline-20260927\n",
+  "successful_rehearsal_allocation": "3921821696\t/home/builder/vlr-recovery-check/gate2-6t1ng6jg\n"
+}

@@ -29,6 +29,25 @@ class RecoverySafetyTests(unittest.TestCase):
             self.assertIsNone(data)
             self.assertTrue(any('NOT attested production' in e for e in errors))
 
+    def test_baseline_mode_requires_manifest_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manifest = root / 'release.json'
+            manifest.write_text(json.dumps({'strategy': 'new-known-baseline', 'files': {'backend/app.py': 'a', 'frontend/x': 'b'}}))
+            data = {'strategy': 'new-known-baseline', 'stages': ['candidate', 'baseline'],
+                    'purpose': 'baseline-rehearsal', 'secret_free_artifacts_reviewed': True,
+                    'baseline_release': {'path': str(manifest), 'sha256': m.sha(manifest)},
+                    'baseline_backend': {'files': {'app.py': 'changed'}},
+                    'baseline_frontend': {'files': {'x': 'b'}}}
+            path = root / 'input.json'
+            path.write_text(json.dumps(data))
+            _, errors = m.preflight(path)
+            self.assertTrue(any('Baseline inventory mismatch' in e for e in errors))
+
+    def test_private_bwrap_resolved_before_environment_clear(self):
+        with patch.object(m.shutil, 'which', return_value='/private/bin/bwrap'):
+            self.assertEqual(m.sandbox_command(Path('/private/test'))[0], '/private/bin/bwrap')
+
     def test_path_escape_and_absolute_path_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             for name in ('../secret', '/etc/passwd'):

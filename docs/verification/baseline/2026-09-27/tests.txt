@@ -1,0 +1,17 @@
+test_baseline_mode_requires_manifest_identity (tests.test_integrated_recovery.RecoverySafetyTests.test_baseline_mode_requires_manifest_identity) ... ok
+test_hash_mismatch_rejected (tests.test_integrated_recovery.RecoverySafetyTests.test_hash_mismatch_rejected) ... ok
+test_known_fallback_rejected_even_with_review_boolean (tests.test_integrated_recovery.RecoverySafetyTests.test_known_fallback_rejected_even_with_review_boolean) ... ok
+test_missing_inputs_do_not_start_processes (tests.test_integrated_recovery.RecoverySafetyTests.test_missing_inputs_do_not_start_processes) ... ok
+test_path_escape_and_absolute_path_rejected (tests.test_integrated_recovery.RecoverySafetyTests.test_path_escape_and_absolute_path_rejected) ... ok
+test_private_bwrap_resolved_before_environment_clear (tests.test_integrated_recovery.RecoverySafetyTests.test_private_bwrap_resolved_before_environment_clear) ... ok
+test_sandbox_mounts_exclude_host_storage_and_credentials (tests.test_integrated_recovery.RecoverySafetyTests.test_sandbox_mounts_exclude_host_storage_and_credentials) ... ok
+test_undeclared_file_environment_and_symlinks_rejected (tests.test_integrated_recovery.RecoverySafetyTests.test_undeclared_file_environment_and_symlinks_rejected) ... ok
+test_changed_artifact_rejected (tests.test_baseline_receipt.ReceiptTests.test_changed_artifact_rejected) ... ok
+test_launcher_writes_invocation_receipt_after_lifespan (tests.test_baseline_receipt.ReceiptTests.test_launcher_writes_invocation_receipt_after_lifespan) ... ok
+test_start_ticks_handles_parentheses_in_process_name (tests.test_baseline_receipt.ReceiptTests.test_start_ticks_handles_parentheses_in_process_name) ... ok
+test_wrong_invocation_rejected (tests.test_baseline_receipt.ReceiptTests.test_wrong_invocation_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.097s
+
+OK

@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "archives": {
+    "backend": {
+      "sha256": "bbbd5f9434226af503643bbd94bf47140ee6118b4dd1866830de98c9a8d55cf3",
+      "members_verified": 5593
+    },
+    "frontend": {
+      "sha256": "c0ada104649ee841a0009fd3495306af162b49537dda62dd49c0c49139975209",
+      "members_verified": 25689
+    }
+  }
+}

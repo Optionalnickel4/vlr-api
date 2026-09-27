@@ -1,0 +1,116 @@
+{
+  "created_at_utc": "2026-09-27T20:26:46.548610+00:00",
+  "recommendation": "NO-GO: preparation complete; production gates open",
+  "strategy": "new-known-baseline",
+  "historical_gate1": {
+    "status": "FAILED_SUPERSEDED",
+    "provenance": "unrecoverable from available evidence",
+    "further_search_required": false,
+    "fallback_is_exact_running_backend": false,
+    "old_backend_attested_application_only_rollback": false
+  },
+  "prerequisites": {
+    "bwrap": "RESOLVED: private Debian extraction; network/mount/PID/user isolation executed",
+    "gate2_input": "RESOLVED: new baseline-only artifact manifest, not historical fallback",
+    "input_path": "/home/builder/vlr-recovery-check/gate2-input.json",
+    "input_sha256": "99353e5fd3625e344ed4281523313ef9dae385a4c758fe6a57e1f651166306aa"
+  },
+  "offline_checks": {
+    "unit_tests_passed": 12,
+    "python_ast": "PASS",
+    "shell_syntax": "PASS",
+    "archive_file_verification": "PASS",
+    "npm_ls_offline": "PASS",
+    "fresh_networkless_frontend_build": "PASS",
+    "secret_review": "PASS within documented scope",
+    "integrated_baseline_rehearsal": "PASS",
+    "private_result_path": "/home/builder/vlr-recovery-check/gate2-6t1ng6jg/state/result.json",
+    "private_result_sha256": "b38a6822b36ecdb41e0c2009c0061f31ad80a1f0d13b0759836f0e62cce19979",
+    "normal_schema_startup": true,
+    "scheduler_fixture_refresh_both_stages": true,
+    "integrated_frontend_marker_both_stages": true,
+    "newer_history_and_cache_preserved": true,
+    "storage_continuously_running": true,
+    "private_processes_stopped": true,
+    "not_proven": [
+      "second-release rollback",
+      "fresh production schema/data compatibility",
+      "production systemd launch and startup receipt",
+      "all scheduler job bodies",
+      "real ingress deadlines"
+    ],
+    "local_document_links_checked": 40,
+    "git_diff_check": "PASS",
+    "rendered_overrides": "PREPARED; systemd rehearsal required"
+  },
+  "before_first_cutover": {
+    "package_source_runtime_build_review": "PREPARED; operator review required",
+    "immutable_offhost_retention_and_download_verification": "OPEN",
+    "private_baseline_recovery_rehearsal": "PASS",
+    "fresh_database_and_cache_backup_restore": "OPEN; old PG restore evidence retained, no fresh cache point",
+    "real_schema_normal_startup_and_lock_rehearsal": "OPEN",
+    "disposable_systemd_launcher_receipt_rehearsal": "OPEN; unit-level receipt generation/verification tested",
+    "capacity_recheck": "OPEN for cutover; isolated preparation budget passed",
+    "effective_ingress_deadlines": "OPEN; proposed settings are not active attestation",
+    "maintenance_failure_path_authorization": "OPEN"
+  },
+  "baseline_proven": {
+    "production_cutover": "NOT_RUN",
+    "live_startup_receipts": "NOT_GENERATED",
+    "health_singleton_data_preservation": "NOT_RUN",
+    "24h_soak": "NOT_RUN"
+  },
+  "before_second_release_GO": {
+    "proven_immutable_baseline": "OPEN",
+    "distinct_candidate_package": "NOT_SUPPLIED",
+    "candidate_to_baseline_application_only_rollback": "NOT_RUN",
+    "bidirectional_schema_cache_compatibility": "OPEN",
+    "candidate_acceptance_and_fresh_backup_capacity": "OPEN"
+  },
+  "ingress": {
+    "identified_vlr_path": true,
+    "caddy_version": "v2.11.4",
+    "caddy_pid": 87,
+    "listen": ":80",
+    "host": "val.jushosting.dev",
+    "upstream": "10.0.0.21:3000",
+    "reported_explicit_proxy_timeouts": false,
+    "source": "existing captured operator active-config summary; no raw export hash supplied",
+    "effective_80_90_gate_passed": false,
+    "proposed_margin_seconds": 120,
+    "postchange_active_config_attestation": "REQUIRED IF CHANGED",
+    "connector_and_edge_effective_policy": "OPEN"
+  },
+  "failed_attempts": [
+    {
+      "run": "gate2-j7fjkt8b",
+      "reason": "Private bwrap lost after PATH clearing; no sandbox started"
+    },
+    {
+      "run": "gate2-c3808v_n",
+      "reason": "Unnecessary loopback flag mutation denied; no storage started"
+    },
+    {
+      "run": "gate2-gx9xd8m0",
+      "reason": "Debian retained site-packages absent from PYTHONPATH; private storage cleaned up"
+    },
+    {
+      "run": "gate2-hfdauv61",
+      "reason": "Next expected graceful exit 143 rejected by generic exit check; private processes cleaned up"
+    }
+  ],
+  "protected_files_sha256": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "production_services_changed": false,
+  "production_configuration_data_cache_changed": false,
+  "production_migrations_run": false,
+  "vlr_requests_made": false,
+  "isolated_services_and_fixture_migrations_run": true,
+  "executed_runner_sha256": {
+    "integrated.py": "c2d59eeac9e4368b4708924d51b6075db6c317759782238f1ed80233cfc025df",
+    "sandbox.py": "0a63c1b62f1802d941148859262fe9b4b24c9f1024157d4aad798c102fd0c24e",
+    "backend_worker.py": "68d622fc59d8217896485583f465935539a52e1e10559378a0849d99643a9441"
+  }
+}

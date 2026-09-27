@@ -1,0 +1,21 @@
+# MERGE proposal; never replace the multi-site Caddyfile with this fragment.
+# The existing :80 server is shared: review impact on ALL routes before changing it.
+# In the existing global block:
+# servers :80 {
+#     timeouts {
+#         write 120s
+#     }
+# }
+# Replace only the existing val.jushosting.dev reverse_proxy handler:
+@vlr host val.jushosting.dev
+handle @vlr {
+    reverse_proxy 10.0.0.21:3000 {
+        flush_interval -1
+        transport http {
+            response_header_timeout 120s
+            read_timeout 120s
+            write_timeout 120s
+        }
+    }
+}
+# No response_buffers; inspect enclosing middleware and stream_timeout too.

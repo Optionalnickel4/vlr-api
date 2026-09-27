@@ -62,6 +62,10 @@ def validate_tree(spec, backend=False):
         require((root / 'node_modules/next/dist/bin/next').is_file(), 'Missing installed Next runtime')
 
 
+def artifact_names(data):
+    return tuple(stage + '_' + kind for stage in data.get('stages', ['candidate', 'historical']) for kind in ('backend', 'frontend'))
+
+
 def preflight(path):
     problems = []
     fixture = Path(__file__).resolve().parents[2] / 'tests/fixtures/results.html'
@@ -78,19 +82,42 @@ def preflight(path):
         return None, problems
     try:
         data = json.loads(path.read_text())
-        require(data['candidate_revision'] == CANDIDATE, 'Wrong candidate revision')
-        require(data['secret_free_artifacts_reviewed'] is True, 'Secret-free artifact review required')
-        provenance = data['provenance']
-        require(provenance['reviewed_startup_link'] is True, 'Gate 1 startup-link review required')
-        require(provenance['archive_sha256'] != FALLBACK, 'Known historical fallback is NOT attested production')
-        for key in ('startup_timestamp', 'invocation_id', 'source_identity'):
-            require(bool(provenance[key]), 'Missing provenance: ' + key)
-        require(provenance['pid'] > 0, 'Missing startup PID')
-        for name in ('archive', 'receipt'):
-            require(sha(provenance[name + '_path']) == provenance[name + '_sha256'], 'Provenance file hash mismatch')
-        canonical = json.dumps(data['historical_backend']['files'], sort_keys=True, separators=(',', ':')).encode()
-        require(hashlib.sha256(canonical).hexdigest() == provenance['backend_files_sha256'], 'Receipt/artifact inventory mismatch')
-        for name in ('candidate_backend', 'historical_backend', 'candidate_frontend', 'historical_frontend'):
+        if data.get('strategy') == 'new-known-baseline':
+            require(data['stages'] == ['candidate', 'baseline'], 'Invalid baseline stages')
+            require(data['secret_free_artifacts_reviewed'] is True, 'Secret-free artifact review required')
+            require(data['purpose'] in ('baseline-rehearsal', 'second-release-rollback'), 'Invalid purpose')
+            release = data['baseline_release']
+            require(sha(release['path']) == release['sha256'], 'Baseline release manifest mismatch')
+            manifest = json.loads(Path(release['path']).read_text())
+            require(manifest['strategy'] == 'new-known-baseline', 'Not a new baseline')
+            for kind in ('backend', 'frontend'):
+                expected = {k[len(kind)+1:]: v for k, v in manifest['files'].items() if k.startswith(kind + '/')}
+                require(expected == data['baseline_' + kind]['files'], 'Baseline inventory mismatch')
+            if data['purpose'] == 'baseline-rehearsal':
+                for kind in ('backend', 'frontend'):
+                    require(data['candidate_' + kind]['files'] == data['baseline_' + kind]['files'], 'Rehearsal requires identical new baseline artifacts')
+            else:
+                require(data['baseline_startup_reviewed'] is True, 'Proven baseline startup review required')
+                require(sha(data['baseline_receipt_path']) == data['baseline_receipt_sha256'], 'Baseline receipt mismatch')
+                receipt = json.loads(Path(data['baseline_receipt_path']).read_text())
+                require(receipt['release_manifest_sha256'] == release['sha256'], 'Receipt is for a different baseline')
+                require(receipt['frontend_build_id'] == manifest['frontend_build_id'], 'Receipt BUILD_ID mismatch')
+                require(bool(receipt['invocation_id']) and receipt['pid'] > 0, 'Missing startup identity')
+                require(any(data['candidate_' + kind]['files'] != data['baseline_' + kind]['files'] for kind in ('backend', 'frontend')), 'Second release must differ from baseline')
+        else:
+            require(data['candidate_revision'] == CANDIDATE, 'Wrong candidate revision')
+            require(data['secret_free_artifacts_reviewed'] is True, 'Secret-free artifact review required')
+            provenance = data['provenance']
+            require(provenance['reviewed_startup_link'] is True, 'Gate 1 startup-link review required')
+            require(provenance['archive_sha256'] != FALLBACK, 'Known historical fallback is NOT attested production')
+            for key in ('startup_timestamp', 'invocation_id', 'source_identity'):
+                require(bool(provenance[key]), 'Missing provenance: ' + key)
+            require(provenance['pid'] > 0, 'Missing startup PID')
+            for name in ('archive', 'receipt'):
+                require(sha(provenance[name + '_path']) == provenance[name + '_sha256'], 'Provenance file hash mismatch')
+            canonical = json.dumps(data['historical_backend']['files'], sort_keys=True, separators=(',', ':')).encode()
+            require(hashlib.sha256(canonical).hexdigest() == provenance['backend_files_sha256'], 'Receipt/artifact inventory mismatch')
+        for name in artifact_names(data):
             validate_tree(data[name], name.endswith('backend'))
         return data, problems
     except (KeyError, ValueError, OSError, TypeError) as exc:
@@ -101,8 +128,8 @@ def preflight(path):
 def sandbox_command(work):
     # Fresh mount, PID, IPC, user and network namespaces. Host /etc, /home,
     # /opt, /run, /var, sockets, credentials and inherited env are not mounted.
-    cmd = ['bwrap', '--unshare-all', '--die-with-parent', '--new-session',
-           '--cap-add', 'CAP_NET_ADMIN', '--clearenv', '--setenv', 'PATH', '/usr/bin:/bin',
+    cmd = [shutil.which('bwrap') or 'bwrap', '--unshare-all', '--die-with-parent', '--new-session',
+           '--clearenv', '--setenv', 'PATH', '/usr/bin:/bin',
            '--setenv', 'HOME', '/work', '--setenv', 'LANG', 'C.UTF-8']
     for path in ('/usr', '/bin', '/lib', '/lib64'):
         if Path(path).exists():
@@ -128,18 +155,19 @@ def main():
     if args.preflight:
         print('Preflight inputs pass; namespace capability is checked only by the isolated run.')
         return 0
-    identity = subprocess.check_output(['systemctl', 'show', 'vlr-api.service', '-p', 'MainPID',
-                                        '-p', 'ExecMainStartTimestamp', '-p', 'InvocationID'], text=True)
-    current = dict(line.split('=', 1) for line in identity.splitlines())
-    provenance = data['provenance']
-    require(current == {'MainPID': str(provenance['pid']),
-                        'ExecMainStartTimestamp': provenance['startup_timestamp'],
-                        'InvocationID': provenance['invocation_id']},
-            'Attestation does not match current service identity')
+    if data.get('strategy') != 'new-known-baseline':
+        identity = subprocess.check_output(['systemctl', 'show', 'vlr-api.service', '-p', 'MainPID',
+                                            '-p', 'ExecMainStartTimestamp', '-p', 'InvocationID'], text=True)
+        current = dict(line.split('=', 1) for line in identity.splitlines())
+        provenance = data['provenance']
+        require(current == {'MainPID': str(provenance['pid']),
+                            'ExecMainStartTimestamp': provenance['startup_timestamp'],
+                            'InvocationID': provenance['invocation_id']},
+                'Attestation does not match current service identity')
     require(os.getuid() != 0, 'Run as the unprivileged builder user, never root')
     copied_bytes = sum(sum(member(Path(data[name]['root']), item).stat().st_size
                                  for item in data[name]['files']) * (2 if name.endswith('frontend') else 1)
-                       for name in ('candidate_backend', 'historical_backend', 'candidate_frontend', 'historical_frontend'))
+                       for name in artifact_names(data))
     require(shutil.disk_usage(BASE).free >= copied_bytes + 3 * 1024 ** 3,
             'Insufficient space: artifact copies plus 1 GiB test storage/log budget and 2 GiB reserve required')
     os.umask(0o077)
@@ -151,7 +179,7 @@ def main():
     shutil.copyfile(fixture, work / 'runner/results.html')
     (work / 'passwd').write_text(f'builder:x:{os.getuid()}:{os.getgid()}:Recovery:/work:/bin/sh\n')
     try:
-        for name in ('candidate_backend', 'historical_backend', 'candidate_frontend', 'historical_frontend'):
+        for name in artifact_names(data):
             spec = data[name]
             dest = work / 'artifacts' / name
             shutil.copytree(spec['root'], dest)
@@ -159,8 +187,9 @@ def main():
             validate_tree(copied, name.endswith('backend'))
             data[name]['root'] = '/artifacts/' + name
         # Only redacted identity fields cross into the sandbox. No receipt/archive.
-        data['provenance'].pop('archive_path')
-        data['provenance'].pop('receipt_path')
+        if 'provenance' in data:
+            data['provenance'].pop('archive_path')
+            data['provenance'].pop('receipt_path')
         (work / 'state/input.json').write_text(json.dumps(data, indent=2))
         print('Private recovery directory: ' + str(work), flush=True)
         with (work / 'launcher.log').open('w') as log:

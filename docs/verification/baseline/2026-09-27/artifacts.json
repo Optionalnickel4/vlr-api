@@ -1,0 +1,17 @@
+{
+  "release": "/home/builder/vlr-recovery-check/baseline-20260927/release.json",
+  "sha256": "6eb973ac839f5c8bbf87921eb15b946637854b136c8e19520aff62f16a7ea308",
+  "archives": {
+    "backend": {
+      "path": "/home/builder/vlr-recovery-check/baseline-20260927/backend.tar.gz",
+      "sha256": "bbbd5f9434226af503643bbd94bf47140ee6118b4dd1866830de98c9a8d55cf3",
+      "bytes": 64707168
+    },
+    "frontend": {
+      "path": "/home/builder/vlr-recovery-check/baseline-20260927/frontend.tar.gz",
+      "sha256": "c0ada104649ee841a0009fd3495306af162b49537dda62dd49c0c49139975209",
+      "bytes": 271389312
+    }
+  },
+  "frontend_build_id": "IIyq0m2kCual3Z4aiC0C2"
+}

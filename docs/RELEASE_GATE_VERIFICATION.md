@@ -1,5 +1,19 @@
 # Release gate verification — 2026-09-27
 
+## Superseding proposal: establish a new known baseline
+
+**Current recommendation: NO-GO pending the new baseline gates.** The September 17 backend provenance is **unrecoverable from the available evidence**; no further provenance pursuit is required. Historical Gate 1 is **failed/superseded**, not passed. The retained historical fallback is not an exact copy of that process and is not an attested application-only rollback.
+
+The [new baseline deployment proposal](BASELINE_DEPLOYMENT_PROPOSAL.md) is the governing plan. It separates (1) a maintenance transition from the unknown backend to a newly retained known backend/frontend and (2) a later, separately gated application release with tested rollback to that proven baseline. Read its [machine-readable assessment](verification/baseline/2026-09-27/assessment.json) and [artifact identities](verification/baseline/2026-09-27/artifacts.json). All earlier “recover the original backend” instructions and historical-only Gate 2 prerequisites below are retained as history and superseded for this strategy.
+
+Before first cutover: sealed source/runtime/build review, immutable off-host retention, private baseline recovery rehearsal, real-schema restore/startup compatibility, deployment-launcher/systemd rehearsal, fresh DB/cache backups and restore proof, capacity, effective ingress attestation and maintenance/failure authorization must pass. After cutover: live startup receipts, health, singleton scheduler, data preservation and soak prove the baseline. Only then may a distinct second release seek GO after its own candidate→baseline rollback rehearsal. Proposed Caddy settings do not pass the ingress gate. No production action has been taken.
+
+The active Caddy observation remains accepted: v2.11.4 PID 87 on :80, `val.jushosting.dev` to `10.0.0.21:3000`, no explicit proxy timeouts. This identifies VLR's frontend path, not effective end-to-end 80/90-second deadline compliance. The new plan requires a post-change active-config attestation if configuration is changed, without asking to recollect the old observation.
+
+---
+
+The following sections preserve earlier reviews; the proposal above controls current gate interpretation.
+
 Application under test: **`9301682c4165d7507e49d6ad7678d14ca9df377e`**. No application or live configuration changes were necessary for the tested deadlines; no application fix commit was created. Evidence and reproducible review harnesses are in [verification/release-gates/2026-09-27](verification/release-gates/2026-09-27/). The recommendation remains **NO-GO**: full backend rollback and effective ingress deadline attestation remain unresolved. Cold-cache staging and durable application capacity pass. The latest closure section below supersedes the earlier measurements where noted.
 
 | Gate | Result | Pass criteria | Outstanding requirement |

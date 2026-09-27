@@ -1,0 +1,370 @@
+{
+  "os_release": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"13\"\nVERSION=\"13 (trixie)\"\nVERSION_CODENAME=trixie\nDEBIAN_VERSION_FULL=13.6\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+  "kernel": "Linux 7.0.2-6-pve x86_64 GNU/Linux",
+  "bwrap_version": "bubblewrap 0.12.0",
+  "bwrap_sha256": "573236e5328ac2ebb08f59ae3a9805b4f8d12bdef14be8af4450d5463294985f",
+  "bwrap_deb_sha256": "70aca4fa8daeacb677ec00e8063eb586f08ae3d94b1f11e684370b5524c43431",
+  "namespaces": {
+    "unprivileged": true,
+    "loopback_connect": true,
+    "host_network_shared": false
+  },
+  "source": {
+    "strategy": "new-known-baseline",
+    "historical_process_identity": "unrecoverable",
+    "source_commit": "3cf2373a7d1186eca037368a3cda12e54e01db7a",
+    "application_patch": "",
+    "application_files": {
+      "app/__init__.py": "f0f1d46b6cbca7d7e11b64f9194d2a3acff0c7534e110ab9bc7790b0b63dbfe9",
+      "app/api/__init__.py": "67d41514bd0817ad1b4afa2c46846e6853d58ac3d090154128d236f57bf144f5",
+      "app/api/status_html.py": "47c7fc118e3d2b15e1796dbe19ea4f496af65963fabf161b0382f511e0020898",
+      "app/api/v1/__init__.py": "1271d58b2e629f46befbb4372c58b14ad4740f247dab7048adb4c5c6548f30ba",
+      "app/api/v1/routes.py": "abdb475467ba4ee1fdd489a49442247f2d98a471b074d6b67c5398318d24007f",
+      "app/core/__init__.py": "844680a1cb5b51a584693ebcf229e4e129d0d6f611c4397d5e5426979a0ce8ca",
+      "app/core/cache.py": "08999d1f094eb23c94548697780476e68324fb0a6edae6ee9bf684388df4d2e8",
+      "app/core/config.py": "4fb3384414c830c5248b0621bc3e3dd9de60d7ed80a3d9b3c60294126327b207",
+      "app/core/db.py": "19044b895424e17290c65b0cf6260efa1a9102f9a6e39963ac354d75e2040835",
+      "app/core/http.py": "702a302adffddd2bfbdc8fffd9481b5edfb12199a666d57cf94ac5eeb3abcbbf",
+      "app/core/migrations.py": "b5091496caa4cdcfe639f2244030b634c92ff0e7d73e4ae02653a0f83055801a",
+      "app/jobs/__init__.py": "48f86507391efcb6708663350e73cf1a90ae3901badaa0d223bdb34548fd86f9",
+      "app/jobs/run.py": "c82f08df5f8c9b1864b05ac2ed3e7f5fe35e7942558b0605c9d90529c2aaab83",
+      "app/jobs/scheduler.py": "ea8a589365a9af58dda22c3509973f8f57087a14861ef70ca4401731b2b65f9a",
+      "app/main.py": "75caef5b948209b372b319062ce016b3c5d21a4206877df9b6f01f70b45fb7c4",
+      "app/models/__init__.py": "885d6fb4b042aa77c17d8a6fc10cc7c080eb76783426300f1e8d953002dafc67",
+      "app/ratings/__init__.py": "f7be2d4446e8dbf21cd37573feaad1eee9e5c0ea19b1ec178585fc98b262ea2b",
+      "app/ratings/dimensions.py": "403c0792f49f511e230e8029f85469548cb135c25a609490cf68e62b195053c7",
+      "app/schemas/__init__.py": "6d155f5696a69d4dd0023fb49be59573437cffbbe17f89a42bbdeae598e32094",
+      "app/scrapers/__init__.py": "e495ec99fc6918093eee96c21a4082eea20990213a0296aee81bc6c30dfa93e8",
+      "app/scrapers/_util.py": "ca0c5bdf7f7630e09b1289dd40a0ce0af4bb0a9752d6ea9b7cd59c48f0ab2733",
+      "app/scrapers/capture.py": "9d5ab9ac86c27d328baf0a9f7ce683d9e83a8d9d39909403a655245d5e6f9180",
+      "app/scrapers/events.py": "566484a438e149784791e7e2c917fef805ec05ffaaaa0887966752687205844a",
+      "app/scrapers/match_detail.py": "644c5c1f31c7f0754753c7530e5764433c224198aed12e789173fcdb068ed963",
+      "app/scrapers/matches.py": "418de44f37506dcb26fa74ee5124fa882dc5367f0f799f8bb2934ecffd7f241e",
+      "app/scrapers/players.py": "afa5903de48872f953f94f40660e14eaa38d38b82f15247a92bb9b74c67b4ac4",
+      "app/scrapers/rankings.py": "57d6fca3a5b4b4b190fe489dfae37cb5b1a72ae128f3fb85356b43182a80c316",
+      "app/scrapers/selectors.py": "9fcde8bbff575d8c6aa03c85bba769395a5b8b4ea67b323ac7c6608e2d056192",
+      "app/scrapers/stats.py": "ca2454e7ba2876bd76a6dae5631b673124d9f40d945916a16241dbdd7b4f7ed7",
+      "app/scrapers/stats_recon.py": "51284f8ada1e95894fc21e802363dde64009426ddb08990fd92895302d3f790d",
+      "app/scrapers/teams.py": "04dc87374c086f9f4dad29cd712a2d4e489ece53f931493d79c75a309b9a1be0",
+      "app/scrapers/verify.py": "3191976348d68bd7c44b7ee716996d1cf5cbad6cd95f3653ee0cad31afab1e3e",
+      "app/services/__init__.py": "1d92a617df52cc6cc43438b375ef65f747ffaed86a49112b70c3e7e2ee84af6e",
+      "app/services/assistant.py": "b154d2d22143f1fe137bba5d64ec7d9df11343a4cefcd8e6cc0a10fa37e3ce8a",
+      "app/services/refresh.py": "c052bfc5e8bcf5938239814062107f2a015c365ec1d3a343b52519dd9dddb7a1",
+      "app/services/search.py": "d44c47dae4d98863e591bbefddc299496fff870407dbd66ca355b5d4b5599f88",
+      "app/services/trends.py": "0053b41e83ff5f66e8b0f91edb2c5821b7ddbca7a370d07f5f9ca05f0803f3e8",
+      "app/status_meta.py": "9255bd803117a3dec683429e3ddbe8be5ac15a6bff81ff948bee084a5383a618",
+      "frontend/.gitignore": "e279dc634935e6657838cbaf65c2500a9c1e48ad6dbf2c388a93fb03dff2409f",
+      "frontend/AGENTS.md": "e3447d84251880fb34cfae09131cb4c57471529bbfe60976a3245793cf621627",
+      "frontend/CLAUDE.md": "3ad644e0596f71c18315969c5075dc8f3f5b7fb5b34184d24927a05168ee3801",
+      "frontend/FEATURES.md": "127aefc5de84b8e6b33a7f9fd5d9da0fdc6f141b6e7d57bbba0139b636102471",
+      "frontend/OPEN-ITEM-team-detail-500.md": "e537e4df112e15b0af6355b4879de4fa96584649fec79e5fb20dfa6f5e76156b",
+      "frontend/README.md": "60b55ff7df79af72590f9524208e46642bc32bdc175cdad41349681c0e2f958f",
+      "frontend/eslint.config.mjs": "870f1adccecf3051cbcd9fd307cef51d7633cf510979c181a81f4b1797273493",
+      "frontend/next.config.ts": "c6abcf021a6316a396783e41918525644811e3ab9e2ced77db8aa271c61523df",
+      "frontend/package-lock.json": "5674bd6814e506dd30fb1c1907fa3e44e48f8bd59a4974270d011d85a10a9d2e",
+      "frontend/package.json": "f787998b0375b5b8413dbd73c1e533b5d770fd8bfdcc40027c580375f4ee8be2",
+      "frontend/postcss.config.mjs": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde",
+      "frontend/public/file.svg": "2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4",
+      "frontend/public/globe.svg": "b614b9bf183925957661ac851498fe1d8029fd43a62fbfed86f9e2624a57e7cf",
+      "frontend/public/next.svg": "55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "frontend/public/vercel.svg": "f081337b2fee635b455b63275406a3e7f39d6a014e25ad90dab5a67e62a12ac4",
+      "frontend/public/window.svg": "644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1",
+      "frontend/src/app/api/match/[id]/route.ts": "e5cd98970c2b9e595cd3a4e2d4242506ddb6e25e3841088d3a4e231cfe4855a4",
+      "frontend/src/app/api/matches/live/route.ts": "331139c9d0608ce0c2840951cceba0b900705259c3a7b1ddf7b822bdf9717186",
+      "frontend/src/app/api/matches/results/route.ts": "020a7a3f97bfdb3e336166f4b4ceb4e1ea5bec0cc524e7a601889a0f68b77538",
+      "frontend/src/app/api/matches/upcoming/route.ts": "a6190a478c45df829f7fc4e014189373065dab9a529703d0790820597792df5d",
+      "frontend/src/app/api/news/route.ts": "3a6da58c3a8315c597a1b31ab8f06c7d088460d6e413adbbe902e533a5082fcb",
+      "frontend/src/app/api/player/[id]/route.ts": "116eeb53ccaee93889611e33adfa48078baff1fa6b0264727bc1ce72e566d60d",
+      "frontend/src/app/api/players/route.ts": "80c05d34632ced57580d84e3c4e94a74585f30b552caca531bcaf84d51e74db3",
+      "frontend/src/app/api/rankings/route.ts": "b2d4c06f67a10dd8ca04a42bbcc76ed9e1287c5f9f4ca43c2f030cfae51b70f7",
+      "frontend/src/app/api/stats/route.ts": "60db64ff7297bdad26bd697f1a22ece0071ccd4060ed7a90d2daebc13c872fd8",
+      "frontend/src/app/api/streamers/route.ts": "aa2c6456292b3151b619576a46a30f39b7e96666b29199e20d984d6cb7622924",
+      "frontend/src/app/api/team/[id]/route.ts": "adfd015aa54a49f8eac1ab10af7748a35edfbf4255d10644ca41bfb6ad552fd5",
+      "frontend/src/app/api/ticker/route.ts": "ac994cddf8fadb9e931249c8d9cc7b50cf26d019ba9d7f63a29213930e909df2",
+      "frontend/src/app/api/trends/player/[id]/route.ts": "f9520980b0a0599dfab0f55bb95c4863a3d823aa42c9934a710f1498ec492318",
+      "frontend/src/app/api/trends/team/[id]/route.ts": "6523a5e87500daac980472d85381b2afd240a63bb8e68bbaadc1e73b4a4d9ca2",
+      "frontend/src/app/favicon.ico": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932",
+      "frontend/src/app/globals.css": "f5193e2a54e4f4e92a06e6dae8a0732fd104e83402a732aa13963cb6446cb573",
+      "frontend/src/app/ladders.css": "6bbf246fe348d087491e1f3deefe25f009ec373bba0a0cbd028d8ff47158d4ec",
+      "frontend/src/app/landing.test.ts": "6074ce641562dc546d2cf90b1eea7bebc9c50f47c6ad55e288270bce5f537a04",
+      "frontend/src/app/layout.tsx": "4847340ec814d5c93d14d983214d08640bf24f24eafd0b21b0da5e085524f3fe",
+      "frontend/src/app/match-listings.css": "19d7e0f3e67ad404ec3ec02deac85d960ec7b4a368de80f7bf7a891686b55765",
+      "frontend/src/app/match/[id]/loading.tsx": "3fa321140c19c749d256682e7fe978e27217571e6c5a13ab1647ac7562ddfb8d",
+      "frontend/src/app/match/[id]/match.css": "58b4f225e0496e9ca8395981e18a240e5bcd7810130e7ca5e7cd3b1618135674",
+      "frontend/src/app/match/[id]/page.tsx": "7ec2a01aa8ace8b28344842de06c9d161ab1e11194ef69079b6694f465a81b20",
+      "frontend/src/app/news/news.css": "6ac634879807b2d9d90b42f1c0b2f3257392fcaa0338a50f20819f18d479dfbe",
+      "frontend/src/app/news/page.tsx": "2d240db72b509bcc4701d039437a8dcad956e3200031d31506e7a06653528199",
+      "frontend/src/app/not-found.tsx": "ccb3bc62570ff20799fc2ab584c5aa12781235e3755364a88449841721b13f3a",
+      "frontend/src/app/page.tsx": "05732b916cc95106bbababf626d52f4dfd1ee5817d0a33cb8da97b6a2bd14471",
+      "frontend/src/app/player.test.ts": "21ce496a0175c3dbe3209efe8814a20e55c8086446976897045c16266b7f01fd",
+      "frontend/src/app/player/[id]/loading.tsx": "82dee5688a13807061c0d6767341f4ad0fe255b61d17235c13e5b640c42d23fe",
+      "frontend/src/app/player/[id]/page.tsx": "e4cf049f54bdc4364513fd0aca85e8a91c46ae7e106660d2949317cd2e383ffe",
+      "frontend/src/app/player/[id]/player.css": "20e83a63c5e669f59ef735344643fc4487e8adb52f1ffa72ba6f1b505a9ba3af",
+      "frontend/src/app/rankings/page.tsx": "58495ca72c43945fc13a2173e59a37da5564890a445a09754e9da60b6f32103e",
+      "frontend/src/app/results/page.tsx": "168d3109bd403633ed0a89767a5bf8e79992b743dd65a732f8f974d15ffc9feb",
+      "frontend/src/app/schedule/page.tsx": "c3453d21c55f9baee9dc0a51bcf73d3424a15381e3b036491ac78f950673e241",
+      "frontend/src/app/shell-pages.test.ts": "435abad5f0c36441fd6bb360fcc9e169bc8c5afe2d4101a8ade90545d1cbad5f",
+      "frontend/src/app/stats/page.tsx": "16a220656f019379ac1ea02219bf6ecc233320995d06541601a72d8396d7026d",
+      "frontend/src/app/team/[id]/loading.tsx": "597cd83943516463429912424a3fb7c202dec86a133026a1ca16a0c8a6936d50",
+      "frontend/src/app/team/[id]/page.tsx": "840b4772adf5e7776ee6ea34651d99fb23306a7cdfdaf79f42e3d8abf7602285",
+      "frontend/src/app/team/[id]/team.css": "649d9b8675485742d9fcab836fc08443558ad627b88ca0b48affcb051914cbc3",
+      "frontend/src/components/Badge.tsx": "cc8411e786a1dd66fc5561ce8c955d003089585b98e309aa37a82ec655e1b0e5",
+      "frontend/src/components/Breadcrumbs.tsx": "152fedf3c79a5b8d1f83c86a9d68966cd8b21b638b810ab2ac2082fcb608bfb1",
+      "frontend/src/components/BroadcastMatch.tsx": "3a84a633368cff359aadd028918116e34d2ccb113c0f168fc13e50acf6582830",
+      "frontend/src/components/DetailLoading.tsx": "b8c780eaf1090f50ba1d64fe6e8c5ceb1093634eea98b32a9ff862e767814872",
+      "frontend/src/components/FeaturedStreamers.tsx": "e2d4279809275310e5257c211892327de265c04efef63e00e1c0140875816583",
+      "frontend/src/components/HomeSections.tsx": "359983befc4d54eab9612bf11141daf23c69de67cf553c0db7408e9095f92f62",
+      "frontend/src/components/LiveBadge.tsx": "9dbbd22a72719621d3c18d66de3402fc43c7b962d343945fce5e8d7082b89170",
+      "frontend/src/components/LiveMatchDetail.tsx": "03c8cd8b810f645c17004e8f5fbb8736f4da54b895c79abaa582175d6ca5cb48",
+      "frontend/src/components/LiveMatches.tsx": "63d3680994df1ed62b4e0463df5d202c8b47a6bfa57e10d1bfd8910c1737a7e3",
+      "frontend/src/components/MapTabs.tsx": "7cd4abc574e9895ee9b59072f459fc613a320c928460bbc2659e21a94271f98c",
+      "frontend/src/components/MatchCard.tsx": "86ab5855764f0c53ac022b7a60787c0f182f0d9551540ed7c5dcd2671eb08f22",
+      "frontend/src/components/MatchHeader.tsx": "e24e8d69b375d4f065ea19b21da88a56ae5702c0aa3cbf4b2b084857afe66721",
+      "frontend/src/components/MatchListingParts.tsx": "7d82bf63f940f90b4668aab83e1cca76ad2193a4678e3734bcf4d6bb4ce6c0ee",
+      "frontend/src/components/MatchSection.tsx": "399e08df6b30e57b047ec59206c99b0703f8b35be77c6ed2c5c023d925065d88",
+      "frontend/src/components/NewsBoard.tsx": "e60b340eb1dab0d448aca9c8abe2d8dbbad04397928dce5f0ed8a53bfa289bda",
+      "frontend/src/components/NewsPanel.tsx": "8ca31b8fbe9608bfb62276706d212a01c0fbb21a20a2bee60ddd7c30d75c1da2",
+      "frontend/src/components/PageContainer.tsx": "1002343588a681382d79d6532b18c03225dcfdd8ab6bb440ea2b0a7d02cd38c7",
+      "frontend/src/components/Panel.tsx": "5dd3ed96f629f62a6eeae0c5ae66e8537608a7522d8ab8446962ad69853c4402",
+      "frontend/src/components/PlayerCard.tsx": "40a7bca83b70d06627ed1d89087e3ff8f1b8859d4c11851ccf8cc5dc8153ad9b",
+      "frontend/src/components/PlayerMatchesPanel.tsx": "a56b1dd3f70820b4dfe67e4c03080aa8b9510253a42efd6959bdfc5ce19d573f",
+      "frontend/src/components/PlayerSearch.tsx": "45595a44dfa9d89b56a299bdfc3fe085f3ee973c89e15e820cf40dcff6d07ec1",
+      "frontend/src/components/PlayerStatsPanel.tsx": "c416903b31246e06406fd396557dd2928524f712bbdba73b521432b3f57fdb0c",
+      "frontend/src/components/PlayerStatsTable.tsx": "02cdd687c02a86c17390d32c19445eb62b7fe06e3603cbef4f71d2df5d6e2f9d",
+      "frontend/src/components/PlayerTrendPanel.tsx": "8ea8ff2eedc58114f85c81f4a0a2fcd9a4c375286fc7fa913cd5cae55e4e9644",
+      "frontend/src/components/RankingsBoard.tsx": "01d6569b23f312efd4506f66e4d810d7b47c18a1b98fbf2ed1ddd9314ac2a33a",
+      "frontend/src/components/RankingsPanel.tsx": "53a8f8842c4ecf3c6f79d3c099bf5f7a58d576a26fdb0bab7380c66d745d47aa",
+      "frontend/src/components/RatingBreakdown.tsx": "58de69be6aa5f9220c17838ef40426347e8e2b8a6af7681d86f4e8e0564e7397",
+      "frontend/src/components/ResultsBoard.tsx": "5c241a8e65b37f560ded736fffced1250e4494a522df81e9e4e255f3bd295f9a",
+      "frontend/src/components/RoundTimeline.tsx": "64a8258132ac33dbd712038accd81999fc0eb15ce6cdb81978735715766d4ffb",
+      "frontend/src/components/ScheduleBoard.tsx": "e6b09f21de4dae184a84132792249b3497610eace07c54d55d8d9f128d0edf5c",
+      "frontend/src/components/ScoreDisplay.tsx": "8eb4916715b3c9c0d759b3551966bb7ce786e6d871c218779efc542a4f833b3a",
+      "frontend/src/components/SiteHeader.tsx": "3d0e249e2adab748bc24f4691dceea662f6003895aafb6571311f06f8506b868",
+      "frontend/src/components/SiteShell.tsx": "faa5e3bbff3db8077179d5b2029da3ae8d05e9d9b2e4c938704d73b8bcd41e64",
+      "frontend/src/components/Sparkline.tsx": "b24fadc4738a9a5fd8615027c30edebc1a02ed48c57859bcdae3e1a86ceaf3ea",
+      "frontend/src/components/StatTicker.tsx": "8a4bdb99ec596925a31ec41090e79918e639011c19fba4405d3160941cb7fc80",
+      "frontend/src/components/StatsLeaderboard.tsx": "f6645c2d4f8e5a6442cb023790d8f9f8918c27e9b85addd82fe0e070f06eff16",
+      "frontend/src/components/StreamersSection.tsx": "601eaa25d99ff18b6e95ed72ed25e622e9bb37fded7090cffe4c73783548f0d1",
+      "frontend/src/components/TableShell.tsx": "9af78eda584626a9cb60fa04a20081a74a8ca05ac68a3304e73745aaaec9e8f6",
+      "frontend/src/components/TeamCrest.tsx": "39b2654ac13bcae3863c142ff505a7abf70c052b5235fe075ddc0ff4d13ad0e8",
+      "frontend/src/components/TeamOverview.tsx": "b621252dc7bfef61772379b7382d18a756da34d5c03398c791d19dac2adf048b",
+      "frontend/src/components/TeamResultsPanel.tsx": "6d2658a1eedd58da4c06b05d324cbe44a7c4908992a871f58cb46dcdb7967f2d",
+      "frontend/src/components/TeamRosterPanel.tsx": "ddd9f04f6f74e8103e33c1a17c502fb69c94ea0e0a58c1f65ea55912b17e7227",
+      "frontend/src/components/TeamTrendPanel.tsx": "8aa022e9fdaa6c417a6d58d2bd2820fb4fbd401058951814babd35ce2c784418",
+      "frontend/src/components/TickerTape.tsx": "1b64cd68d3a1f18e31986e842bb42918d1fb68d3ac39a42f4d73a4f27d9e377e",
+      "frontend/src/components/broadcast.test.ts": "0ca892fd7dffdecda27c75362c8912a4439f50a7b8babe63256a7e69cf93b56f",
+      "frontend/src/components/ladders-broadcast.test.ts": "a567cc2f007fcccde3536bc43dd90940556df6578847e3d43ce89b3286905b13",
+      "frontend/src/components/live-match-detail.test.ts": "b3c35986a73c7b0371991d10496a82888c018cbd7ba99b529f15c362a531be1a",
+      "frontend/src/components/live-matches.test.ts": "6e8a9c1e4afe4d5500da1ff4e1c10f377b5b2dcdd9ed19e90682b0a8d471bed5",
+      "frontend/src/components/live-ticker-hydration.test.ts": "0a3c906e9056a64d770cb7caa9156698c79c379171217ebdd6ba4da4b7440b6b",
+      "frontend/src/components/match-broadcast.test.ts": "d59eafd227af268a02feead56aee23ccf1ff843eb1ee7a9ee2f3709c3f701550",
+      "frontend/src/components/match-header.test.ts": "0c06b587ed220a664d038c9a3c4e68dcb5e90482569b8ba02cdcf018164ea1f6",
+      "frontend/src/components/match-hydration.test.ts": "71d4cce7c11eb9875443accad759abef7e2ce56b95dd6357c13049be748d7d90",
+      "frontend/src/components/match-listings.test.ts": "1b0f3dc62f7fb5746427d488c14bb0bdaf877acb0ea8c6d33b3e0b4ec68d3ba2",
+      "frontend/src/components/news-broadcast.test.ts": "299241b70523ff9e50dfc5be35c3431c0601fca21bb92fbeb600c07cf816dacc",
+      "frontend/src/components/player-broadcast.test.ts": "320cc8a8f0b98df59879123a2190f701fa2ac6812071746a08d692b8425a2124",
+      "frontend/src/components/player-search.test.ts": "dc312d295b79c20baed7f43262e19a229e21db39d67a1d642673bf1fd2d5ae2f",
+      "frontend/src/components/site-shell.test.ts": "3fce2e97eb886c1dec485793190c36bb909bb63e9021be1a7305124364ec1a36",
+      "frontend/src/components/stats-leaderboard.test.ts": "8346887883827d7048fecc78d8ee70d4fd58118865b125b1dadc570123f9e3d3",
+      "frontend/src/components/streamers-hydration.test.ts": "a9596a6a091c06409774200058e68c256c0cb106a8c9d35ee86aef8c6213dd84",
+      "frontend/src/components/team-broadcast.test.ts": "dd39d7199b1f0a9c90190cef5707555678b27acbcd6941915bd1e089d05a56f2",
+      "frontend/src/lib/__fixtures__/live.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "frontend/src/lib/__fixtures__/match.json": "09c93aeef99f7ee17ec4f3e1c3e1eb48e004ca4f54e47cde6de72d372fe676ff",
+      "frontend/src/lib/__fixtures__/match_live_filled.json": "a7891bc894f989929371588271a9777c5c49aa7a98377571e66bddc9650b0cc2",
+      "frontend/src/lib/__fixtures__/match_live_partial.json": "5bba1489ad817df1c442b47be4c0b8d98b4d5126045b902d8c8a4e0b180cc158",
+      "frontend/src/lib/__fixtures__/news.json": "bc6c4c6a1b72565172a8975912a5c8a06e1e30f4c5762e7510aea567950b366c",
+      "frontend/src/lib/__fixtures__/player.json": "a51af50af40fd3653a059d3762af49fc759c709ffa0315320b16f7dab04124e7",
+      "frontend/src/lib/__fixtures__/rankings.json": "4e9bfbe923d4c5b607c89e6efc1a9962f809ec716ac4af31520087fa6e51da2f",
+      "frontend/src/lib/__fixtures__/results.json": "e6ff7d92f65a32d8364d0d0a8374ec1caf705de5b0dc46b3280f3bef96ce55de",
+      "frontend/src/lib/__fixtures__/stats.json": "7a2b77bd3d9ba6a7c05875492f6c9f0164c7e3ea638da17693b8cdf7484b39d1",
+      "frontend/src/lib/__fixtures__/team.json": "dbf6040bbbbc2f651f3e30cd0f4a382c04237bdd57c7e45e131a12321619c782",
+      "frontend/src/lib/__fixtures__/trends.json": "870de6f46264b9883af422b2d28f4e15330962172d96c6d3e4ae11a87f7d42a9",
+      "frontend/src/lib/__fixtures__/upcoming.json": "9149be307d81cfff7c523f3e2b8bf7f4bc246e85c892d68071b4744f0f5a026a",
+      "frontend/src/lib/cn.ts": "8a7db8ab1f4bd3ae1c8a8666969546482f3508042746eb5878d8f97d436de91c",
+      "frontend/src/lib/liveTicker.test.ts": "deb6141aa764903a6a090793b72f0314c3dbfbb1f481990c2ea1e4e96e2f903d",
+      "frontend/src/lib/liveTicker.ts": "3dfc89f2738aee656f549308dcd67cfd199dc5ca5546797a979fc63a910baa67",
+      "frontend/src/lib/matchListings.ts": "5231021f023003bace54570b5f632df5911bb792faf709f3d72774e3f8159643",
+      "frontend/src/lib/schedule.test.ts": "f13bb6d4f2a61202eec2f2cb8d43d6f97efd7a9cf74c27a96da18ac76090f08a",
+      "frontend/src/lib/schedule.ts": "20444791e972829783edc78919d4264bac9144d52bb1aa408eeb96ea4ed28442",
+      "frontend/src/lib/ticker.test.ts": "df2fc15bdddb5b573d2be0585359f585244bb9a8d6307ccfaa805b67d2ca9c32",
+      "frontend/src/lib/twitch.test.ts": "2808cb63e7c01aaef4e264b29a6e8b9c43f350aa9abc816c317b544b93757d9f",
+      "frontend/src/lib/twitch.ts": "6167683f6d1ff2c69725cf1314260293e8454fefa8257cbbb09906e1a18e1e6b",
+      "frontend/src/lib/upstream-deadline.test.ts": "f1b6327fc556ef5fb2ec947f0cb9ccf72480b3225414a1954a6432293bbe1f6d",
+      "frontend/src/lib/vlr.test.ts": "a8de41827982c213412961fc018d2082006a91b3b38785c4c3bf4c57b4eb2532",
+      "frontend/src/lib/vlr.ts": "3c721fd8bb6f9c85a6575b3f005c77f14d0d156c751a7f782fafa61d894593fa",
+      "frontend/src/types/vlr.ts": "a31f68b0f88831ae51efa0416f25f09f669fa658679eeadc48d15fa47a22093d",
+      "frontend/tsconfig.json": "5c51df4c59f4510d8c7dadf07a5c32132228826a3b331da5e286207b4df7ef9c",
+      "frontend/vitest.config.ts": "63f86a7c3aaf210f31555b04b3df85444e49f9dd0e0272e691b2777be29c3442",
+      "pyproject.toml": "6da5cc6a036590f68984b08f64df7c7e5b2d45e171907699709fc441b2982786"
+    },
+    "python_version": "Python 3.13.5",
+    "python_packages": [
+      {
+        "name": "annotated-doc",
+        "version": "0.0.5"
+      },
+      {
+        "name": "annotated-types",
+        "version": "0.8.0"
+      },
+      {
+        "name": "anyio",
+        "version": "4.14.2"
+      },
+      {
+        "name": "APScheduler",
+        "version": "3.11.3"
+      },
+      {
+        "name": "asyncpg",
+        "version": "0.31.0"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.7.22"
+      },
+      {
+        "name": "click",
+        "version": "8.4.2"
+      },
+      {
+        "name": "fastapi",
+        "version": "0.141.1"
+      },
+      {
+        "name": "greenlet",
+        "version": "3.5.5"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "httpcore",
+        "version": "1.0.9"
+      },
+      {
+        "name": "httptools",
+        "version": "0.8.0"
+      },
+      {
+        "name": "httpx",
+        "version": "0.28.1"
+      },
+      {
+        "name": "idna",
+        "version": "3.19"
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.0"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pip",
+        "version": "26.2.1"
+      },
+      {
+        "name": "pluggy",
+        "version": "1.6.0"
+      },
+      {
+        "name": "pydantic",
+        "version": "2.13.4"
+      },
+      {
+        "name": "pydantic_core",
+        "version": "2.46.4"
+      },
+      {
+        "name": "pydantic-settings",
+        "version": "2.15.0"
+      },
+      {
+        "name": "Pygments",
+        "version": "2.21.0"
+      },
+      {
+        "name": "pytest",
+        "version": "9.1.1"
+      },
+      {
+        "name": "pytest-asyncio",
+        "version": "1.4.0"
+      },
+      {
+        "name": "python-dotenv",
+        "version": "1.2.3"
+      },
+      {
+        "name": "PyYAML",
+        "version": "6.0.3"
+      },
+      {
+        "name": "redis",
+        "version": "8.1.0"
+      },
+      {
+        "name": "selectolax",
+        "version": "0.4.11"
+      },
+      {
+        "name": "SQLAlchemy",
+        "version": "2.0.52"
+      },
+      {
+        "name": "starlette",
+        "version": "1.6.0"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "typing-inspection",
+        "version": "0.4.4"
+      },
+      {
+        "name": "tzlocal",
+        "version": "5.4.4"
+      },
+      {
+        "name": "uvicorn",
+        "version": "0.52.4"
+      },
+      {
+        "name": "uvloop",
+        "version": "0.22.1"
+      },
+      {
+        "name": "vlr-api",
+        "version": "0.1.0",
+        "editable_project_location": "/opt/vlr-api"
+      },
+      {
+        "name": "watchfiles",
+        "version": "1.2.0"
+      },
+      {
+        "name": "websockets",
+        "version": "17.0.1"
+      }
+    ],
+    "node_version": "v22.23.3",
+    "npm_version": "10.9.9",
+    "dependency_policy": "retained installed bytes, editable app indirection removed; source PYTHONPATH explicit",
+    "build_environment": {
+      "NODE_ENV": "production",
+      "NEXT_TELEMETRY_DISABLED": "1",
+      "VLR_API_BASE": "http://127.0.0.1:8000/api/v1",
+      "NEXT_FONT_GOOGLE_MOCKED_RESPONSES": "/build/font-inputs/responses.json"
+    },
+    "build_command": "node node_modules/next/dist/bin/next build --webpack",
+    "font_policy": "Actual Google CSS and font bytes retained and hashed in frontend/font-inputs; local CSS URL mapping for offline webpack font loader; no substituted font content"
+  },
+  "gate2_input_sha256": "99353e5fd3625e344ed4281523313ef9dae385a4c758fe6a57e1f651166306aa",
+  "build_log_sha256": "2b936c143962370c0efd63ac50aba912783f0c5fb5eb885a763e75636cd40bc3"
+}

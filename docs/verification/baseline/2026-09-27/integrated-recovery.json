@@ -1,0 +1,504 @@
+{
+  "passed": true,
+  "stages": [
+    {
+      "stage": "candidate",
+      "selected_backend": "/artifacts/candidate_backend",
+      "selected_frontend": "/artifacts/candidate_frontend",
+      "api": {
+        "pid": 38,
+        "process_stat": "38 (python3.13) R 2 1 1 0 -1 4194304 21886 135 172 0 93 9 0 0 20 0 1 0 213292120 109309952 21505 18446744073709551615 4325376 7578617 140720860972304 0 0 0 0 16781312 16386 0 0 0 17 6 0 0 0 0 0 10415544 11007784 82968576 140720860978512 140720860978590 140720860978590 140720860979140 0\n",
+        "interpreter": "/artifacts/candidate_backend/runtime/bin/python3.13",
+        "prefix": "/artifacts/candidate_backend/runtime",
+        "runtime_sha256": "17b78e0a93175e86f9ac03141924fd7a7f0c0c52e66b34bfa0de20ffef989df1",
+        "modules": {
+          "app.api": {
+            "path": "/artifacts/candidate_backend/source/app/api/__init__.py",
+            "sha256": "67d41514bd0817ad1b4afa2c46846e6853d58ac3d090154128d236f57bf144f5"
+          },
+          "app.status_meta": {
+            "path": "/artifacts/candidate_backend/source/app/status_meta.py",
+            "sha256": "9255bd803117a3dec683429e3ddbe8be5ac15a6bff81ff948bee084a5383a618"
+          },
+          "app.api.status_html": {
+            "path": "/artifacts/candidate_backend/source/app/api/status_html.py",
+            "sha256": "47c7fc118e3d2b15e1796dbe19ea4f496af65963fabf161b0382f511e0020898"
+          },
+          "app.api.v1": {
+            "path": "/artifacts/candidate_backend/source/app/api/v1/__init__.py",
+            "sha256": "1271d58b2e629f46befbb4372c58b14ad4740f247dab7048adb4c5c6548f30ba"
+          },
+          "sqlalchemy": {
+            "path": "/artifacts/candidate_backend/runtime/lib/python3.13/site-packages/sqlalchemy/__init__.py",
+            "sha256": "d1555378655090f12ec3e3f66d0dd2efc3661014150d2cc56d1e46f898542bda"
+          },
+          "app.core": {
+            "path": "/artifacts/candidate_backend/source/app/core/__init__.py",
+            "sha256": "844680a1cb5b51a584693ebcf229e4e129d0d6f611c4397d5e5426979a0ce8ca"
+          },
+          "redis": {
+            "path": "/artifacts/candidate_backend/runtime/lib/python3.13/site-packages/redis/__init__.py",
+            "sha256": "cfd9db997a6d7928d0a77abe356259b763b34c17f817ea4c7767a1b6dd7d9a42"
+          },
+          "app.core.config": {
+            "path": "/artifacts/candidate_backend/source/app/core/config.py",
+            "sha256": "4fb3384414c830c5248b0621bc3e3dd9de60d7ed80a3d9b3c60294126327b207"
+          },
+          "app.core.cache": {
+            "path": "/artifacts/candidate_backend/source/app/core/cache.py",
+            "sha256": "08999d1f094eb23c94548697780476e68324fb0a6edae6ee9bf684388df4d2e8"
+          },
+          "asyncpg": {
+            "path": "/artifacts/candidate_backend/runtime/lib/python3.13/site-packages/asyncpg/__init__.py",
+            "sha256": "6f30f7d5a31e91b291f7068c5ee03121815b9ab43e4b532db639abbbfb128e8f"
+          },
+          "app.core.db": {
+            "path": "/artifacts/candidate_backend/source/app/core/db.py",
+            "sha256": "19044b895424e17290c65b0cf6260efa1a9102f9a6e39963ac354d75e2040835"
+          },
+          "httpx": {
+            "path": "/artifacts/candidate_backend/runtime/lib/python3.13/site-packages/httpx/__init__.py",
+            "sha256": "0ac6997bac998f4ac783adf6d8058a587193315afdb718047c3e4fdff46bcfad"
+          },
+          "app.core.http": {
+            "path": "/artifacts/candidate_backend/source/app/core/http.py",
+            "sha256": "702a302adffddd2bfbdc8fffd9481b5edfb12199a666d57cf94ac5eeb3abcbbf"
+          },
+          "app.jobs": {
+            "path": "/artifacts/candidate_backend/source/app/jobs/__init__.py",
+            "sha256": "48f86507391efcb6708663350e73cf1a90ae3901badaa0d223bdb34548fd86f9"
+          },
+          "app.services": {
+            "path": "/artifacts/candidate_backend/source/app/services/__init__.py",
+            "sha256": "1d92a617df52cc6cc43438b375ef65f747ffaed86a49112b70c3e7e2ee84af6e"
+          },
+          "app.models": {
+            "path": "/artifacts/candidate_backend/source/app/models/__init__.py",
+            "sha256": "885d6fb4b042aa77c17d8a6fc10cc7c080eb76783426300f1e8d953002dafc67"
+          },
+          "app.scrapers": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/__init__.py",
+            "sha256": "e495ec99fc6918093eee96c21a4082eea20990213a0296aee81bc6c30dfa93e8"
+          },
+          "app.scrapers.selectors": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/selectors.py",
+            "sha256": "9fcde8bbff575d8c6aa03c85bba769395a5b8b4ea67b323ac7c6608e2d056192"
+          },
+          "app.scrapers._util": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/_util.py",
+            "sha256": "ca0c5bdf7f7630e09b1289dd40a0ce0af4bb0a9752d6ea9b7cd59c48f0ab2733"
+          },
+          "app.scrapers.events": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/events.py",
+            "sha256": "566484a438e149784791e7e2c917fef805ec05ffaaaa0887966752687205844a"
+          },
+          "app.scrapers.match_detail": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/match_detail.py",
+            "sha256": "644c5c1f31c7f0754753c7530e5764433c224198aed12e789173fcdb068ed963"
+          },
+          "app.scrapers.matches": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/matches.py",
+            "sha256": "418de44f37506dcb26fa74ee5124fa882dc5367f0f799f8bb2934ecffd7f241e"
+          },
+          "app.scrapers.players": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/players.py",
+            "sha256": "afa5903de48872f953f94f40660e14eaa38d38b82f15247a92bb9b74c67b4ac4"
+          },
+          "app.scrapers.rankings": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/rankings.py",
+            "sha256": "57d6fca3a5b4b4b190fe489dfae37cb5b1a72ae128f3fb85356b43182a80c316"
+          },
+          "app.scrapers.stats": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/stats.py",
+            "sha256": "ca2454e7ba2876bd76a6dae5631b673124d9f40d945916a16241dbdd7b4f7ed7"
+          },
+          "app.scrapers.teams": {
+            "path": "/artifacts/candidate_backend/source/app/scrapers/teams.py",
+            "sha256": "04dc87374c086f9f4dad29cd712a2d4e489ece53f931493d79c75a309b9a1be0"
+          },
+          "app.services.refresh": {
+            "path": "/artifacts/candidate_backend/source/app/services/refresh.py",
+            "sha256": "c052bfc5e8bcf5938239814062107f2a015c365ec1d3a343b52519dd9dddb7a1"
+          },
+          "app.jobs.scheduler": {
+            "path": "/artifacts/candidate_backend/source/app/jobs/scheduler.py",
+            "sha256": "ea8a589365a9af58dda22c3509973f8f57087a14861ef70ca4401731b2b65f9a"
+          },
+          "app.ratings": {
+            "path": "/artifacts/candidate_backend/source/app/ratings/__init__.py",
+            "sha256": "f7be2d4446e8dbf21cd37573feaad1eee9e5c0ea19b1ec178585fc98b262ea2b"
+          },
+          "app.ratings.dimensions": {
+            "path": "/artifacts/candidate_backend/source/app/ratings/dimensions.py",
+            "sha256": "403c0792f49f511e230e8029f85469548cb135c25a609490cf68e62b195053c7"
+          },
+          "app.services.search": {
+            "path": "/artifacts/candidate_backend/source/app/services/search.py",
+            "sha256": "d44c47dae4d98863e591bbefddc299496fff870407dbd66ca355b5d4b5599f88"
+          },
+          "app.services.assistant": {
+            "path": "/artifacts/candidate_backend/source/app/services/assistant.py",
+            "sha256": "b154d2d22143f1fe137bba5d64ec7d9df11343a4cefcd8e6cc0a10fa37e3ce8a"
+          },
+          "app.services.trends": {
+            "path": "/artifacts/candidate_backend/source/app/services/trends.py",
+            "sha256": "0053b41e83ff5f66e8b0f91edb2c5821b7ddbca7a370d07f5f9ca05f0803f3e8"
+          },
+          "app.api.v1.routes": {
+            "path": "/artifacts/candidate_backend/source/app/api/v1/routes.py",
+            "sha256": "abdb475467ba4ee1fdd489a49442247f2d98a471b074d6b67c5398318d24007f"
+          },
+          "app.main": {
+            "path": "/artifacts/candidate_backend/source/app/main.py",
+            "sha256": "75caef5b948209b372b319062ce016b3c5d21a4206877df9b6f01f70b45fb7c4"
+          },
+          "uvicorn": {
+            "path": "/artifacts/candidate_backend/runtime/lib/python3.13/site-packages/uvicorn/__init__.py",
+            "sha256": "d47fc9857b620dc0302aa3d4fdb29639cdf52e7de836ad3143386fded24574cc"
+          },
+          "app.core.migrations": {
+            "path": "/artifacts/candidate_backend/source/app/core/migrations.py",
+            "sha256": "b5091496caa4cdcfe639f2244030b634c92ff0e7d73e4ae02653a0f83055801a"
+          }
+        },
+        "normal_startup_calls": [
+          "init_db",
+          "run_migrations"
+        ],
+        "scheduler_jobs": [
+          "live_matches",
+          "upcoming",
+          "results",
+          "news",
+          "events",
+          "rankings",
+          "stats",
+          "player_prefetch"
+        ],
+        "scheduler_identity": 124533003296384
+      },
+      "frontend_pid": 47,
+      "frontend_process_stat": "47 (next-server (v1) S 2 1 1 0 -1 4194304 18625 0 296 0 49 6 0 0 20 0 13 0 213292705 13501919232 33960 18446744073709551615 14905344 54527057 140728190909264 0 0 0 0 16781312 17922 0 0 0 17 6 0 0 0 0 0 112269536 112450384 911298560 140728190910194 140728190910308 140728190910308 140728190910426 0\n",
+      "node_sha256": "fde6a4bf8d0562f7751d1a2d6cb9b417c4cfe107bbcb0aa3e9a24e125e348f48",
+      "frontend_build_id": "IIyq0m2kCual3Z4aiC0C2",
+      "fixture_marker_rendered": true,
+      "scheduler": {
+        "job": "results",
+        "success": true,
+        "scheduler_identity": 124533003296384
+      },
+      "history": {
+        "match_results": {
+          "sha256": "562dd3b222a3cbf734e257df67b00c17e3deec36401de75fa38636fda171354a",
+          "rows": 3
+        },
+        "player_snapshots": {
+          "sha256": "784dd3448dbdd33b098f5959c19e9f1864ce03e724c758e1f43caaf4dd42892b",
+          "rows": 1
+        },
+        "ranking_snapshots": {
+          "sha256": "d850d665bf7bf0bc7ac168e9275121a04264648dfc568e096e3fef941e6fc60b",
+          "rows": 1
+        },
+        "team_snapshots": {
+          "sha256": "9f2332ff4b812cfe09be5f1adadf1d8d8f137171bd27ae91975caf05cd48dd89",
+          "rows": 1
+        }
+      },
+      "shutdown": {
+        "lifespan_exited": true,
+        "scheduler_stopped": true
+      }
+    },
+    {
+      "stage": "baseline",
+      "selected_backend": "/artifacts/baseline_backend",
+      "selected_frontend": "/artifacts/baseline_frontend",
+      "api": {
+        "pid": 101,
+        "process_stat": "101 (python3.13) R 2 1 1 0 -1 4194304 21880 132 3 2 88 9 0 0 20 0 1 0 213292832 109314048 21842 18446744073709551615 4325376 7578617 140720877541136 0 0 0 0 16781312 16386 0 0 0 17 6 0 0 0 0 0 10415544 11007784 844808192 140720877542743 140720877542820 140720877542820 140720877543365 0\n",
+        "interpreter": "/artifacts/baseline_backend/runtime/bin/python3.13",
+        "prefix": "/artifacts/baseline_backend/runtime",
+        "runtime_sha256": "17b78e0a93175e86f9ac03141924fd7a7f0c0c52e66b34bfa0de20ffef989df1",
+        "modules": {
+          "app.api": {
+            "path": "/artifacts/baseline_backend/source/app/api/__init__.py",
+            "sha256": "67d41514bd0817ad1b4afa2c46846e6853d58ac3d090154128d236f57bf144f5"
+          },
+          "app.status_meta": {
+            "path": "/artifacts/baseline_backend/source/app/status_meta.py",
+            "sha256": "9255bd803117a3dec683429e3ddbe8be5ac15a6bff81ff948bee084a5383a618"
+          },
+          "app.api.status_html": {
+            "path": "/artifacts/baseline_backend/source/app/api/status_html.py",
+            "sha256": "47c7fc118e3d2b15e1796dbe19ea4f496af65963fabf161b0382f511e0020898"
+          },
+          "app.api.v1": {
+            "path": "/artifacts/baseline_backend/source/app/api/v1/__init__.py",
+            "sha256": "1271d58b2e629f46befbb4372c58b14ad4740f247dab7048adb4c5c6548f30ba"
+          },
+          "sqlalchemy": {
+            "path": "/artifacts/baseline_backend/runtime/lib/python3.13/site-packages/sqlalchemy/__init__.py",
+            "sha256": "d1555378655090f12ec3e3f66d0dd2efc3661014150d2cc56d1e46f898542bda"
+          },
+          "app.core": {
+            "path": "/artifacts/baseline_backend/source/app/core/__init__.py",
+            "sha256": "844680a1cb5b51a584693ebcf229e4e129d0d6f611c4397d5e5426979a0ce8ca"
+          },
+          "redis": {
+            "path": "/artifacts/baseline_backend/runtime/lib/python3.13/site-packages/redis/__init__.py",
+            "sha256": "cfd9db997a6d7928d0a77abe356259b763b34c17f817ea4c7767a1b6dd7d9a42"
+          },
+          "app.core.config": {
+            "path": "/artifacts/baseline_backend/source/app/core/config.py",
+            "sha256": "4fb3384414c830c5248b0621bc3e3dd9de60d7ed80a3d9b3c60294126327b207"
+          },
+          "app.core.cache": {
+            "path": "/artifacts/baseline_backend/source/app/core/cache.py",
+            "sha256": "08999d1f094eb23c94548697780476e68324fb0a6edae6ee9bf684388df4d2e8"
+          },
+          "asyncpg": {
+            "path": "/artifacts/baseline_backend/runtime/lib/python3.13/site-packages/asyncpg/__init__.py",
+            "sha256": "6f30f7d5a31e91b291f7068c5ee03121815b9ab43e4b532db639abbbfb128e8f"
+          },
+          "app.core.db": {
+            "path": "/artifacts/baseline_backend/source/app/core/db.py",
+            "sha256": "19044b895424e17290c65b0cf6260efa1a9102f9a6e39963ac354d75e2040835"
+          },
+          "httpx": {
+            "path": "/artifacts/baseline_backend/runtime/lib/python3.13/site-packages/httpx/__init__.py",
+            "sha256": "0ac6997bac998f4ac783adf6d8058a587193315afdb718047c3e4fdff46bcfad"
+          },
+          "app.core.http": {
+            "path": "/artifacts/baseline_backend/source/app/core/http.py",
+            "sha256": "702a302adffddd2bfbdc8fffd9481b5edfb12199a666d57cf94ac5eeb3abcbbf"
+          },
+          "app.jobs": {
+            "path": "/artifacts/baseline_backend/source/app/jobs/__init__.py",
+            "sha256": "48f86507391efcb6708663350e73cf1a90ae3901badaa0d223bdb34548fd86f9"
+          },
+          "app.services": {
+            "path": "/artifacts/baseline_backend/source/app/services/__init__.py",
+            "sha256": "1d92a617df52cc6cc43438b375ef65f747ffaed86a49112b70c3e7e2ee84af6e"
+          },
+          "app.models": {
+            "path": "/artifacts/baseline_backend/source/app/models/__init__.py",
+            "sha256": "885d6fb4b042aa77c17d8a6fc10cc7c080eb76783426300f1e8d953002dafc67"
+          },
+          "app.scrapers": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/__init__.py",
+            "sha256": "e495ec99fc6918093eee96c21a4082eea20990213a0296aee81bc6c30dfa93e8"
+          },
+          "app.scrapers.selectors": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/selectors.py",
+            "sha256": "9fcde8bbff575d8c6aa03c85bba769395a5b8b4ea67b323ac7c6608e2d056192"
+          },
+          "app.scrapers._util": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/_util.py",
+            "sha256": "ca0c5bdf7f7630e09b1289dd40a0ce0af4bb0a9752d6ea9b7cd59c48f0ab2733"
+          },
+          "app.scrapers.events": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/events.py",
+            "sha256": "566484a438e149784791e7e2c917fef805ec05ffaaaa0887966752687205844a"
+          },
+          "app.scrapers.match_detail": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/match_detail.py",
+            "sha256": "644c5c1f31c7f0754753c7530e5764433c224198aed12e789173fcdb068ed963"
+          },
+          "app.scrapers.matches": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/matches.py",
+            "sha256": "418de44f37506dcb26fa74ee5124fa882dc5367f0f799f8bb2934ecffd7f241e"
+          },
+          "app.scrapers.players": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/players.py",
+            "sha256": "afa5903de48872f953f94f40660e14eaa38d38b82f15247a92bb9b74c67b4ac4"
+          },
+          "app.scrapers.rankings": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/rankings.py",
+            "sha256": "57d6fca3a5b4b4b190fe489dfae37cb5b1a72ae128f3fb85356b43182a80c316"
+          },
+          "app.scrapers.stats": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/stats.py",
+            "sha256": "ca2454e7ba2876bd76a6dae5631b673124d9f40d945916a16241dbdd7b4f7ed7"
+          },
+          "app.scrapers.teams": {
+            "path": "/artifacts/baseline_backend/source/app/scrapers/teams.py",
+            "sha256": "04dc87374c086f9f4dad29cd712a2d4e489ece53f931493d79c75a309b9a1be0"
+          },
+          "app.services.refresh": {
+            "path": "/artifacts/baseline_backend/source/app/services/refresh.py",
+            "sha256": "c052bfc5e8bcf5938239814062107f2a015c365ec1d3a343b52519dd9dddb7a1"
+          },
+          "app.jobs.scheduler": {
+            "path": "/artifacts/baseline_backend/source/app/jobs/scheduler.py",
+            "sha256": "ea8a589365a9af58dda22c3509973f8f57087a14861ef70ca4401731b2b65f9a"
+          },
+          "app.ratings": {
+            "path": "/artifacts/baseline_backend/source/app/ratings/__init__.py",
+            "sha256": "f7be2d4446e8dbf21cd37573feaad1eee9e5c0ea19b1ec178585fc98b262ea2b"
+          },
+          "app.ratings.dimensions": {
+            "path": "/artifacts/baseline_backend/source/app/ratings/dimensions.py",
+            "sha256": "403c0792f49f511e230e8029f85469548cb135c25a609490cf68e62b195053c7"
+          },
+          "app.services.search": {
+            "path": "/artifacts/baseline_backend/source/app/services/search.py",
+            "sha256": "d44c47dae4d98863e591bbefddc299496fff870407dbd66ca355b5d4b5599f88"
+          },
+          "app.services.assistant": {
+            "path": "/artifacts/baseline_backend/source/app/services/assistant.py",
+            "sha256": "b154d2d22143f1fe137bba5d64ec7d9df11343a4cefcd8e6cc0a10fa37e3ce8a"
+          },
+          "app.services.trends": {
+            "path": "/artifacts/baseline_backend/source/app/services/trends.py",
+            "sha256": "0053b41e83ff5f66e8b0f91edb2c5821b7ddbca7a370d07f5f9ca05f0803f3e8"
+          },
+          "app.api.v1.routes": {
+            "path": "/artifacts/baseline_backend/source/app/api/v1/routes.py",
+            "sha256": "abdb475467ba4ee1fdd489a49442247f2d98a471b074d6b67c5398318d24007f"
+          },
+          "app.main": {
+            "path": "/artifacts/baseline_backend/source/app/main.py",
+            "sha256": "75caef5b948209b372b319062ce016b3c5d21a4206877df9b6f01f70b45fb7c4"
+          },
+          "uvicorn": {
+            "path": "/artifacts/baseline_backend/runtime/lib/python3.13/site-packages/uvicorn/__init__.py",
+            "sha256": "d47fc9857b620dc0302aa3d4fdb29639cdf52e7de836ad3143386fded24574cc"
+          },
+          "app.core.migrations": {
+            "path": "/artifacts/baseline_backend/source/app/core/migrations.py",
+            "sha256": "b5091496caa4cdcfe639f2244030b634c92ff0e7d73e4ae02653a0f83055801a"
+          }
+        },
+        "normal_startup_calls": [
+          "init_db",
+          "run_migrations"
+        ],
+        "scheduler_jobs": [
+          "live_matches",
+          "upcoming",
+          "results",
+          "news",
+          "events",
+          "rankings",
+          "stats",
+          "player_prefetch"
+        ],
+        "scheduler_identity": 134901419253376
+      },
+      "frontend_pid": 126,
+      "frontend_process_stat": "126 (next-server (v1) S 2 1 1 0 -1 4194304 18670 0 459 0 52 6 0 0 20 0 13 0 213293470 13501997056 33939 18446744073709551615 14905344 54527057 140721135308240 0 0 0 0 16781312 17922 0 0 0 17 6 0 0 0 0 0 112269536 112450384 140566528 140721135316725 140721135316837 140721135316837 140721135316955 0\n",
+      "node_sha256": "fde6a4bf8d0562f7751d1a2d6cb9b417c4cfe107bbcb0aa3e9a24e125e348f48",
+      "frontend_build_id": "IIyq0m2kCual3Z4aiC0C2",
+      "fixture_marker_rendered": true,
+      "scheduler": {
+        "job": "results",
+        "success": true,
+        "scheduler_identity": 134901419253376
+      },
+      "history": {
+        "match_results": {
+          "sha256": "562dd3b222a3cbf734e257df67b00c17e3deec36401de75fa38636fda171354a",
+          "rows": 3
+        },
+        "player_snapshots": {
+          "sha256": "784dd3448dbdd33b098f5959c19e9f1864ce03e724c758e1f43caaf4dd42892b",
+          "rows": 1
+        },
+        "ranking_snapshots": {
+          "sha256": "d850d665bf7bf0bc7ac168e9275121a04264648dfc568e096e3fef941e6fc60b",
+          "rows": 1
+        },
+        "team_snapshots": {
+          "sha256": "9f2332ff4b812cfe09be5f1adadf1d8d8f137171bd27ae91975caf05cd48dd89",
+          "rows": 1
+        }
+      },
+      "shutdown": {
+        "lifespan_exited": true,
+        "scheduler_stopped": true
+      }
+    }
+  ],
+  "normal_schema_startup_required": true,
+  "network_interfaces": [
+    [
+      1,
+      "lo"
+    ]
+  ],
+  "routes": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+  "storage_pids": {
+    "postgres": 17,
+    "redis": 29
+  },
+  "strategy": "new-known-baseline",
+  "purpose": "baseline-rehearsal",
+  "before_switch": {
+    "match_results": {
+      "sha256": "562dd3b222a3cbf734e257df67b00c17e3deec36401de75fa38636fda171354a",
+      "rows": 3
+    },
+    "player_snapshots": {
+      "sha256": "784dd3448dbdd33b098f5959c19e9f1864ce03e724c758e1f43caaf4dd42892b",
+      "rows": 1
+    },
+    "ranking_snapshots": {
+      "sha256": "d850d665bf7bf0bc7ac168e9275121a04264648dfc568e096e3fef941e6fc60b",
+      "rows": 1
+    },
+    "team_snapshots": {
+      "sha256": "9f2332ff4b812cfe09be5f1adadf1d8d8f137171bd27ae91975caf05cd48dd89",
+      "rows": 1
+    }
+  },
+  "service_exits": [
+    {
+      "pid": 47,
+      "code": 143
+    },
+    {
+      "pid": 38,
+      "code": -15
+    },
+    {
+      "pid": 126,
+      "code": 143
+    },
+    {
+      "pid": 101,
+      "code": -15
+    },
+    {
+      "pid": 29,
+      "code": 0
+    },
+    {
+      "pid": 17,
+      "code": 0
+    }
+  ],
+  "after_switch": {
+    "match_results": {
+      "sha256": "562dd3b222a3cbf734e257df67b00c17e3deec36401de75fa38636fda171354a",
+      "rows": 3
+    },
+    "player_snapshots": {
+      "sha256": "784dd3448dbdd33b098f5959c19e9f1864ce03e724c758e1f43caaf4dd42892b",
+      "rows": 1
+    },
+    "ranking_snapshots": {
+      "sha256": "d850d665bf7bf0bc7ac168e9275121a04264648dfc568e096e3fef941e6fc60b",
+      "rows": 1
+    },
+    "team_snapshots": {
+      "sha256": "9f2332ff4b812cfe09be5f1adadf1d8d8f137171bd27ae91975caf05cd48dd89",
+      "rows": 1
+    }
+  },
+  "fixture_requests": [
+    "/matches/results",
+    "/matches/results"
+  ],
+  "private_processes_stopped": true
+}
