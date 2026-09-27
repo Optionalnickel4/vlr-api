@@ -1,15 +1,94 @@
 # Release gate verification — 2026-09-27
 
-Application under test: **`9301682c4165d7507e49d6ad7678d14ca9df377e`**. No application or live configuration changes were necessary for the tested deadlines; no application fix commit was created. Evidence and reproducible review harnesses are in [verification/release-gates/2026-09-27](verification/release-gates/2026-09-27/). The recommendation remains **NO-GO**: cold-cache staging now passes for the selected sample; exact rollback provenance, effective ingress configuration and durable capacity remain unresolved.
+Application under test: **`9301682c4165d7507e49d6ad7678d14ca9df377e`**. No application or live configuration changes were necessary for the tested deadlines; no application fix commit was created. Evidence and reproducible review harnesses are in [verification/release-gates/2026-09-27](verification/release-gates/2026-09-27/). The recommendation remains **NO-GO**: full backend rollback and effective ingress deadline attestation remain unresolved. Cold-cache staging and durable application capacity pass. The latest closure section below supersedes the earlier measurements where noted.
 
 | Gate | Result | Pass criteria | Outstanding requirement |
 | --- | --- | --- | --- |
-| Rollback provenance | **Unresolved; frontend artifact restore passes** | Attested source/runtime/configuration for both running services, recoverable artifacts, isolated restore, data-preserving rollback | Recover the exact old backend source/runtime from an owner-held deployment artifact or machine backup; attest source/runtime correspondence. Current disk HEAD cannot identify the old worker |
-| Ingress deadlines | **Unresolved; application tests pass** | Inspect effective configuration for every ingress hop and prove compatible deadlines/streaming without modifying live ingress | Read Caddy LXC configuration and version, imports/global options, effective JSON and Cloudflare settings; verify an isolated copy of that topology |
+| Rollback provenance | **Unresolved; frontend restore and limited historical backend read checks pass** | Verified data-preserving full-service rollback with identified artifacts/runtime | Recover an attested old backend; the preserved historical substitute does not verify normal lifespan, Redis or scheduler recovery |
+| Ingress deadlines | **Supplied configuration compatible; effective configuration unresolved** | Compatible effective settings and finite application deadlines | Owner-supplied effective-setting attestation; no access request or live mutation. Public static curl passed; isolated deadline tests remain valid |
 | Cold-cache staging | **Pass for three selected core details** | Empty isolated caches, sequential bounded real-source reads, populated cold/warm API responses, successful browser outcomes, no production writes | Broader sampling/load testing is not claimed; browser outcomes were measured after API warming |
-| Build/backup capacity | **Unresolved; build, database and frontend restore tests pass** | Measured build peak; verified backups; adequate durable simultaneous artifact/restore space and operating reserve | At least 674,842,774 additional free bytes for the measured lower bound, plus the missing backend artifact/environment and durable off-host backup destination |
+| Build/backup capacity | **Pass for measured durable layout** | Measured build requirements, restored backups and sufficient headroom | 11.374 GB free after restores; 4.617 GB additional budget including 2 GiB reserve leaves 6.757 GB. Recheck recovered artifact size; off-host disaster recovery remains unverified |
 
-## 1. Rollback provenance
+## Latest closure review — supplied tunnel topology and enlarged disk
+
+This section supersedes earlier unresolved-capacity and unknown-topology statements. New evidence is in [release-closure/2026-09-27](verification/release-closure/2026-09-27/). **NO-GO remains:** full backend rollback has not been verified, and effective public-ingress deadline settings remain unattested. Capacity now passes. No application code changed and completed cold-cache/final application tests were not repeated.
+
+### Backend recovery: useful artifact, incomplete rollback
+
+`baseline.json` records `systemctl show` identities/commands, unit hashes and the interpreter checksum. API PID **61821** still runs `/opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1`, with working directory `/opt/vlr-api`, installed unit `/etc/systemd/system/vlr-api.service` and protected `.env`. Frontend PID **308** is unchanged. The configuration names and exact private copies recorded below remain valid. Python on disk is **3.13.5**; the complete installed dependency inventory is `installed-python-packages.json` (including Uvicorn **0.52.4**, httpx **0.28.1**, asyncpg **0.31.0**, Redis client **8.1.0**, SQLAlchemy **2.0.52**). These are current disk versions, not proof of versions already imported by the old process. The exact loaded source remains unknown; neither Git date nor current `.venv` closes that gap.
+
+`python3 docs/verification/release-closure/2026-09-27/package_fallback.py` archived historical source **`139378cb7505c6257c7b69da3491e382c4ebf0bc`**, the copied interpreter/stdlib and current installed dependencies. It removes editable-install indirection only from the copy, so imports cannot resolve back into the changing production checkout. First extraction safely rejected an absolute stdlib symlink; the final archive dereferences copied links and restores with Python's `data` extraction filter. No production file was edited. Failed-attempt files remain private and are included in current disk use.
+
+Verified archive: `/home/builder/vlr-recovery-check/backend-fallback-139378c-portable.tar.gz`, **66,175,718 bytes**, SHA-256 **`f0ab700c450bd9edc11775e9b7af38ef8fdfd040b6f28f25fccdb4685c53fdaa`**. All **5,752** regular-file hashes match after extraction. Expanded bundle is **192,485,242 logical bytes**; allocated restored size is **208,490,496 bytes**. Source tree and manifest are recorded in `backend-artifact.json`. This is a **known historical fallback candidate**, not the exact running backend artifact. It depends on the existing OS shared libraries (`ldd` captured in `final-preservation-capacity.json`), so it is not an independently bootable system image.
+
+`restore_checks.py` used the restored Python/source against a fresh **disk-backed**, Unix-socket-only PostgreSQL cluster on logical port **55440**. It restored the retained database dump, verified all four snapshot counts, then called the historical ASGI app: `/health` returned HTTP **200**, object; `/api/v1/history/results?limit=2` returned HTTP **200**, two-element array. Before/after row counts matched. The harness rejects every TCP connection, preventing VLR and production storage access. The restored interpreter prefix and imported application path both point inside the recovery directory. Eight scheduler jobs could be constructed, but were **not started**. The private cluster was stopped afterward.
+
+**Verification boundary:** these are read-only ASGI health/history checks, not a Uvicorn/systemd/full-scheduler recovery test. The historical normal lifespan executes schema initialization/migrations; it was not run. Emergency `--lifespan off` also disables the in-process scheduler, and Redis operation was not verified by this new backend probe. Consequently this bundle does **not** pass the full-service rollback gate. Existing frontend restoration/startup evidence remains valid; a second durable extraction verified all **25,776** hashes and the same BUILD_ID. No new backend service definition has been installed or declared ready.
+
+**Snapshot alternative evaluated:** this guest is LXC, with root device `/dev/mapper/pve-vm--221--disk--0`; no `pct`, `qm`, `pvesm`, hypervisor backup inventory or usable snapshot is accessible here. A current disk-only LXC snapshot would capture today's on-disk candidate/dependencies/configuration, **not the old Python process memory/source**. Reverting the whole container could also revert `/var/lib/postgresql` and `/var/lib/redis` on that root filesystem, discarding later data. Such a revert is not an acceptable data-preserving application rollback. No snapshot restore has been verified. A historical backup must be mounted/extracted into an isolated location and its application artifacts tested; its database/cache files must never replace live storage.
+
+**Required infrastructure/artifact action:** on application host **`vlr-api` / `10.0.0.21`**, recover an attested September 17 backend deployment bundle (source, Python/dependencies, original unit and configuration-name manifest) to a new private directory under `/home/builder/vlr-recovery-check`. Obtain it from the backup owner or the Proxmox host owning the above LXC volume; that hypervisor's hostname and historical-backup availability are unknown, so no executable hypervisor restore command can honestly be supplied. Reserve **1 GiB** for compressed plus expanded application recovery as budgeted below; remeasure if larger. If extracting an entire container backup is necessary, provision separate storage for its actual uncompressed image plus at least **2 GiB reserve**, rather than restoring over CT 221 or assuming this guest's free space covers a whole image. Expected effect: a testable historical application recovery slot without touching serving processes/data. Reversal: stop only isolated test processes and remove only the newly created recovery copy after review; retain the original backup. Pass requires attested provenance, hash verification and isolated API/Redis/history/scheduler verification with network fixtures and no production writes. The current limited bundle cannot substitute for that evidence.
+
+### Public ingress: supplied configuration, observed request, remaining uncertainty
+
+The following is **user-supplied configuration evidence**, not inspected effective runtime configuration:
+
+```yaml
+# cloudflared tunnel meowth, separate LXC shared with Caddy
+ingress:
+  - hostname: val.jushosting.dev
+    service: http://localhost:80
+  - service: http_status:404
+```
+
+```caddyfile
+{
+    auto_https off
+}
+:80 {
+    @val host val.jushosting.dev
+    handle @val {
+        reverse_proxy 10.0.0.21:3000
+    }
+}
+```
+
+The supplied route establishes **Browser → Cloudflare edge/Tunnel `meowth` → Caddy localhost:80 → Next `10.0.0.21:3000` → server-side FastAPI `:8000` → Redis/Postgres** (VLR only on ordinary refresh paths). It does not publish FastAPI directly through this hostname. `auto_https off` fits HTTP inside the tunnel; public TLS is terminated at Cloudflare. No short response timeout or response-buffer override appears in these excerpts.
+
+[Caddy's documented defaults](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy) have no response-header/read timeout, and immediately flush responses of unknown content length. That is compatible with Next's streaming and the application's **80-second backend / 90-second initial-page** budgets; explicit other configuration could change it. [Cloudflare's general connection-limit table](https://developers.cloudflare.com/fundamentals/reference/connection-limits/) gives a **125-second proxy read limit**, greater than those budgets, but explicitly redirects Tunnel users to origin parameters. It is not an independently verified effective limit for `meowth`. [Tunnel origin parameters](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/origin-parameters/) distinguish the default **30-second TCP connect timeout** from the **90-second idle keep-alive timeout**; neither is an active-response 30/90-second cutoff. Do not increase these settings merely because their numbers resemble application deadlines.
+
+`public-smoke.json` records only static-asset requests, bounded to 15 seconds/request and 2 MB/body (initial Python pair additionally wrapped by a 40-second process bound). Direct Next: **200**, **3,377 bytes**, **97.7 ms**. Python public request: **403**, **87.2 ms**, cause unknown. One diagnostic `curl --max-time 15 --max-filesize 2000000` to the same asset returned **200**, `server: cloudflare`, `via: 1.1 Caddy`, `CF-Cache-Status: MISS`, and exactly the same SHA-256 **`aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0`** as disk/direct Next. This observes working static delivery through Cloudflare/Caddy for that client. It does not independently prove the tunnel identity, every upstream address, browser behavior, streaming or long-response survival. No dynamic detail request, scrape, production cache flush or load test occurred.
+
+The existing isolated **12-second healthy**, **80-second backend 504**, and **90-second Next unavailable-state** tests below remain the deadline evidence. No code/configuration correction is justified by the supplied excerpts. **Configuration review passes for the supplied route; the stricter effective-ingress gate stays unresolved.** Installed Caddy/cloudflared versions, omitted global/imported configuration, runtime overrides and effective edge policies are unknown. No LXC access is requested. To close that evidence gap, the owner of the **separate LXC running `meowth` and Caddy** can supply a redacted effective-configuration/version attestation and compatible deadline/streaming settings; if it requires changing live infrastructure to verify, leave it unresolved until a separately authorized window. This task proposes no live proxy mutation, so there is no proxy rollback or added space requirement. Optional browser/content polish is unrelated to these blockers.
+
+### Capacity: passed on the enlarged durable filesystem
+
+`df -B1 /` now reports total **21,024,690,176 bytes** on ext4; initial available **13,156,806,656 bytes**. The disk increase was already present when this follow-up began; this task did not resize it. `/tmp` remains memory-backed and is not used for these restores. All existing backups, production artifacts/data/caches and failed/new recovery artifacts are retained.
+
+Measured additional durable restore allocations: frontend **724,770,816 bytes**, complete isolated PostgreSQL cluster **119,771,136 bytes**, backend restored tree **208,490,496 bytes**, and backend packaging tree **208,121,856 bytes**. Existing compressed database/frontend artifacts remain **9,901,311 / 215,041,425 bytes**; the verified backend archive adds **66,175,718 bytes**. `restoration.json` records sampled available-space minimum **11,379,400,704 bytes** during restoration; final settled measurement was lower, **11,373,789,184 bytes**, so use the final measurement for budgeting rather than treating samples as an absolute peak bound. The complete new recovery directory occupies about **1.782 GB**, including failed packaging artifacts. Existing retained candidate build/source occupies **108,232,704 allocated bytes**.
+
+The earlier exact-release build measurement is reused: sampled **702,152,704-byte RSS** peak; **94,716,374-byte logical `.next`** peak; **96,182,272-byte** total filesystem decrease during the build. Prior candidate `node_modules` measured **712,368,128 bytes**. No rebuild was justified by a documentation-only follow-up. Free disk at final preservation check: **11,373,678,592 bytes**, after durable restores and all retained archives.
+
+Conservative **additional** budget, on top of everything already present:
+
+| Item | Bytes |
+| --- | ---: |
+| Candidate pinned dependencies, prior measurement | 712,368,128 |
+| Another build output, prior measured filesystem delta | 96,182,272 |
+| Another source tree allowance | 33,554,432 |
+| Candidate backend runtime allowance | 268,435,456 |
+| New database dump allowance | 16,777,216 |
+| Another compressed frontend archive allowance | 268,435,456 |
+| Missing attested backend artifact plus expansion allowance | 1,073,741,824 |
+| Operating reserve | 2,147,483,648 |
+| **Total additional budget** | **4,616,978,432** |
+| **Available beyond that entire budget/reserve** | **6,756,700,160** |
+
+Use separate release/recovery directories on `/home/builder`'s ext4 filesystem; keep PostgreSQL/Redis at their existing paths. Build serially, then perform recovery checks, and recheck `df` before any later cutover. Capacity passes for this measured application layout with explicit allowances; the unknown historical artifact must fit the 1 GiB allowance or be remeasured. Memory remains 4 GiB with about 1.35 GiB available at preflight; swap is now 2 GiB with about 1 GiB used. Successful prior build peak is not permission for concurrent heavy builds/restores.
+
+The existing database dump was hash-verified and restored again specifically to verify this new durable layout and the historical backend's history reads; all snapshot table counts matched. There was no new production dump or database connection in this follow-up. Backups are recoverable locally, but **not protected against loss of this host**; off-host retention remains a disaster-recovery risk, not a claim of verified off-host recovery. No additional capacity increase is currently necessary for this application layout. If off-host durability is required by policy, copy the retained artifacts/configuration privately to a named backup destination and verify hashes there; no destination was supplied and no transfer is claimed.
+
+## 1. Earlier rollback verification (retained evidence)
 
 **Commands/configuration evidence:** `systemctl show vlr-api vlr-frontend -p MainPID -p ExecMainStartTimestamp -p FragmentPath -p DropInPaths`; read the two installed unit files and hash them; GET the strictly read-only `/api/v1/status`; inspect `.next/BUILD_ID`, build metadata and Git reflog; attempt read-only `/proc/<pid>/{cwd,exe,maps}` access. See `baseline.json`, `provenance-ingress.json`, and the prior review's `configuration.json`.
 
@@ -31,20 +110,9 @@ Application under test: **`9301682c4165d7507e49d6ad7678d14ca9df377e`**. No appli
 
 Steps 2's extraction/hash check and isolated frontend startup were actually tested. A full backend rollback and service switch were **not** tested and are **not** asserted to pass. An owner-held historical LXC snapshot/deployment bundle may close the provenance gap without changing production; privileged read access alone would not necessarily recover source that has already been overwritten.
 
-## 2. Ingress deadlines
+## 2. Earlier isolated deadline verification
 
-The owner confirms **Caddy on a separate LXC** serves `https://val.jushosting.dev`. DNS resolves to `104.21.70.245` and `172.67.140.254`, inside [Cloudflare's published IPv4 ranges](https://www.cloudflare.com/ips-v4/). This supports an inferred Cloudflare edge; it does not reveal zone rules or origin routing. A TLS-only `openssl s_client -connect val.jushosting.dev:443 -servername val.jushosting.dev -brief` handshake verified TLS 1.3 and a `jushosting.dev` certificate. No application request was sent through the public site to provoke cache refreshes.
-
-The best-supported path is:
-
-```text
-Browser -> Cloudflare edge [inferred from DNS; effective settings unknown]
-        -> Caddy on separate LXC [owner confirmed; upstream/rules unknown]
-        -> Next :3000 [installed local frontend; remote Caddy target unverified]
-        -> server-side loader/proxy -> FastAPI :8000 -> Redis/Postgres/VLR
-```
-
-There is no Caddy executable/service/configuration on this application host, and no provided access to its LXC. Thus Caddy routing, network proxy/tunnel hops, timeouts and buffering cannot be attested. The topology is no longer treated as possibly direct-LAN-only; the earlier review's absence of a local proxy never proved absence of an external one.
+The latest closure section supplies the formerly missing route. The following application tests are retained without rerunning them.
 
 **Configured application limits, read from pinned source:** `frontend/src/lib/vlr.ts` defines 90,000 ms for initial detail-page upstream reads, including headers/body, and 10,000 ms for ordinary loaders/proxies. `app/api/v1/routes.py` wraps detail cache/refresh in an 80-second deadline. History persistence after cache publication has a five-second budget. API Uvicorn uses one worker; no additional request-duration override is present in the installed ExecStart. These limits are application behavior, not proxy defaults.
 
@@ -59,9 +127,7 @@ There is no Caddy executable/service/configuration on this application host, and
 
 The final case deliberately bypassed the backend route only in the private harness; it proves Next's own limit rather than remeasuring FastAPI's 80 seconds. The initial direct-API test accidentally inherited httpx's five-second idle timeout; those failed attempts are retained in `deadline-api-initial.json`. `deadline_probe.py` disables that client idle timeout while retaining the helper's 95-second whole-request deadline; the corrected results above are from that rerun. No application setting or assertion was weakened.
 
-**Ingress pass criteria and next action:** obtain Caddy's version, `systemctl cat caddy`, site block plus imports/global options, and locally inspected effective adapted/runtime JSON, with secrets redacted. Inspect upstream routing, HTTP transport `response_header_timeout`/`read_timeout`, server write/idle limits, response buffers/flush behavior, retry policy and any tunnel settings. Obtain effective Cloudflare settings too. Reproduce that configuration on an isolated proxy and point it at the private 12-second/80-second/90-second scenarios. Require prompt streamed loading and no edge cutoff before the application's intended response. If an effective setting conflicts, make a separately reviewed configuration fix and test it in isolation; do not reload live Caddy in this task.
-
-[Caddy documents](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy) no default timeout for response headers/next backend read, but those defaults do not establish this LXC's configuration. [Cloudflare currently documents](https://developers.cloudflare.com/fundamentals/reference/connection-limits/) a 125-second proxy read timeout; that published value alone is not evidence of this zone's effective path. A 120-second direct cold rankings/events refresh leaves little edge margin and differs from the 80-second detail path. Prior generic 150-second proxy guidance cannot override a preceding edge limit. **No live configuration fix is justified from an unknown configuration, and no full-ingress pass is inferred from localhost tests.**
+Effective-ingress uncertainty and the owner evidence needed are described in the latest closure section; no LXC access or live change is requested.
 
 ## 3. Cold-cache staging
 
@@ -79,7 +145,7 @@ Exactly **three** real upstream HTTP requests occurred, all 200: `/753445`, `/te
 
 **Risk remaining:** this is a small completed-match/team/player sample, not proof for every entity, cache-expiry race, live state, upstream outage or concurrent load. Initial-page slow behavior is covered by the isolated fixture test above. No source values were repaired or invented; missing fields stay missing. This closes the review's representative real cold-detail validation gate, not a broad availability SLA.
 
-## 4. Build and backup capacity
+## 4. Earlier build and backup measurements (capacity shortage superseded)
 
 **Database backup/restore commands:** `backup.py` opens a repeatable-read, read-only production transaction, exports its snapshot, measures database size and counts all public tables, then invokes `pg_dump -Fc --no-owner --no-acl --snapshot=<snapshot>` into a new private file. Authentication is passed privately, never printed. `pg_restore --list` validates the archive; `pg_restore --exit-on-error --no-owner --no-acl` restores into **`restored` on the private Unix socket**, never the production server. The fresh dump does not overwrite an existing backup.
 
@@ -102,7 +168,7 @@ Exactly **three** real upstream HTTP requests occurred, all 200: `/753445`, `/te
 
 The restored frontend and database fit only in temporary storage during this exercise. Both were verified, stopped and removed to release memory. Compressed backups/configuration remain under `/home/builder/vlr-gates-private`; move them securely to a separately verified durable backup destination as a future operator action. They are not in Git. Redis's existing `/var/lib/redis/dump.rdb` is not readable by this account; no `SAVE`, `BGSAVE`, replication snapshot, cache flush or persistence change was issued. Redis backup recoverability is therefore **not** asserted. Normal application rollback continues to preserve the running Redis and PostgreSQL data.
 
-**Pass criteria not met:** provision enough durable space for both releases, recovery work and reserve; obtain the missing backend artifact; verify backup retention outside this nearly full root volume. If a recoverable Redis disk backup is required for the deployment's disaster-recovery policy, have an authorized operator copy and verify the existing persistence artifact without changing the live cache. Do not use the passing temporary restores as a durable-capacity pass.
+**Historical assessment, superseded by the latest durable restores and budget above:** provision enough durable space for both releases, recovery work and reserve; obtain the missing backend artifact; verify backup retention outside this nearly full root volume. If a recoverable Redis disk backup is required for the deployment's disaster-recovery policy, have an authorized operator copy and verify the existing persistence artifact without changing the live cache. Do not use the passing temporary restores as a durable-capacity pass.
 
 ## Final checks, cleanup and recommendation
 
@@ -110,4 +176,4 @@ Fresh final checks on the pinned archive: **284 backend tests, 348 frontend test
 
 `final-preservation.json` confirms unchanged production PIDs/start times, unit-file hashes, environment-file bytes, `.gitignore`, and the untracked plan. All private HTTP servers, Redis and PostgreSQL are stopped. The three source GETs wrote only private staging storage. Production interaction consisted of configuration/artifact reads, a read-only database snapshot/dump, a read-only status GET and a public TLS handshake. No live proxy changes, production detail refreshes, schema changes, cache mutations or service restarts were performed by this task. Normal production scheduler activity was not stopped or rolled back.
 
-**NO-GO remains for three gates.** There is no executable production cutover authorized or claimed ready. The existing release review's service order/data-preserving procedure remains conditional. The next concrete work is: recover the backend deployment artifact; supply read access to the separate Caddy/edge configuration; provision and verify durable capacity/backup storage. Browser/content polish is separate and does not close those gates.
+**NO-GO remains for full backend rollback and effective-ingress attestation.** Capacity and selected cold-cache staging pass. The release review’s deployment/service order remains conditional; do not execute it. Latest production preservation checks pass in `release-closure/2026-09-27/final-preservation-capacity.json`. No deployment, service restart, production configuration/data/cache change, migration or VLR request occurred in this follow-up. Browser/content polish is optional and cannot close these gates.

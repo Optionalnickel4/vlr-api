@@ -1,0 +1,41 @@
+{
+  "path": "/_next/static/chunks/05-c3ty_6dwfk.js",
+  "expected_sha256": "aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0",
+  "requests": [
+    {
+      "origin": "http://10.0.0.21:3000",
+      "status": 200,
+      "bytes": 3377,
+      "sha256": "aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0",
+      "headers": {
+        "content-type": "application/javascript; charset=UTF-8",
+        "server": null,
+        "cf-cache-status": null,
+        "age": null,
+        "content-length": "3377"
+      },
+      "matches_disk": true,
+      "elapsed_ms": 97.7
+    },
+    {
+      "origin": "https://val.jushosting.dev",
+      "error": "HTTP Error 403: Forbidden",
+      "elapsed_ms": 87.2
+    }
+  ],
+  "diagnostic_curl": {
+    "command": "curl --max-time 15 --max-filesize 2000000 --silent --show-error -D <private headers> -o <private body> 'https://val.jushosting.dev/_next/static/chunks/05-c3ty_6dwfk.js?release-review=9301682'",
+    "status": 200,
+    "bytes": 3377,
+    "sha256": "aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0",
+    "matches_disk": true,
+    "headers": {
+      "date": "Sun, 27 Sep 2026 15:19:55 GMT",
+      "content-type": "application/javascript; charset=UTF-8",
+      "via": "1.1 Caddy",
+      "cf-cache-status": "MISS",
+      "server": "cloudflare"
+    },
+    "reason": "One diagnostic request after Python client HTTP403; no retries or dynamic requests. Cause of client-dependent403 not established."
+  }
+}

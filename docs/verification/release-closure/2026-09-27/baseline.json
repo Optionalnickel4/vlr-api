@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-27T15:15:31.349089+00:00",
+  "services": "MainPID=61821\nExecMainStartTimestamp=Thu 2026-09-17 11:10:09 UTC\nExecStart={ path=/opt/vlr-api/.venv/bin/uvicorn ; argv[]=/opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1 ; ignore_errors=no ; start_time=[Thu 2026-09-17 11:10:09 UTC] ; stop_time=[n/a] ; pid=61821 ; code=(null) ; status=0/0 }\nWorkingDirectory=/opt/vlr-api\nFragmentPath=/etc/systemd/system/vlr-api.service\nDropInPaths=\n\nMainPID=308\nExecMainStartTimestamp=Thu 2026-09-03 04:02:56 UTC\nExecStart={ path=/opt/vlr-api/frontend/node_modules/.bin/next ; argv[]=/opt/vlr-api/frontend/node_modules/.bin/next start -H 0.0.0.0 -p 3000 ; ignore_errors=no ; start_time=[Thu 2026-09-03 04:02:56 UTC] ; stop_time=[n/a] ; pid=308 ; code=(null) ; status=0/0 }\nWorkingDirectory=/opt/vlr-api/frontend\nFragmentPath=/etc/systemd/system/vlr-frontend.service\nDropInPaths=\n",
+  "protected": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "root_disk": {
+    "total": 21024690176,
+    "used": 6906228736,
+    "free": 13156806656
+  },
+  "kernel": "7.0.2-6-pve",
+  "runtime": "Python 3.13.5",
+  "interpreter_sha256": "17b78e0a93175e86f9ac03141924fd7a7f0c0c52e66b34bfa0de20ffef989df1",
+  "units": {
+    "vlr-api.service": "d0a8ec3bbb6fb0a6ddfb1871cabacb542a07a892b2407a3f95d19972e8500bbf",
+    "vlr-frontend.service": "a228d2be3938cae32056250bbcfeb9d83bb1c51f1413a9e56ff220755ecb024d"
+  },
+  "snapshot_tools_available": {
+    "pct": false,
+    "qm": false,
+    "pvesm": false
+  }
+}

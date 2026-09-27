@@ -1,0 +1,15 @@
+{
+  "fallback_source_sha": "139378cb7505c6257c7b69da3491e382c4ebf0bc",
+  "exact_running_source": false,
+  "runtime_origin": "current on-disk Python 3.13.5 and installed dependencies, not attested loaded-worker versions",
+  "launch": "runtime/bin/python3.13 -m uvicorn app.main:app --lifespan off --workers 1",
+  "startup_scope": "schema-preserving emergency API; lifespan off also disables in-process scheduler",
+  "source_tree": "ff71f0f80ad6a7bac4d9bc9090c39b3d4f5f104f",
+  "archive_bytes": 66175718,
+  "archive_sha256": "f0ab700c450bd9edc11775e9b7af38ef8fdfd040b6f28f25fccdb4685c53fdaa",
+  "regular_files_verified": 5752,
+  "restore_mismatches": [],
+  "bundle_logical_bytes": 192485242,
+  "artifact": "/home/builder/vlr-recovery-check/backend-fallback-139378c-portable.tar.gz",
+  "restored_directory": "/home/builder/vlr-recovery-check/restored-portable/backend"
+}

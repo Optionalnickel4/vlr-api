@@ -1,0 +1,60 @@
+{
+  "initial_free_bytes": 12218695680,
+  "frontend": {
+    "files_verified": 25776,
+    "mismatches": [],
+    "build_id": "5RXlwj7jwc2eDLWI_-439"
+  },
+  "database_counts_before": {
+    "match_results": 1572,
+    "player_snapshots": 14792,
+    "ranking_snapshots": 106077,
+    "team_snapshots": 1009
+  },
+  "backend": {
+    "interpreter": "/home/builder/vlr-recovery-check/restored-portable/backend/runtime/bin/python3.13",
+    "prefix": "/home/builder/vlr-recovery-check/restored-portable/backend/runtime",
+    "app_module": "/home/builder/vlr-recovery-check/restored-portable/backend/source/app/main.py",
+    "dependencies": {
+      "httpx": "0.28.1",
+      "uvicorn": "0.52.4",
+      "asyncpg": "0.31.0",
+      "redis": "8.1.0",
+      "sqlalchemy": "2.0.52"
+    },
+    "scheduler_jobs_constructed": 8,
+    "scheduler_started": false,
+    "lifespan_executed": false,
+    "responses": [
+      {
+        "path": "/health",
+        "status": 200,
+        "shape": "dict",
+        "length": 1
+      },
+      {
+        "path": "/api/v1/history/results?limit=2",
+        "status": 200,
+        "shape": "list",
+        "length": 2
+      }
+    ]
+  },
+  "database_counts_after": {
+    "match_results": 1572,
+    "player_snapshots": 14792,
+    "ranking_snapshots": 106077,
+    "team_snapshots": 1009
+  },
+  "database_restore_matches_prior_snapshot": true,
+  "backend_full_rollback_verified": false,
+  "limitation": "Known historical source only; lifespan/scheduler not executed; Redis unavailable; no attestation to loaded production worker. Health/history prove only emergency read API restoration.",
+  "minimum_sampled_free_bytes": 11379400704,
+  "final_free_bytes": 11373789184,
+  "allocated_bytes": {
+    "frontend-restored": 724770816,
+    "pg": 119771136,
+    "bundle-portable": 208121856,
+    "restored-portable": 208490496
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "services": "MainPID=61821\nExecMainStartTimestamp=Thu 2026-09-17 11:10:09 UTC\nExecStart={ path=/opt/vlr-api/.venv/bin/uvicorn ; argv[]=/opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1 ; ignore_errors=no ; start_time=[Thu 2026-09-17 11:10:09 UTC] ; stop_time=[n/a] ; pid=61821 ; code=(null) ; status=0/0 }\nWorkingDirectory=/opt/vlr-api\nFragmentPath=/etc/systemd/system/vlr-api.service\nDropInPaths=\n\nMainPID=308\nExecMainStartTimestamp=Thu 2026-09-03 04:02:56 UTC\nExecStart={ path=/opt/vlr-api/frontend/node_modules/.bin/next ; argv[]=/opt/vlr-api/frontend/node_modules/.bin/next start -H 0.0.0.0 -p 3000 ; ignore_errors=no ; start_time=[Thu 2026-09-03 04:02:56 UTC] ; stop_time=[n/a] ; pid=308 ; code=(null) ; status=0/0 }\nWorkingDirectory=/opt/vlr-api/frontend\nFragmentPath=/etc/systemd/system/vlr-frontend.service\nDropInPaths=\n",
+  "services_unchanged": true,
+  "protected": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "protected_unchanged": true,
+  "units": {
+    "vlr-api.service": "d0a8ec3bbb6fb0a6ddfb1871cabacb542a07a892b2407a3f95d19972e8500bbf",
+    "vlr-frontend.service": "a228d2be3938cae32056250bbcfeb9d83bb1c51f1413a9e56ff220755ecb024d"
+  },
+  "units_unchanged": true,
+  "config_copy_matches": {
+    "backend.env": true,
+    "frontend.env": true
+  },
+  "disk": {
+    "total": 21024690176,
+    "used": 8689356800,
+    "free": 11373678592
+  },
+  "shared_library_dependencies": "\tlinux-vdso.so.1 (0x00007c0b021eb000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007c0b020ef000)\n\tlibz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007c0b020cf000)\n\tlibexpat.so.1 => /lib/x86_64-linux-gnu/libexpat.so.1 (0x00007c0b020a1000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007c0b01ead000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007c0b021ed000)\n",
+  "budget": {
+    "additional_candidate_dependencies_measured": 712368128,
+    "additional_clean_build_output_measured": 96182272,
+    "additional_release_source_allowance": 33554432,
+    "additional_candidate_backend_allowance": 268435456,
+    "additional_fresh_database_dump_allowance": 16777216,
+    "additional_frontend_archive_allowance": 268435456,
+    "additional_recovered_backend_archive_and_restore_allowance": 1073741824,
+    "operating_reserve": 2147483648
+  },
+  "budget_total": 4616978432,
+  "headroom_after_budget": 6756700160
+}
