@@ -53,7 +53,7 @@ export function LiveMatchDetail({ initial }: { initial: MatchDetail }) {
   }, [initial.id, initial.status]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="match-detail">
       <MatchHeader match={match} />
       <MapTabs match={match} />
     </div>

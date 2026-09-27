@@ -609,11 +609,13 @@ function normalizeMap(raw: Record<string, unknown>): MatchMap {
 
 function normalizeMatchTeam(raw: unknown): MatchTeam {
   const t = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  const logo = str(t.logo);
   return {
     name: str(t.name),
     id: str(t.id),
     score: parseNumeric(t.score),
     won: t.won === true,
+    ...(logo ? { logo } : {}),
   };
 }
 

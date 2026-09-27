@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-27T11:20:23.993Z",
+  "method": "Actual Chromium default page zoom via chrome.settingsPrivate.setDefaultZoom(2); no CSS zoom or pinch emulation",
+  "results": [
+    {
+      "browserZoom": 2,
+      "outerWidth": 1440,
+      "innerWidth": 720,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 720,
+      "focusedClear": true,
+      "bottomClear": true,
+      "mapKeyboard": true,
+      "tableKeyboardScroll": true,
+      "errors": []
+    },
+    {
+      "browserZoom": 2,
+      "outerWidth": 768,
+      "innerWidth": 384,
+      "innerHeight": 456,
+      "devicePixelRatio": 2,
+      "documentWidth": 384,
+      "focusedClear": true,
+      "bottomClear": true,
+      "mapKeyboard": true,
+      "tableKeyboardScroll": true,
+      "errors": []
+    }
+  ]
+}

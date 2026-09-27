@@ -1,82 +1,39 @@
 import Link from "next/link";
 import type { MatchMapTeam } from "@/types/vlr";
-import { TableShell } from "@/components/TableShell";
 
-/**
- * PlayerStatsTable — one team's per-map scoreboard in the broadcast stat-table
- * idiom: PLAYER + the R/ACS/K/D/A/+−/KAST/ADR/HS%/FK/FD columns, mono and
- * right-aligned. Values are already coerced to numbers at the data layer
- * (parseNumeric, null-not-NaN); empty cells (R/ACS/ADR on a live/early map)
- * render as a dash, never NaN, never 0. KAST/HS% carry their % in display.
- */
-interface Col {
-  label: string;
-  key: string; // stat key from the API
-  pct?: boolean;
-}
-
-// the API stat keys: R, ACS, K, D, A, KD_+/-, KAST, ADR, HS%, FK, FD, FK_+/-
-const COLS: Col[] = [
-  { label: "R", key: "R" },
-  { label: "ACS", key: "ACS" },
-  { label: "K", key: "K" },
-  { label: "D", key: "D" },
-  { label: "A", key: "A" },
-  { label: "+/−", key: "KD_+/-" },
-  { label: "KAST", key: "KAST", pct: true },
-  { label: "ADR", key: "ADR" },
-  { label: "HS%", key: "HS%", pct: true },
-  { label: "FK", key: "FK" },
-  { label: "FD", key: "FD" },
+const COLS = [
+  { label: "R", key: "R", title: "Rating" },
+  { label: "ACS", key: "ACS", title: "Average combat score" },
+  { label: "K", key: "K", title: "Kills" },
+  { label: "D", key: "D", title: "Deaths" },
+  { label: "A", key: "A", title: "Assists" },
+  { label: "+/−", key: "KD_+/-", title: "Kill/death difference" },
+  { label: "KAST", key: "KAST", title: "Kill, assist, survive or traded rounds", pct: true },
+  { label: "ADR", key: "ADR", title: "Average damage per round" },
+  { label: "HS%", key: "HS%", title: "Headshot percentage", pct: true },
+  { label: "FK", key: "FK", title: "First kills" },
+  { label: "FD", key: "FD", title: "First deaths" },
 ];
 
 function fmt(value: number | null | undefined, pct?: boolean): string {
-  if (value === null || value === undefined) return "—"; // never NaN, never 0
+  if (value === null || value === undefined) return "—";
   const n = Number.isInteger(value) ? String(value) : value.toFixed(2);
   return pct ? `${n}%` : n;
 }
 
+/** Preserve upstream row order, every existing column, and numeric formatting. */
 export function PlayerStatsTable({ team }: { team: MatchMapTeam }) {
-  return (
-    <TableShell
-      columns={[
-        { label: team.name ?? "—", className: "min-w-[8rem]" },
-        ...COLS.map((c) => ({ label: c.label, align: "right" as const })),
-      ]}
-    >
-      {team.players.map((p, i) => (
-        <tr key={p.playerId ?? `${p.player}-${i}`}>
-          <td>
-            <span className="flex items-baseline gap-2">
-              {p.playerId ? (
-                <Link
-                  href={`/player/${p.playerId}`}
-                  className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink transition-colors hover:text-accent"
-                >
-                  {p.player ?? "—"}
-                </Link>
-              ) : (
-                <span className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink">
-                  {p.player ?? "—"}
-                </span>
-              )}
-              {p.agent && (
-                <span className="font-body text-[11px] uppercase tracking-wide text-dim">
-                  {p.agent}
-                </span>
-              )}
-            </span>
-          </td>
-          {COLS.map((c) => (
-            <td
-              key={c.key}
-              className="text-right font-mono text-[13px] text-mut tabular-nums"
-            >
-              {fmt(p.stats[c.key]?.value, c.pct)}
-            </td>
-          ))}
-        </tr>
-      ))}
-    </TableShell>
-  );
+  return <section className="md-scoreboard" aria-label={`${team.name ?? "Team"} player scoreboard`}>
+    <div className="md-scoreboard-heading"><h4>{team.name ?? "Team unavailable"}</h4>{team.score !== null && <span>{team.score} <span className="md-eyebrow">rounds</span></span>}</div>
+    <div className="md-table-scroll" role="region" aria-label={`${team.name ?? "Team"} statistics, scroll horizontally`} tabIndex={0}>
+      <table className="md-table">
+        <caption className="sr-only">{team.name ?? "Team"} player statistics in source order</caption>
+        <thead><tr><th scope="col">Player / Agent</th>{COLS.map(col => <th scope="col" key={col.key}><abbr title={col.title}>{col.label}</abbr></th>)}</tr></thead>
+        <tbody>{team.players.length ? team.players.map((player, i) => <tr key={player.playerId ?? `${player.player}-${i}`}>
+          <th scope="row"><div className="md-player">{player.playerId ? <Link href={`/player/${player.playerId}`}>{player.player ?? "Player unavailable"}</Link> : <span>{player.player ?? "Player unavailable"}</span>}<span className="md-agent">{player.agent ?? "Agent unavailable"}</span></div></th>
+          {COLS.map(col => <td key={col.key}>{fmt(player.stats[col.key]?.value, col.pct)}</td>)}
+        </tr>) : <tr><td colSpan={COLS.length + 1}>Player statistics unavailable.</td></tr>}</tbody>
+      </table>
+    </div>
+  </section>;
 }

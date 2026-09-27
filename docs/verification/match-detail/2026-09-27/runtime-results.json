@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-09-27T11:21:14.623410+00:00",
+  "previewDirectory": "/tmp/vlr-preview/match-final",
+  "previewPid": "129299",
+  "identicalInputFiles": 114,
+  "sourceMatchesPreview": true,
+  "productionUnchanged": true,
+  "services": "MainPID=61821\nNRestarts=0\nId=vlr-api.service\nActiveEnterTimestamp=Thu 2026-09-17 11:10:09 UTC\n\nMainPID=308\nNRestarts=0\nId=vlr-frontend.service\nActiveEnterTimestamp=Thu 2026-09-03 04:02:56 UTC\n",
+  "http": [
+    {
+      "url": "http://10.0.0.21:3100/match/753450",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200,
+      "body": "{\"status\":\"ok\"}"
+    },
+    {
+      "url": "http://127.0.0.1:3000/favicon.ico",
+      "status": 200
+    }
+  ],
+  "unrelatedFilesPreserved": true,
+  "controlledAcceptanceProcessStopped": 129301
+}

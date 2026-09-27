@@ -1,117 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { MatchDetail, MatchMap, MatchMapTeam } from "@/types/vlr";
-import { cn } from "@/lib/cn";
-import { Panel } from "@/components/Panel";
 import { PlayerStatsTable } from "@/components/PlayerStatsTable";
 import { RoundTimeline } from "@/components/RoundTimeline";
 
-/**
- * MapTabs — the client island. One tab per map (Pearl/Fracture/Split, the
- * picked/decider marked) plus an "All Maps" aggregate tab; clicking switches the
- * active scoreboard. State is purely local (the data is already in props from the
- * SSR fetch), so this stays a thin interactive shell.
- *
- * NOTE: Next 16 hardens cross-origin dev access and the map tabs hydration broke
- * before when the LAN host wasn't whitelisted. This runs on LXC 289
- * (192.168.1.35) — see allowedDevOrigins in next.config.ts (already set), not the
- * old Crostini IP.
- */
-type Tab =
+type Tab = { key: string } & (
   | { kind: "map"; map: MatchMap }
-  | { kind: "all"; teams: MatchMapTeam[] };
+  | { kind: "all"; teams: MatchMapTeam[] }
+);
 
-function Scoreboards({ teams }: { teams: MatchMapTeam[] }) {
-  return (
-    <div className="flex flex-col gap-6">
-      {teams.map((team, i) => (
-        <div key={team.name ?? i} className="overflow-x-auto">
-          <PlayerStatsTable team={team} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
+/** Selection is local, stable across score updates, and usable without a pointer. */
 export function MapTabs({ match }: { match: MatchDetail }) {
   const tabs: Tab[] = [
-    ...match.maps.map((map) => ({ kind: "map" as const, map })),
-    ...(match.allMaps
-      ? [{ kind: "all" as const, teams: match.allMaps.teams }]
-      : []),
+    ...match.maps.map((map, i) => ({ key: `map-${map.gameId ?? i}`, kind: "map" as const, map })),
+    ...(match.allMaps ? [{ key: "all", kind: "all" as const, teams: match.allMaps.teams }] : []),
   ];
-  const [active, setActive] = useState(0);
-  if (tabs.length === 0) {
-    return (
-      <Panel className="px-4 py-6 text-center font-body text-sm text-dim">
-        No map data available for this match.
-      </Panel>
-    );
-  }
-  const current = tabs[Math.min(active, tabs.length - 1)];
+  const [selected, setSelected] = useState<string | null>(null);
+  const id = useId();
+  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+  const active = Math.max(0, tabs.findIndex(tab => tab.key === selected));
+  if (!tabs.length) return <section className="md-empty" aria-label="Map coverage">No map data available for this match.</section>;
+  const current = tabs[active];
+  const teams = current.kind === "map" ? current.map.teams : current.teams;
+  const teamName = (i: number) => teams[i]?.name ?? match.teams[i]?.name ?? `Team ${i + 1}`;
+  const select = (i: number) => { setSelected(tabs[i].key); buttons.current[i]?.focus(); };
 
-  return (
-    <div className="flex flex-col gap-4">
-      {/* tab strip */}
-      <div className="flex flex-wrap gap-2">
-        {tabs.map((t, i) => {
-          const isMap = t.kind === "map";
-          const label = isMap ? (t.map.name ?? "Map") : "All Maps";
-          const score =
-            isMap && t.map.scores.length === 2
-              ? `${t.map.scores[0] ?? "–"}:${t.map.scores[1] ?? "–"}`
-              : null;
-          const marker = isMap
-            ? t.map.decider
-              ? "DEC"
-              : t.map.picked
-                ? "PICK"
-                : null
-            : null;
-          return (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setActive(i)}
-              className={cn(
-                "flex items-center gap-2 rounded-[8px] border px-3 py-1.5 font-display text-[12px] font-semibold uppercase tracking-[0.08em] transition-colors",
-                i === active
-                  ? "border-accent/50 bg-accent/[0.08] text-ink"
-                  : "border-line bg-transparent text-mut hover:text-ink",
-              )}
-            >
-              <span>{label}</span>
-              {score && (
-                <span className="font-mono text-[11px] text-dim tabular-nums">
-                  {score}
-                </span>
-              )}
-              {marker && (
-                <span className="text-[9px] tracking-[0.1em] text-accent">
-                  {marker}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* active scoreboard + round strip */}
-      <Panel className="flex flex-col gap-2 overflow-hidden py-2">
-        {current.kind === "map" && current.map.rounds.length > 0 && (
-          <RoundTimeline
-            rounds={current.map.rounds}
-            team1={current.map.teams[0]?.name ?? null}
-            team2={current.map.teams[1]?.name ?? null}
-          />
-        )}
-        <div className="px-2 py-2">
-          <Scoreboards
-            teams={current.kind === "map" ? current.map.teams : current.teams}
-          />
-        </div>
-      </Panel>
+  return <section className="md-maps" aria-label="Maps and player performance">
+    <div className="md-section-heading"><div><p className="md-eyebrow">The series / map by map</p><h2>MAP BREAKDOWN.</h2></div><p>Scores follow the team order above.</p></div>
+    <div className="md-map-tabs" role="tablist" aria-label="Select a map">
+      {tabs.map((tab, i) => <button key={tab.key} type="button" role="tab" id={`${id}-tab-${i}`} aria-controls={`${id}-panel`} aria-selected={i === active} tabIndex={i === active ? 0 : -1}
+        ref={el => { buttons.current[i] = el; }} onClick={() => setSelected(tab.key)}
+        onKeyDown={event => {
+          const next = event.key === "ArrowRight" ? (i + 1) % tabs.length : event.key === "ArrowLeft" ? (i + tabs.length - 1) % tabs.length : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : null;
+          if (next !== null) { event.preventDefault(); select(next); }
+        }}>
+        <span className="md-tab-kicker">{tab.kind === "map" ? `Map ${i + 1}` : "Series totals"}</span>
+        <span className="md-tab-name">{tab.kind === "map" ? tab.map.name ?? "Name unavailable" : "All Maps"}</span>
+        {tab.kind === "map" && <span className="md-tab-score">{tab.map.scores[0] ?? "–"} : {tab.map.scores[1] ?? "–"}</span>}
+        <span className="md-tab-marker">{tab.kind === "map" ? tab.map.decider ? "Decider" : tab.map.picked ? "Pick" : "Map" : "Combined stats"}</span>
+      </button>)}
     </div>
-  );
+    <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-tab-${active}`} tabIndex={0} className="md-map-panel">
+      <div className="md-map-heading"><h3>{current.kind === "map" ? current.map.name ?? `Map ${active + 1}` : "All Maps"}</h3><p>{current.kind === "map" ? `${teamName(0)} ${current.map.scores[0] ?? "–"} : ${current.map.scores[1] ?? "–"} ${teamName(1)}` : "Combined player performance across the series"}</p></div>
+      {current.kind === "map" && (current.map.rounds.length ? <RoundTimeline rounds={current.map.rounds} team1={teamName(0)} team2={teamName(1)} /> : <p className="md-data-note">Round history unavailable for this map.</p>)}
+      <div className="md-scoreboards">
+        <div className="md-section-heading"><h3>PLAYER SCOREBOARDS</h3><p>Source order · Scroll tables for all statistics</p></div>
+        {!teams.length && <p className="md-empty">Player statistics unavailable for this map.</p>}
+        {teams.map((team, i) => <PlayerStatsTable key={`${current.key}-${i}`} team={{ ...team, name: teamName(i) }} />)}
+      </div>
+    </div>
+  </section>;
 }

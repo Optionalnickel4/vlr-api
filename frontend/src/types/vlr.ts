@@ -281,6 +281,8 @@ export interface MatchMap {
 export interface MatchTeam {
   name: string | null;
   id: string | null;
+  /** Optional source-provided crest; existing match feeds may omit it. */
+  logo?: string;
   score: number | null; // series score (maps won)
   won: boolean;
 }

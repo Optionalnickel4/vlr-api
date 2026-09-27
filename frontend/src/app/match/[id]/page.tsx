@@ -1,3 +1,4 @@
+import "./match.css";
 import type { Metadata } from "next";
 import { PageContainer } from "@/components/PageContainer";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -31,9 +32,9 @@ export default async function MatchPage({
   // (HTTP 200, not a crash, not a Next error boundary).
   if (!match) {
     return (
-      <PageContainer>
+      <PageContainer width="home">
         <Breadcrumbs kind="match" label={`Match ${id}`} />
-        <Panel className="flex flex-col items-center gap-3 px-6 py-16 text-center">
+        <Panel className="match-unavailable flex flex-col items-center gap-3 px-6 py-16 text-center">
           <Badge tone="down">unavailable</Badge>
           <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-ink">
             Couldn&apos;t load this match
@@ -58,9 +59,9 @@ export default async function MatchPage({
   // match is live, polls /api/match/[id] every 30s to refresh the scorebug /
   // scoreboard / round timeline without a reload (stops when the match finals).
   return (
-    <PageContainer>
+    <PageContainer width="home">
       <Breadcrumbs kind="match" label={`Match ${id}`} />
-      <h1 className="sr-only">Match {id}</h1>
+      <div className="match-masthead"><p>Valorant / Match coverage</p><h1>MATCH <span>REPORT.</span></h1></div>
       <LiveMatchDetail initial={match} />
     </PageContainer>
   );
