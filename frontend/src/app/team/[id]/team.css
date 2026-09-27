@@ -1,0 +1,80 @@
+/* Scoped broadcast team dossier; shared navigation and fixed ticker are unchanged. */
+.team-detail { display:grid; gap:36px; min-width:0; color:#f5f2ec; }
+.team-detail section { min-width:0; }
+.team-detail :is(a,summary,[tabindex]) { scroll-margin-block:24px calc(var(--ticker-h) + 36px + env(safe-area-inset-bottom)); }
+.td-identity { margin-top:24px; border:1px solid #3c4653; border-top:4px solid #ff5261; background:linear-gradient(115deg,#151c25 55%,#241e29); padding:28px 32px 0; }
+.td-kicker { font:600 11px/1.5 var(--font-body); text-transform:uppercase; letter-spacing:.12em; color:#ff8792; }
+.td-identity-main { display:flex; align-items:center; gap:28px; padding:30px 0; }
+.td-identity-main > div { min-width:0; }
+.td-identity h1 { font:700 clamp(40px,6vw,80px)/1 var(--font-display); letter-spacing:-.025em; text-transform:uppercase; overflow-wrap:anywhere; margin-top:8px; }
+.td-meta,.td-caption { font:400 12px/1.6 var(--font-body); color:#b9c3d0; overflow-wrap:anywhere; }
+.td-summary { display:flex; flex-wrap:wrap; gap:16px 32px; padding:18px 0; border-top:1px solid #3c4653; font-size:13px; color:#c2cad5; }
+.td-summary strong { color:#eeeae2; font:600 22px var(--font-mono); margin-right:6px; }
+.td-summary > :last-child { margin-left:auto; align-self:center; }
+.td-section-heading { display:flex; justify-content:space-between; align-items:end; gap:16px; margin-bottom:18px; }
+.td-section-heading h2 { font:700 38px/1 var(--font-display); margin-top:6px; }
+.td-section-heading > p { font-size:12px; color:#b9c3d0; }
+.td-form { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; list-style:none; padding:0; }
+.td-form li { background:#131c23; border:1px solid #3c4653; padding:18px; display:flex; flex-direction:column; align-items:flex-start; gap:10px; min-width:0; }
+.td-verdict { display:inline-block; font:600 11px var(--font-body); padding:5px 9px; background:#283443; color:#e0e7ef; }
+.td-verdict[data-result="win"] { color:#91e7c9; background:#18352f; }
+.td-verdict[data-result="loss"] { color:#ffb1b8; background:#40252e; }
+.td-opponent { font:600 22px/1.15 var(--font-display); overflow-wrap:anywhere; }
+.td-form-score { color:#eeeae2; font:600 28px var(--font-mono); font-variant-numeric:tabular-nums; margin-top:auto; }
+.td-form-score span { font-size:16px; color:#b9c3d0; }
+.team-detail a:hover { color:#73d9c6; text-decoration:underline; }
+.td-caption { margin:12px 0; }
+.td-rating { background:#131c23; border:1px solid #3c4653; border-top:3px solid #73d9c6; padding:24px; }
+.td-rating-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; }
+.td-rating-stats span { display:block; font-size:12px; color:#b9c3d0; }
+.td-rating-stats strong { font:600 clamp(24px,3vw,40px)/1.4 var(--font-mono); font-variant-numeric:tabular-nums; }
+.td-rating [data-tone="up"] { color:#91e7c9; }
+.td-rating [data-tone="down"] { color:#ffb1b8; }
+.td-chart { display:grid; grid-template-columns:48px minmax(0,1fr); margin:24px 0; gap:12px; color:#c2cad5; }
+.td-chart-range { display:flex; flex-direction:column; justify-content:space-between; font:400 11px var(--font-mono); }
+.td-chart svg { width:100%; height:160px; fill:currentColor; background:repeating-linear-gradient(to top,transparent 0,transparent 39px,#ffffff12 40px); }
+.td-chart figcaption { grid-column:1/-1; font-size:12px; color:#b9c3d0; }
+.td-history { border-top:1px solid #3c4653; margin-top:20px; }
+.td-history summary { padding:16px 0; cursor:pointer; font-size:14px; min-height:48px; }
+.td-table-scroll { max-width:100%; overflow-x:auto; padding:3px 0 10px; border:1px solid #3c4653; background:#111923; scrollbar-color:#738195 #131c23; }
+.td-table { position:relative; width:100%; min-width:620px; border-collapse:separate; border-spacing:0; }
+.td-table th,.td-table td { padding:16px !important; border-bottom:1px solid #303c4a; text-align:right; font:400 13px/1.4 var(--font-mono); font-variant-numeric:tabular-nums; color:#c2cad5; }
+.td-table thead th { font:600 12px var(--font-body); background:#192430; }
+.td-table tr > :first-child { text-align:left; }
+.td-table tbody th { font:600 18px/1.3 var(--font-display); color:#f5f2ec; }
+.td-table tbody tr:hover > * { background:#1b2835; }
+.td-roster .td-table :is(th,td) { text-align:left; }
+.td-roster .td-table tbody td:first-child { min-width:180px; }
+.td-roster .td-table tbody td:first-child > span { flex-wrap:wrap; }
+.td-roster .td-table tbody td:first-child a { display:inline-flex; min-height:28px; align-items:center; }
+.td-roster .td-table tbody td:first-child a span { font-size:20px; }
+.td-results { min-width:820px; table-layout:fixed; }
+.td-results tr > :first-child { width:240px; }
+.td-results tr > :nth-child(2) { width:100px; }
+.td-results tr > :nth-child(3) { width:90px; }
+.td-results tr > :nth-child(4) { width:230px; }
+.td-results tr > :nth-child(5) { width:110px; }
+.td-results tr > :first-child,.td-roster tr > :first-child:not([colspan]) { position:sticky; left:0; z-index:1; background:#111923; border-right:1px solid #303c4a; }
+.td-roster .td-table { table-layout:fixed; }
+.td-roster .td-table tr > :first-child { width:180px; }
+.td-roster .td-table tr > :nth-child(2) { width:230px; }
+.td-result-event { display:block; font:400 12px/1.5 var(--font-body); color:#b9c3d0; margin-top:6px; }
+.td-empty,.td-notice { padding:24px; border:1px solid #3c4653; color:#c2cad5; font-size:14px; }
+.td-notice { border-left:3px solid #ffb1b8; }
+@media(max-width:900px) { .td-form { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:599px) {
+ .td-identity { padding:20px 18px 0; }
+ .td-identity-main { gap:16px; padding:24px 0; }
+ .td-identity-main > :first-child { width:60px !important; height:60px !important; font-size:24px; }
+ .td-identity h1 { font-size:40px; }
+ .td-summary { gap:12px; }
+ .td-summary > :last-child { margin-left:0; width:100%; }
+ .td-section-heading { flex-direction:column; align-items:flex-start; gap:8px; }
+ .td-form { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .td-form li { padding:14px; }
+ .td-rating { padding:16px; }
+ .td-rating-stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+ .td-rating-stats strong { font-size:27px; }
+ .td-table th,.td-table td { padding:12px !important; }
+ .td-results tr > :first-child,.td-roster .td-table tr > :first-child { width:140px; }
+}

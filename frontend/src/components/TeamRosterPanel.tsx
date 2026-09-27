@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { RosterMember } from "@/types/vlr";
-import { MatchSection } from "@/components/MatchSection";
 import { TableShell } from "@/components/TableShell";
 import { Badge } from "@/components/Badge";
 
@@ -38,7 +37,7 @@ function RosterRow({ m }: { m: RosterMember }) {
           )}
           {m.isCaptain && (
             <Badge tone="accent" className="px-1.5 py-0">
-              C
+              Captain
             </Badge>
           )}
         </span>
@@ -63,13 +62,11 @@ export function TeamRosterPanel({
   const staff = roster.filter((m) => m.isStaff);
 
   return (
-    <MatchSection
-      title="Roster"
-      count={players.length}
-      isEmpty={roster.length === 0}
-      emptyLabel="No roster listed."
-    >
-      <TableShell
+    <section aria-labelledby="team-roster">
+      <div className="td-section-heading"><div><p className="td-kicker">03 / Team sheet</p><h2 id="team-roster">Roster</h2></div><p>{players.length} listed players · {staff.length} staff</p></div>
+      {roster.length > 0 && <p className="td-caption">Scroll horizontally to see all columns on smaller screens.</p>}
+      {roster.length === 0 ? <p className="td-empty">No roster listed by the source.</p> : <div className="td-table-scroll td-roster" tabIndex={0} role="region" aria-label="Team roster, scroll horizontally">
+      <TableShell className="td-table"
         // First column heads with the team name (same identity anchor
         // PlayerStatsTable uses on match detail) so the table reads as *this
         // team's* roster, not a generic wall of names.
@@ -99,6 +96,7 @@ export function TeamRosterPanel({
           </>
         )}
       </TableShell>
-    </MatchSection>
+      </div>}
+    </section>
   );
 }

@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-09-27T11:40:34.078321+00:00",
+  "services": "MainPID=61821\nNRestarts=0\nActiveState=active\nActiveEnterTimestamp=Thu 2026-09-17 11:10:09 UTC\n\nMainPID=308\nNRestarts=0\nActiveState=active\nActiveEnterTimestamp=Thu 2026-09-03 04:02:56 UTC\n",
+  "health": {
+    "api": {
+      "url": "http://127.0.0.1:8000/health",
+      "status": 200
+    },
+    "frontend": {
+      "url": "http://127.0.0.1:3000/favicon.ico",
+      "status": 200
+    }
+  },
+  "preview": "Preview PID: 133220 cwd: /tmp/vlr-preview/team-final\n",
+  "unrelatedFiles": "Byte-for-byte unchanged; excluded from staging",
+  "productionActions": "No deployment or production restart performed; only preview frontend and read-only adapter restarted"
+}

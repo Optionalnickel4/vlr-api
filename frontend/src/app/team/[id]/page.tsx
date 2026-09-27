@@ -1,3 +1,5 @@
+import "./team.css";
+import { TeamOverview } from "@/components/TeamOverview";
 import type { Metadata } from "next";
 import { PageContainer } from "@/components/PageContainer";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -38,7 +40,7 @@ export default async function TeamPage({
   // everywhere else. NOT a crash, NOT a Next.js error boundary.
   if (!detail) {
     return (
-      <PageContainer>
+      <PageContainer width="home">
         <Breadcrumbs kind="team" label={`Team ${id}`} />
         <Panel className="flex flex-col items-center gap-3 px-6 py-16 text-center">
           <Badge tone="down">unavailable</Badge>
@@ -61,36 +63,14 @@ export default async function TeamPage({
     );
   }
 
-  const trendData = trend.data[0] ?? null;
-
   return (
-    <PageContainer>
+    <PageContainer width="home">
       <Breadcrumbs kind="team" label={detail.name ?? `Team ${id}`} />
-      {/* team identity — accent stripe is the team's brand-spark, same teal the
-          match scorebug spends on its source/brand marks (header accent). */}
-      <div className="mb-10 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-l-[3px] border-accent pl-4">
-        <h1 className="font-display text-4xl font-bold uppercase tracking-[0.03em] text-ink">
-          {detail.name ?? "—"}
-        </h1>
-        {detail.tag && (
-          <span className="font-mono text-lg text-accent">{detail.tag}</span>
-        )}
-        {detail.country && (
-          <Badge tone="neutral" className="self-center">
-            {detail.country}
-          </Badge>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-10">
-        {/* the differentiation surface: rating line over the banked history */}
+      <div className="team-detail">
+        <TeamOverview team={team} />
         <TeamTrendPanel trend={trend} />
-
-        {/* roster + the results join (same window as the rating line) */}
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-          <TeamRosterPanel roster={detail.roster} teamName={detail.name} />
-          <TeamResultsPanel results={trendData?.resultsInWindow ?? []} />
-        </div>
+        <TeamRosterPanel roster={detail.roster} teamName={detail.name} />
+        <TeamResultsPanel trend={trend} />
       </div>
     </PageContainer>
   );

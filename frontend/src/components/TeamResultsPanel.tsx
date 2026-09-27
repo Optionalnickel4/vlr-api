@@ -1,79 +1,16 @@
-import type { TrendResult } from "@/types/vlr";
-import { MatchSection } from "@/components/MatchSection";
-import { Badge } from "@/components/Badge";
+import type { ApiResponse, TeamTrend } from "@/types/vlr";
+import Link from "next/link";
+import { captureDate } from "./TeamTrendPanel";
 
-/**
- * TeamResultsPanel — the "results join" half of the trend view: the team's
- * match results over the SAME window as the rating line, each tagged win/loss
- * with the broadcast color signal (green win / red loss). This is the array the
- * trend endpoint joins out of Phase 4/5; pairing it with the rating line is the
- * combined view vlr.gg structurally can't show.
- *
- * Empty is a valid state (out of season, or the fuzzy name-match resolved
- * nothing) — surfaced as graceful-empty, not an error. The score string ("2:1")
- * is shown verbatim; win/loss already comes resolved from upstream so we don't
- * re-derive a verdict from the raw score here.
- */
-function ResultRow({ r, idx }: { r: TrendResult; idx: number }) {
-  const tone = r.result === "win" ? "up" : r.result === "loss" ? "down" : "neutral";
-  // The score carries the same chroma weight as a scorebug: winner-green on a
-  // win, loss-red on a loss (the green/red rhythm match-detail uses), instead of
-  // the flat dim it had before. Same token vocabulary, just lit per verdict.
-  const scoreTone =
-    r.result === "win" ? "text-up" : r.result === "loss" ? "text-down" : "text-dim";
-  const url = r.vlrId ? `https://www.vlr.gg/${r.vlrId}` : null;
-
-  const inner = (
-    <div className="flex items-center gap-3 px-4 py-3">
-      <Badge tone={tone} className="w-12 justify-center">
-        {r.result === "win" ? "W" : r.result === "loss" ? "L" : "—"}
-      </Badge>
-      <div className="min-w-0 flex-1">
-        <div className="truncate font-display text-base font-semibold uppercase tracking-[0.03em] text-ink">
-          {r.opponent ?? "—"}
-        </div>
-        {r.event && (
-          <div className="truncate font-body text-[12px] text-mut">{r.event}</div>
-        )}
-      </div>
-      <span
-        className={`shrink-0 font-display text-xl font-bold tabular-nums ${scoreTone}`}
-      >
-        {r.score ?? "–"}
-      </span>
-    </div>
-  );
-
-  const shell =
-    "block border-b border-line/60 last:border-b-0 transition-colors hover:bg-ink/[0.03]";
-  return url ? (
-    <a
-      key={r.vlrId ?? idx}
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={shell}
-    >
-      {inner}
-    </a>
-  ) : (
-    <div key={r.vlrId ?? idx} className={shell}>
-      {inner}
-    </div>
-  );
-}
-
-export function TeamResultsPanel({ results }: { results: TrendResult[] }) {
-  return (
-    <MatchSection
-      title="Results in Window"
-      count={results.length}
-      isEmpty={results.length === 0}
-      emptyLabel="No results matched for this window."
-    >
-      {results.map((r, i) => (
-        <ResultRow key={r.vlrId ?? i} r={r} idx={i} />
-      ))}
-    </MatchSection>
-  );
+export function TeamResultsPanel({ trend }: { trend: ApiResponse<TeamTrend> }) {
+  const t = trend.data[0];
+  const results = t?.resultsInWindow ?? [];
+  return <section aria-labelledby="team-results">
+    <div className="td-section-heading"><div><p className="td-kicker">04 / Results archive</p><h2 id="team-results">Results in window</h2></div><p>{t?.windowDays != null ? `${t.windowDays}-day lookback · ` : ""}{t ? `${results.length} matched results` : "History unavailable"}</p></div>
+    {trend.stale && t && <p className="td-notice" role="status">Result updates unavailable — showing last available data.</p>}
+    {!results.length ? <p className="td-empty">{!t && (trend.stale || trend.error) ? "Results unavailable — couldn't load this team's history." : "No results matched for this window."}</p> : <>
+      <p className="td-caption">Banked results in source order. Capture times are not match dates. Scores and verdicts are shown as supplied. Scroll horizontally to see all columns on smaller screens.</p>
+      <div className="td-table-scroll" tabIndex={0} role="region" aria-label="Results in window, scroll horizontally"><table className="td-table td-results"><caption className="sr-only">Team results in the history window</caption><thead><tr><th scope="col">Opponent / Event</th><th scope="col">Result</th><th scope="col">Score</th><th scope="col">Captured at (UTC)</th><th scope="col">Source</th></tr></thead><tbody>{results.map((r,i) => <tr key={r.vlrId ?? i}><th scope="row">{r.vlrId ? <Link href={`/match/${r.vlrId}`}>{r.opponent ?? "Opponent unavailable"}</Link> : r.opponent ?? "Opponent unavailable"}<span className="td-result-event">{r.event ?? "Event unavailable"}</span></th><td><span className="td-verdict" data-result={r.result ?? "unknown"}>{r.result === "win" ? "Win" : r.result === "loss" ? "Loss" : "Unknown"}</span></td><td>{r.score ?? "—"}</td><td>{captureDate(r.capturedAt)}</td><td>{r.vlrId ? <a href={`https://www.vlr.gg/${r.vlrId}`} target="_blank" rel="noopener noreferrer" aria-label={`View ${r.opponent ?? "match"} on VLR.gg (new tab)`}>VLR.gg ↗</a> : "—"}</td></tr>)}</tbody></table></div>
+    </>}
+  </section>;
 }
