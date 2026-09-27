@@ -1,0 +1,40 @@
+{
+  "database_backup": 9901311,
+  "frontend_archive": 215041425,
+  "redis_existing_rdb_readable": false,
+  "redis_backup_created": false,
+  "redis_mutation_commands": false,
+  "durable_free_bytes_now": 287760384,
+  "tmpfs_free_bytes_now": 2821804032,
+  "backup_storage": "same root filesystem; not an off-host durable backup",
+  "private_artifact_directory": "/home/builder/vlr-gates-private",
+  "build_measurement": {
+    "release": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "started": "2026-09-27T14:57:08.431549+00:00",
+    "disk_available_before": 383733760,
+    "peak_process_tree_rss_bytes": 702152704,
+    "peak_build_logical_bytes": 94716374,
+    "minimum_disk_available": 287748096,
+    "exit_code": 0,
+    "elapsed_seconds": 25.04,
+    "disk_available_after": 287571968
+  },
+  "frontend_restore_logical_bytes": 648491491,
+  "postgres_restore_bytes": 45029043,
+  "minimum_operating_reserve_bytes": 268435456,
+  "minimum_free_for_restore_and_reserve": 961955990,
+  "available_after_review": 999481344,
+  "shortfall_bytes": 674842774,
+  "exclusions": "Additional backend rollback environment/source, future data growth and off-host backup capacity are not included in this lower bound.",
+  "capacity_gate_pass": false,
+  "available_before_dependency_cleanup": 287531008,
+  "candidate_dependency_reinstall_bytes": 712368128,
+  "minimum_free_for_release_restore_and_reserve": 1674324118
+}

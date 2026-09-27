@@ -1,0 +1,15 @@
+{
+  "services": "MainPID=61821\nExecMainStartTimestamp=Thu 2026-09-17 11:10:09 UTC\nFragmentPath=/etc/systemd/system/vlr-api.service\nDropInPaths=\n\nMainPID=308\nExecMainStartTimestamp=Thu 2026-09-03 04:02:56 UTC\nFragmentPath=/etc/systemd/system/vlr-frontend.service\nDropInPaths=\n",
+  "production_services_unchanged": true,
+  "protected_files_unchanged": true,
+  "unit_files_unchanged": true,
+  "environment_files_match_private_copies": true,
+  "release_files_verified": 511,
+  "archive_mismatches": [],
+  "private_http_services_stopped": true,
+  "private_postgres_redis_stopped": true,
+  "isolated_restore_database_removed_after_verification": true,
+  "durable_free_bytes": 287531008,
+  "origin_requests": 3,
+  "durable_free_bytes_after_dependency_cleanup": 999481344
+}

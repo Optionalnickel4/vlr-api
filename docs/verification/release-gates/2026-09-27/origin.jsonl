@@ -1,0 +1,3 @@
+{"sequence": 1, "path": "/753445", "status": 200, "elapsed_ms": 102.6, "stop": false}
+{"sequence": 2, "path": "/team/8877", "status": 200, "elapsed_ms": 46.1, "stop": false}
+{"sequence": 3, "path": "/player/3799/", "status": 200, "elapsed_ms": 26.6, "stop": false}

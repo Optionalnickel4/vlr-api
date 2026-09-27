@@ -1,0 +1,22 @@
+[
+  {
+    "id": "9904",
+    "http_status": 200,
+    "loading_ms": 203,
+    "elapsed_ms": 12566,
+    "expected": ".match-detail",
+    "expected_budget_ms": 12000,
+    "page_errors": 0,
+    "pass": true
+  },
+  {
+    "id": "9901",
+    "http_status": 200,
+    "loading_ms": 150,
+    "elapsed_ms": 90305,
+    "expected": ".match-unavailable",
+    "expected_budget_ms": 90000,
+    "page_errors": 0,
+    "pass": true
+  }
+]

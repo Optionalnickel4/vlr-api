@@ -1,0 +1,85 @@
+{
+  "backend": {
+    "release": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+    "command": [
+      "/opt/vlr-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    "started": "2026-09-27T14:56:42.194045+00:00",
+    "disk_available_before": 279314432,
+    "peak_process_tree_rss_bytes": 160739328,
+    "peak_build_logical_bytes": 0,
+    "minimum_disk_available": 279306240,
+    "exit_code": 0,
+    "elapsed_seconds": 4.02,
+    "disk_available_after": 279306240
+  },
+  "frontend": {
+    "release": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "started": "2026-09-27T14:56:46.215613+00:00",
+    "disk_available_before": 279306240,
+    "peak_process_tree_rss_bytes": 384897024,
+    "peak_build_logical_bytes": 0,
+    "minimum_disk_available": 279281664,
+    "exit_code": 0,
+    "elapsed_seconds": 14.11,
+    "disk_available_after": 279281664
+  },
+  "lint": {
+    "release": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "started": "2026-09-27T14:57:00.321542+00:00",
+    "disk_available_before": 279281664,
+    "peak_process_tree_rss_bytes": 670052352,
+    "peak_build_logical_bytes": 0,
+    "minimum_disk_available": 278769664,
+    "exit_code": 0,
+    "elapsed_seconds": 8.08,
+    "disk_available_after": 278769664
+  },
+  "build": {
+    "release": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+    "command": [
+      "npm",
+      "run",
+      "build",
+      "--",
+      "--webpack"
+    ],
+    "started": "2026-09-27T14:57:08.431549+00:00",
+    "disk_available_before": 383733760,
+    "peak_process_tree_rss_bytes": 702152704,
+    "peak_build_logical_bytes": 94716374,
+    "minimum_disk_available": 287748096,
+    "exit_code": 0,
+    "elapsed_seconds": 25.04,
+    "disk_available_after": 287571968
+  },
+  "typescript": {
+    "release": "9301682c4165d7507e49d6ad7678d14ca9df377e",
+    "command": [
+      "./node_modules/.bin/tsc",
+      "--noEmit",
+      "--incremental",
+      "false"
+    ],
+    "started": "2026-09-27T14:57:33.473252+00:00",
+    "disk_available_before": 287571968,
+    "peak_process_tree_rss_bytes": 481808384,
+    "peak_build_logical_bytes": 0,
+    "minimum_disk_available": 287571968,
+    "exit_code": 0,
+    "elapsed_seconds": 5.56,
+    "disk_available_after": 287571968
+  }
+}

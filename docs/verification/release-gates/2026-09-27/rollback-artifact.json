@@ -1,0 +1,16 @@
+{
+  "archive_bytes": 215041425,
+  "archive_sha256": "cfabf6b2d94faf3d253bcdbb5191c10b0fe725d00ba3a992891de53ad992a5b6",
+  "regular_files": 25776,
+  "logical_bytes": 638783971,
+  "seconds": 32.2,
+  "all_archive_files_match_source": true,
+  "build_id": "5RXlwj7jwc2eDLWI_-439",
+  "exact_source_revision": "unattested",
+  "private_config_files": [
+    "backend.env",
+    "frontend.env",
+    "vlr-api.service",
+    "vlr-frontend.service"
+  ]
+}

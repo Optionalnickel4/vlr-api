@@ -1,0 +1,9 @@
+{
+  "homepage_http_status": 200,
+  "homepage_bytes": 17899,
+  "elapsed_seconds": 0.152,
+  "asset_status": 200,
+  "asset_matches_restored_file": true,
+  "runtime_configuration": "isolated unavailable API, no production data access",
+  "rendered_content_gate": "transport/artifact smoke only"
+}

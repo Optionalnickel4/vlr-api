@@ -1,0 +1,32 @@
+{
+  "commands": [
+    "pg_dump --format=custom --no-owner --no-acl --snapshot=<exported read-only snapshot> --file=<new private file>",
+    "pg_restore --list <new dump>",
+    "createdb -h <private socket> -p 55439 restored",
+    "pg_restore --exit-on-error --no-owner --no-acl -h <private socket> -p 55439 -d restored <new dump>"
+  ],
+  "started": 1790520505.6679056,
+  "database_bytes": 46167731,
+  "source_snapshot_counts": {
+    "match_results": 1572,
+    "player_snapshots": 14792,
+    "ranking_snapshots": 106077,
+    "team_snapshots": 1009
+  },
+  "dump_exit": 0,
+  "backup_bytes": 9901311,
+  "backup_sha256": "4c50d9f02a7a408e7816be4d439647ef5e3976dcac5ef4bec74f4da9e5ee8d4c",
+  "archive_list_exit": 0,
+  "archive_entries": 38,
+  "restore_exit": 0,
+  "restored_counts": {
+    "match_results": 1572,
+    "player_snapshots": 14792,
+    "ranking_snapshots": 106077,
+    "team_snapshots": 1009
+  },
+  "restored_database_bytes": 45029043,
+  "counts_match": true,
+  "pass": true,
+  "ended": 1790520509.1007771
+}

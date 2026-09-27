@@ -1,0 +1,47 @@
+{
+  "production_status": {
+    "http_status": 200,
+    "commit": "unknown",
+    "checks": {
+      "postgres": true,
+      "redis": true
+    }
+  },
+  "environment_names": {
+    ".env": [
+      "VLR_DATABASE_URL",
+      "VLR_REDIS_URL",
+      "VLR_USER_AGENT",
+      "VLR_MIN_REQUEST_INTERVAL",
+      "VLR_ENABLE_SCHEDULER"
+    ],
+    "frontend/.env": [
+      "VLR_API_BASE",
+      "TWITCH_CLIENT_ID",
+      "TWITCH_CLIENT_SECRET",
+      "TWITCH_FEATURED"
+    ]
+  },
+  "public_hostname": "val.jushosting.dev",
+  "caddy_location": "separate LXC, confirmed by owner; host/config not accessible",
+  "dns_ipv4": [
+    "104.21.70.245",
+    "172.67.140.254"
+  ],
+  "tls": {
+    "protocol": "TLSv1.3",
+    "certificate_cn": "jushosting.dev",
+    "verification": "OK"
+  },
+  "edge_inference": "DNS addresses fall within published Cloudflare ranges; effective Cloudflare settings not available",
+  "effective_caddy_configuration": "not obtained",
+  "local_proxy_units": "UNIT FILE STATE PRESET\n\n0 unit files listed.\n",
+  "privileged_process_access": "denied; no process environment/memory read",
+  "known_backend_baseline_candidates": [
+    "32e7e23bbf1435163f0660ed74196a4704eff51a",
+    "139378cb7505c6257c7b69da3491e382c4ebf0bc"
+  ],
+  "exact_backend_source": "unrecoverable from available evidence",
+  "exact_frontend_source": "no embedded revision manifest found",
+  "production_api_or_frontend_restarts": false
+}

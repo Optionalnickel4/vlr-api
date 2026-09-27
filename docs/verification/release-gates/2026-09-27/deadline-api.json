@@ -1,0 +1,112 @@
+[
+  {
+    "path": "http://127.0.0.1:8111/api/v1/match/9905",
+    "started": "2026-09-27T14:52:52.461901+00:00",
+    "status": 200,
+    "state": "populated",
+    "headers": {
+      "date": "Sun, 27 Sep 2026 14:52:52 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 34766,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "id": {
+          "type": "str"
+        },
+        "event": {
+          "type": "str"
+        },
+        "series": {
+          "type": "str"
+        },
+        "status": {
+          "type": "str"
+        },
+        "format": {
+          "type": "str"
+        },
+        "teams": {
+          "type": "array",
+          "count": 2,
+          "item": {
+            "type": "object",
+            "fields": {
+              "name": "str",
+              "id": "str",
+              "score": "int",
+              "won": "bool"
+            }
+          }
+        },
+        "veto": {
+          "type": "str"
+        },
+        "streams": {
+          "type": "array",
+          "count": 1,
+          "item": {
+            "type": "str"
+          }
+        },
+        "maps": {
+          "type": "array",
+          "count": 3,
+          "item": {
+            "type": "object",
+            "fields": {
+              "game_id": "str",
+              "name": "str",
+              "duration": "str",
+              "picked": "bool",
+              "decider": "bool",
+              "scores": "list",
+              "teams": "list",
+              "rounds": "list"
+            }
+          }
+        },
+        "all_maps": {
+          "type": "object",
+          "fields": {
+            "teams": {
+              "type": "array",
+              "count": 2,
+              "item": null
+            }
+          }
+        },
+        "url": {
+          "type": "str"
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "elapsed_ms": 12045.4
+  },
+  {
+    "path": "http://127.0.0.1:8111/api/v1/match/9900",
+    "started": "2026-09-27T14:53:04.507306+00:00",
+    "status": 504,
+    "state": "unavailable",
+    "headers": {
+      "date": "Sun, 27 Sep 2026 14:53:04 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 37,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "detail": {
+          "type": "str"
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "failure": "http_status",
+    "elapsed_ms": 80002.6
+  }
+]

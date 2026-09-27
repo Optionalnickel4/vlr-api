@@ -1,0 +1,495 @@
+{
+  "initial_staging_keys": 0,
+  "final_staging_keys": 3,
+  "max_requests": 6,
+  "max_seconds": 300,
+  "request_seconds": 90,
+  "max_bytes": 2000000,
+  "interval_seconds": 2,
+  "observations": [
+    {
+      "path": "/match/753445",
+      "started": "2026-09-27T14:49:44.778110+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:49:44 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 25647,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "event": {
+            "type": "str"
+          },
+          "series": {
+            "type": "str"
+          },
+          "status": {
+            "type": "str"
+          },
+          "format": {
+            "type": "str"
+          },
+          "teams": {
+            "type": "array",
+            "count": 2,
+            "item": {
+              "type": "object",
+              "fields": {
+                "name": "str",
+                "id": "str",
+                "score": "NoneType",
+                "won": "bool"
+              }
+            }
+          },
+          "veto": {
+            "type": "str"
+          },
+          "streams": {
+            "type": "array",
+            "count": 0,
+            "item": null
+          },
+          "maps": {
+            "type": "array",
+            "count": 2,
+            "item": {
+              "type": "object",
+              "fields": {
+                "game_id": "str",
+                "name": "str",
+                "duration": "str",
+                "picked": "bool",
+                "decider": "bool",
+                "scores": "list",
+                "teams": "list",
+                "rounds": "list"
+              }
+            }
+          },
+          "all_maps": {
+            "type": "object",
+            "fields": {
+              "teams": {
+                "type": "array",
+                "count": 2,
+                "item": null
+              }
+            }
+          },
+          "url": {
+            "type": "str"
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 171.8,
+      "phase": "cold"
+    },
+    {
+      "path": "/match/753445",
+      "started": "2026-09-27T14:49:46.952094+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:49:46 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 25647,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "event": {
+            "type": "str"
+          },
+          "series": {
+            "type": "str"
+          },
+          "status": {
+            "type": "str"
+          },
+          "format": {
+            "type": "str"
+          },
+          "teams": {
+            "type": "array",
+            "count": 2,
+            "item": {
+              "type": "object",
+              "fields": {
+                "name": "str",
+                "id": "str",
+                "score": "NoneType",
+                "won": "bool"
+              }
+            }
+          },
+          "veto": {
+            "type": "str"
+          },
+          "streams": {
+            "type": "array",
+            "count": 0,
+            "item": null
+          },
+          "maps": {
+            "type": "array",
+            "count": 2,
+            "item": {
+              "type": "object",
+              "fields": {
+                "game_id": "str",
+                "name": "str",
+                "duration": "str",
+                "picked": "bool",
+                "decider": "bool",
+                "scores": "list",
+                "teams": "list",
+                "rounds": "list"
+              }
+            }
+          },
+          "all_maps": {
+            "type": "object",
+            "fields": {
+              "teams": {
+                "type": "array",
+                "count": 2,
+                "item": null
+              }
+            }
+          },
+          "url": {
+            "type": "str"
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 6.7,
+      "phase": "warm"
+    },
+    {
+      "path": "/team/8877",
+      "started": "2026-09-27T14:49:48.960921+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:49:48 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 3199,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "name": {
+            "type": "str"
+          },
+          "tag": {
+            "type": "str"
+          },
+          "country": {
+            "type": "str"
+          },
+          "country_code": {
+            "type": "str"
+          },
+          "logo": {
+            "type": "str"
+          },
+          "roster": {
+            "type": "array",
+            "count": 9,
+            "item": {
+              "type": "object",
+              "fields": {
+                "alias": "str",
+                "real_name": "str",
+                "role": "NoneType",
+                "country": "str",
+                "player_id": "str",
+                "url": "str",
+                "is_captain": "bool",
+                "is_staff": "bool"
+              }
+            }
+          },
+          "results": {
+            "type": "array",
+            "count": 5,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "opponent_id": "NoneType",
+                "result": "str",
+                "score": "str",
+                "event": "str",
+                "date": "str"
+              }
+            }
+          },
+          "upcoming": {
+            "type": "array",
+            "count": 1,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "opponent_id": "NoneType",
+                "result": "NoneType",
+                "score": "str",
+                "event": "str",
+                "date": "str"
+              }
+            }
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 71.6,
+      "phase": "cold"
+    },
+    {
+      "path": "/team/8877",
+      "started": "2026-09-27T14:49:51.034875+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:49:50 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 3199,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "name": {
+            "type": "str"
+          },
+          "tag": {
+            "type": "str"
+          },
+          "country": {
+            "type": "str"
+          },
+          "country_code": {
+            "type": "str"
+          },
+          "logo": {
+            "type": "str"
+          },
+          "roster": {
+            "type": "array",
+            "count": 9,
+            "item": {
+              "type": "object",
+              "fields": {
+                "alias": "str",
+                "real_name": "str",
+                "role": "NoneType",
+                "country": "str",
+                "player_id": "str",
+                "url": "str",
+                "is_captain": "bool",
+                "is_staff": "bool"
+              }
+            }
+          },
+          "results": {
+            "type": "array",
+            "count": 5,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "opponent_id": "NoneType",
+                "result": "str",
+                "score": "str",
+                "event": "str",
+                "date": "str"
+              }
+            }
+          },
+          "upcoming": {
+            "type": "array",
+            "count": 1,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "opponent_id": "NoneType",
+                "result": "NoneType",
+                "score": "str",
+                "event": "str",
+                "date": "str"
+              }
+            }
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 2.3,
+      "phase": "warm"
+    },
+    {
+      "path": "/player/3799",
+      "started": "2026-09-27T14:49:53.039580+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:49:52 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 1803,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "alias": {
+            "type": "str"
+          },
+          "real_name": {
+            "type": "NoneType"
+          },
+          "country": {
+            "type": "str"
+          },
+          "team": {
+            "type": "NoneType"
+          },
+          "team_id": {
+            "type": "NoneType"
+          },
+          "team_url": {
+            "type": "NoneType"
+          },
+          "agent_stats": {
+            "type": "array",
+            "count": 3,
+            "item": {
+              "type": "object",
+              "fields": {
+                "agent": "str",
+                "stats": "dict"
+              }
+            }
+          },
+          "matches": {
+            "type": "array",
+            "count": 5,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "result": "str",
+                "score": "str",
+                "event": "str"
+              }
+            }
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 34.1,
+      "phase": "cold"
+    },
+    {
+      "path": "/player/3799",
+      "started": "2026-09-27T14:49:55.075997+00:00",
+      "status": 200,
+      "state": "populated",
+      "headers": {
+        "date": "Sun, 27 Sep 2026 14:49:54 GMT",
+        "content-type": "application/json"
+      },
+      "bytes": 1803,
+      "shape": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str"
+          },
+          "alias": {
+            "type": "str"
+          },
+          "real_name": {
+            "type": "NoneType"
+          },
+          "country": {
+            "type": "str"
+          },
+          "team": {
+            "type": "NoneType"
+          },
+          "team_id": {
+            "type": "NoneType"
+          },
+          "team_url": {
+            "type": "NoneType"
+          },
+          "agent_stats": {
+            "type": "array",
+            "count": 3,
+            "item": {
+              "type": "object",
+              "fields": {
+                "agent": "str",
+                "stats": "dict"
+              }
+            }
+          },
+          "matches": {
+            "type": "array",
+            "count": 5,
+            "item": {
+              "type": "object",
+              "fields": {
+                "id": "str",
+                "url": "str",
+                "opponent": "str",
+                "result": "str",
+                "score": "str",
+                "event": "str"
+              }
+            }
+          }
+        }
+      },
+      "stale": null,
+      "error_present": false,
+      "elapsed_ms": 2.1,
+      "phase": "warm"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "services": "MainPID=61821\nExecMainStartTimestamp=Thu 2026-09-17 11:10:09 UTC\nFragmentPath=/etc/systemd/system/vlr-api.service\nDropInPaths=\n\nMainPID=308\nExecMainStartTimestamp=Thu 2026-09-03 04:02:56 UTC\nFragmentPath=/etc/systemd/system/vlr-frontend.service\nDropInPaths=\n",
+  "protected": {
+    ".gitignore": "ecb8ef9c350ae025eb102e5ca18568b6436a0dabf52378b8217ca7dfd58c9eab",
+    "docs/SHARED_NAV_HOMEPAGE_REDESIGN_PLAN.md": "1e658f91d4316e575030f94caf4b11635c4e539794224cc4ddacd4a7c06c7d88"
+  },
+  "unit_hashes": {
+    "vlr-api.service": "d0a8ec3bbb6fb0a6ddfb1871cabacb542a07a892b2407a3f95d19972e8500bbf",
+    "vlr-frontend.service": "a228d2be3938cae32056250bbcfeb9d83bb1c51f1413a9e56ff220755ecb024d"
+  },
+  "proc_access": {
+    "61821/cwd": "PermissionError",
+    "61821/exe": "PermissionError",
+    "61821/maps": "PermissionError",
+    "308/cwd": "PermissionError",
+    "308/exe": "PermissionError",
+    "308/maps": "PermissionError"
+  },
+  "disk": "Filesystem                        1B-blocks       Used  Available Use% Mounted on\n/dev/mapper/pve-vm--221--disk--0 8350298112 7394844672  509181952  94% /\ntmpfs                            6195154944 3245445120 2949709824  53% /tmp\n"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/match/753445",
+    "cache": "warmed by preceding cold API probe; all subsequent origin traffic blocked",
+    "http_status": 200,
+    "populated": true,
+    "elapsed_ms": 299,
+    "page_errors": 0,
+    "overflow": false,
+    "table_rows": 10
+  },
+  {
+    "path": "/team/8877",
+    "cache": "warmed by preceding cold API probe; all subsequent origin traffic blocked",
+    "http_status": 200,
+    "populated": true,
+    "elapsed_ms": 499,
+    "page_errors": 0,
+    "overflow": false,
+    "table_rows": 15
+  },
+  {
+    "path": "/player/3799",
+    "cache": "warmed by preceding cold API probe; all subsequent origin traffic blocked",
+    "http_status": 200,
+    "populated": true,
+    "elapsed_ms": 6123,
+    "page_errors": 0,
+    "overflow": false,
+    "table_rows": 9
+  }
+]

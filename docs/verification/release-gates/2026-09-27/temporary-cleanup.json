@@ -1,0 +1,9 @@
+{
+  "removed": "isolated duplicate npm-ci dependency directory only",
+  "allocated_bytes": 712368128,
+  "free_before": 287113216,
+  "free_after": 999481344,
+  "candidate_source_and_build_retained": true,
+  "production_dependencies_unchanged": true,
+  "future_build_requires_npm_ci_again": true
+}
