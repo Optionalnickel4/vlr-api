@@ -51,6 +51,49 @@ Failure/deadline/body-limit tests use `httpx.MockTransport` exclusively:
 ```
 
 For browser validation, follow the selected IDs from their listing links once.
-The existing preview on 3100 uses its cache-only adapter on 8101, which does not
-implement every API route. Report this distinction; do not reconfigure it merely
-to make a check pass. See [real-data evidence](../docs/verification/probe/2026-09-27/README.md).
+The preview on 3100 uses a cache-only adapter; it does not implement every API
+route. Report this distinction; do not add live refreshes merely to make a check
+pass. See the updated adapter instructions below and [real-data evidence](../docs/verification/probe/2026-09-27/README.md).
+
+# Cache-only frontend preview adapter
+
+`scripts.preview_api:app` versions the standalone adapter formerly kept only at
+`/tmp/vlr-preview/read_api.py`. Start it on a **separate loopback preview port**:
+
+```sh
+.venv/bin/uvicorn scripts.preview_api:app --host 127.0.0.1 --port 8103 --lifespan off
+```
+
+Point an isolated Next build at `http://127.0.0.1:8103/api/v1`. This process imports
+no production FastAPI application/lifespan, starts no scheduler, performs no schema
+setup and calls no refresh functions. It reads the configured Redis/Postgres; no
+fixture hooks or cache mutation endpoints exist. Each route handler has an
+8-second cancellation deadline, below the frontend optional-loader deadline.
+Do not use this adapter as a replacement production API.
+
+Player analytics now include:
+
+- `/api/v1/players/{id}/dimensions?region=na&timespan=all`: reads only the selected
+  cached cohort, shares the API's pure dimension computation and response shape.
+  Missing/empty cohort returns 503; absent player in a populated cohort returns
+  404. No scrape to confirm absence. NA/EU fallback remains in the Next loader.
+- `/api/v1/trends/player/{id}?days=90`: reads banked snapshots in a transaction
+  explicitly marked READ ONLY, uses the same pure aggregation as the backend,
+  including current `R`/`Rnd` labels. No snapshots returns 404; existing but unrated
+  or out-of-window snapshots produce a successful empty trend. Thin/flat history
+  stays thin/flat; the adapter does not invent points.
+- `/api/v1/player/{id}` continues to pass the cached bare detail verbatim, including
+  agent stats and recent matches. No separate dimensions Next proxy is required:
+  the player server component calls its dimensions loader directly.
+
+The inherited listing, team-trend and search paths retain their cache/SELECT-only
+behavior. Other unsupported paths return 503. Validate a new adapter on its own
+port first. Applying it to an explicitly requested staging preview is distinct
+from restarting production 8000/3000; keep those production services untouched.
+
+```sh
+.venv/bin/pytest -q tests/test_preview_api.py
+```
+
+The [player analytics audit](../docs/verification/player-analytics/2026-09-27/README.md)
+records the layer comparison, desktop/mobile results and preview process scope.
