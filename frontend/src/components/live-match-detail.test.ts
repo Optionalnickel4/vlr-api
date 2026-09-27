@@ -161,3 +161,41 @@ describe("LiveMatchDetail — poll while live, stop on final, hydration-safe", (
     root.unmount();
   });
 });
+
+it.each(["stale", "http", "empty"])("retains the last good score on %s failure and clears the warning after recovery", async kind => {
+  vi.useFakeTimers();
+  const failed = kind === "http" ? new Response("{}", { status: 503 }) : jsonResp({ data: kind === "empty" ? [] : [mk("final", [2, 0], [13, 1])], stale: kind === "stale" });
+  vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(failed).mockImplementation(async () => jsonResp(envelope(mk("live", [0, 0], [11, 5]))));
+  const el = h(LiveMatchDetail, { initial: mk("live", [0, 0], [9, 3]) });
+  const container = document.createElement("div");
+  container.innerHTML = renderToString(el);
+  const root = hydrateRoot(container, el);
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+  expect(container.innerHTML).toContain('aria-label="Score 9 to 3"');
+  expect(container.textContent).toContain("Updates unavailable");
+  await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+  expect(container.innerHTML).toContain('aria-label="Score 11 to 5"');
+  expect(container.textContent).not.toContain("Updates unavailable");
+  await act(async () => root.unmount());
+});
+
+it("aborts a slow refresh, retains the score, and cleans up on unmount", async () => {
+  vi.useFakeTimers();
+  let signal: AbortSignal | undefined;
+  const spy = vi.spyOn(globalThis, "fetch").mockImplementation((_url, options) => {
+    signal = options?.signal as AbortSignal;
+    return new Promise((_resolve, reject) => signal!.addEventListener("abort", () => reject(new Error("aborted"))));
+  });
+  const el = h(LiveMatchDetail, { initial: mk("live", [0, 0], [9, 3]) });
+  const container = document.createElement("div"); container.innerHTML = renderToString(el);
+  const root = hydrateRoot(container, el);
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  await act(async () => { await vi.advanceTimersByTimeAsync(45_000); });
+  expect(signal?.aborted).toBe(true);
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(container.textContent).toContain("Updates unavailable");
+  expect(container.innerHTML).toContain('aria-label="Score 9 to 3"');
+  await act(async () => root.unmount());
+  expect(vi.getTimerCount()).toBe(0);
+});

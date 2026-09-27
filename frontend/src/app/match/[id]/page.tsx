@@ -62,7 +62,7 @@ export default async function MatchPage({
     <PageContainer width="home">
       <Breadcrumbs kind="match" label={`Match ${id}`} />
       <div className="match-masthead"><p>Valorant / Match coverage</p><h1>MATCH <span>REPORT.</span></h1></div>
-      <LiveMatchDetail initial={match} />
+      <LiveMatchDetail initial={match} initialStale={res.stale || Boolean(res.error)} />
     </PageContainer>
   );
 }
