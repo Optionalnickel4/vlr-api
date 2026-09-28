@@ -18,6 +18,24 @@ client = TestClient(app)
 ISO = "2026-06-09T00:00:00+00:00"
 
 
+@pytest.mark.parametrize("revision,expected", [("a" * 40, "a" * 40), ("invalid", "unknown")])
+def test_artifact_revision_without_git(monkeypatch, tmp_path, revision, expected):
+    monkeypatch.setattr(meta, "_PROJECT_ROOT", tmp_path)
+    (tmp_path / "REVISION").write_text(revision + "\n")
+    def no_git(*args, **kwargs):
+        raise AssertionError("artifact must not consult checkout Git metadata")
+    monkeypatch.setattr(meta.subprocess, "run", no_git)
+    assert meta._git_short_commit() == expected
+
+
+def test_revision_git_unavailable(monkeypatch, tmp_path):
+    monkeypatch.setattr(meta, "_PROJECT_ROOT", tmp_path)
+    def unavailable(*args, **kwargs):
+        raise FileNotFoundError("git")
+    monkeypatch.setattr(meta.subprocess, "run", unavailable)
+    assert meta._git_short_commit() == "unknown"
+
+
 def _patch_healthy(monkeypatch):
     """Fake a fully-up backend: db + redis reachable, every helper returns canned data."""
     async def fake_check_db():

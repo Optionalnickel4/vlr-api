@@ -4,8 +4,15 @@ Counts here mirror `app/status_meta.py` (the committed source of truth). Keep th
 in sync: bump both in the same commit.
 
 - **Phases shipped:** 14 / 14
-- **Tests passing:** 305 backend (2026-09-28); 173 frontend (historical count, not rerun in this backend pass)
+- **Tests passing:** 308 backend (2026-09-28); 173 frontend (historical count, not rerun in this backend pass)
 - **Commit:** phase14
+
+## Backend artifact identity (2026-09-28)
+
+Status prefers a full Git SHA from an artifact-local `REVISION` file, resolved
+once at import. Development checkouts retain the Git fallback. An invalid or
+unreadable marker reports unknown rather than attributing an artifact to an
+unrelated checkout. All 308 backend tests pass. Deployment evidence is separate.
 
 ## Backend fixes — upstream score markup and player results (2026-09-28)
 

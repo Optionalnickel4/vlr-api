@@ -6,6 +6,7 @@ keep the two in sync). COMMIT and DEPLOY are resolved once at process start so
 they always report the machine and checkout actually serving the page.
 """
 import socket
+import re
 import subprocess
 from pathlib import Path
 
@@ -13,7 +14,14 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _git_short_commit() -> str:
-    """Short sha of the running checkout; never raises (the status page must not 500)."""
+    """Prefer an artifact's pinned revision; fall back to the development checkout."""
+    marker = _PROJECT_ROOT / "REVISION"
+    if marker.exists():
+        try:
+            revision = marker.read_text().strip()
+            return revision if re.fullmatch(r"[0-9a-f]{40}", revision) else "unknown"
+        except OSError:
+            return "unknown"
     try:
         out = subprocess.run(
             ["git", "rev-parse", "--short", "HEAD"],
@@ -37,7 +45,7 @@ COMMIT = _git_short_commit()
 # Running the suite to render a status page would make an operator page depend on
 # pytest being installed and on shelling out per request; a stale number is a far
 # cheaper failure than that.
-TESTS_PASSING = 305
+TESTS_PASSING = 308
 
 # Where this is running (hostname of the serving machine; no secrets here).
 DEPLOY = {"hostname": socket.gethostname()}
