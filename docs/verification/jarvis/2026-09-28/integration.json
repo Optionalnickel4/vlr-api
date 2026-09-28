@@ -1,0 +1,1 @@
+{"check": "isolated HTTP + real Redis", "passed": true, "requests": 32, "elapsed_seconds": 0.052, "schema_version": "1", "state": "partial"}

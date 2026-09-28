@@ -17,6 +17,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from app.api.jarvis import router as jarvis_router
 from app.api.status_html import router as status_html_router
 from app.api.v1.routes import router as v1_router
 from app.core.config import get_settings
@@ -58,6 +59,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="vlr-api", version="0.1.0", lifespan=lifespan)
 app.include_router(v1_router, prefix=settings.api_prefix)
+app.include_router(jarvis_router, prefix=settings.api_prefix)
 # status dashboard HTML at the root (no api prefix): GET / and GET /status
 app.include_router(status_html_router)
 

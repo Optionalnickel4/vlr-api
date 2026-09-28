@@ -52,6 +52,8 @@ class Settings(BaseSettings):
 
     # api
     api_prefix: str = "/api/v1"
+    # Dedicated credential grants only Jarvis team-match reads; contents never logged.
+    jarvis_token_file: str = "/home/builder/.config/vlr-api/jarvis.token"
     # True (default) runs the scraping scheduler inside the API process — fine
     # for the single-worker deployment this ships with. Set False and run
     # `python -m app.jobs.run` separately (deploy/vlr-scheduler.service) if you
