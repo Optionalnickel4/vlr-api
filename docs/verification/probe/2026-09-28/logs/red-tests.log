@@ -1,0 +1,73 @@
+.................F.F....................FF.....................F         [100%]
+=================================== FAILURES ===================================
+__________________ test_current_upstream_sp_hide_series_score __________________
+
+    def test_current_upstream_sp_hide_series_score():
+        """Scoped Sept 28 capture: JDG 0–2 FUT; never derive a series from map rounds."""
+        d = parse_match(load('match_header_753445_20260928.html'))
+        assert [t['id'] for t in d['teams']] == ['13576', '1184']
+>       assert [t['score'] for t in d['teams']] == [0, 2]
+E       assert [None, None] == [0, 2]
+E
+E         At index 0 diff: None != 0
+E         Use -v to get more diff
+
+tests/test_match_detail.py:295: AssertionError
+____________ test_current_live_series_score_does_not_declare_winner ____________
+
+    def test_current_live_series_score_does_not_declare_winner():
+        html = load('match_header_753445_20260928.html').replace('final', 'live')
+        d = parse_match(html)
+>       assert [t['score'] for t in d['teams']] == [0, 2]
+E       assert [None, None] == [0, 2]
+E
+E         At index 0 diff: None != 0
+E         Use -v to get more diff
+
+tests/test_match_detail.py:312: AssertionError
+______________ test_player_recent_result_preserves_displayed_date ______________
+
+    def test_player_recent_result_preserves_displayed_date():
+        p = parse_player(load('player_result_36245_20260928.html'))
+        m = p['matches'][0]
+        assert m['id'] == '753459'
+        assert m['opponent'] == 'Xi Lai Gaming'
+>       assert m['date'] == '2026/09/25 7:25 am'
+               ^^^^^^^^^
+E       KeyError: 'date'
+
+tests/test_scrapers.py:251: KeyError
+______________ test_player_recent_result_missing_date_stays_null _______________
+
+    def test_player_recent_result_missing_date_stays_null():
+        p = parse_player('<a class="m-item" href="/123/example"></a>')
+>       assert p['matches'][0]['date'] is None
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'date'
+
+tests/test_scrapers.py:257: KeyError
+__________ test_upstream_not_found_has_consistent_detail_404[player] ___________
+
+api = <httpx.AsyncClient object at 0x77f78fae2ed0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77f78f76b000>
+kind = 'player'
+
+    @pytest.mark.parametrize('kind', ['match', 'team', 'player'])
+    async def test_upstream_not_found_has_consistent_detail_404(api, monkeypatch, kind):
+        from app.core.http import VlrNotFound
+        monkeypatch.setattr(routes, 'cache_get', AsyncMock(return_value=None))
+        refresh = AsyncMock(side_effect=VlrNotFound(f'/{kind}/123'))
+        monkeypatch.setattr(R, f'refresh_{kind}', refresh)
+        response = await api.get(f'/api/v1/{kind}/123')
+>       assert response.status_code == 404
+E       assert 500 == 404
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/test_detail_reliability.py:116: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_match_detail.py::test_current_upstream_sp_hide_series_score
+FAILED tests/test_match_detail.py::test_current_live_series_score_does_not_declare_winner
+FAILED tests/test_scrapers.py::test_player_recent_result_preserves_displayed_date
+FAILED tests/test_scrapers.py::test_player_recent_result_missing_date_stays_null
+FAILED tests/test_detail_reliability.py::test_upstream_not_found_has_consistent_detail_404[player]
+5 failed, 59 passed in 1.20s

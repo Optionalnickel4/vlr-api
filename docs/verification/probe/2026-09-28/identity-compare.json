@@ -1,0 +1,93 @@
+{
+  "player_id": "3799",
+  "selection": "September 27 comparator, not current first listing ID",
+  "api": {
+    "path": "/api/v1/player/3799",
+    "started": "2026-09-28T14:26:52.581426+00:00",
+    "status": 200,
+    "state": "populated",
+    "headers": {
+      "date": "Mon, 28 Sep 2026 14:26:52 GMT",
+      "content-type": "application/json"
+    },
+    "bytes": 1803,
+    "shape": {
+      "type": "object",
+      "fields": {
+        "id": {
+          "type": "str"
+        },
+        "alias": {
+          "type": "str"
+        },
+        "real_name": {
+          "type": "NoneType"
+        },
+        "country": {
+          "type": "str"
+        },
+        "team": {
+          "type": "NoneType"
+        },
+        "team_id": {
+          "type": "NoneType"
+        },
+        "team_url": {
+          "type": "NoneType"
+        },
+        "agent_stats": {
+          "type": "array",
+          "count": 3,
+          "item": {
+            "type": "object",
+            "fields": {
+              "agent": "str",
+              "stats": "dict"
+            }
+          }
+        },
+        "matches": {
+          "type": "array",
+          "count": 5,
+          "item": {
+            "type": "object",
+            "fields": {
+              "id": "str",
+              "url": "str",
+              "opponent": "str",
+              "result": "str",
+              "score": "str",
+              "event": "str"
+            }
+          }
+        }
+      }
+    },
+    "stale": null,
+    "error_present": false,
+    "elapsed_ms": 62.1,
+    "identity_present": {
+      "alias": true,
+      "real_name": false,
+      "country": true,
+      "team": false,
+      "team_id": false
+    }
+  },
+  "upstream": {
+    "url": "https://www.vlr.gg/player/3799/?timespan=all",
+    "started": "2026-09-28T14:26:55.655887+00:00",
+    "status": 200,
+    "bytes": 25684,
+    "identity_present": {
+      "alias": true,
+      "real_name": false,
+      "country": true,
+      "team": false,
+      "team_id": false
+    },
+    "real_name_element_present": true,
+    "current_teams_heading_present": false,
+    "elapsed_ms": 94.2
+  }
+}

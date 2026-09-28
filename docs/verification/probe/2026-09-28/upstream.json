@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://www.vlr.gg/player/36245/?timespan=all",
+    "started": "2026-09-28T14:24:58.848383+00:00",
+    "status": 200,
+    "bytes": 52609,
+    "retry_after_present": false,
+    "elapsed_ms": 130.4
+  },
+  {
+    "url": "https://www.vlr.gg/753445",
+    "started": "2026-09-28T14:25:01.982137+00:00",
+    "status": 200,
+    "bytes": 581850,
+    "retry_after_present": false,
+    "elapsed_ms": 136.4
+  }
+]

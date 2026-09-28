@@ -1,0 +1,21 @@
+{
+  "initial": {
+    "MainPID": 61821,
+    "ExecMainStartTimestamp": "Thu 2026-09-17 11:10:09 UTC",
+    "ActiveState": "active",
+    "SubState": "running"
+  },
+  "after_final_api_check": {
+    "MainPID": 176198,
+    "ExecMainStartTimestamp": "Mon 2026-09-28 14:26:46 UTC",
+    "ActiveState": "active",
+    "SubState": "running",
+    "WorkingDirectory": "/opt/vlr-api",
+    "Restart": "always",
+    "NRestarts": 0
+  },
+  "listener": "0.0.0.0:8000; PID ownership not visible in ss output",
+  "local_ipv4": "10.0.0.21/24",
+  "journal_inspection": "journalctl exited 0; no matching systemd lifecycle events visible for requested interval",
+  "limitation": "PID changed during pass; cause not established. No restart, replacement, deployment, or service mutation command was issued by this pass. Status commit was unknown both before and after."
+}

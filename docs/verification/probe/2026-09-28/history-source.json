@@ -1,0 +1,16 @@
+{
+  "player_id": "36245",
+  "transaction": "READ ONLY",
+  "row_limit": 1000,
+  "rows_read": 27,
+  "within_window": 27,
+  "source_points": 27,
+  "source_summary": {
+    "points": 27,
+    "current_rating": 1.11,
+    "peak_rating": 1.11,
+    "current_acs": 223.8,
+    "peak_acs": 223.9
+  },
+  "newest_capture": "2026-09-28T14:23:49.680337+00:00"
+}

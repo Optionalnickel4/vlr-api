@@ -1,0 +1,90 @@
+.........................F.............................................. [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 70%]
+........................................................................ [ 94%]
+.................                                                        [100%]
+=================================== FAILURES ===================================
+_____ ReceiptTests.test_launcher_writes_invocation_receipt_after_lifespan ______
+
+self = <tests.test_baseline_receipt.ReceiptTests testMethod=test_launcher_writes_invocation_receipt_after_lifespan>
+
+    def test_launcher_writes_invocation_receipt_after_lifespan(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'backend/source').mkdir(parents=True)
+            (root / 'release.json').write_text('{}')
+            events = []
+            @asynccontextmanager
+            async def original(application):
+                events.append('startup')
+                yield
+                events.append('shutdown')
+            app_object = SimpleNamespace(router=SimpleNamespace(lifespan_context=original))
+            package = ModuleType('app')
+            main = ModuleType('app.main')
+            main.app = app_object
+            main._scheduler = None
+            package.main = main
+            server = ModuleType('uvicorn')
+            def run(application, **kwargs):
+                async def exercise():
+                    async with application.router.lifespan_context(application):
+                        self.assertEqual(events, ['startup'])
+                        receipt = json.loads((root / 'receipts/test-invocation.json').read_text())
+                        self.assertEqual(receipt['invocation_id'], 'test-invocation')
+                        self.assertEqual(receipt['frontend_build_id'], 'test-build')
+                        self.assertTrue(receipt['proc_start_ticks'])
+                asyncio.run(exercise())
+            server.run = run
+            manifest = {'artifact_archives': {}, 'frontend_build_id': 'test-build', 'dependency_inventory_sha256': 'digest'}
+            with patch.dict(m.sys.modules, {'app': package, 'app.main': main, 'uvicorn': server}), patch.dict(m.os.environ, {'INVOCATION_ID': 'test-invocation'}), patch.object(m, 'check_manifest', return_value=manifest), patch.object(m.sys, 'path', list(m.sys.path)):
+>               m.launch(root, root / 'receipts')
+
+tests/test_baseline_receipt.py:73:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts/baseline/receipt.py:98: in launch
+    uvicorn.run(app.main.app, host='0.0.0.0', port=8000, workers=1)
+tests/test_baseline_receipt.py:69: in run
+    asyncio.run(exercise())
+/usr/lib/python3.13/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_baseline_receipt.py:63: in exercise
+    async with application.router.lifespan_context(application):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/contextlib.py:214: in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+application = namespace(router=namespace(lifespan_context=<function launch.<locals>.witnessed at 0x7940c9e0a020>))
+
+    @asynccontextmanager
+    async def witnessed(application):
+        async with original(application):
+            modules = {}
+            for name, mod in list(sys.modules.items()):
+                filename = getattr(mod, '__file__', None)
+                if filename and Path(filename).is_file():
+                    p = Path(filename).resolve()
+                    if name == 'app' or name.startswith('app.'):
+                        if not p.is_relative_to(root / 'backend/source'):
+>                           raise RuntimeError('Imported app outside release')
+E                           RuntimeError: Imported app outside release
+
+scripts/baseline/receipt.py:78: RuntimeError
+=============================== warnings summary ===============================
+.venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /opt/vlr-api/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_baseline_receipt.py::ReceiptTests::test_launcher_writes_invocation_receipt_after_lifespan
+1 failed, 304 passed, 1 warning in 2.94s
