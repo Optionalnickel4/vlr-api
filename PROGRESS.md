@@ -4,8 +4,19 @@ Counts here mirror `app/status_meta.py` (the committed source of truth). Keep th
 in sync: bump both in the same commit.
 
 - **Phases shipped:** 14 / 14
-- **Tests passing:** 207 backend + 173 frontend
+- **Tests passing:** 305 backend (2026-09-28); 173 frontend (historical count, not rerun in this backend pass)
 - **Commit:** phase14
+
+## Backend fixes — upstream score markup and player results (2026-09-28)
+
+Current and legacy series-score containers are supported without deriving scores
+from maps or placeholders. Player recent results preserve the upstream display
+date/time as a nullable string, with no inferred timezone. Player upstream 404s
+now match team/match 404 behavior. Scoped live HTML excerpts back the scraper
+regressions; the API failure path is tested with isolated mocks. The release
+receipt test now isolates its mocked app package from modules imported during
+suite collection; the production receipt guard is unchanged. All 305 backend
+tests pass. These are source results, not evidence of deployment to port 8000.
 
 ## Bugfix — map-name/duration label-bleed (2026-09-06)
 

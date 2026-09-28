@@ -137,12 +137,14 @@ def _parse_header(tree: HTMLParser) -> dict[str, Any]:
         name = clean_spaces(text_of(ln.css_first(S.MATCH_H_TEAM_NAME))) or None
         teams.append({"name": name, "id": id_from_href(href)})
 
-    spoiler = tree.css_first(S.MATCH_H_SCORE_SPOILER)
     a, b = None, None
-    if spoiler is not None:
-        m = re.findall(r"\d+", spoiler.text())
-        if len(m) >= 2:
-            a, b = int(m[0]), int(m[1])
+    for spoiler in tree.css(S.MATCH_H_SCORE_SPOILER):
+        # Only an explicit complete series pair is evidence. Partial scores,
+        # placeholders and the alternative "vs." display must remain unknown.
+        m = re.fullmatch(r"(\d+)\s*:\s*(\d+)", clean_spaces(text_of(spoiler)))
+        if m:
+            a, b = int(m[1]), int(m[2])
+            break
 
     notes = [clean_spaces(text_of(n)).lower() for n in tree.css(S.MATCH_H_VS_NOTE)]
     status = "final" if any("final" in n for n in notes) else (

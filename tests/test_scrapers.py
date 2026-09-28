@@ -241,3 +241,17 @@ def test_parse_player_match_history_structure():
         assert isinstance(m["opponent"], str) and m["opponent"].strip()
         assert m["result"] in {"win", "loss", None}
         assert isinstance(m["event"], str) and m["event"].strip()
+
+
+def test_player_recent_result_preserves_displayed_date():
+    p = parse_player(load('player_result_36245_20260928.html'))
+    m = p['matches'][0]
+    assert m['id'] == '753459'
+    assert m['opponent'] == 'Xi Lai Gaming'
+    assert m['date'] == '2026/09/25 7:25 am'
+    assert m['score'] == '2:0'
+
+
+def test_player_recent_result_missing_date_stays_null():
+    p = parse_player('<a class="m-item" href="/123/example"></a>')
+    assert p['matches'][0]['date'] is None

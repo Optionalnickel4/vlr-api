@@ -104,3 +104,15 @@ async def test_external_cancellation_is_not_swallowed():
     task.cancel()
     with pytest.raises(asyncio.CancelledError):
         await task
+
+
+@pytest.mark.parametrize('kind', ['match', 'team', 'player'])
+async def test_upstream_not_found_has_consistent_detail_404(api, monkeypatch, kind):
+    from app.core.http import VlrNotFound
+    monkeypatch.setattr(routes, 'cache_get', AsyncMock(return_value=None))
+    refresh = AsyncMock(side_effect=VlrNotFound(f'/{kind}/123'))
+    monkeypatch.setattr(R, f'refresh_{kind}', refresh)
+    response = await api.get(f'/api/v1/{kind}/123')
+    assert response.status_code == 404
+    assert response.json() == {'detail': f'{kind} 123 not found'}
+    refresh.assert_awaited_once_with('123')

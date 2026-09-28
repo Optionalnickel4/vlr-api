@@ -328,12 +328,12 @@ async def player(player_id: str):
     # The cache miss is what gates snapshot history: refresh_player writes a
     # PlayerSnapshot on every call, so this route banks at most one row per
     # ttl_players per player. Don't "optimize" by always refreshing.
-    #
-    # Unlike /team and /match below, a VlrNotFound here is NOT caught, so an
-    # unknown player id surfaces as a 500 rather than a 404.
-    return await _detail_or_refresh(
-        R.CACHE_PLAYER.format(id=player_id), lambda: R.refresh_player(player_id),
-    )
+    try:
+        return await _detail_or_refresh(
+            R.CACHE_PLAYER.format(id=player_id), lambda: R.refresh_player(player_id),
+        )
+    except VlrNotFound:
+        raise HTTPException(status_code=404, detail=f"player {player_id} not found")
 
 
 # ---- team detail (on-demand: scrape-on-miss, cache, persist a snapshot) ----

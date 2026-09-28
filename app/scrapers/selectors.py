@@ -138,6 +138,8 @@ PLAYER_MATCH_CARD = "a.m-item"
 PLAYER_MATCH_EVENT = "div.m-item-event div.text-of"
 PLAYER_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
 PLAYER_MATCH_RESULT = "div.m-item-result"
+# Raw displayed date/time, same contract as team recent results; no timezone inferred.
+PLAYER_MATCH_DATE = "div.m-item-date"
 
 # --- match detail page (/{match_id}/...) — scoreboard (Phase 7) ---
 # vlr's 2026 match-page rewrite dropped the <table class="wf-table-inset mod-overview">
@@ -200,8 +202,9 @@ MATCH_H_SERIES = "div.match-header-event-series"
 # the two team links carry the team id (href) + mod-1/mod-2 ordering
 MATCH_H_TEAM_LINK = "a.match-header-link"
 MATCH_H_TEAM_NAME = "div.match-header-link-name div.wf-title-med"
-# series score: the spoiler holds "2:1"; vs-note holds status ("final"/"live") + "Bo3"
-MATCH_H_SCORE_SPOILER = "div.match-header-vs-score .js-spoiler"
+# Legacy/current spoiler containers hold "2:1". Scope to series scores, not maps
+# or the adjacent status/Bo3 notes (observed .sp-hide on September 28, 2026).
+MATCH_H_SCORE_SPOILER = "div.match-header-vs-score .js-spoiler, div.match-header-vs-score .sp-hide"
 MATCH_H_VS_NOTE = "div.match-header-vs-note"
 MATCH_H_VETO = "div.match-header-note"
 # per-map game containers (one per map + an aggregate with data-game-id="all")

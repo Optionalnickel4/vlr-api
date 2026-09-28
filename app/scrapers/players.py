@@ -109,6 +109,7 @@ def _parse_match(card: Node) -> dict[str, Any]:
     rcls = (result_node.attributes.get("class", "") if result_node else "") or ""
     result = "win" if "mod-win" in rcls else "loss" if "mod-loss" in rcls else None
     opp = card.css_first(S.PLAYER_MATCH_OPPONENT)
+    date = card.css_first(S.PLAYER_MATCH_DATE)
     return {
         "id": id_from_href(href),
         "url": ("https://www.vlr.gg" + href) if href.startswith("/") else href,
@@ -116,6 +117,9 @@ def _parse_match(card: Node) -> dict[str, Any]:
         "result": result,
         "score": (clean_spaces(text_of(result_node)) or None) if result_node else None,
         "event": clean_spaces(text_of(card.css_first(S.PLAYER_MATCH_EVENT))) or None,
+        # Date and time are separate DOM text nodes; keep their boundary. This
+        # is upstream display text, not a timestamp with an assumed timezone.
+        "date": (clean_spaces(date.text(separator=" ")) or None) if date is not None else None,
     }
 
 

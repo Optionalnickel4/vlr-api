@@ -286,3 +286,38 @@ def test_all_player_values_finite_or_none():
             for cell in p["stats"].values():
                 v = cell["value"]
                 assert v is None or (isinstance(v, float) and v == v)  # NaN guard
+
+
+def test_current_upstream_sp_hide_series_score():
+    """Scoped Sept 28 capture: JDG 0–2 FUT; never derive a series from map rounds."""
+    d = parse_match(load('match_header_753445_20260928.html'))
+    assert [t['id'] for t in d['teams']] == ['13576', '1184']
+    assert [t['score'] for t in d['teams']] == [0, 2]
+    assert [t['won'] for t in d['teams']] == [False, True]
+    assert d['status'] == 'final'
+
+
+def test_series_score_does_not_consume_format_or_partial_score():
+    html = load('match_header_753445_20260928.html')
+    # Keep Bo3 elsewhere in the header: it is not the missing second score.
+    html = html.replace('2\t', 'TBD\t')
+    d = parse_match(html)
+    assert [t['score'] for t in d['teams']] == [None, None]
+    assert not any(t['won'] for t in d['teams'])
+
+
+def test_current_live_series_score_does_not_declare_winner():
+    html = load('match_header_753445_20260928.html').replace('final', 'live')
+    d = parse_match(html)
+    assert [t['score'] for t in d['teams']] == [0, 2]
+    assert not any(t['won'] for t in d['teams'])
+
+
+def test_upcoming_series_placeholders_remain_unknown_with_map_digits_present():
+    html = load('match_header_753445_20260928.html')
+    html = html.replace('final', 'starts in 2h').replace('0\t', '-\t').replace('2\t', '-\t')
+    html += '<div class="vm-stats-game-header"><div class="score">13</div><div class="score">7</div></div>'
+    d = parse_match(html)
+    assert d['status'] is None
+    assert [t['score'] for t in d['teams']] == [None, None]
+    assert not any(t['won'] for t in d['teams'])

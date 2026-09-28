@@ -69,6 +69,12 @@ class ReceiptTests(unittest.TestCase):
                 asyncio.run(exercise())
             server.run = run
             manifest = {'artifact_archives': {}, 'frontend_build_id': 'test-build', 'dependency_inventory_sha256': 'digest'}
-            with patch.dict(m.sys.modules, {'app': package, 'app.main': main, 'uvicorn': server}), patch.dict(m.os.environ, {'INVOCATION_ID': 'test-invocation'}), patch.object(m, 'check_manifest', return_value=manifest), patch.object(m.sys, 'path', list(m.sys.path)):
+            # Other tests import the real app during collection. A mocked release
+            # package must not inherit those submodules from a different checkout;
+            # the launcher's outside-release guard correctly rejects that mixture.
+            modules = {name: mod for name, mod in m.sys.modules.items()
+                       if name != 'app' and not name.startswith('app.')}
+            modules.update({'app': package, 'app.main': main, 'uvicorn': server})
+            with patch.dict(m.sys.modules, modules, clear=True), patch.dict(m.os.environ, {'INVOCATION_ID': 'test-invocation'}), patch.object(m, 'check_manifest', return_value=manifest), patch.object(m.sys, 'path', list(m.sys.path)):
                 m.launch(root, root / 'receipts')
             self.assertEqual(events, ['startup', 'shutdown'])
