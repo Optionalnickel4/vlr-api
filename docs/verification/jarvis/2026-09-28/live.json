@@ -1,0 +1,61 @@
+{
+  "status": 200,
+  "elapsed_seconds": 0.004,
+  "cache_control": "no-store",
+  "body": {
+    "schema_version": "1",
+    "state": "ok",
+    "team": {
+      "id": "13576",
+      "name": "JD Gaming"
+    },
+    "match": {
+      "id": "753445",
+      "state": "completed",
+      "opponent": {
+        "id": "1184",
+        "name": "FUT Esports"
+      },
+      "event": "Valorant Champions 2026",
+      "url": "https://www.vlr.gg/753445",
+      "series_score": {
+        "team": 0,
+        "opponent": 2
+      },
+      "maps": [
+        {
+          "name": "Ascent",
+          "round_score": {
+            "team": 1,
+            "opponent": 13
+          }
+        },
+        {
+          "name": "Summit",
+          "round_score": {
+            "team": 10,
+            "opponent": 13
+          }
+        }
+      ],
+      "source_date": {
+        "display_date": "2026/09/277:35 am",
+        "display_time": null,
+        "starts_at": null
+      },
+      "freshness": {
+        "status": "unknown",
+        "captured_at": null,
+        "age_seconds": null
+      }
+    },
+    "candidates": [],
+    "error": null,
+    "freshness": {
+      "served_at": "2026-09-28T15:05:36.071689+00:00",
+      "status": "unknown",
+      "captured_at": null,
+      "age_seconds": null
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-09-28T15:23:52.147950+00:00",
+  "initial_ttl": 1025,
+  "initial_read_at": "2026-09-28T15:06:44.882119+00:00",
+  "ttl_before_request": -2,
+  "status": 200,
+  "elapsed_seconds": 0.169,
+  "result_count": 5,
+  "results": [
+    {
+      "id": "753459",
+      "date": "2026/09/25 7:25 am"
+    },
+    {
+      "id": "731401",
+      "date": "2026/08/30 11:00 am"
+    },
+    {
+      "id": "731400",
+      "date": "2026/08/28 10:00 am"
+    },
+    {
+      "id": "731399",
+      "date": "2026/08/21 11:00 am"
+    },
+    {
+      "id": "712831",
+      "date": "2026/08/01 2:10 pm"
+    }
+  ],
+  "payload_keys": [
+    "id",
+    "alias",
+    "real_name",
+    "country",
+    "team",
+    "team_id",
+    "team_url",
+    "agent_stats",
+    "matches"
+  ],
+  "ttl_after_request": 3600
+}

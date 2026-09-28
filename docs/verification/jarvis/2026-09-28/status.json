@@ -1,0 +1,111 @@
+{
+  "service": "vlr-api",
+  "commit": "396bc79b0f233f6d6f92ab4a8b89b94bdf81db28",
+  "deploy": {
+    "hostname": "vlr-api",
+    "source_root": "/home/builder/vlr-releases/396bc79b0f233f6d6f92ab4a8b89b94bdf81db28/source",
+    "python_executable": "/opt/vlr-api/.venv/bin/python3",
+    "python_path": [
+      "/home/builder/vlr-releases/396bc79b0f233f6d6f92ab4a8b89b94bdf81db28/source",
+      "/opt/vlr-api/.venv/bin",
+      "/usr/lib/python313.zip",
+      "/usr/lib/python3.13",
+      "/usr/lib/python3.13/lib-dynload",
+      "/opt/vlr-api/.venv/lib/python3.13/site-packages"
+    ]
+  },
+  "checks": {
+    "postgres": true,
+    "redis": true
+  },
+  "history": [
+    {
+      "table": "match_results",
+      "rows": 1572,
+      "newest": "2026-09-27T13:20:11.972490+00:00"
+    },
+    {
+      "table": "ranking_snapshots",
+      "rows": 107648,
+      "newest": "2026-09-28T14:53:42.457790+00:00"
+    },
+    {
+      "table": "player_snapshots",
+      "rows": 14817,
+      "newest": "2026-09-28T14:50:02.594827+00:00"
+    },
+    {
+      "table": "team_snapshots",
+      "rows": 1014,
+      "newest": "2026-09-28T14:53:25.354483+00:00"
+    }
+  ],
+  "cache_keys": [
+    {
+      "key": "vlr:results",
+      "ttl": 358
+    },
+    {
+      "key": "vlr:upcoming",
+      "ttl": 579
+    },
+    {
+      "key": "vlr:live",
+      "ttl": 9
+    },
+    {
+      "key": "vlr:rankings:all",
+      "ttl": null
+    },
+    {
+      "key": "vlr:events",
+      "ttl": null
+    },
+    {
+      "key": "vlr:news",
+      "ttl": 84
+    }
+  ],
+  "scheduler": [
+    {
+      "job": "upcoming",
+      "last_run": "2026-09-28T15:04:32.946177+00:00",
+      "next_run": "2026-09-28T15:06:20.986665+00:00"
+    },
+    {
+      "job": "live_matches",
+      "last_run": "2026-09-28T15:05:02.836015+00:00",
+      "next_run": "2026-09-28T15:05:50.986819+00:00"
+    },
+    {
+      "job": "results",
+      "last_run": "2026-09-28T15:01:34.389561+00:00",
+      "next_run": "2026-09-28T15:15:20.986894+00:00"
+    },
+    {
+      "job": "news",
+      "last_run": "2026-09-28T14:25:11.977305+00:00",
+      "next_run": "2026-09-28T15:20:20.986982+00:00"
+    },
+    {
+      "job": "events",
+      "last_run": "2026-09-28T11:10:14.999206+00:00",
+      "next_run": "2026-09-28T21:05:20.987040+00:00"
+    },
+    {
+      "job": "rankings",
+      "last_run": "2026-09-28T11:10:16.634694+00:00",
+      "next_run": "2026-09-28T21:05:20.987122+00:00"
+    },
+    {
+      "job": "player_prefetch",
+      "last_run": "2026-09-28T05:00:37.578084+00:00",
+      "next_run": "2026-09-28T17:00:00+00:00"
+    },
+    {
+      "job": "stats",
+      "last_run": "2026-09-28T11:10:30.004952+00:00",
+      "next_run": "2026-09-28T21:05:20.988992+00:00"
+    }
+  ]
+}

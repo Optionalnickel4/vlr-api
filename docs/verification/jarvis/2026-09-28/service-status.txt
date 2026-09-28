@@ -1,0 +1,21 @@
+● vlr-api.service - vlr-api FastAPI server
+     Loaded: loaded (/etc/systemd/system/vlr-api.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2026-09-28 15:05:20 UTC; 24s ago
+ Invocation: 5553f363ad54447abb283d6dd76227d7
+   Main PID: 178083 (uvicorn)
+      Tasks: 6 (limit: 12245)
+     Memory: 66.3M (peak: 66.6M)
+        CPU: 689ms
+     CGroup: /system.slice/vlr-api.service
+             └─178083 /opt/vlr-api/.venv/bin/python3 /opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
+
+Sep 28 15:05:20 vlr-api uvicorn[178083]: INFO:apscheduler.scheduler:Added job "_tracked.<locals>.runner" to job store "default"
+Sep 28 15:05:20 vlr-api uvicorn[178083]: INFO:apscheduler.scheduler:Added job "_tracked.<locals>.runner" to job store "default"
+Sep 28 15:05:20 vlr-api uvicorn[178083]: INFO:apscheduler.scheduler:Scheduler started
+Sep 28 15:05:20 vlr-api uvicorn[178083]: INFO:     Application startup complete.
+Sep 28 15:05:20 vlr-api uvicorn[178083]: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Sep 28 15:05:25 vlr-api uvicorn[178083]: INFO:     127.0.0.1:58426 - "GET /api/v1/matches/live HTTP/1.1" 200 OK
+Sep 28 15:05:31 vlr-api uvicorn[178083]: INFO:     127.0.0.1:58436 - "GET /api/v1/matches/live HTTP/1.1" 200 OK
+Sep 28 15:05:36 vlr-api uvicorn[178083]: INFO:     10.0.0.21:53592 - "GET /health HTTP/1.1" 200 OK
+Sep 28 15:05:36 vlr-api uvicorn[178083]: INFO:     10.0.0.21:53592 - "GET /api/v1/status HTTP/1.1" 200 OK
+Sep 28 15:05:36 vlr-api uvicorn[178083]: INFO:     10.0.0.21:53592 - "GET /api/v1/jarvis/team-match?team_id=13576&kind=completed HTTP/1.1" 200 OK
