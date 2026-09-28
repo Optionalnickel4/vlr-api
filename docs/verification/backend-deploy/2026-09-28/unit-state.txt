@@ -1,0 +1,10 @@
+MainPID=177452
+NRestarts=0
+ExecMainStartTimestamp=Mon 2026-09-28 14:51:32 UTC
+ExecStart={ path=/opt/vlr-api/.venv/bin/uvicorn ; argv[]=/opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1 ; ignore_errors=no ; start_time=[Mon 2026-09-28 14:51:32 UTC] ; stop_time=[n/a] ; pid=177452 ; code=(null) ; status=0/0 }
+WorkingDirectory=/opt/vlr-api
+User=root
+ActiveState=active
+SubState=running
+FragmentPath=/etc/systemd/system/vlr-api.service
+DropInPaths=

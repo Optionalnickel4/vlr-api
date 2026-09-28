@@ -1,0 +1,21 @@
+● vlr-api.service - vlr-api FastAPI server
+     Loaded: loaded (/etc/systemd/system/vlr-api.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2026-09-28 14:51:32 UTC; 2min 33s ago
+ Invocation: baa6bf9ae8764a8facecf4ff272fbfc7
+   Main PID: 177452 (uvicorn)
+      Tasks: 6 (limit: 12245)
+     Memory: 80.4M (peak: 250M)
+        CPU: 1.814s
+     CGroup: /system.slice/vlr-api.service
+             └─177452 /opt/vlr-api/.venv/bin/python3 /opt/vlr-api/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
+
+Sep 28 14:53:36 vlr-api uvicorn[177452]: INFO:     127.0.0.1:52868 - "GET /api/v1/rankings?region=all HTTP/1.1" 200 OK
+Sep 28 14:53:41 vlr-api uvicorn[177452]: INFO:httpx:HTTP Request: GET https://www.vlr.gg/rankings/north-america "HTTP/1.1 200 OK"
+Sep 28 14:53:42 vlr-api uvicorn[177452]: INFO:     127.0.0.1:52868 - "GET /api/v1/rankings?region=north-america HTTP/1.1" 200 OK
+Sep 28 14:53:44 vlr-api uvicorn[177452]: INFO:     127.0.0.1:52868 - "GET /api/v1/matches/live HTTP/1.1" 200 OK
+Sep 28 14:53:45 vlr-api uvicorn[177452]: INFO:     127.0.0.1:52868 - "GET /api/v1/matches/live HTTP/1.1" 200 OK
+Sep 28 14:53:47 vlr-api uvicorn[177452]: INFO:     127.0.0.1:52868 - "GET /api/v1/rankings?region=all HTTP/1.1" 200 OK
+Sep 28 14:54:02 vlr-api uvicorn[177452]: INFO:apscheduler.executors.default:Running job "_tracked.<locals>.runner (trigger: interval[0:00:30], next run at: 2026-09-28 14:54:32 UTC)" (scheduled at 2026-09-28 14:54:02.835509+00:00)
+Sep 28 14:54:02 vlr-api uvicorn[177452]: INFO:apscheduler.executors.default:Job "_tracked.<locals>.runner (trigger: interval[0:00:30], next run at: 2026-09-28 14:54:32 UTC)" executed successfully
+Sep 28 14:54:05 vlr-api uvicorn[177452]: INFO:httpx:HTTP Request: GET https://www.vlr.gg/matches "HTTP/1.1 200 OK"
+Sep 28 14:54:05 vlr-api uvicorn[177452]: INFO:     127.0.0.1:34400 - "GET /api/v1/matches/live HTTP/1.1" 200 OK
