@@ -7,6 +7,7 @@ they always report the machine and checkout actually serving the page.
 """
 import socket
 import re
+import sys
 import subprocess
 from pathlib import Path
 
@@ -48,7 +49,12 @@ COMMIT = _git_short_commit()
 TESTS_PASSING = 308
 
 # Where this is running (hostname of the serving machine; no secrets here).
-DEPLOY = {"hostname": socket.gethostname()}
+DEPLOY = {
+    "hostname": socket.gethostname(),
+    "source_root": str(_PROJECT_ROOT),
+    "python_executable": sys.executable,
+    "python_path": list(sys.path),
+}
 
 PHASES = [
     {"n": 1, "name": "league listings",  "desc": "results, upcoming/live, rankings, events, news + history", "shipped": True},
