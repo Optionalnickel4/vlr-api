@@ -87,6 +87,20 @@ describe("normalizeResult", () => {
       if (m.url) expect(m.url.startsWith("https://www.vlr.gg")).toBe(true);
     }
   });
+
+  it("propagates stable team ids, source logos, and short labels by side", () => {
+    const [match] = normalizeResult([{
+      id: "753445", teams: ["JD Gaming", "FUT Esports"], scores: ["0", "2"],
+      team_ids: ["13576", "1184"],
+      team_logos: ["https://cdn/jdg.png", "https://cdn/fut.png"],
+      team_short_names: ["JDG", "FUT"],
+    }]);
+    expect(match).toMatchObject({
+      team1Id: "13576", team2Id: "1184",
+      team1Logo: "https://cdn/jdg.png", team2Logo: "https://cdn/fut.png",
+      team1ShortName: "JDG", team2ShortName: "FUT",
+    });
+  });
 });
 
 describe("normalizeUpcoming", () => {
@@ -138,6 +152,11 @@ describe("normalizeRankings", () => {
     const ranks = out.map((t) => t.rank).filter((r): r is number => r !== null);
     const sorted = [...ranks].sort((a, b) => a - b);
     expect(ranks).toEqual(sorted);
+  });
+
+  it("carries the authoritative ranking logo", () => {
+    expect(normalizeRankings([{ team_id: "2", team: "Sentinels", logo: "https://cdn/sen.png" }])[0].logo)
+      .toBe("https://cdn/sen.png");
   });
 });
 
@@ -197,6 +216,15 @@ describe("normalizePlayer (single object -> one-element list)", () => {
         .agent_stats[0].stats,
     );
     expect(keys).toEqual(rawKeys);
+  });
+
+  it("carries current-team and opponent identities", () => {
+    const [p] = normalizePlayer({
+      id: "1", team: "Sentinels", team_id: "2", team_logo: "https://cdn/sen.png",
+      matches: [{ id: "9", opponent: "LOUD", opponent_id: "6961", opponent_logo: "https://cdn/loud.png" }],
+    });
+    expect(p.teamLogo).toBe("https://cdn/sen.png");
+    expect(p.matches[0]).toMatchObject({ opponentId: "6961", opponentLogo: "https://cdn/loud.png" });
   });
 });
 

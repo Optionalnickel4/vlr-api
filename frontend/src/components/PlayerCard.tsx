@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { agentRounds, playerOverall, signatureAgent } from "@/lib/vlr";
 import type { PlayerDetail } from "@/types/vlr";
+import { TeamCrest } from "./TeamCrest";
 
 export function PlayerCard({ player }: { player: PlayerDetail }) {
   const overall = playerOverall(player.agentStats);
@@ -14,7 +15,7 @@ export function PlayerCard({ player }: { player: PlayerDetail }) {
     <div className="pd-identity-main">
       <span className="pd-avatar" aria-hidden>{player.alias?.slice(0, 2).toUpperCase() ?? "?"}</span>
       <div><p className="pd-meta">{player.realName ?? "Name unavailable"} / {player.country ?? "Country unavailable"}</p><h1>{player.alias ?? "Player name unavailable"}</h1>
-        <div className="pd-affiliation">{player.teamId ? <Link href={`/team/${player.teamId}`}>{team}</Link> : player.teamUrl ? <a href={player.teamUrl} target="_blank" rel="noopener noreferrer">{team}</a> : <span>{team}</span>}<span>Role unavailable</span></div>
+        <div className="pd-affiliation"><TeamCrest name={player.team} logo={player.teamLogo} size="table" />{player.teamId ? <Link href={`/team/${player.teamId}`}>{team}</Link> : player.teamUrl ? <a href={player.teamUrl} target="_blank" rel="noopener noreferrer">{team}</a> : <span>{team}</span>}<span>Role unavailable</span></div>
       </div>
     </div>
     <div className="pd-headline">

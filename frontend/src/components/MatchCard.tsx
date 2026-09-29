@@ -2,6 +2,7 @@ import { cn } from "@/lib/cn";
 import { Badge } from "@/components/Badge";
 import { LiveBadge } from "@/components/LiveBadge";
 import { ScoreDisplay } from "@/components/ScoreDisplay";
+import { TeamCrest } from "@/components/TeamCrest";
 
 export type MatchState = "result" | "upcoming" | "live";
 
@@ -9,6 +10,8 @@ export interface MatchCardProps {
   state: MatchState;
   team1: string | null;
   team2: string | null;
+  team1Logo?: string | null;
+  team2Logo?: string | null;
   score1?: number | null;
   score2?: number | null;
   event?: string | null;
@@ -45,6 +48,8 @@ export function MatchCard({
   state,
   team1,
   team2,
+  team1Logo,
+  team2Logo,
   score1 = null,
   score2 = null,
   event,
@@ -75,8 +80,8 @@ export function MatchCard({
 
       {/* scorebug row */}
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-        <span className={cn(teamClass(state, score1, score2), "text-right")}>
-          {team1 ?? "TBD"}
+        <span className={cn(teamClass(state, score1, score2), "flex min-w-0 items-center justify-end gap-2 text-right")}>
+          <span className="truncate">{team1 ?? "TBD"}</span><TeamCrest name={team1} logo={team1Logo} size="table" />
         </span>
         <ScoreDisplay
           score1={state === "upcoming" ? null : score1}
@@ -84,8 +89,8 @@ export function MatchCard({
           decided={state === "result"}
           size="md"
         />
-        <span className={cn(teamClass(state, score2, score1), "text-left")}>
-          {team2 ?? "TBD"}
+        <span className={cn(teamClass(state, score2, score1), "flex min-w-0 items-center gap-2 text-left")}>
+          <TeamCrest name={team2} logo={team2Logo} size="table" /><span className="truncate">{team2 ?? "TBD"}</span>
         </span>
       </div>
     </div>

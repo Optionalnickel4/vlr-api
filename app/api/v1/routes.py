@@ -47,6 +47,7 @@ from app.services import assistant as AS
 from app.services import refresh as R
 from app.services import search as SR
 from app.services import trends as T
+from app.services import team_identity as I
 
 router = APIRouter()
 log = logging.getLogger("vlr.api")
@@ -146,19 +147,22 @@ async def _retained_or_refresh(
 
 @router.get("/matches/results")
 async def results():
-    return await _cached_or_refresh(R.CACHE_RESULTS, R.refresh_results)
+    rows = await _cached_or_refresh(R.CACHE_RESULTS, R.refresh_results)
+    return await I.enrich_match_cards(rows)
 
 
 @router.get("/matches/upcoming")
 async def upcoming():
-    return await _cached_or_refresh(R.CACHE_UPCOMING, R.refresh_upcoming)
+    rows = await _cached_or_refresh(R.CACHE_UPCOMING, R.refresh_upcoming)
+    return await I.enrich_match_cards(rows)
 
 
 @router.get("/matches/live")
 async def live():
     # refresh_upcoming (not a "refresh_live") on purpose: one /matches scrape
     # fills both the live and upcoming keys, so a cold miss on either warms both.
-    return await _cached_or_refresh(R.CACHE_LIVE, R.refresh_upcoming)
+    rows = await _cached_or_refresh(R.CACHE_LIVE, R.refresh_upcoming)
+    return await I.enrich_match_cards(rows)
 
 
 @router.get("/rankings")
@@ -172,9 +176,10 @@ async def rankings(
     if region not in R.RANKINGS_REGIONS:
         raise HTTPException(400, f"region must be one of {list(R.RANKINGS_REGIONS)}")
     key = R.CACHE_RANKINGS.format(region=region)
-    return await _retained_or_refresh(
+    rows = await _retained_or_refresh(
         key, lambda: R.refresh_rankings(region), response, background_tasks,
     )
+    return await I.enrich_rankings(rows)
 
 
 @router.get("/stats")
@@ -208,6 +213,7 @@ async def stats(
     rows = data or []
     if min_rnd > 0:
         rows = [r for r in rows if (r.get("rnd") or 0) >= min_rnd]
+    rows = await I.enrich_stats(rows)
     return {"data": rows, "stale": stale, "error": error}
 
 
@@ -286,7 +292,9 @@ async def players(q: str = Query("", max_length=64)):
     # The service reads PlayerSnapshot (clean DB read) and only touches VLR's
     # typeahead on a DB miss, caching that like the detail endpoints. Returns the
     # { data, stale, error } envelope; never raises (graceful-empty on failure).
-    return await SR.search_players(q)
+    result = await SR.search_players(q)
+    result["data"] = await I.enrich_search_rows(result.get("data") or [])
+    return result
 
 
 # ---- team search (DB-first over team_snapshots; VLR autocomplete on a miss) ----
@@ -295,7 +303,9 @@ async def teams(q: str = Query("", max_length=64)):
     # The name->id primitive the assistant sits on. Reads TeamSnapshot (clean DB
     # read) and only touches VLR's typeahead on a DB miss, caching that like the
     # detail endpoints. Returns the { data, stale, error } envelope; never raises.
-    return await SR.search_teams(q)
+    result = await SR.search_teams(q)
+    result["data"] = await I.enrich_search_rows(result.get("data") or [], team_results=True)
+    return result
 
 
 # ---- assistant: one deterministic name-driven "team's most relevant match" ----
@@ -329,9 +339,10 @@ async def player(player_id: str):
     # PlayerSnapshot on every call, so this route banks at most one row per
     # ttl_players per player. Don't "optimize" by always refreshing.
     try:
-        return await _detail_or_refresh(
+        detail = await _detail_or_refresh(
             R.CACHE_PLAYER.format(id=player_id), lambda: R.refresh_player(player_id),
         )
+        return await I.enrich_player_detail(detail)
     except VlrNotFound:
         raise HTTPException(status_code=404, detail=f"player {player_id} not found")
 
@@ -340,9 +351,10 @@ async def player(player_id: str):
 @router.get("/team/{team_id}")
 async def team(team_id: str):
     try:
-        return await _detail_or_refresh(
+        detail = await _detail_or_refresh(
             R.CACHE_TEAM.format(id=team_id), lambda: R.refresh_team(team_id),
         )
+        return await I.enrich_team_detail(detail)
     except VlrNotFound:
         raise HTTPException(status_code=404, detail=f"team {team_id} not found")
 
@@ -361,7 +373,7 @@ async def match(match_id: str):
 # ---- trends (analytics over banked history; reads ranking_snapshots + match_results) ----
 @router.get("/trends/team/{team_id}")
 async def trends_team(team_id: str, days: int = Query(90, ge=1, le=365)):
-    return await T.team_trend(team_id, days)
+    return await I.enrich_team_trend(await T.team_trend(team_id, days))
 
 
 @router.get("/trends/player/{player_id}")

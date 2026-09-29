@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import type { ApiResponse, PlayerSearchResult } from "@/types/vlr";
+import { TeamCrest } from "./TeamCrest";
 
 export const MIN_QUERY_LEN = 2;
 export const DEBOUNCE_MS = 250;
@@ -210,11 +211,12 @@ export function PlayerSearch() {
                     {item.alias}
                   </span>
                   <span className="ml-3 flex items-center gap-1.5">
-                    {item.team && (
+                    {item.team && (<>
+                      <TeamCrest name={item.team} logo={item.teamLogo} size="ticker" />
                       <span className="font-body text-[11px] text-mut">
                         {item.team}
                       </span>
-                    )}
+                    </>)}
                     {item.source === "vlr" && (
                       <span className="font-display text-[10px] uppercase tracking-[0.1em] text-dim">
                         vlr

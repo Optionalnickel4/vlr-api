@@ -1,6 +1,7 @@
 import type { ApiResponse, RankedTeam } from "@/types/vlr";
 import { MatchSection } from "@/components/MatchSection";
 import { TableShell } from "@/components/TableShell";
+import { TeamCrest } from "@/components/TeamCrest";
 
 /**
  * RankingsPanel — the global ranking ladder as a tight broadcast stat table.
@@ -66,7 +67,7 @@ export function RankingsPanel({
     {(rankings.stale || rankings.error) && <p role="status" className="bc-warning">Updates unavailable.</p>}
     {!rows.length && !rankings.stale && !rankings.error && <p className="bc-empty">No rankings available.</p>}
     <div className="bc-leaders">{rows.map((t, i) => <div className="bc-leader" key={t.id ?? i}>
-      <span className="bc-rank">{t.rank !== null ? `#${t.rank}` : "—"}</span><div><h3>{t.id ? <a href={`/team/${t.id}`}>{t.team ?? "—"}</a> : t.team ?? "—"}</h3><span className="bc-micro">{t.country ?? "Region unavailable"}</span></div><div className="bc-rating"><strong>{t.rating ?? "—"}</strong><span className="bc-micro">Rating</span></div>
+      <span className="bc-rank">{t.rank !== null ? `#${t.rank}` : "—"}</span><TeamCrest name={t.team} logo={t.logo} size="row"/><div><h3>{t.id ? <a href={`/team/${t.id}`}>{t.team ?? "—"}</a> : t.team ?? "—"}</h3><span className="bc-micro">{t.country ?? "Region unavailable"}</span></div><div className="bc-rating"><strong>{t.rating ?? "—"}</strong><span className="bc-micro">Rating</span></div>
     </div>)}</div>
   </section>;
   return (
@@ -92,7 +93,7 @@ export function RankingsPanel({
             <td className="text-right font-mono text-dim tabular-nums">
               {t.rank ?? "—"}
             </td>
-            <td className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink">
+            <td className="font-display text-sm font-semibold uppercase tracking-[0.03em] text-ink"><span className="inline-flex items-center gap-2"><TeamCrest name={t.team} logo={t.logo} size="table" />
               {t.id ? (
                 // links to the internal team page (rating trend + results join).
                 // Some ids 500 upstream — the team page renders that as a
@@ -103,7 +104,7 @@ export function RankingsPanel({
               ) : (
                 (t.team ?? "—")
               )}
-            </td>
+            </span></td>
             <td className="font-body text-[13px] text-mut">{t.country ?? "—"}</td>
             <td className="text-right font-mono text-sm text-ink tabular-nums">
               {t.rating ?? "—"}

@@ -6,9 +6,14 @@ import { cn } from "@/lib/cn";
 import { teamHue, teamInitials } from "@/lib/schedule";
 
 // Source-provided crests use an image; missing or failed images use initials.
-// Match-list payloads currently supply names only. Decorative because the
-// adjacent text already identifies each team.
+// Decorative by default because adjacent text usually identifies each team.
 const SIZES = {
+  ticker: { box: 24, text: "text-[9px]" },
+  table: { box: 28, text: "text-[10px]" },
+  row: { box: 34, text: "text-[13px]" },
+  card: { box: 46, text: "text-[17px]" },
+  hero: { box: 88, text: "text-[30px]" },
+  // Backward-compatible names while call sites migrate to semantic contexts.
   sm: { box: 34, text: "text-[13px]" },
   md: { box: 46, text: "text-[17px]" },
   lg: { box: 88, text: "text-[30px]" },
@@ -19,24 +24,33 @@ export function TeamCrest({
   size = "sm",
   className,
   logo,
+  labelMode = "decorative",
 }: {
   name: string | null;
   size?: keyof typeof SIZES;
   className?: string;
   /** Use only an actual source-provided URL; no guessed asset paths. */
   logo?: string | null;
+  labelMode?: "decorative" | "informative";
 }) {
   const [failedSource, setFailedSource] = useState<string | null>(null);
   const source = logo?.startsWith("//") ? `https:${logo}` : logo;
   const s = SIZES[size];
   if (source && /^https?:\/\//.test(source) && failedSource !== source) {
-    return <Image src={source} width={s.box} height={s.box} alt="" aria-hidden unoptimized
-      className={cn("shrink-0 object-contain", className)} onError={() => setFailedSource(source)} />;
+    return <span data-team-logo="true" aria-label={labelMode === "informative" ? `${name ?? "Unknown"} team identity` : undefined}
+      aria-hidden={labelMode === "decorative" ? true : undefined}
+      className={cn("relative inline-flex shrink-0 items-center justify-center", className)}
+      style={{ width: s.box, height: s.box }}>
+      <Image src={source} width={s.box} height={s.box} alt="" unoptimized
+        className="block h-full w-full object-contain" onError={() => setFailedSource(source)} />
+    </span>;
   }
   const hue = teamHue(name);
   return (
     <span
-      aria-hidden
+      data-team-fallback="true"
+      aria-hidden={labelMode === "decorative" ? true : undefined}
+      aria-label={labelMode === "informative" ? `${name ?? "Unknown"} team identity` : undefined}
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full border",
         "font-display font-semibold uppercase leading-none tracking-[0.02em]",

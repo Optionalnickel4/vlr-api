@@ -40,7 +40,7 @@ export async function UpcomingSnapshot({ data }: { data: Promise<ApiResponse<Upc
     {!response.data.length && !response.stale && !response.error && <p className="bc-empty">No upcoming matches scheduled.</p>}
     <div className="bc-upcoming-list">
       {response.data.slice(0, HOME_SNAPSHOT_LIMIT).map((m, i) => {
-        const content = <><span className="bc-fixture-time">{m.timeUntil ?? m.startTime ?? "Time TBA"}</span><span className="bc-fixture-teams">{m.team1 ?? "TBD"}<span className="bc-micro">vs</span>{m.team2 ?? "TBD"}</span><span className="bc-fixture-event">{m.event ?? "Event unavailable"}</span><span className="bc-row-arrow" aria-hidden>↗</span></>;
+        const content = <><span className="bc-fixture-time">{m.timeUntil ?? m.startTime ?? "Time TBA"}</span><span className="bc-fixture-teams"><span><TeamCrest name={m.team1} logo={m.team1Logo} size="table" />{m.team1 ?? "TBD"}</span><span className="bc-micro">vs</span><span><TeamCrest name={m.team2} logo={m.team2Logo} size="table" />{m.team2 ?? "TBD"}</span></span><span className="bc-fixture-event">{m.event ?? "Event unavailable"}</span><span className="bc-row-arrow" aria-hidden>↗</span></>;
         return m.id ? <Link key={m.id} className="bc-fixture" href={`/match/${m.id}`}>{content}</Link> : <div key={i} className="bc-fixture">{content}</div>;
       })}
     </div>
@@ -55,7 +55,8 @@ export async function ResultsSnapshot({ data }: { data: Promise<ApiResponse<Resu
     {(response.stale || response.error) && <p role="status" className="bc-warning">Updates unavailable.</p>}
     {!response.data.length && !response.stale && !response.error && <p className="bc-empty">No recent results.</p>}
     <div className="bc-results-list">{response.data.slice(0, HOME_SNAPSHOT_LIMIT).map((m, i) => {
-      const content = <><div className="bc-result-teams">{[[m.team1,m.score1,m.score2],[m.team2,m.score2,m.score1]].map(([name,score,other], n) => <div key={n} className={typeof score === "number" && typeof other === "number" && score > other ? "bc-winner" : ""}><TeamCrest name={name as string | null} /><span>{name ?? "TBD"}</span><strong>{score ?? "–"}</strong></div>)}</div><p className="bc-fixture-event">{m.event ?? "Event unavailable"} <span>· {m.time ?? "Final"}</span></p></>;
+      const teams = [{name:m.team1,logo:m.team1Logo,score:m.score1,other:m.score2},{name:m.team2,logo:m.team2Logo,score:m.score2,other:m.score1}];
+      const content = <><div className="bc-result-teams">{teams.map(({name,logo,score,other}, n) => <div key={n} className={typeof score === "number" && typeof other === "number" && score > other ? "bc-winner" : ""}><TeamCrest name={name} logo={logo} size="row" /><span>{name ?? "TBD"}</span><strong>{score ?? "–"}</strong></div>)}</div><p className="bc-fixture-event">{m.event ?? "Event unavailable"} <span>· {m.time ?? "Final"}</span></p></>;
       return m.id ? <Link className="bc-result" key={m.id} href={`/match/${m.id}`}>{content}</Link> : <div className="bc-result" key={i}>{content}</div>;
     })}</div>
     <Link className="bc-section-link" href="/results">All results <span aria-hidden>→</span></Link>

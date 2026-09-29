@@ -19,7 +19,7 @@
 .td-verdict { display:inline-block; font:600 11px var(--font-body); padding:5px 9px; background:#283443; color:#e0e7ef; }
 .td-verdict[data-result="win"] { color:#91e7c9; background:#18352f; }
 .td-verdict[data-result="loss"] { color:#ffb1b8; background:#40252e; }
-.td-opponent { font:600 22px/1.15 var(--font-display); overflow-wrap:anywhere; }
+.td-opponent { display:flex; align-items:center; gap:9px; font:600 22px/1.15 var(--font-display); overflow-wrap:anywhere; }
 .td-form-score { color:#eeeae2; font:600 28px var(--font-mono); font-variant-numeric:tabular-nums; margin-top:auto; }
 .td-form-score span { font-size:16px; color:#b9c3d0; }
 .team-detail a:hover { color:#73d9c6; text-decoration:underline; }
@@ -59,6 +59,7 @@
 .td-roster .td-table tr > :first-child { width:180px; }
 .td-roster .td-table tr > :nth-child(2) { width:230px; }
 .td-result-event { display:block; font:400 12px/1.5 var(--font-body); color:#b9c3d0; margin-top:6px; }
+.td-result-opponent { display:flex; align-items:center; gap:9px; }
 .td-empty,.td-notice { padding:24px; border:1px solid #3c4653; color:#c2cad5; font-size:14px; }
 .td-notice { border-left:3px solid #ffb1b8; }
 @media(max-width:900px) { .td-form { grid-template-columns:repeat(3,minmax(0,1fr)); } }

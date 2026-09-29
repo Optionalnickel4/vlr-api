@@ -49,7 +49,9 @@
 .md-rounds { background:#131c23; border:1px solid #303c4a; padding:20px; margin-bottom:28px; min-width:0; }
 .md-round-scroll { display:flex; overflow-x:auto; padding:4px 0 12px; scrollbar-color:#738195 #131c23; }
 .md-round-labels { display:grid; grid-template-rows:24px 28px 28px; gap:5px; flex:0 0 132px; position:sticky; left:0; background:#131c23; z-index:1; padding-right:12px; font:600 12px/1.2 var(--font-display); }
-.md-round-labels span { display:flex; align-items:center; overflow-wrap:anywhere; }
+.md-round-labels span { display:flex; align-items:center; gap:6px; overflow-wrap:anywhere; }
+.md-map-teams { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.md-map-teams > span { display:inline-flex; align-items:center; gap:6px; }
 .md-round-grid { display:flex; gap:5px; list-style:none; margin:0; padding:0; }
 .md-round-grid li { position:relative; display:grid; grid-template-rows:24px 28px 28px; gap:5px; width:28px; flex-shrink:0; text-align:center; font:500 11px/28px var(--font-mono); }
 .md-round-number { color:#c2cad5; }
@@ -63,6 +65,7 @@
 .md-scoreboards > .md-section-heading { margin-bottom:0; }
 .md-scoreboard { border:1px solid #303c4a; background:#111923; }
 .md-scoreboard-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 20px; border-left:3px solid #73d9c6; background:#192430; }
+.md-scoreboard-team { display:flex; min-width:0; align-items:center; gap:12px; }
 .md-scoreboard-heading h4 { font:600 26px/1.1 var(--font-display); overflow-wrap:anywhere; }
 .md-scoreboard-heading > span { flex-shrink:0; font:600 24px var(--font-mono); }
 .md-table-scroll { max-width:100%; overflow-x:auto; padding-bottom:8px; scrollbar-color:#738195 #131c23; }

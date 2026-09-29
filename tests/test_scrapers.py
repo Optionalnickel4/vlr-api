@@ -6,7 +6,7 @@ from app.scrapers.matches import parse_match_list, split_live_upcoming
 from app.scrapers.rankings import parse_rankings
 from app.scrapers.events import parse_events, parse_news
 from app.scrapers.players import parse_player
-from app.scrapers._util import id_from_href, clean_spaces
+from app.scrapers._util import absolute_vlr_asset, id_from_href, clean_spaces
 
 FIX = Path(__file__).parent / "fixtures"
 
@@ -25,6 +25,13 @@ def test_id_from_href_variants():
 
 def test_clean_spaces():
     assert clean_spaces("  a   b\n c ") == "a b c"
+
+
+def test_absolute_vlr_asset_normalizes_only_usable_sources():
+    assert absolute_vlr_asset("//owcdn.net/img/team.png") == "https://owcdn.net/img/team.png"
+    assert absolute_vlr_asset("https://cdn.example/team.svg") == "https://cdn.example/team.svg"
+    assert absolute_vlr_asset("/img/team.png") == "https://www.vlr.gg/img/team.png"
+    assert absolute_vlr_asset("") is None
 
 
 # ---------- matches / results ----------
@@ -75,8 +82,10 @@ def test_parse_rankings():
     assert rows[0]["team_id"] == "876"
     assert rows[0]["rating"] == "2000"
     assert rows[0]["country"] == "Czech Republic"
+    assert rows[0]["logo"] == "https://owcdn.net/img/68643d0b1c72b.png"
     assert rows[1]["team"] == "Team Vitality"
     assert rows[1]["country"] == "Europe"
+    assert rows[1]["logo"].startswith("https://")
 
 
 # ---------- rankings: W/L record (Item 1 — regional layout) ----------
@@ -186,6 +195,7 @@ def test_parse_player_team_none_when_no_current_teams_section():
     assert p["team"] is None
     assert p["team_id"] is None
     assert p["team_url"] is None
+    assert p["team_logo"] is None
 
 
 def test_parse_player_team_resolves_to_club_not_national():
@@ -197,6 +207,7 @@ def test_parse_player_team_resolves_to_club_not_national():
     assert p["team"] == "Sentinels"
     assert p["team_id"] == "2"
     assert p["team_url"] == "https://www.vlr.gg/team/2/sentinels"
+    assert p["team_logo"] == "https://owcdn.net/img/62875027c8e06.png"
 
 
 def test_parse_player_team_club_only_no_national():
@@ -239,6 +250,7 @@ def test_parse_player_match_history_structure():
         assert m["id"] and m["id"].isdigit()
         assert m["url"].startswith("https://www.vlr.gg/")
         assert isinstance(m["opponent"], str) and m["opponent"].strip()
+        assert isinstance(m["opponent_logo"], str) and m["opponent_logo"].startswith("https://")
         assert m["result"] in {"win", "loss", None}
         assert isinstance(m["event"], str) and m["event"].strip()
 

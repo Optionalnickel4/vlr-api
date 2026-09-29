@@ -15,8 +15,9 @@ export function MatchListStatus({ kind, count, unavailable }: { kind: "schedule"
   return null;
 }
 
-export function ListingTeam({ name }: { name: string | null }) {
-  return <span className="ml-team"><TeamCrest name={name} /><span>{name ?? "Team TBD"}</span></span>;
+export function ListingTeam({ name, id, logo }: { name: string | null; id?: string | null; logo?: string | null }) {
+  const identity = <><TeamCrest name={name} logo={logo} size="row" /><span>{name ?? "Team TBD"}</span></>;
+  return id ? <Link prefetch={false} className="ml-team" href={`/team/${id}`}>{identity}</Link> : <span className="ml-team">{identity}</span>;
 }
 
 export function MatchListLink({ id, team1, team2 }: { id: string | null; team1: string | null; team2: string | null }) {

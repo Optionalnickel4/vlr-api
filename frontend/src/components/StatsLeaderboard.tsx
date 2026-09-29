@@ -14,6 +14,7 @@ import {
   type StatSortKey,
 } from "@/lib/vlr";
 import type { ApiResponse, StatLeader } from "@/types/vlr";
+import { TeamCrest } from "./TeamCrest";
 
 /** Region/window controls retain the existing API and stable numeric sorting.
  * Preview cards follow the current sort. They are not global rank claims.
@@ -52,7 +53,7 @@ function PodiumBlock({player,slot}: {player:StatLeader|undefined;slot:(typeof PO
  return <div className="ld-sort-card" data-podium-rank={slot.rank}>
   <span className="ld-kicker">View position {slot.rank}</span>
   {player.playerId?<Link href={`/player/${player.playerId}`}>{player.player??'Player unavailable'}</Link>:<strong>{player.player??'Player unavailable'}</strong>}
-  <span>{player.team??'Team unavailable'}</span>
+  <span className="inline-flex items-center gap-1"><TeamCrest name={player.team} logo={player.teamLogo} size="ticker" />{player.team??'Team unavailable'}</span>
   <div><strong>{num(player.r2,2)}</strong> R2.0 <span> / {player.rnd??'—'} rounds</span></div>
  </div>;
 }
@@ -80,8 +81,8 @@ const COLUMNS: Col[] = [
           (r.player ?? "—")
         )}
         {r.team && (
-          <span className="block font-display text-[10px] font-semibold uppercase tracking-broadcast text-dim">
-            {r.team}
+          <span className="flex items-center gap-1 font-display text-[10px] font-semibold uppercase tracking-broadcast text-dim">
+            <TeamCrest name={r.team} logo={r.teamLogo} size="ticker" />{r.team}
           </span>
         )}
       </>

@@ -104,6 +104,22 @@ def id_from_href(href: str) -> Optional[str]:
     return None
 
 
+def absolute_vlr_asset(src: object) -> Optional[str]:
+    """Return a usable absolute URL for source-provided VLR artwork."""
+    if src is None:
+        return None
+    value = str(src).strip()
+    if not value:
+        return None
+    if value.startswith("//"):
+        return "https:" + value
+    if value.startswith("/"):
+        return "https://www.vlr.gg" + value
+    if value.startswith(("https://", "http://")):
+        return value
+    return None
+
+
 def clean_spaces(s: str) -> str:
     """Collapse runs of whitespace to single spaces and trim.
 

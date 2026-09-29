@@ -58,6 +58,7 @@ def db_search_stmt(q: str, cap: int = RESULT_CAP):
             PlayerSnapshot.player_id,
             PlayerSnapshot.alias,
             PlayerSnapshot.team,
+            PlayerSnapshot.team_id,
             PlayerSnapshot.country,
         )
         .where(
@@ -82,6 +83,7 @@ async def db_search(q: str, cap: int = RESULT_CAP) -> list[dict[str, Any]]:
             "id": r.player_id,
             "alias": r.alias,
             "team": r.team,
+            "team_id": r.team_id,
             "country": r.country,
             "source": "db",
         }

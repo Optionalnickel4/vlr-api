@@ -1,4 +1,5 @@
 import type { MatchRound } from "@/types/vlr";
+import { TeamCrest } from "@/components/TeamCrest";
 
 function description(round: MatchRound, index: number, names: string[]) {
   const winner = round.winner === null ? "Result unavailable" : `${names[round.winner - 1]} won`;
@@ -6,13 +7,19 @@ function description(round: MatchRound, index: number, names: string[]) {
 }
 
 /** Real round results only. Text and a disclosure complement the color matrix. */
-export function RoundTimeline({ rounds, team1, team2 }: { rounds: MatchRound[]; team1: string | null; team2: string | null }) {
+export function RoundTimeline({ rounds, team1, team2, team1Logo, team2Logo }: {
+  rounds: MatchRound[];
+  team1: string | null;
+  team2: string | null;
+  team1Logo?: string | null;
+  team2Logo?: string | null;
+}) {
   if (!rounds.length) return null;
   const names = [team1 ?? "Team 1", team2 ?? "Team 2"];
   return <section className="md-rounds" aria-label="Round history">
     <div className="md-section-heading"><h3>ROUND HISTORY</h3><p>W = win · L = loss · – = unavailable</p></div>
     <div className="md-round-scroll" role="region" tabIndex={0} aria-label="Round results, scroll horizontally">
-      <div className="md-round-labels" aria-hidden><span>Round</span><span>{names[0]}</span><span>{names[1]}</span></div>
+      <div className="md-round-labels" aria-hidden><span>Round</span><span><TeamCrest name={team1} logo={team1Logo} size="ticker" />{names[0]}</span><span><TeamCrest name={team2} logo={team2Logo} size="ticker" />{names[1]}</span></div>
       <ol className="md-round-grid">{rounds.map((round, i) => <li key={round.round ?? i} title={description(round, i, names)}>
         <span className="sr-only">{description(round, i, names)}</span>
         <span aria-hidden className="md-round-number">{round.round ?? i + 1}</span>

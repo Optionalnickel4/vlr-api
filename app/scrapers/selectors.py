@@ -39,6 +39,7 @@ RANK_NUM = "div.rank-item-rank-num, td.rank-item-rank"
 # both children — never strip suffixes off the deep text (the tag span produced
 # "100 Thieves#XSN" that way).
 RANK_TEAM_NAME = "div.ge-text, td.rank-item-team a div"
+RANK_TEAM_LOGO = "div.rank-item-team img, td.rank-item-team img"
 RANK_COUNTRY = "div.rank-item-team-country"
 RANK_RATING = "div.rank-item-rating, td.rank-item-rating"
 # The W/L record is "wins–losses" (en-dash) text in div.rank-item-record. There are
@@ -97,6 +98,8 @@ TEAM_MATCH_GAME_ROW_CLASS = "m-item-games-item"
 # series/stage text that trails it in the same container (label-bleed guard).
 TEAM_MATCH_EVENT = "div.m-item-event div.text-of"
 TEAM_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
+TEAM_MATCH_OPPONENT_TAG = "div.m-item-team.mod-right span.m-item-team-tag"
+TEAM_MATCH_OPPONENT_LOGO = "div.m-item-logo.mod-right img"
 # Opponent team link: ALWAYS absent on live markup (audited 2026-07-15 — the
 # card itself is the only <a>; vlr exposes no opponent team id on match cards),
 # so opponent_id is ALWAYS null. Kept because the frontend transform consumes
@@ -125,6 +128,7 @@ PLAYER_SELF_LINK = "a.player-stats-filter-btn"
 PLAYER_TEAM_HEADING = "h2.wf-label.mod-large"
 PLAYER_TEAM = 'a.wf-module-item[href^="/team/"]'
 PLAYER_TEAM_NAME = 'div[style*="font-weight: 500"]'
+PLAYER_TEAM_LOGO = "img"
 # per-agent stats table (header titles drive the stat keys, agent name = img alt)
 # vlr's 2026 stats-page rewrite dropped the `mod-table` container class and
 # renamed the table class wf-table -> st-table (confirmed live 2026-07-14).
@@ -137,6 +141,8 @@ PLAYER_AGENT_IMG = "img"
 PLAYER_MATCH_CARD = "a.m-item"
 PLAYER_MATCH_EVENT = "div.m-item-event div.text-of"
 PLAYER_MATCH_OPPONENT = "div.m-item-team.mod-right span.m-item-team-name"
+PLAYER_MATCH_OPPONENT_TAG = "div.m-item-team.mod-right span.m-item-team-tag"
+PLAYER_MATCH_OPPONENT_LOGO = "div.m-item-logo.mod-right img"
 PLAYER_MATCH_RESULT = "div.m-item-result"
 # Raw displayed date/time, same contract as team recent results; no timezone inferred.
 PLAYER_MATCH_DATE = "div.m-item-date"
@@ -202,6 +208,7 @@ MATCH_H_SERIES = "div.match-header-event-series"
 # the two team links carry the team id (href) + mod-1/mod-2 ordering
 MATCH_H_TEAM_LINK = "a.match-header-link"
 MATCH_H_TEAM_NAME = "div.match-header-link-name div.wf-title-med"
+MATCH_H_TEAM_LOGO = "img"
 # Legacy/current spoiler containers hold "2:1". Scope to series scores, not maps
 # or the adjacent status/Bo3 notes (observed .sp-hide on September 28, 2026).
 MATCH_H_SCORE_SPOILER = "div.match-header-vs-score .js-spoiler, div.match-header-vs-score .sp-hide"

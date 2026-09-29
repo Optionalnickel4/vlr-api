@@ -24,7 +24,7 @@ from selectolax.parser import HTMLParser, Node
 
 from app.core.http import get_client
 from app.scrapers import selectors as S
-from app.scrapers._util import clean_spaces, country_from_flag, id_from_href, text_of
+from app.scrapers._util import absolute_vlr_asset, clean_spaces, country_from_flag, id_from_href, text_of
 
 VLR = "https://www.vlr.gg"
 
@@ -97,6 +97,7 @@ def _parse_match(card: Node) -> dict[str, Any]:
     rcls = (result_node.attributes.get("class", "") if result_node else "") or ""
     result = "win" if "mod-win" in rcls else "loss" if "mod-loss" in rcls else None
     opp = card.css_first(S.TEAM_MATCH_OPPONENT)
+    opp_logo = card.css_first(S.TEAM_MATCH_OPPONENT_LOGO)
     # opponent_id is ALWAYS null on live markup — vlr nests no team <a> inside
     # match cards (see TEAM_MATCH_OPPONENT_LINK). The key stays because the
     # frontend transform consumes it.
@@ -106,6 +107,8 @@ def _parse_match(card: Node) -> dict[str, Any]:
         "id": id_from_href(href),
         "url": _abs(href),
         "opponent": clean_spaces(text_of(opp)) or None,
+        "opponent_tag": clean_spaces(text_of(card.css_first(S.TEAM_MATCH_OPPONENT_TAG))) or None,
+        "opponent_logo": absolute_vlr_asset(opp_logo.attributes.get("src") if opp_logo else None),
         "opponent_id": id_from_href(opp_href),
         "result": result,
         "score": (clean_spaces(text_of(result_node)) or None) if result_node else None,
@@ -138,11 +141,7 @@ def parse_team(html: str) -> dict[str, Any]:
     self_link = tree.css_first(S.TEAM_SELF_LINK)
     team_id = id_from_href(self_link.attributes.get("href", "")) if self_link else None
     logo = tree.css_first(S.TEAM_LOGO)
-    logo_src = (logo.attributes.get("src") if logo else None) or None
-    # vlr serves logos protocol-relative ("//owcdn.net/..."); left as-is they
-    # resolve against file:// in a Next.js <img> and silently 404.
-    if logo_src and logo_src.startswith("//"):
-        logo_src = "https:" + logo_src
+    logo_src = absolute_vlr_asset(logo.attributes.get("src") if logo else None)
     results, upcoming = _parse_matches(tree)
     return {
         "id": team_id,

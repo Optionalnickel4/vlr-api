@@ -17,6 +17,12 @@ export interface ResultMatch {
   id: string | null;
   team1: string | null;
   team2: string | null;
+  team1Id?: string | null;
+  team2Id?: string | null;
+  team1Logo?: string | null;
+  team2Logo?: string | null;
+  team1ShortName?: string | null;
+  team2ShortName?: string | null;
   score1: number | null;
   score2: number | null;
   time: string | null; // eta || time (raw display string from upstream)
@@ -34,6 +40,12 @@ export interface UpcomingMatch {
   id: string | null;
   team1: string | null;
   team2: string | null;
+  team1Id?: string | null;
+  team2Id?: string | null;
+  team1Logo?: string | null;
+  team2Logo?: string | null;
+  team1ShortName?: string | null;
+  team2ShortName?: string | null;
   timeUntil: string | null; // eta, e.g. "2h 15m" / "1d 4h"
   startTime: string | null; // raw clock display, e.g. "9:00 AM" (no date/zone)
   series: string | null;
@@ -47,6 +59,12 @@ export interface LiveMatch {
   id: string | null;
   team1: string | null;
   team2: string | null;
+  team1Id?: string | null;
+  team2Id?: string | null;
+  team1Logo?: string | null;
+  team2Logo?: string | null;
+  team1ShortName?: string | null;
+  team2ShortName?: string | null;
   score1: number | null;
   score2: number | null;
   series: string | null;
@@ -62,6 +80,7 @@ export interface RankedTeam {
   team: string | null;
   country: string | null;
   rating: number | null;
+  logo?: string | null;
 }
 
 /** A news article (from /news). meta is split into date + author, with a
@@ -87,6 +106,9 @@ export interface PlayerMatch {
   id: string | null;
   url: string | null;
   opponent: string | null;
+  opponentId?: string | null;
+  opponentLogo?: string | null;
+  opponentShortName?: string | null;
   result: "win" | "loss" | null;
   score: string | null;
   event: string | null;
@@ -100,6 +122,7 @@ export interface PlayerDetail {
   team: string | null;
   teamId: string | null;
   teamUrl: string | null;
+  teamLogo?: string | null;
   agentStats: AgentStat[];
   matches: PlayerMatch[];
 }
@@ -138,6 +161,8 @@ export interface TeamMatch {
   url: string | null;
   opponent: string | null;
   opponentId: string | null;
+  opponentLogo?: string | null;
+  opponentShortName?: string | null;
   result: "win" | "loss" | null;
   score: string | null;
   event: string | null;
@@ -169,6 +194,9 @@ export interface RatingPoint {
 export interface TrendResult {
   vlrId: string | null;
   opponent: string | null;
+  opponentId?: string | null;
+  opponentLogo?: string | null;
+  opponentShortName?: string | null;
   result: "win" | "loss" | null;
   score: string | null;
   event: string | null;
@@ -186,6 +214,7 @@ export interface TrendSummary {
 export interface TeamTrend {
   teamId: string | null;
   team: string | null;
+  logo?: string | null;
   windowDays: number | null;
   ratingTrend: RatingPoint[];
   ratingChange: number | null;
@@ -282,7 +311,7 @@ export interface MatchTeam {
   name: string | null;
   id: string | null;
   /** Optional source-provided crest; existing match feeds may omit it. */
-  logo?: string;
+  logo?: string | null;
   score: number | null; // series score (maps won)
   won: boolean;
 }
@@ -324,6 +353,8 @@ export interface PlayerSearchResult {
   id: string | null;
   alias: string | null;
   team: string | null;
+  teamId?: string | null;
+  teamLogo?: string | null;
   country: string | null;
   source: "db" | "vlr";
 }
@@ -338,6 +369,8 @@ export interface StatLeader {
   player: string | null;
   playerId: string | null;
   team: string | null; // short team abbreviation e.g. "SEN" — null when absent
+  teamId?: string | null;
+  teamLogo?: string | null;
   r2: number | null; // VLR R2.0 — the headline rating
   acs: number | null;
   kd: number | null;
@@ -430,4 +463,47 @@ export interface TickerSources {
   rankings: RankedTeam[];
   matches: MatchDetail[];
   trends: TeamTrend[];
+}
+
+// ---- Match Wire -----------------------------------------------------------
+export interface MatchWireTeam {
+  id: string | null;
+  name: string;
+  shortName: string;
+  logo: string | null;
+  score: number | null;
+}
+
+export type MatchWireItem =
+  | {
+      id: string;
+      kind: "live" | "upcoming" | "final";
+      href: string;
+      status: "LIVE" | "UPCOMING" | "FINAL";
+      teams: [MatchWireTeam, MatchWireTeam];
+      event: string | null;
+      context: string | null;
+      time: string | null;
+      winnerId: string | null;
+    }
+  | {
+      id: string;
+      kind: "mover";
+      href: string;
+      status: "RANK";
+      team: MatchWireTeam;
+      direction: "up" | "down";
+      positions: number;
+      previousRank: number;
+      currentRank: number;
+      context: string | null;
+    };
+
+export interface MatchWireSources {
+  live: LiveMatch[];
+  upcoming: UpcomingMatch[];
+  results: ResultMatch[];
+  rankings: RankedTeam[];
+  trends: TeamTrend[];
+  liveDetails: MatchDetail[];
 }

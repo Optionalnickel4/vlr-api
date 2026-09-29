@@ -45,6 +45,7 @@ import type {
   MatchRound,
   MatchStatCell,
   MatchTeam,
+  MatchWireItem,
   NewsArticle,
   PlayerDetail,
   PlayerDimensions,
@@ -65,6 +66,7 @@ import type {
   TrendResult,
   UpcomingMatch,
 } from "@/types/vlr";
+import { buildMatchWire } from "@/lib/matchWire";
 
 export const VLR_API_BASE =
   process.env.VLR_API_BASE ?? "http://127.0.0.1:8000/api/v1";
@@ -159,14 +161,29 @@ function teamsScores(raw: Record<string, unknown>): {
   team2: string | null;
   score1: number | null;
   score2: number | null;
+  team1Id: string | null;
+  team2Id: string | null;
+  team1Logo: string | null;
+  team2Logo: string | null;
+  team1ShortName: string | null;
+  team2ShortName: string | null;
 } {
   const teams = Array.isArray(raw.teams) ? (raw.teams as unknown[]) : [];
   const scores = Array.isArray(raw.scores) ? (raw.scores as unknown[]) : [];
+  const ids = Array.isArray(raw.team_ids) ? (raw.team_ids as unknown[]) : [];
+  const logos = Array.isArray(raw.team_logos) ? (raw.team_logos as unknown[]) : [];
+  const shortNames = Array.isArray(raw.team_short_names) ? (raw.team_short_names as unknown[]) : [];
   return {
     team1: str(teams[0]),
     team2: str(teams[1]),
     score1: parseNumeric(scores[0]),
     score2: parseNumeric(scores[1]),
+    team1Id: str(ids[0]),
+    team2Id: str(ids[1]),
+    team1Logo: str(logos[0]),
+    team2Logo: str(logos[1]),
+    team1ShortName: str(shortNames[0]),
+    team2ShortName: str(shortNames[1]),
   };
 }
 
@@ -185,11 +202,20 @@ export function normalizeResult(raw: unknown): ResultMatch[] {
 
 export function normalizeUpcoming(raw: unknown): UpcomingMatch[] {
   return asList(raw).map((m) => {
-    const { team1, team2 } = teamsScores(m);
+    const {
+      team1, team2, team1Id, team2Id, team1Logo, team2Logo,
+      team1ShortName, team2ShortName,
+    } = teamsScores(m);
     return {
       id: str(m.id),
       team1,
       team2,
+      team1Id,
+      team2Id,
+      team1Logo,
+      team2Logo,
+      team1ShortName,
+      team2ShortName,
       timeUntil: str(m.eta),
       startTime: str(m.time), // raw clock display; already in the card payload
       series: str(m.series),
@@ -217,6 +243,7 @@ export function normalizeRankings(raw: unknown): RankedTeam[] {
     team: str(t.team),
     country: str(t.country),
     rating: parseNumeric(t.rating),
+    logo: str(t.logo),
   }));
 }
 
@@ -266,6 +293,9 @@ function normalizePlayerMatches(raw: unknown): PlayerMatch[] {
     id: str(m.id),
     url: str(m.url),
     opponent: str(m.opponent),
+    opponentId: str(m.opponent_id),
+    opponentLogo: str(m.opponent_logo),
+    opponentShortName: str(m.opponent_short_name) ?? str(m.opponent_tag),
     result: winLoss(m.result),
     score: str(m.score),
     event: str(m.event),
@@ -286,6 +316,7 @@ export function normalizePlayer(raw: unknown): PlayerDetail[] {
       team: str(p.team),
       teamId: str(p.team_id),
       teamUrl: str(p.team_url),
+      teamLogo: str(p.team_logo),
       agentStats: normalizeAgentStats(p.agent_stats),
       matches: normalizePlayerMatches(p.matches),
     },
@@ -383,6 +414,8 @@ function normalizeTeamMatches(raw: unknown): TeamMatch[] {
     url: str(m.url),
     opponent: str(m.opponent),
     opponentId: str(m.opponent_id),
+    opponentLogo: str(m.opponent_logo),
+    opponentShortName: str(m.opponent_short_name) ?? str(m.opponent_tag),
     result: winLoss(m.result),
     score: str(m.score),
     event: str(m.event),
@@ -424,6 +457,9 @@ export function normalizeTrend(raw: unknown): TeamTrend[] {
   const resultsInWindow: TrendResult[] = results.map((r) => ({
     vlrId: str(r.vlr_id),
     opponent: str(r.opponent),
+    opponentId: str(r.opponent_id),
+    opponentLogo: str(r.opponent_logo),
+    opponentShortName: str(r.opponent_short_name),
     result: winLoss(r.result),
     score: str(r.score),
     event: str(r.event),
@@ -451,6 +487,7 @@ export function normalizeTrend(raw: unknown): TeamTrend[] {
     {
       teamId: str(t.team_id),
       team: str(t.team),
+      logo: str(t.logo),
       windowDays: parseNumeric(t.window_days),
       ratingTrend,
       ratingChange: parseNumeric(t.rating_change),
@@ -623,13 +660,12 @@ function normalizeMap(raw: Record<string, unknown>): MatchMap {
 
 function normalizeMatchTeam(raw: unknown): MatchTeam {
   const t = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
-  const logo = str(t.logo);
   return {
     name: str(t.name),
     id: str(t.id),
     score: parseNumeric(t.score),
     won: t.won === true,
-    ...(logo ? { logo } : {}),
+    logo: str(t.logo),
   };
 }
 
@@ -765,6 +801,8 @@ export function normalizePlayerSearch(raw: unknown): PlayerSearchResult[] {
     id: str(r.id),
     alias: str(r.alias),
     team: str(r.team),
+    teamId: str(r.team_id),
+    teamLogo: str(r.team_logo),
     country: str(r.country),
     source: r.source === "vlr" ? "vlr" : "db",
   }));
@@ -781,6 +819,8 @@ export function normalizeStats(raw: unknown): StatLeader[] {
     player: str(r.player),
     playerId: str(r.player_id),
     team: str(r.team),
+    teamId: str(r.team_id),
+    teamLogo: str(r.team_logo),
     r2: parseNumeric(r.r2),
     acs: parseNumeric(r.acs),
     kd: parseNumeric(r.kd),
@@ -1109,21 +1149,25 @@ export function buildTicker(src: TickerSources): TickerItem[] {
 }
 
 
-/** Aggregate the notable-stats tape. Server-side, force-dynamic via the route.
+/** Aggregate the Match Wire. Server-side, force-dynamic via the route.
  *  Fans out (bounded) over the SAME loaders the match center already uses, so it
  *  adds no new upstream surface. Graceful-empty: any failure → empty tape, never
- *  a thrown page; an empty tape simply hides the ticker. */
-export async function getTicker(): Promise<ApiResponse<TickerItem>> {
+ *  a thrown page; the ticker renders an honest unavailable state when every
+ *  category is empty. */
+export async function getTicker(): Promise<ApiResponse<MatchWireItem>> {
   try {
-    const [results, rankings] = await Promise.all([getResults(), getRankings()]);
+    const [live, upcoming, results, rankings] = await Promise.all([
+      getLive(), getUpcoming(), getResults(), getRankings(),
+    ]);
 
-    // top-ACS source: detail for the most recent completed results (bounded).
-    const matchIds = results.data
-      .map((r) => r.id)
+    // Live details are already kept warm by the backend live-refresh job. The
+    // bounded fan-out supplies current-map context and authoritative identities.
+    const liveIds = live.data
+      .map(match => match.id)
       .filter((id): id is string => Boolean(id))
-      .slice(0, TICKER_MATCH_SAMPLE);
-    const matchRes = await Promise.all(matchIds.map((id) => getMatch(id)));
-    const matches = matchRes.flatMap((r) => r.data);
+      .slice(0, 4);
+    const detailResponses = await Promise.all(liveIds.map(id => getMatch(id)));
+    const liveDetails = detailResponses.flatMap(response => response.stale || response.error ? [] : response.data);
 
     // mover/trend source: trends for the top-ranked teams (bounded).
     const teamIds = rankings.data
@@ -1133,18 +1177,20 @@ export async function getTicker(): Promise<ApiResponse<TickerItem>> {
     const trendRes = await Promise.all(teamIds.map((id) => getTeamTrend(id)));
     const trends = trendRes.flatMap((r) => r.data);
 
-    const data = buildTicker({
-      results: results.data,
-      // The all-regions feed has no ladder identifiers. Comparing its rank
-      // numbers would invent cross-region "upsets". Withhold those claims;
-      // keep rankings above only for selecting the existing trend sample.
-      rankings: [],
-      matches,
+    const data = buildMatchWire({
+      live: live.stale || live.error ? [] : live.data,
+      upcoming: upcoming.stale || upcoming.error ? [] : upcoming.data,
+      results: results.stale || results.error ? [] : results.data,
+      rankings: rankings.stale || rankings.error ? [] : rankings.data,
       trends,
+      liveDetails,
     });
-    // stale if either headline source was stale (detail/trend gaps just thin the
-    // tape — they don't mark the whole thing stale).
-    return { data, stale: results.stale || rankings.stale };
+    const coreUnavailable = [live, upcoming, results].every(response => response.stale || Boolean(response.error));
+    return {
+      data,
+      stale: data.length === 0 && coreUnavailable,
+      ...(data.length === 0 && coreUnavailable ? { error: "Match wire unavailable" } : {}),
+    };
   } catch (err) {
     return { data: [], stale: true, error: String(err) };
   }

@@ -4,6 +4,7 @@ import { useId, useRef, useState } from "react";
 import type { MatchDetail, MatchMap, MatchMapTeam } from "@/types/vlr";
 import { PlayerStatsTable } from "@/components/PlayerStatsTable";
 import { RoundTimeline } from "@/components/RoundTimeline";
+import { TeamCrest } from "@/components/TeamCrest";
 
 type Tab = { key: string } & (
   | { kind: "map"; map: MatchMap }
@@ -42,12 +43,12 @@ export function MapTabs({ match }: { match: MatchDetail }) {
       </button>)}
     </div>
     <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-tab-${active}`} tabIndex={0} className="md-map-panel">
-      <div className="md-map-heading"><h3>{current.kind === "map" ? current.map.name ?? `Map ${active + 1}` : "All Maps"}</h3><p>{current.kind === "map" ? `${teamName(0)} ${current.map.scores[0] ?? "–"} : ${current.map.scores[1] ?? "–"} ${teamName(1)}` : "Combined player performance across the series"}</p></div>
-      {current.kind === "map" && (current.map.rounds.length ? <RoundTimeline rounds={current.map.rounds} team1={teamName(0)} team2={teamName(1)} /> : <p className="md-data-note">Round history unavailable for this map.</p>)}
+      <div className="md-map-heading"><h3>{current.kind === "map" ? current.map.name ?? `Map ${active + 1}` : "All Maps"}</h3>{current.kind === "map" ? <p className="md-map-teams"><span><TeamCrest name={teamName(0)} logo={match.teams[0]?.logo} size="ticker" />{teamName(0)} {current.map.scores[0] ?? "–"}</span><span aria-hidden>{" : "}</span><span>{current.map.scores[1] ?? "–"} {teamName(1)}<TeamCrest name={teamName(1)} logo={match.teams[1]?.logo} size="ticker" /></span></p> : <p>Combined player performance across the series</p>}</div>
+      {current.kind === "map" && (current.map.rounds.length ? <RoundTimeline rounds={current.map.rounds} team1={teamName(0)} team2={teamName(1)} team1Logo={match.teams[0]?.logo} team2Logo={match.teams[1]?.logo} /> : <p className="md-data-note">Round history unavailable for this map.</p>)}
       <div className="md-scoreboards">
         <div className="md-section-heading"><h3>PLAYER SCOREBOARDS</h3><p>Source order · Scroll tables for all statistics</p></div>
         {!teams.length && <p className="md-empty">Player statistics unavailable for this map.</p>}
-        {teams.map((team, i) => <PlayerStatsTable key={`${current.key}-${i}`} team={{ ...team, name: teamName(i) }} />)}
+        {teams.map((team, i) => <PlayerStatsTable key={`${current.key}-${i}`} team={{ ...team, name: teamName(i) }} identity={match.teams[i]} />)}
       </div>
     </div>
   </section>;

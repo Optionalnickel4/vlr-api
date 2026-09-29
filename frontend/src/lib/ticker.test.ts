@@ -352,16 +352,15 @@ describe("getTicker (graceful-empty, never throws to the page)", () => {
   });
 });
 
-it("withholds cross-region upset claims from the public ticker while retaining match statistics", async () => {
+it("public ticker prioritizes a completed match when live and upcoming feeds are empty", async () => {
   vi.spyOn(globalThis, "fetch").mockImplementation(async input => {
     const url = String(input);
     if (url.includes("/matches/results")) return Response.json([{ id: "1", teams: ["Low", "High"], scores: ["2", "0"] }]);
-    if (url.includes("/rankings?")) return Response.json([{ rank: "1", team: "High", team_id: "1" }, { rank: "8", team: "Low", team_id: "2" }]);
-    if (url.includes("/match/")) return Response.json(match);
+    if (url.includes("/matches/live") || url.includes("/matches/upcoming") || url.includes("/rankings?")) return Response.json([]);
     return new Response("{}", { status: 503 });
   });
   const tape = await getTicker();
   expect(tape.stale).toBe(false);
-  expect(tape.data.some(item => item.kind === "upset")).toBe(false);
-  expect(tape.data.some(item => item.kind === "acs")).toBe(true);
+  expect(tape.data.map(item => item.kind)).toEqual(["final"]);
+  expect(tape.data[0].href).toBe("/match/1");
 });

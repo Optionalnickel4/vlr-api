@@ -18,6 +18,7 @@ from selectolax.parser import HTMLParser, Node
 from app.core.http import get_client
 from app.scrapers import selectors as S
 from app.scrapers._util import (
+    absolute_vlr_asset,
     clean_spaces,
     country_from_flag,
     id_from_href,
@@ -135,7 +136,12 @@ def _parse_header(tree: HTMLParser) -> dict[str, Any]:
     for ln in links[:2]:
         href = ln.attributes.get("href", "") or ""
         name = clean_spaces(text_of(ln.css_first(S.MATCH_H_TEAM_NAME))) or None
-        teams.append({"name": name, "id": id_from_href(href)})
+        logo = ln.css_first(S.MATCH_H_TEAM_LOGO)
+        teams.append({
+            "name": name,
+            "id": id_from_href(href),
+            "logo": absolute_vlr_asset(logo.attributes.get("src") if logo else None),
+        })
 
     a, b = None, None
     for spoiler in tree.css(S.MATCH_H_SCORE_SPOILER):

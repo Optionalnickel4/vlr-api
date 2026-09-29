@@ -6,7 +6,7 @@ import { TeamCrest } from "@/components/TeamCrest";
 
 function TeamIdentity({ team, side }: { team?: MatchTeam; side: number }) {
   const identity = <>
-    <TeamCrest name={team?.name ?? null} logo={team?.logo} size="lg" />
+    <TeamCrest name={team?.name ?? null} logo={team?.logo} size="hero" />
     <span className="md-team-name">{team?.name ?? `Team ${side} TBD`}</span>
   </>;
   return <div className="md-team">

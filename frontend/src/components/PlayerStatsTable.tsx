@@ -1,5 +1,6 @@
 import Link from "next/link";
-import type { MatchMapTeam } from "@/types/vlr";
+import type { MatchMapTeam, MatchTeam } from "@/types/vlr";
+import { TeamCrest } from "@/components/TeamCrest";
 
 const COLS = [
   { label: "R", key: "R", title: "Rating" },
@@ -22,9 +23,9 @@ function fmt(value: number | null | undefined, pct?: boolean): string {
 }
 
 /** Preserve upstream row order, every existing column, and numeric formatting. */
-export function PlayerStatsTable({ team }: { team: MatchMapTeam }) {
+export function PlayerStatsTable({ team, identity }: { team: MatchMapTeam; identity?: MatchTeam }) {
   return <section className="md-scoreboard" aria-label={`${team.name ?? "Team"} player scoreboard`}>
-    <div className="md-scoreboard-heading"><h4>{team.name ?? "Team unavailable"}</h4>{team.score !== null && <span>{team.score} <span className="md-eyebrow">rounds</span></span>}</div>
+    <div className="md-scoreboard-heading"><div className="md-scoreboard-team"><TeamCrest name={team.name} logo={identity?.logo} size="row" /><h4>{identity?.id ? <Link prefetch={false} href={`/team/${identity.id}`}>{team.name ?? "Team unavailable"}</Link> : team.name ?? "Team unavailable"}</h4></div>{team.score !== null && <span>{team.score} <span className="md-eyebrow">rounds</span></span>}</div>
     <div className="md-table-scroll" role="region" aria-label={`${team.name ?? "Team"} statistics, scroll horizontally`} tabIndex={0}>
       <table className="md-table">
         <caption className="sr-only">{team.name ?? "Team"} player statistics in source order</caption>

@@ -61,6 +61,19 @@ async def cache_get(key: str) -> Any | None:
     return json.loads(raw) if raw is not None else None
 
 
+async def cache_get_many(keys: list[str]) -> list[Any | None]:
+    """Decode several JSON cache entries in one Redis round trip.
+
+    The returned list is position-aligned with ``keys``.  This is used by team
+    identity enrichment so a page with many rows never becomes one Redis
+    request per team or match.
+    """
+    if not keys:
+        return []
+    raw_values = await get_redis().mget(keys)
+    return [json.loads(raw) if raw is not None else None for raw in raw_values]
+
+
 async def cache_set(key: str, value: Any, ttl: int) -> None:
     """Store `value` as JSON under `key` with a REQUIRED expiry.
 

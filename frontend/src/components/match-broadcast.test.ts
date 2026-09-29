@@ -36,8 +36,8 @@ it("distinguishes live-map rounds from the still-level series", async () => {
   expect(container.querySelector('[aria-label="Series score 0 to 0"]')).not.toBeNull();
   expect(container.textContent).toContain('Map 1 · Haven');
 });
-it("keeps absent crest fields absent, uses a supplied crest, and falls back after failure", async () => {
-  const data = match(); expect(data.teams[0]).not.toHaveProperty('logo');
+it("keeps absent crest fields null, uses a supplied crest, and falls back after failure", async () => {
+  const data = match(); expect(data.teams[0].logo).toBeNull();
   const withLogo = normalizeMatch({ ...fixture, teams: [{ ...fixture.teams[0], logo: '//example.test/crest.png' }, fixture.teams[1]] })[0];
   await mount(h(MatchHeader, { match: withLogo }));
   const image = container.querySelector('img')!;

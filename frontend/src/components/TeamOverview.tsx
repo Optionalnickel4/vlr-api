@@ -9,7 +9,7 @@ export function TeamOverview({ team }: { team: ApiResponse<TeamDetail> }) {
     <header className="td-identity">
       <div className="td-kicker">Valorant / Team dossier</div>
       <div className="td-identity-main">
-        <TeamCrest name={detail.name} logo={detail.logo} size="lg" />
+        <TeamCrest name={detail.name} logo={detail.logo} size="hero" />
         <div><p className="td-meta">{detail.tag ?? "Team profile"} / {detail.country ?? "Country unavailable"}</p><h1>{detail.name ?? "Team name unavailable"}</h1></div>
       </div>
       <div className="td-summary"><span><strong>{detail.roster.filter(p => !p.isStaff).length}</strong> listed players</span><span><strong>{detail.roster.filter(p => p.isStaff).length}</strong> staff</span><span>Roster and results via VLR.gg</span></div>
@@ -19,7 +19,7 @@ export function TeamOverview({ team }: { team: ApiResponse<TeamDetail> }) {
       <div className="td-section-heading"><div><p className="td-kicker">01 / Latest listed matches</p><h2 id="team-form">Recent form</h2></div><p>Up to five results · source order</p></div>
       {recent.length ? <><ol className="td-form">{recent.map((r, i) => <li key={r.id ?? i}>
         <span className="td-verdict" data-result={r.result ?? "unknown"}>{r.result === "win" ? "Win" : r.result === "loss" ? "Loss" : "Unknown"}</span>
-        {r.opponentId ? <Link className="td-opponent" href={`/team/${r.opponentId}`}>{r.opponent ?? "Opponent unavailable"}</Link> : <span className="td-opponent">{r.opponent ?? "Opponent unavailable"}</span>}
+        <span className="td-opponent"><TeamCrest name={r.opponent} logo={r.opponentLogo} size="table" />{r.opponentId ? <Link prefetch={false} href={`/team/${r.opponentId}`}>{r.opponent ?? "Opponent unavailable"}</Link> : <span>{r.opponent ?? "Opponent unavailable"}</span>}</span>
         {r.id ? <Link className="td-form-score" href={`/match/${r.id}`} aria-label={`Match against ${r.opponent ?? "unknown opponent"}, score ${r.score ?? "unavailable"}`}>{r.score ?? "—"} <span aria-hidden>↗</span></Link> : r.url ? <a className="td-form-score" href={r.url} target="_blank" rel="noopener noreferrer">{r.score ?? "—"} ↗</a> : <span className="td-form-score">{r.score ?? "—"}</span>}
         <span className="td-meta">{r.event ?? "Event unavailable"}</span>
         <span className="td-meta">{r.date ?? "Match date unavailable"}</span>

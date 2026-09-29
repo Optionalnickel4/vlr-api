@@ -7,18 +7,22 @@ import { StatTicker } from "./StatTicker";
 import { TickerTape } from "./TickerTape";
 import { TeamCrest } from "./TeamCrest";
 import { BroadcastMatch } from "./BroadcastMatch";
-import type { LiveMatch, TickerItem } from "@/types/vlr";
+import type { LiveMatch, MatchWireItem } from "@/types/vlr";
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root;
 let container: HTMLDivElement;
 async function mount(element: React.ReactNode) {
-  container = document.createElement("div"); root = createRoot(container);
+  container = document.createElement("div"); document.body.append(container); root = createRoot(container);
   await act(async () => { root.render(element); });
 }
-const item: TickerItem = { id: "test", kind: "acs", label: "ACS", primary: "Test player", value: "200", detail: "Test event", tone: "neutral" };
+const item: MatchWireItem = { id: "upcoming:42", kind: "upcoming", href: "/match/42", status: "UPCOMING", event: "Test event", context: "Group", time: "7:00 PM", winnerId: null, teams: [
+  { id: "1", name: "Alpha", shortName: "ALP", logo: "https://cdn/alpha.png", score: null },
+  { id: "2", name: "Beta", shortName: "BET", logo: "https://cdn/beta.png", score: null },
+] };
 const json = (data: unknown) => new Response(JSON.stringify({ data, stale: false }));
 afterEach(async () => {
   if (root) await act(async () => root.unmount());
+  container?.remove();
   vi.restoreAllMocks(); vi.useRealTimers();
 });
 it("does not overlap ticker cycles and cancels the deadline and request on unmount", async () => {
@@ -41,10 +45,10 @@ it("keeps the last successful tape after a failed static refresh", async () => {
     if (failed) throw new Error("offline");
     return json(String(input).includes("ticker") ? [item] : []);
   });
-  await mount(h(StatTicker)); expect(container.textContent).toContain("Test player");
+  await mount(h(StatTicker)); expect(container.textContent).toContain("Alpha");
   failed = true;
-  await act(async () => { await vi.advanceTimersByTimeAsync(300_000); });
-  expect(container.textContent).toContain("Test player");
+  await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+  expect(container.textContent).toContain("Alpha");
 });
 it("offers a pause control and hides the duplicate tape from assistive technology", async () => {
   await mount(h(TickerTape, { items: [item] }));
@@ -54,6 +58,33 @@ it("offers a pause control and hides the duplicate tape from assistive technolog
   expect(button.getAttribute("aria-pressed")).toBe("true");
   expect(container.querySelector<HTMLElement>(".vlr-ticker-track")!.style.animationPlayState).toBe("paused");
   expect(container.querySelector(".ticker-duplicate")?.getAttribute("aria-hidden")).toBe("true");
+  expect(container.querySelector('a[href="/match/42"]')?.getAttribute("aria-label")).toContain("Alpha versus Beta");
+});
+it("temporarily pauses for hover and keyboard focus, then resumes", async () => {
+  await mount(h(TickerTape, { items: [item] }));
+  const section = container.querySelector("section")!;
+  const track = container.querySelector<HTMLElement>(".vlr-ticker-track")!;
+  await act(async () => section.dispatchEvent(new Event("pointerover", { bubbles: true })));
+  expect(track.style.animationPlayState).toBe("paused");
+  await act(async () => section.dispatchEvent(new Event("pointerout", { bubbles: true })));
+  expect(track.style.animationPlayState).toBe("running");
+  const link = container.querySelector<HTMLAnchorElement>(".wire-entry")!;
+  await act(async () => link.focus());
+  expect(track.style.animationPlayState).toBe("paused");
+  await act(async () => link.blur());
+  expect(track.style.animationPlayState).toBe("running");
+});
+it("manual pause survives hover leave and reduced motion removes the looping copy", async () => {
+  const original = window.matchMedia;
+  window.matchMedia = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() });
+  await mount(h(TickerTape, { items: [item] }));
+  expect(container.querySelector("section")?.getAttribute("data-reduced-motion")).toBe("true");
+  expect(container.querySelector(".ticker-duplicate")).toBeNull();
+  const button = container.querySelector("button")!;
+  await act(async () => button.click());
+  await act(async () => container.querySelector("section")!.dispatchEvent(new Event("pointerout", { bubbles: true })));
+  expect(container.querySelector<HTMLElement>(".vlr-ticker-track")!.style.animationPlayState).toBe("paused");
+  window.matchMedia = original;
 });
 it("uses a provided crest and falls back to initials when the image fails", async () => {
   await mount(h(TeamCrest, { name: "Test Team", logo: "https://example.test/crest.png" }));

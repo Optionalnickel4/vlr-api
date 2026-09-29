@@ -50,6 +50,7 @@ def test_header_event_teams_score_veto():
     assert names == ["ABACATUDOS", "Team Liquid Brazil"]
     ids = [t["id"] for t in d["teams"]]
     assert all(i and i.isdigit() for i in ids)
+    assert all(t["logo"].startswith("https://") for t in d["teams"])
     for t in d["teams"]:
         assert isinstance(t["score"], (int, float))
     # the veto/picks strip is present and mentions a ban/pick
@@ -292,6 +293,10 @@ def test_current_upstream_sp_hide_series_score():
     """Scoped Sept 28 capture: JDG 0–2 FUT; never derive a series from map rounds."""
     d = parse_match(load('match_header_753445_20260928.html'))
     assert [t['id'] for t in d['teams']] == ['13576', '1184']
+    assert [t['logo'] for t in d['teams']] == [
+        'https://owcdn.net/img/64f9825408326.png',
+        'https://owcdn.net/img/632be9976b8fe.png',
+    ]
     assert [t['score'] for t in d['teams']] == [0, 2]
     assert [t['won'] for t in d['teams']] == [False, True]
     assert d['status'] == 'final'

@@ -115,6 +115,9 @@ def _check_match_detail(mt: dict[str, Any]) -> list[str]:
     named = [t for t in mt["teams"] if t.get("name")]
     if len(named) != 2:
         bad.append(f"match-header: {len(named)}/2 teams named")
+    logos = [t for t in named if str(t.get("logo") or "").startswith("http")]
+    if len(logos) != 2:
+        bad.append(f"match-header: {len(logos)}/2 named teams carry an absolute logo")
     if not mt["format"]:
         bad.append("match-header: no BoN format parsed from the vs-notes")
     if not mt["maps"]:
@@ -230,6 +233,10 @@ async def main() -> None:
         print(f"  sample: {rk[0]}")
     if not rk:
         bad.append("rankings: no rows")
+    else:
+        no_logo = sum(1 for r in rk if not str(r.get("logo") or "").startswith("http"))
+        if no_logo:
+            bad.append(f"rankings: {no_logo}/{len(rk)} rows without an absolute team logo")
 
     print(f"== /rankings/{PROBE_REGION} (regional) ==")
     html = await client.get_html(f"/rankings/{PROBE_REGION}")

@@ -22,7 +22,7 @@ from selectolax.parser import HTMLParser, Node
 
 from app.core.http import get_client
 from app.scrapers import selectors as S
-from app.scrapers._util import clean_spaces, first_text, id_from_href, text_of
+from app.scrapers._util import absolute_vlr_asset, clean_spaces, first_text, id_from_href, text_of
 
 _DIGIT_RUN = re.compile(r"\d+")
 
@@ -63,6 +63,7 @@ def _parse_row(row: Node) -> dict[str, Any]:
     href = link.attributes.get("href", "") if link else ""
     country = clean_spaces(first_text(row, S.RANK_COUNTRY))
     team = _team_name(row)
+    logo = row.css_first(S.RANK_TEAM_LOGO)
     # current/rating-window record (the first of the two record nodes); split into
     # clean wins/losses so each coerces numerically. Null on the world view.
     record = clean_spaces(first_text(row, S.RANK_RECORD)) or None
@@ -71,6 +72,7 @@ def _parse_row(row: Node) -> dict[str, Any]:
         "rank": first_text(row, S.RANK_NUM) or None,
         "team": team or None,
         "team_id": id_from_href(href) if href else None,
+        "logo": absolute_vlr_asset(logo.attributes.get("src") if logo else None),
         "country": country or None,
         "rating": first_text(row, S.RANK_RATING) or None,
         "record": record,

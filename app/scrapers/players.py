@@ -22,7 +22,7 @@ from selectolax.parser import HTMLParser, Node
 
 from app.core.http import get_client
 from app.scrapers import selectors as S
-from app.scrapers._util import clean_spaces, id_from_href, text_of
+from app.scrapers._util import absolute_vlr_asset, clean_spaces, id_from_href, text_of
 
 
 def _country_from_flag(flag: Node | None) -> str | None:
@@ -65,13 +65,15 @@ def _parse_team(card: Node | None) -> dict[str, Any]:
     wf-card. None means free agent -> all three keys null; never a fallback.
     """
     if card is None:
-        return {"team": None, "team_id": None, "team_url": None}
+        return {"team": None, "team_id": None, "team_url": None, "team_logo": None}
     href = card.attributes.get("href", "") or ""
     name = clean_spaces(text_of(card.css_first(S.PLAYER_TEAM_NAME)))
+    logo = card.css_first(S.PLAYER_TEAM_LOGO)
     return {
         "team": name or None,
         "team_id": id_from_href(href),
         "team_url": ("https://www.vlr.gg" + href) if href.startswith("/") else (href or None),
+        "team_logo": absolute_vlr_asset(logo.attributes.get("src") if logo else None),
     }
 
 
@@ -109,11 +111,14 @@ def _parse_match(card: Node) -> dict[str, Any]:
     rcls = (result_node.attributes.get("class", "") if result_node else "") or ""
     result = "win" if "mod-win" in rcls else "loss" if "mod-loss" in rcls else None
     opp = card.css_first(S.PLAYER_MATCH_OPPONENT)
+    opp_logo = card.css_first(S.PLAYER_MATCH_OPPONENT_LOGO)
     date = card.css_first(S.PLAYER_MATCH_DATE)
     return {
         "id": id_from_href(href),
         "url": ("https://www.vlr.gg" + href) if href.startswith("/") else href,
         "opponent": clean_spaces(text_of(opp)) or None,
+        "opponent_tag": clean_spaces(text_of(card.css_first(S.PLAYER_MATCH_OPPONENT_TAG))) or None,
+        "opponent_logo": absolute_vlr_asset(opp_logo.attributes.get("src") if opp_logo else None),
         "result": result,
         "score": (clean_spaces(text_of(result_node)) or None) if result_node else None,
         "event": clean_spaces(text_of(card.css_first(S.PLAYER_MATCH_EVENT))) or None,
