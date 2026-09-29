@@ -6,7 +6,8 @@ No public ingress or frontend proxy is added. Do not put the credential in a
 browser, URL, logs, or source control.
 
 Send `Authorization: Bearer <secret>` from the Jarvis server. The dedicated
-opaque token grants only this read endpoint. Backend reads it from
+opaque token grants only the private Jarvis read endpoints (`team-match` and the
+versioned general contract in [JARVIS_QUERY.md](JARVIS_QUERY.md)). Backend reads it from
 `VLR_JARVIS_TOKEN_FILE` (default `/home/builder/.config/vlr-api/jarvis.token`),
 a private file outside Git. Transfer its contents to the Jarvis host's secret
 store using the existing private administration channel. Suggested Jarvis
