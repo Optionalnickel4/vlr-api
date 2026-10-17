@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { teamHue, teamInitials } from "@/lib/schedule";
 
@@ -19,6 +19,38 @@ const SIZES = {
   lg: { box: 88, text: "text-[30px]" },
 } as const;
 
+function validLogo(source: string | null | undefined): source is string {
+  try { return Boolean(source && /^https?:\/\//.test(source) && new URL(source).hostname); }
+  catch { return false; }
+}
+
+function RetryingLogo({ source, box, fallback, className, name, labelMode }: {
+  source: string; box: number; fallback: ReactNode; className?: string;
+  name: string | null; labelMode: "decorative" | "informative";
+}) {
+  const [attempt, setAttempt] = useState(0);
+  const [waiting, setWaiting] = useState(false);
+  useEffect(() => {
+    if (!waiting || attempt >= 2) return;
+    const timer = window.setTimeout(() => {
+      setAttempt(n => n + 1);
+      setWaiting(false);
+    }, attempt === 0 ? 1000 : 3000);
+    return () => window.clearTimeout(timer);
+  }, [waiting, attempt]);
+  if (waiting) return fallback;
+  const url = new URL(source);
+  if (attempt) url.searchParams.set("_vlr_retry", String(attempt));
+  return <span data-team-logo="true"
+    aria-label={labelMode === "informative" ? `${name ?? "Unknown"} team identity` : undefined}
+    aria-hidden={labelMode === "decorative" ? true : undefined}
+    className={cn("relative inline-flex shrink-0 items-center justify-center", className)}
+    style={{ width: box, height: box }}>
+    <Image key={attempt} src={attempt ? url.href : source} width={box} height={box} alt="" unoptimized
+      className="block h-full w-full object-contain" onError={() => setWaiting(true)} />
+  </span>;
+}
+
 export function TeamCrest({
   name,
   size = "sm",
@@ -33,20 +65,10 @@ export function TeamCrest({
   logo?: string | null;
   labelMode?: "decorative" | "informative";
 }) {
-  const [failedSource, setFailedSource] = useState<string | null>(null);
   const source = logo?.startsWith("//") ? `https:${logo}` : logo;
   const s = SIZES[size];
-  if (source && /^https?:\/\//.test(source) && failedSource !== source) {
-    return <span data-team-logo="true" aria-label={labelMode === "informative" ? `${name ?? "Unknown"} team identity` : undefined}
-      aria-hidden={labelMode === "decorative" ? true : undefined}
-      className={cn("relative inline-flex shrink-0 items-center justify-center", className)}
-      style={{ width: s.box, height: s.box }}>
-      <Image src={source} width={s.box} height={s.box} alt="" unoptimized
-        className="block h-full w-full object-contain" onError={() => setFailedSource(source)} />
-    </span>;
-  }
   const hue = teamHue(name);
-  return (
+  const fallback = (
     <span
       data-team-fallback="true"
       aria-hidden={labelMode === "decorative" ? true : undefined}
@@ -68,4 +90,9 @@ export function TeamCrest({
       {teamInitials(name)}
     </span>
   );
+  if (validLogo(source)) {
+    return <RetryingLogo key={source} source={source} box={s.box} fallback={fallback}
+      className={className} name={name} labelMode={labelMode} />;
+  }
+  return fallback;
 }

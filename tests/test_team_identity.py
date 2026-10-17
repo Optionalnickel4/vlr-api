@@ -1,6 +1,17 @@
 """Shared team-identity enrichment: stable IDs first, one batched cache read."""
 
 from app.services import team_identity as I
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def isolated_retention(monkeypatch):
+    async def remember(*args, **kwargs):
+        pass
+    async def lookup(*args, **kwargs):
+        return {}, {}
+    monkeypatch.setattr(I.store, 'remember', remember)
+    monkeypatch.setattr(I.store, 'lookup', lookup)
 
 
 RANKINGS = [

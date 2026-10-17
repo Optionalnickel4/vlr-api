@@ -171,6 +171,8 @@ async def refresh_rankings(region: str = "all") -> int:
         CACHE_RANKINGS.format(region=region), s.ttl_rankings,
         lambda: rk.fetch_rankings(region),
     )
+    from app.services.team_identity_store import remember
+    await remember(data, ranking=True)
     if not scraped_here:
         return len(data)  # only the lease owner banks a snapshot
     # Unnamed rows are parse debris (a layout row, or a selector that half-broke);
@@ -284,6 +286,8 @@ async def refresh_match(match_id: str) -> dict[str, Any]:
     TTL is the backstop for when it isn't running / between ticks."""
     s = get_settings()
     data = await md.fetch_match(match_id)
+    from app.services.team_identity_store import remember
+    await remember(data.get('teams') or [])
     ttl = s.ttl_live if data.get("status") == "live" else s.ttl_matches
     await cache_set(CACHE_MATCH.format(id=match_id), data, ttl)
     return data
@@ -373,6 +377,8 @@ async def refresh_team(team_id: str) -> dict[str, Any]:
     """
     s = get_settings()
     data = await te.fetch_team(team_id)
+    from app.services.team_identity_store import remember
+    await remember([data])
     await cache_set(CACHE_TEAM.format(id=team_id), data, s.ttl_teams)
 
     async with _detail_history("team", team_id):

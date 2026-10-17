@@ -12,6 +12,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.core.cache import cache_get, cache_get_many
+from app.services import team_identity_store as store
 
 RANKINGS_KEY = "vlr:rankings:all"
 MATCH_KEY = "vlr:match:{id}"
@@ -62,7 +63,7 @@ def _detail_teams(detail: object) -> list[dict[str, Any]]:
     return [_identity(t) for t in detail["teams"] if isinstance(t, dict)]
 
 
-async def _load(match_ids: list[str]) -> tuple[
+async def _load(match_ids: list[str], names=()) -> tuple[
     dict[str, dict[str, Any]], dict[str, dict[str, Any]], dict[str, list[dict[str, Any]]]
 ]:
     rankings = await cache_get(RANKINGS_KEY)
@@ -92,7 +93,16 @@ async def _load(match_ids: list[str]) -> tuple[
             key = _name_key(item["name"])
             if key:
                 by_name[key] = item
-    return by_id, by_name, by_match
+    await store.remember(list(by_id.values()), replace=False)
+    retained_id, retained_name = await store.lookup(list(names) + list(by_name), list(by_id))
+    for tid, item in by_id.items():
+        if not item.get('logo') and tid in retained_id:
+            item['logo'] = retained_id[tid]['logo']
+    for sides in by_match.values():
+        for item in sides:
+            if not item.get('logo') and item.get('id') in retained_id:
+                item['logo'] = retained_id[item['id']]['logo']
+    return {**retained_id, **by_id}, {**retained_name, **by_name}, by_match
 
 
 def _find(name: object, by_name: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
@@ -104,7 +114,7 @@ async def enrich_match_cards(rows: list[dict[str, Any]]) -> list[dict[str, Any]]
     """Add index-aligned team identity fields to live/upcoming/result cards."""
     try:
         ids = [str(r["id"]) for r in rows if r.get("id") is not None]
-        _, by_name, by_match = await _load(ids)
+        _, by_name, by_match = await _load(ids, [n for r in rows for n in (r.get('teams') or [])])
     except Exception:
         return rows
 
@@ -146,6 +156,7 @@ async def enrich_rankings(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ))
         details = await cache_get_many([TEAM_KEY.format(id=team_id) for team_id in ids])
         detail_by_id = dict(zip(ids, details))
+        retained, _ = await store.lookup(ids=ids)
     except Exception:
         return rows
 
@@ -158,7 +169,7 @@ async def enrich_rankings(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         detail_logo = detail.get("logo") if isinstance(detail, dict) else None
         logo = enriched.get("logo") or detail_logo or (
             world_team.get("logo") if world_team else None
-        )
+        ) or retained.get(team_id, {}).get('logo')
         if logo:
             enriched["logo"] = logo
         out.append(enriched)

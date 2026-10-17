@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, createElement as h } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import { TeamCrest } from "./TeamCrest";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -14,6 +14,7 @@ afterEach(async () => {
   host?.remove();
   root = undefined;
   host = undefined;
+  vi.useRealTimers();
 });
 
 async function render(props: Parameters<typeof TeamCrest>[0]) {
@@ -48,4 +49,30 @@ it("falls back after an image load failure", async () => {
 it("can expose one informative accessible label when no adjacent name exists", async () => {
   const node = await render({ name: "Sentinels", logo: null, labelMode: "informative" });
   expect(node.querySelector('[aria-label="Sentinels team identity"]')).toBeTruthy();
+});
+
+it("retries transient failures twice with a cache-busting URL then stops", async () => {
+  vi.useFakeTimers();
+  const node = await render({ name: "LOUD", logo: "https://cdn/logo.png?version=1#crest" });
+  await act(async () => node.querySelector("img")!.dispatchEvent(new Event("error")));
+  expect(node.querySelector("img")).toBeNull();
+  await act(async () => vi.advanceTimersByTime(1000));
+  expect(node.querySelector("img")!.src).toContain("version=1&_vlr_retry=1#crest");
+  await act(async () => node.querySelector("img")!.dispatchEvent(new Event("error")));
+  await act(async () => vi.advanceTimersByTime(3000));
+  expect(node.querySelector("img")!.src).toContain("_vlr_retry=2");
+  await act(async () => node.querySelector("img")!.dispatchEvent(new Event("error")));
+  await act(async () => vi.advanceTimersByTime(60000));
+  expect(node.querySelector("img")).toBeNull();
+  expect(vi.getTimerCount()).toBe(0);
+});
+
+it("cancels a failed source retry when the team logo changes", async () => {
+  vi.useFakeTimers();
+  const node = await render({ name: "Old", logo: "https://cdn/old.png" });
+  await act(async () => node.querySelector("img")!.dispatchEvent(new Event("error")));
+  await act(async () => root!.render(h(TeamCrest, { name: "New", logo: "https://cdn/new.png" })));
+  expect(node.querySelector("img")!.src).toBe("https://cdn/new.png");
+  await act(async () => vi.advanceTimersByTime(10000));
+  expect(node.querySelector("img")!.src).toBe("https://cdn/new.png");
 });
