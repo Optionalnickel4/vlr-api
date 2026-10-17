@@ -67,8 +67,8 @@ import type {
   UpcomingMatch,
 } from "@/types/vlr";
 import { buildMatchWire } from "@/lib/matchWire";
-import { normalizePredictions } from "@/lib/predictions";
-import type { MatchPrediction } from "@/types/predictions";
+import { normalizePredictions, normalizePredictionAccuracy } from "@/lib/predictions";
+import type { MatchPrediction, PredictionAccuracy } from "@/types/predictions";
 
 export const VLR_API_BASE =
   process.env.VLR_API_BASE ?? "http://127.0.0.1:8000/api/v1";
@@ -78,11 +78,11 @@ export const VLR_API_BASE =
  *  /schedule and /results pages (same endpoints, no slice). */
 export const HOME_SNAPSHOT_LIMIT = 5;
 
-export async function getPredictions(): Promise<ApiResponse<MatchPrediction>> {
+export async function getPredictions(): Promise<ApiResponse<MatchPrediction> & { accuracy?: PredictionAccuracy }> {
   try {
     const raw = await fetchUpstream("/predictions") as Record<string, unknown>;
     if (!raw || !Array.isArray(raw.data)) throw new Error("Invalid prediction coverage");
-    return { data: normalizePredictions(raw.data), stale: Boolean(raw.stale || raw.error),
+    return { data: normalizePredictions(raw.data), accuracy: normalizePredictionAccuracy(raw.accuracy), stale: Boolean(raw.stale || raw.error),
       error: raw.error ? "Prediction coverage temporarily unavailable" : undefined };
   } catch {
     return { data: [], stale: true, error: "Prediction coverage temporarily unavailable" };

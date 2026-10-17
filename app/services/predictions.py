@@ -24,7 +24,7 @@ from sqlalchemy.dialects.postgresql import insert
 from app.core.cache import cache_get, get_redis
 from app.core.config import get_settings
 from app.core.db import SessionLocal
-from app.models import MatchPrediction
+from app.models import MatchPrediction, PredictionResult
 from app.services import refresh as R
 from app.services.openclaw import connection_ready, request_prediction
 from app.services.prediction_evidence import enrich
@@ -288,6 +288,8 @@ async def list_predictions() -> dict:
     rows = []
     stale = False
     records = []
+    results = {}
+    summary = None
     try:
         rows = await cache_get(R.CACHE_UPCOMING)
         if not isinstance(rows, list):
@@ -299,6 +301,12 @@ async def list_predictions() -> dict:
             records = list((await session.scalars(
                 select(MatchPrediction).order_by(MatchPrediction.starts_at.desc()).limit(50)
             )).all())
+            from app.services.prediction_results import accuracy
+            summary = await accuracy(session, datetime.now(timezone.utc))
+            if records:
+                results = {r.match_id: {"winner_id": r.winner_id, "scores": r.scores}
+                           for r in (await session.scalars(select(PredictionResult)
+                               .where(PredictionResult.match_id.in_([r.match_id for r in records])))).all()}
     except Exception:
         stale = True
     saved = {record.match_id: record for record in records}
@@ -312,7 +320,9 @@ async def list_predictions() -> dict:
         cards.append(_card(mid, saved.get(mid), names=names, event=_text(row.get("event")),
                            timing=_text(row.get("eta"))))
     cards.extend(_card(r.match_id, r) for r in records if r.match_id not in seen)
-    return {"data": cards, "stale": stale,
+    for card in cards:
+        card["result"] = results.get(card["match_id"]) if card["prediction"] else None
+    return {"data": cards, "stale": stale, "accuracy": summary,
             "error": "Prediction coverage temporarily unavailable" if stale else None}
 
 

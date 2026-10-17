@@ -31,6 +31,7 @@ from app.core.cache import record_job_run
 from app.services import refresh as R
 from app.core.config import get_settings
 from app.services import predictions as P
+from app.services.prediction_results import refresh_prediction_results
 
 log = logging.getLogger("vlr.scheduler")
 
@@ -84,6 +85,8 @@ def build_scheduler() -> AsyncIOScheduler:
     # run; max_instances=1 so a slow run never overlaps. Records vlr:lastrun:stats.
     sched.add_job(_tracked("stats", R.refresh_all_stats), "interval", hours=6, id="stats", max_instances=1)
     if get_settings().predictions_enabled:
+        sched.add_job(_tracked("prediction_results", refresh_prediction_results), "interval", minutes=5,
+                      id="prediction_results", max_instances=1)
         sched.add_job(_tracked("predictions", P.refresh_predictions), "interval", minutes=10,
                       id="predictions", max_instances=1)
     _active = sched

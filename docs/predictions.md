@@ -7,6 +7,20 @@ pre-match picks after their scheduled start. No probabilities or score forecasts
 
 ## Generation and records
 
+Past cards show correct/wrong picks, the final score and winning team, or an
+awaiting-result label. No-picks remain explicitly unscored. A separate
+`prediction_results` table retains final results without rewriting prediction
+snapshots. The opt-in scheduler checks three outstanding results every five
+minutes, verifying final status, match/team IDs, consistent non-tied series
+scores and pre-start generation. Unknown, live, cancelled or inconsistent
+results are not graded. Public reads never fetch match pages or call OpenClaw.
+
+The API's `accuracy` counters cover all saved pre-start predictions whose match
+start has passed, not only the latest 50 displayed cards. Accuracy is correct
+divided by correct plus incorrect; no-picks and awaiting results are excluded.
+Final results can appear after the next successful background check. Past
+predictions, including abstentions and wrong picks, remain unchanged.
+
 Generation is opt-in (`VLR_PREDICTIONS_ENABLED=false` by default). The existing
 scheduler processes at most three candidates every ten minutes. Requests from
 the public never trigger a model call. Each failed candidate has a thirty-minute

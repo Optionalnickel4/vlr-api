@@ -159,3 +159,13 @@ class MatchPrediction(Base):
     # Exact supplied evidence and validated output retained for later evaluation.
     evidence: Mapped[dict[str, Any]] = mapped_column(JSONB)
     prediction: Mapped[dict[str, Any]] = mapped_column(JSONB)
+
+
+class PredictionResult(Base):
+    """Confirmed final result, stored separately from the original prediction."""
+
+    __tablename__ = "prediction_results"
+    match_id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    winner_id: Mapped[str] = mapped_column(String(32))
+    scores: Mapped[dict[str, int]] = mapped_column(JSONB)
+    checked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)

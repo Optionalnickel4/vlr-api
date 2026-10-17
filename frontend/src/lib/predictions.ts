@@ -1,4 +1,4 @@
-import type { MatchPrediction, PredictionTeam } from "@/types/predictions";
+import type { MatchPrediction, PredictionTeam, PredictionAccuracy } from "@/types/predictions";
 
 type Raw = Record<string, unknown>;
 const object = (v: unknown): Raw | null => v !== null && typeof v === "object" && !Array.isArray(v) ? v as Raw : null;
@@ -6,6 +6,12 @@ const text = (v: unknown): string | null => typeof v === "string" && v.trim() ? 
 const id = (v: unknown): string | null => typeof v === "string" && /^\d{1,32}$/.test(v) ? v : null;
 const strings = (v: unknown): string[] => Array.isArray(v) ? v.filter((s): s is string => typeof s === "string" && Boolean(s.trim())) : [];
 const date = (v: unknown): string | null => typeof v === "string" && /(?:Z|[+-]\d\d:\d\d)$/.test(v) && Number.isFinite(Date.parse(v)) ? v : null;
+
+export function normalizePredictionAccuracy(value: unknown): PredictionAccuracy | undefined {
+  const row = object(value);
+  if (!row || ![row.correct, row.incorrect, row.no_pick, row.awaiting_result].every(n => typeof n === "number" && Number.isSafeInteger(n) && n >= 0)) return undefined;
+  return { correct: row.correct as number, incorrect: row.incorrect as number, noPick: row.no_pick as number, awaitingResult: row.awaiting_result as number };
+}
 
 /** Unknown winners or malformed evidence become pending, never invented picks. */
 export function normalizePredictions(raw: unknown): MatchPrediction[] {
@@ -33,9 +39,17 @@ export function normalizePredictions(raw: unknown): MatchPrediction[] {
       && startsAt && generatedAt && Date.parse(generatedAt) < Date.parse(startsAt)
       && evidenceIds.every(ref => facts.some(f => f.id === ref))
       && teams.every(t => evidenceIds.some(ref => facts.some(f => f.id === ref && f.teamId === t.id))));
+    const rawResult = object(row.result), actualWinner = id(rawResult?.winner_id), scores = object(rawResult?.scores);
+    const scoreValues = teams.map(t => t.id ? scores?.[t.id] : undefined);
+    const validResult = Boolean(valid && actualWinner && teams.some(t => t.id === actualWinner)
+      && scoreValues.every(n => typeof n === "number" && Number.isInteger(n) && n >= 0 && n <= 5)
+      && scoreValues[0] !== scoreValues[1] && typeof scores?.[actualWinner!] === "number"
+      && scores![actualWinner!] === Math.max(...scoreValues as number[]));
+    const result: MatchPrediction["result"] = validResult ? { winnerId: actualWinner!, scores: scores as Record<string, number>,
+      outcome: noPick ? "no_pick" : winnerId === actualWinner ? "correct" : "incorrect" } : null;
     return [{ matchId, teams, event: text(row.event), timing: text(row.timing), startsAt, generatedAt: valid ? generatedAt : null,
       status: valid ? (noPick ? "no_pick" : "published") : "pending",
       prediction: valid ? { winnerId, explanation: explanation!, evidenceIds, caveats } : null,
-      facts: valid ? facts : [], limitations: valid ? strings(row.limitations) : [] } satisfies MatchPrediction];
+      facts: valid ? facts : [], limitations: valid ? strings(row.limitations) : [], result } satisfies MatchPrediction];
   });
 }
