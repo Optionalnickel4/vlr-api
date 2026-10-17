@@ -10,6 +10,7 @@ datasets still expire outright and can refresh inline on a cache miss.
 """
 from functools import lru_cache
 
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -58,6 +59,17 @@ class Settings(BaseSettings):
     # ever scale the API past one worker: otherwise every worker starts its own
     # copy of every cron job and multiplies the load on vlr.gg.
     enable_scheduler: bool = True
+
+    # Predictions are opt-in. Secrets remain in the backend/scheduler only.
+    predictions_enabled: bool = False
+    predictions_source_api_url: str = ""
+    predictions_batch_size: int = Field(3, ge=1, le=10)
+    openclaw_base_url: str = "https://openclaw.jushosting.dev"
+    openclaw_agent_id: str = "val-predictions"
+    openclaw_gateway_token: SecretStr = SecretStr("")
+    openclaw_access_client_id: SecretStr = SecretStr("")
+    openclaw_access_client_secret: SecretStr = SecretStr("")
+    openclaw_timeout: float = Field(60, ge=5, le=120)
 
 
 @lru_cache

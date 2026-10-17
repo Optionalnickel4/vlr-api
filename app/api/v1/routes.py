@@ -48,9 +48,16 @@ from app.services import refresh as R
 from app.services import search as SR
 from app.services import trends as T
 from app.services import team_identity as I
+from app.services import predictions as P
 
 router = APIRouter()
 log = logging.getLogger("vlr.api")
+
+
+@router.get("/predictions")
+async def predictions(response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return await P.list_predictions()
 
 # History tables surfaced on the status page, paired with their timestamp column.
 # All four models happen to use `captured_at` — wired explicitly, not assumed.

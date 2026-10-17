@@ -11,6 +11,7 @@ instead would CONCATENATE the three (K=13 -> "1385"), a number that coerces fine
 is silently wrong. Live-state empties (R/ACS/ADR not yet computed) -> None, never NaN.
 """
 import re
+from datetime import datetime, timezone
 from typing import Any
 
 from selectolax.parser import HTMLParser, Node
@@ -131,6 +132,15 @@ def _parse_rounds(game: Node) -> list[dict[str, Any]]:
 
 # ---- header ----------------------------------------------------------------
 def _parse_header(tree: HTMLParser) -> dict[str, Any]:
+    starts_at = None
+    start_node = tree.css_first(S.MATCH_H_START)
+    if start_node is not None:
+        try:
+            starts_at = datetime.strptime(
+                start_node.attributes.get("data-utc-ts", ""), "%Y-%m-%d %H:%M:%S"
+            ).replace(tzinfo=timezone.utc).isoformat()
+        except ValueError:
+            pass
     links = tree.css(S.MATCH_H_TEAM_LINK)
     teams: list[dict[str, Any]] = []
     for ln in links[:2]:
@@ -169,6 +179,7 @@ def _parse_header(tree: HTMLParser) -> dict[str, Any]:
         "series": clean_spaces(text_of(tree.css_first(S.MATCH_H_SERIES))) or None,
         "status": status,
         "format": fmt,
+        "starts_at": starts_at,
         "teams": teams,
         "veto": clean_spaces(text_of(tree.css_first(S.MATCH_H_VETO))) or None,
     }

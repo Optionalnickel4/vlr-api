@@ -35,11 +35,11 @@ function markup() {
   return element;
 }
 
-it.each(["/", "/schedule", "/results", "/stats", "/rankings", "/news"])("marks only %s active and renders one shared search", (pathname) => {
+it.each(["/", "/schedule", "/results", "/predictions", "/stats", "/rankings", "/news"])("marks only %s active and renders one shared search", (pathname) => {
   route.pathname = pathname;
   const element = markup();
   const nav = element.querySelector('nav[aria-label="Primary"]')!;
-  expect(nav.querySelectorAll("a")).toHaveLength(6);
+  expect(nav.querySelectorAll("a")).toHaveLength(7);
   expect(nav.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
   expect(nav.querySelector('[aria-current="page"]')?.getAttribute("href")).toBe(pathname);
   expect(element.querySelectorAll('[role="combobox"]')).toHaveLength(1);

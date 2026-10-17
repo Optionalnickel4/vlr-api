@@ -1,0 +1,14 @@
+{
+  "agents": {
+    "entries": {
+      "val-predictions": {
+        "name": "Valorant predictions",
+        "workspace": "/srv/vlr-predictions/workspace",
+        "tools": { "deny": ["*"] }
+      }
+    }
+  },
+  "gateway": {
+    "http": { "endpoints": { "chatCompletions": { "enabled": true } } }
+  }
+}

@@ -143,3 +143,19 @@ class TeamSnapshot(Base):
     captured_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_now, index=True
     )
+
+
+class MatchPrediction(Base):
+    """First published pre-match assessment; never overwritten by later results."""
+
+    __tablename__ = "match_predictions"
+
+    match_id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    starts_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    generated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    input_hash: Mapped[str] = mapped_column(String(64))
+    agent_id: Mapped[str] = mapped_column(String(64))
+    prompt_version: Mapped[str] = mapped_column(String(32))
+    # Exact supplied evidence and validated output retained for later evaluation.
+    evidence: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    prediction: Mapped[dict[str, Any]] = mapped_column(JSONB)

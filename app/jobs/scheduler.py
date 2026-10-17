@@ -29,6 +29,8 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from app.core.cache import record_job_run
 from app.services import refresh as R
+from app.core.config import get_settings
+from app.services import predictions as P
 
 log = logging.getLogger("vlr.scheduler")
 
@@ -81,5 +83,8 @@ def build_scheduler() -> AsyncIOScheduler:
     # 4 windows. Slow cadence (6h) — these barely move and it's 8 light scrapes per
     # run; max_instances=1 so a slow run never overlaps. Records vlr:lastrun:stats.
     sched.add_job(_tracked("stats", R.refresh_all_stats), "interval", hours=6, id="stats", max_instances=1)
+    if get_settings().predictions_enabled:
+        sched.add_job(_tracked("predictions", P.refresh_predictions), "interval", minutes=10,
+                      id="predictions", max_instances=1)
     _active = sched
     return sched

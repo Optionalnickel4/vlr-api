@@ -67,6 +67,8 @@ import type {
   UpcomingMatch,
 } from "@/types/vlr";
 import { buildMatchWire } from "@/lib/matchWire";
+import { normalizePredictions } from "@/lib/predictions";
+import type { MatchPrediction } from "@/types/predictions";
 
 export const VLR_API_BASE =
   process.env.VLR_API_BASE ?? "http://127.0.0.1:8000/api/v1";
@@ -75,6 +77,17 @@ export const VLR_API_BASE =
  *  upcoming/results rows each; the full ~50-row lists live on the dedicated
  *  /schedule and /results pages (same endpoints, no slice). */
 export const HOME_SNAPSHOT_LIMIT = 5;
+
+export async function getPredictions(): Promise<ApiResponse<MatchPrediction>> {
+  try {
+    const raw = await fetchUpstream("/predictions") as Record<string, unknown>;
+    if (!raw || !Array.isArray(raw.data)) throw new Error("Invalid prediction coverage");
+    return { data: normalizePredictions(raw.data), stale: Boolean(raw.stale || raw.error),
+      error: raw.error ? "Prediction coverage temporarily unavailable" : undefined };
+  } catch {
+    return { data: [], stale: true, error: "Prediction coverage temporarily unavailable" };
+  }
+}
 
 /** Parse a raw upstream value to a number, or null. Never returns NaN.
  *  "1" -> 1, "2000" -> 2000, "1.17" -> 1.17, "–"/""/null/"19h 34m" -> null.
@@ -120,7 +133,9 @@ async function fetchUpstreamResponse(path: string, timeoutMs = UPSTREAM_TIMEOUT_
   const controller = new AbortController();
   const deadline = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const res = await fetch(`${VLR_API_BASE}${path}`, {
+    const base = path === "/predictions"
+      ? process.env.VLR_PREDICTIONS_API_BASE ?? VLR_API_BASE : VLR_API_BASE;
+    const res = await fetch(`${base}${path}`, {
       headers: { accept: "application/json" },
       cache: "no-store",
       signal: controller.signal,

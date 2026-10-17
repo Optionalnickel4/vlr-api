@@ -20,6 +20,9 @@ MATCH_EVENT_SERIES = "div.match-item-event-series"
 MATCH_STATUS = "div.ml-status"
 MATCH_ETA = "div.ml-eta"
 
+# Absolute UTC start on the full match page, never inferred from countdown text.
+MATCH_H_START = "div.match-header-date [data-utc-ts]"
+
 # --- rankings (team rows) ---
 # vlr serves TWO ranking layouts and the parser handles both:
 #  - WORLD view (/rankings, ?region=all): a stripped <tr class="wf-card mod-hover">
